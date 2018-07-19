@@ -38,8 +38,8 @@ input_args = [
 
               '--train_data_augment','1', # translation? rotation?
               '--experiment_id','20180410',# experiment name prefix
-              '--experiment_dir','../../Exp_StyleAdd', # model saving location
-              '--log_dir','tfLogs_StyleAdd/',# log file saving location
+              '--experiment_dir','../../Exp_MSMC', # model saving location
+              '--log_dir','tfLogs_MSMC/',# log file saving location
               '--print_info_seconds','3',
 
               '--content_data_dir', # standard data location
