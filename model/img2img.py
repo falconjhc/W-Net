@@ -1977,7 +1977,8 @@ class Img2Img(object):
         def variable_comparison_and_restore(current_saver, restore_model_dir, model_name):
             ckpt = tf.train.get_checkpoint_state(restore_model_dir)
             output_var_tensor_list = list()
-            ignore_var_tensor_list = list()
+            saved_var_name_list = list()
+            current_var_name_list = list()
             for var_name, var_shape in tf.contrib.framework.list_variables(ckpt.model_checkpoint_path):
                 for checking_var in current_saver._var_list:
                     found_var = checking_var_consistency(checking_var=checking_var,
@@ -1985,16 +1986,33 @@ class Img2Img(object):
                                                          stored_var_shape=var_shape)
                     if found_var:
                         output_var_tensor_list.append(checking_var)
+                    current_var_name_list.append(str(checking_var.name[:len(checking_var.name)-2]))
+                saved_var_name_list.append(var_name)
 
 
             ignore_var_tensor_list = list_diff(first=current_saver._var_list,
                                                second=output_var_tensor_list)
             if ignore_var_tensor_list:
-                print("IgnoreVars:")
+                print("IgnoreVars_ForVar in current model but not in the stored model:")
                 counter=0
                 for ii in ignore_var_tensor_list:
                     print("No.%d, %s" % (counter,ii))
                     counter+=1
+                if not self.debug_mode==1:
+                    raw_input("Press enter to continue")
+
+
+            current_var_name_list = np.unique(current_var_name_list)
+            ignore_var_name_list = list_diff(first=saved_var_name_list,
+                                             second=current_var_name_list)
+            if ignore_var_name_list:
+                print("IgnoreVars_ForVar in stored model but not in the current model:")
+                counter = 0
+                for ii in ignore_var_name_list:
+                    print("No.%d, %s" % (counter, ii))
+                    counter += 1
+                if not self.debug_mode==1:
+                    raw_input("Press enter to continue")
 
             saver = tf.train.Saver(max_to_keep=1, var_list=output_var_tensor_list)
             self.restore_model(saver=saver,
