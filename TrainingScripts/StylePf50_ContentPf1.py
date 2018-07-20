@@ -27,7 +27,7 @@ input_args = [
               '--debug_mode','0',
               '--style_input_number','4', # how many style inputs
               '--init_training_epochs','5',
-              '--final_training_epochs','30',
+              '--final_training_epochs','250',
 
               '--generator_device','/device:GPU:0',
               '--discriminator_device', '/device:GPU:0',

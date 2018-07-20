@@ -24,12 +24,12 @@ exp_root_path = '/DataA/Harric/MSMC_Exp/'
 #               = StyleReTrain:
 #               = FineTuneClassifier: FOR DISCRIMINATOR FINE TUNE ON THE CATEGORY LOSS
 input_args = [
-              '--training_from_model_dir',
-    '../../Exp_MSMC/checkpoint/Exp20180717_StyleHw50_ContentPfSelected15+PfStandard1_StyleAdd_ExtrcVgg16_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
-              '--debug_mode','0',
+              #'--training_from_model_dir',
+    #'../../Exp_MSMC/checkpoint/Exp20180717_StyleHw50_ContentPfSelected15+PfStandard1_StyleAdd_ExtrcVgg16_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
+    '--debug_mode','0',
               '--style_input_number','16', # how many style inputs
               '--init_training_epochs','2',
-              '--final_training_epochs','10',
+              '--final_training_epochs','25',
 
               '--generator_device','/device:GPU:0',
               '--discriminator_device', '/device:GPU:0',

@@ -166,6 +166,7 @@ class Img2Img(object):
         self.discriminator_initialization_iters=25
         self.init_training_epochs=init_training_epochs
         self.final_training_epochs=final_training_epochs
+        self.final_training_epochs=final_training_epochs
         self.model_save_epochs=3
         self.debug_mode = debug_mode
         self.experiment_dir = experiment_dir
@@ -2286,7 +2287,7 @@ class Img2Img(object):
             if current_epoch <= self.final_training_epochs:
                 self.g_iters = 5
             else:
-                self.g_iters = 2
+                self.g_iters = 3
 
             if global_step.eval(session=self.sess) <= self.g_iters * 5 * self.discriminator_initialization_iters:
                 g_iters = self.g_iters * 5
@@ -2409,7 +2410,7 @@ class Img2Img(object):
 
             for bid in range(self.itrs_for_current_epoch):
 
-                if time.time() - training_start_time <= 3600:
+                if time.time() - training_start_time <= 600:
                     summary_seconds = 60
                     sample_seconds = 60
                     print_info_seconds = 60
@@ -2423,7 +2424,7 @@ class Img2Img(object):
                 this_itr_start = time.time()
 
 
-                if epoch_step.eval(session=self.sess)<=self.init_training_epochs:
+                if epoch_step.eval(session=self.sess) < self.init_training_epochs:
                     current_critic_logit_penalty_value = (float(global_step.eval(session=self.sess))/float(self.init_training_epochs*self.itrs_for_current_epoch))*self.Discriminative_Penalty
                     current_lr_real = current_lr * 0.1
                 else:
