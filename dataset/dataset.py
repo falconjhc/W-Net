@@ -153,6 +153,10 @@ class Dataset_Iterator(object):
                         del self.style_reference_list[jjj].label0_list[iii-delete_counter]
                         del self.style_reference_list[jjj].label1_list[iii-delete_counter]
                         del self.style_reference_list[jjj].data_list[iii-delete_counter]
+                    for jjj in range(len(content_prototype_list)):
+                        del content_data_list[jjj][iii - delete_counter]
+                        del content_label0_list[jjj][iii - delete_counter]
+                        del content_label1_list[jjj][iii - delete_counter]
                     delete_counter += 1
 
                 continue
@@ -160,15 +164,14 @@ class Dataset_Iterator(object):
                 current_label0_indices_on_the_style_data = [ii for ii in range(len(self.true_style.label0_list)) if self.true_style.label0_list[ii] == label0]
                 for ii in range(len(content_prototype_list)):
                     current_prototype_dataset = content_prototype_list[ii]
-                    current_label0_index_on_the_content_prototype_data = current_prototype_dataset.label0_list.index(
-                        label0)
+                    current_label0_index_on_the_content_prototype_data = current_prototype_dataset.label0_list.index(label0)
                     for jj in current_label0_indices_on_the_style_data:
                         content_data_list[ii][jj] = current_prototype_dataset.data_list[current_label0_index_on_the_content_prototype_data]
                         content_label0_list[ii][jj] = current_prototype_dataset.label0_list[current_label0_index_on_the_content_prototype_data]
                         content_label1_list[ii][jj] = current_prototype_dataset.label1_list[current_label0_index_on_the_content_prototype_data]
 
-                if time.time() - find_start > info_print_interval or label0 == label0_vec[0] or label0_counter == len(
-                        label0_vec) - 1:
+
+                if time.time() - find_start > info_print_interval or label0 == label0_vec[0] or label0_counter == len(label0_vec) - 1:
                     print(print_marks + ' FindingCorrespondendingContentPrototype_BasedOnLabel0:%d/%d' %
                           (label0_counter + 1, len(label0_vec)))
                     print(print_marks + ' Deleted %d Label0s with %d samples' %
