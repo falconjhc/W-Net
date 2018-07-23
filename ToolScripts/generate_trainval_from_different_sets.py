@@ -10,16 +10,22 @@ import random as rd
 
 
 input_args = [
+              # '--data_type','SINGLE', # 'SINGLE' or STANDARD'
+              # '--data_dir_path','/DataA/Harric/MSMC_Exp/CASIA_64/HandWritingData/CASIA-HWDB2.1/',
+              # '--file_write_path', '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt',
+
               '--data_type','SINGLE', # 'SINGLE' or STANDARD'
               '--data_dir_path','/DataA/Harric/MSMC_Exp/CASIA_64/PrintedData/',
-              '--file_write_path', '../FileList/PrintedData/Printed15SelectedFonts_gb2312l1l2.txt',
+              '--file_write_path', '../FileList/PrintedData/Char_0_3755_Writer_Selected32_Printed_Fonts_GB2312L1L2.txt',
+
+
 
               # '--data_type','STANDARD', # 'SINGLE' OR 'PAIR or STANDARD'
               # '--data_dir_path','/DataA/Harric/WNet_Exp/CASIA_64/StandardChars/GB2312_L1/',
               # '--file_write_path', '../FileList/StandardChars/char_0_3754',
 
-              '--label0','ALL',
-              '--label1','13,14,15,16,17,18,20,21,22,23,25,26,27,29,30']
+              '--label0','0:1:3754',
+              '--label1','14,16,17,18,26,27,29,30,32,35,37,38,41,42,46,47,49,52,55,57,59,63,65,67,68,70,71,72,74,76,78,79']
 
 
 
@@ -55,7 +61,7 @@ def find_file_and_label_list_from_given_path(input_path, data_type,selected_labe
             selected_label1 = selected_label1.split(',')
             for ii in selected_label1:
                 selected_label1_output.append(int(ii))
-    selected_label1 = selected_label1_output
+            selected_label1 = selected_label1_output
 
 
 
@@ -67,24 +73,7 @@ def find_file_and_label_list_from_given_path(input_path, data_type,selected_labe
 
         if files:
 
-            writer_dir = root.split('/')
-            writer_dir = writer_dir[len(writer_dir) - 1]
-            writer_dir = writer_dir.split('_')
-            writer_dir = writer_dir[len(writer_dir) - 1]
 
-            if not selected_label1 == 'ALL':
-                if int(writer_dir) not in selected_label1:
-                    continue
-
-
-            writer_dir = root.split('/')
-            writer_dir = writer_dir[len(writer_dir) - 1]
-            writer_dir = writer_dir.split('_')
-            writer_dir = writer_dir[len(writer_dir) - 1]
-
-            if not selected_label1 == 'ALL':
-                if int(writer_dir) not in selected_label1:
-                    continue
 
             files.sort()
             for name in files:
@@ -99,6 +88,9 @@ def find_file_and_label_list_from_given_path(input_path, data_type,selected_labe
                     label1 = file_name.split("_")[2]
                     label1 = label1[0:label1.index('.')]
                     label1 = int(label1)
+
+                    if label1 == 1031 or label1 == 1032:
+                        a=1
 
                     label0 = file_name.split("_")[1]
                     character_id_1 = int(label0[0:3])
@@ -296,8 +288,6 @@ def main():
 
     data_list = delete_prefix_for_file_path(data_list=data_list,
                                             prefix=args.data_dir_path)
-
-
     write_to_file(path=args.file_write_path,
                   data_list=data_list,
                   label0_list=label0_list,

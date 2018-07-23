@@ -54,15 +54,15 @@ input_args = [
     'CASIA_64/HandWritingData/CASIA-HWDB2.1/',
 
               '--file_list_txt_content', # file list of the standard data
-    '../FileList/StandardChars/char_0_3754_gb2312l1.txt,'
-    '../FileList/StandardChars/char_0_3754_gb2312l2.txt,'
-    '../FileList/PrintedData/Printed15SelectedFonts_gb2312l1l2.txt',
+    '../FileList/StandardChars/Char_0_3754_GB2312L1.txt,'
+    '../FileList/StandardChars/Char_3755_6762_GB2312L2.txt,'
+    '../FileList/PrintedData/Char_0_6762_Font_Selected15_Printed_Fonts_GB2312L1L2.txt',
 
               '--file_list_txt_style_train', # file list of the training data
-    '../FileList/HandWritingData/char_0_29_writer_1001_1005_gb2312l1_isolated.txt',
+    '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt',
 
               '--file_list_txt_style_validation', # file list of the validation data
-    '../FileList/HandWritingData/char_0_29_writer_1001_1005_gb2312l1_cursive.txt',
+    '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Cursive.txt',
 
               # pre-trained feature extractor to build the feature loss for the generator
               '--feature_extractor','extr_vgg16net',

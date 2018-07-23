@@ -130,43 +130,48 @@ class Dataset_Iterator(object):
             content_label1_list.append(cpy.deepcopy(self.true_style.label1_list))
 
         label0_vec = np.unique(self.true_style.label0_list)
+        delete_add = 0
         for label0 in label0_vec:
             current_label0_indices_on_the_style_data = [ii for ii in range(len(self.true_style.label0_list)) if self.true_style.label0_list[ii] == label0]
 
-            tmp_indices = list()
+            valid_label0 = True
             for kk in range(len(content_prototype_list)):
-                if label0 in content_prototype_list[kk].label0_list:
-                    tmp_indices.append(content_prototype_list[kk].label0_list.index(label0))
-                else:
-                    tmp_indices.append(-1)
-
-            for ii in range(len(content_prototype_list)):
-                current_prototype_dataset = content_prototype_list[ii]
-                if not tmp_indices[ii]==-1:
-                    current_label0_index_on_the_content_prototype_data = current_prototype_dataset.label0_list.index(label0)
+                if not label0 in content_prototype_list[kk].label0_list:
+                    valid_label0 = False
+                    break
+            if not valid_label0:
+                delete_add += 1
+                delete_counter = 0
+                current_label0_indices_on_the_style_data.sort()
+                for iii in current_label0_indices_on_the_style_data:
+                    del self.true_style.label0_list[iii-delete_counter]
+                    del self.true_style.label1_list[iii-delete_counter]
+                    del self.true_style.data_list[iii-delete_counter]
+                    for jjj in range(len(self.style_reference_list)):
+                        del self.style_reference_list[jjj].label0_list[iii-delete_counter]
+                        del self.style_reference_list[jjj].label1_list[iii-delete_counter]
+                        del self.style_reference_list[jjj].data_list[iii-delete_counter]
+                    delete_counter+=1
+                print(print_marks+'Delete Label0:%d(Counter:%d) with %d samples' % (label0, delete_add, len(current_label0_indices_on_the_style_data)))
+                continue
+            else:
+                current_label0_indices_on_the_style_data = [ii for ii in range(len(self.true_style.label0_list)) if self.true_style.label0_list[ii] == label0]
+                for ii in range(len(content_prototype_list)):
+                    current_prototype_dataset = content_prototype_list[ii]
+                    current_label0_index_on_the_content_prototype_data = current_prototype_dataset.label0_list.index(
+                        label0)
                     for jj in current_label0_indices_on_the_style_data:
                         content_data_list[ii][jj] = current_prototype_dataset.data_list[current_label0_index_on_the_content_prototype_data]
                         content_label0_list[ii][jj] = current_prototype_dataset.label0_list[current_label0_index_on_the_content_prototype_data]
                         content_label1_list[ii][jj] = current_prototype_dataset.label1_list[current_label0_index_on_the_content_prototype_data]
-                else:
-                    found_valid_indices = False
-                    while not found_valid_indices:
-                        selected_index = rnd.sample(range(len(tmp_indices)),1)[0]
-                        selected_tmp = tmp_indices[selected_index]
-                        if not selected_tmp == -1:
-                            found_valid_indices=True
-                            current_label0_index_on_the_content_prototype_data = content_prototype_list[selected_index].label0_list.index(label0)
-                            for jj in current_label0_indices_on_the_style_data:
-                                content_data_list[ii][jj] = content_prototype_list[selected_index].data_list[current_label0_index_on_the_content_prototype_data]
-                                content_label0_list[ii][jj] = content_prototype_list[selected_index].label0_list[current_label0_index_on_the_content_prototype_data]
-                                content_label1_list[ii][jj] = content_prototype_list[selected_index].label1_list[current_label0_index_on_the_content_prototype_data]
 
-
-
-            if time.time() - find_start > info_print_interval or label0 == label0_vec[0] or label0_counter == len(label0_vec) - 1:
-                print(print_marks + 'FindingCorrespondendingContentPrototype_BasedOnLabel0:%d/%d' % (label0_counter + 1, len(label0_vec)))
-                find_start = time.time()
+                if time.time() - find_start > info_print_interval or label0 == label0_vec[0] or label0_counter == len(
+                        label0_vec) - 1:
+                    print(print_marks + 'FindingCorrespondendingContentPrototype_BasedOnLabel0:%d/%d' % (
+                    label0_counter + 1, len(label0_vec)))
+                    find_start = time.time()
             label0_counter += 1
+
 
         self.content_prototype_list = content_prototype_list
         for ii in range(len(content_prototype_list)):
