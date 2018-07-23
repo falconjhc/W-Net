@@ -130,7 +130,8 @@ class Dataset_Iterator(object):
             content_label1_list.append(cpy.deepcopy(self.true_style.label1_list))
 
         label0_vec = np.unique(self.true_style.label0_list)
-        delete_add = 0
+        delete_label_add = 0
+        delete_data_add = 0
         for label0 in label0_vec:
             current_label0_indices_on_the_style_data = [ii for ii in range(len(self.true_style.label0_list)) if self.true_style.label0_list[ii] == label0]
 
@@ -140,7 +141,8 @@ class Dataset_Iterator(object):
                     valid_label0 = False
                     break
             if not valid_label0:
-                delete_add += 1
+                delete_label_add += 1
+                delete_data_add += len(current_label0_indices_on_the_style_data)
                 delete_counter = 0
                 current_label0_indices_on_the_style_data.sort()
                 for iii in current_label0_indices_on_the_style_data:
@@ -151,8 +153,8 @@ class Dataset_Iterator(object):
                         del self.style_reference_list[jjj].label0_list[iii-delete_counter]
                         del self.style_reference_list[jjj].label1_list[iii-delete_counter]
                         del self.style_reference_list[jjj].data_list[iii-delete_counter]
-                    delete_counter+=1
-                print(print_marks+'Delete Label0:%d(Counter:%d) with %d samples' % (label0, delete_add, len(current_label0_indices_on_the_style_data)))
+                    delete_counter += 1
+
                 continue
             else:
                 current_label0_indices_on_the_style_data = [ii for ii in range(len(self.true_style.label0_list)) if self.true_style.label0_list[ii] == label0]
@@ -167,8 +169,10 @@ class Dataset_Iterator(object):
 
                 if time.time() - find_start > info_print_interval or label0 == label0_vec[0] or label0_counter == len(
                         label0_vec) - 1:
-                    print(print_marks + 'FindingCorrespondendingContentPrototype_BasedOnLabel0:%d/%d' % (
-                    label0_counter + 1, len(label0_vec)))
+                    print(print_marks + ' FindingCorrespondendingContentPrototype_BasedOnLabel0:%d/%d' %
+                          (label0_counter + 1, len(label0_vec)))
+                    print(print_marks + ' Deleted %d Label0s with %d samples' %
+                          (delete_label_add, delete_data_add))
                     find_start = time.time()
             label0_counter += 1
 
@@ -478,8 +482,8 @@ class DataProvider(object):
         train_style_label1_list, train_style_label0_list, train_style_data_path_list = \
             self.data_file_list_read(file_list_txt=file_list_txt_style_train,
                                      file_data_dir=style_train_data_dir)
-        self.style_label1_vec = np.unique(train_style_label1_list)
-        self.style_label0_vec = np.unique(train_style_label0_list)
+        # self.style_label1_vec = np.unique(train_style_label1_list)
+        # self.style_label0_vec = np.unique(train_style_label0_list)
 
         train_style_reference_list = list()
         for ii in range(self.style_input_num):
@@ -511,13 +515,14 @@ class DataProvider(object):
                                                style_input_num=self.style_input_num,
                                                info_print_interval=info_print_interval,
                                                print_marks='ForTrainIterator:')
+        self.style_label1_vec = np.unique(self.train_iterator.true_style.label1_list)
+        self.style_label0_vec = np.unique(self.train_iterator.true_style.label0_list)
 
         # building for style data set for validation
         validation_style_label1_list, validation_style_label0_list, validation_style_data_path_list = \
             self.data_file_list_read(file_list_txt=file_list_txt_style_validation,
                                      file_data_dir=style_validation_data_dir)
-        self.style_label1_vec = np.unique(train_style_label1_list)
-        self.style_label0_vec = np.unique(train_style_label0_list)
+
 
         validation_style_reference_list = list()
         for ii in range(self.style_input_num):
