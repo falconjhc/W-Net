@@ -93,11 +93,11 @@ input_args = [
               # penalties
               '--generator_weight_decay_penalty','0.0001',
               '--discriminator_weight_decay_penalty','0.0003',
-              '--L1_Penalty','50',
+              '--L1_Penalty','100',
               '--Feature_Penalty','80',
               '--Lconst_content_Penalty','3',
               '--Lconst_style_Penalty','5',
-              '--Discriminative_Penalty', '3',
+              '--Discriminative_Penalty', '15',
               '--Discriminator_Categorical_Penalty', '1',
               '--Generator_Categorical_Penalty', '0.2',
               '--Discriminator_Gradient_Penalty', '10']
