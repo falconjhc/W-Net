@@ -35,30 +35,32 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--experiment_id','20180723_StyleHw50_ContentPf32',# experiment name prefix
+              '--experiment_id','20180724_StylePf50_ContentPf32+Hw32',# experiment name prefix
               '--experiment_dir','../../Exp_MSMC', # model saving location
               '--log_dir','tfLogs_MSMC/',# log file saving location
               '--print_info_seconds','900',
 
               '--content_data_dir', # standard data location
+    'CASIA_64/HandWritingData/CASIA-HWDB1.1/,'
+    'CASIA_64/HandWritingData/CASIA-HWDB2.1/,'
     'CASIA_64/PrintedData/',
 
               '--style_train_data_dir', # training data location
-    'CASIA_64/HandWritingData/CASIA-HWDB1.1/,'
-    'CASIA_64/HandWritingData/CASIA-HWDB2.1/',
+    'CASIA_64/PrintedData/GB2312_L1/',
 
               '--style_validation_data_dir',# validation data location
-    'CASIA_64/HandWritingData/CASIA-HWDB2.1/',
+    'CASIA_64/PrintedData/GB2312_L1/',
 
               '--file_list_txt_content', # file list of the standard data
+    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt,'
+    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt,'
     '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1L2.txt',
-
+    
               '--file_list_txt_style_train', # file list of the training data
-    '../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated.txt,'
-    '../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive.txt',
+    '../FileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1.txt',
 
               '--file_list_txt_style_validation', # file list of the validation data
-    '../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
+    '../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt',
 
               # pre-trained feature extractor to build the feature loss for the generator
               '--feature_extractor','extr_vgg16net',
@@ -68,7 +70,7 @@ input_args = [
 
               # generator && discriminator
               '--generator_residual_at_layer','3',
-              '--generator_residual_blocks','1',
+              '--generator_residual_blocks','5',
               '--discriminator','DisMdy6conv',
 
               '--batch_size','32',
