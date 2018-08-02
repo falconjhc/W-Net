@@ -13,7 +13,6 @@ from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-
 exp_root_path = '/DataA/Harric/MSMC_Exp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
@@ -21,16 +20,11 @@ exp_root_path = '/DataA/Harric/MSMC_Exp/'
 # OPTIONS SPECIFICATION
 # resume_training = 0: training from stratch
 #                   1: training from a based model
-# training_mode = StyleInit:
-#               = StyleReTrain:
-#               = FineTuneClassifier: FOR DISCRIMINATOR FINE TUNE ON THE CATEGORY LOSS
 input_args = [
-              '--training_from_model_dir',
-    '../../Exp_MSMC/checkpoint/Exp20180717_StyleHw50_ContentPfSelected15+PfStandard1_StyleAdd_ExtrcVgg16_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
-              '--debug_mode','1',
+              '--debug_mode','0',
               '--style_input_number','4', # how many style inputs
               '--init_training_epochs','5',
-              '--final_training_epochs','25',
+              '--final_training_epochs','250',
 
               '--generator_device','/device:GPU:0',
               '--discriminator_device', '/device:GPU:0',
@@ -38,37 +32,39 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--experiment_id','20180410',# experiment name prefix
-              '--experiment_dir','../../Exp_MSMC', # model saving location
+              '--experiment_id','20180725_StyleHw100_ContentPf32+Hw32',# experiment name prefix
+              '--experiment_dir','../../../Exp_MSMC', # model saving location
               '--log_dir','tfLogs_MSMC/',# log file saving location
-              '--print_info_seconds','3',
+              '--print_info_seconds','900',
 
               '--content_data_dir', # standard data location
-    'CASIA_64/StandardChars/GB2312_L1/,'
-    'CASIA_64/StandardChars/GB2312_L2/,'
+    'CASIA_64/HandWritingData/CASIA-HWDB1.1/,'
+    'CASIA_64/HandWritingData/CASIA-HWDB2.1/,'
     'CASIA_64/PrintedData/',
 
               '--style_train_data_dir', # training data location
-    'CASIA_64/HandWritingData/CASIA-HWDB1.1/',
+    'CASIA_64/HandWritingData/CASIA-HWDB1.1/,'
+    'CASIA_64/HandWritingData/CASIA-HWDB2.1/',
 
               '--style_validation_data_dir',# validation data location
     'CASIA_64/HandWritingData/CASIA-HWDB2.1/',
 
               '--file_list_txt_content', # file list of the standard data
-    '../FileList/StandardChars/Char_0_3754_GB2312L1.txt,'
-    '../FileList/StandardChars/Char_3755_6762_GB2312L2.txt,'
-    '../FileList/PrintedData/Char_0_6762_Font_Selected15_Printed_Fonts_GB2312L1L2.txt',
-
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt,'
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt,'
+    '../../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1L2.txt',
+    
               '--file_list_txt_style_train', # file list of the training data
-    '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt',
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated.txt,'
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive.txt',
 
               '--file_list_txt_style_validation', # file list of the validation data
-    '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Cursive.txt',
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
 
               # pre-trained feature extractor to build the feature loss for the generator
               '--feature_extractor','extr_vgg16net',
               '--feature_extractor_model_dir',
-    'CASIA_64/TrainedModel_ExtraNet_WithWeightDecay/Exp20180514_Hw50_vgg16net/variables/',
+    'TrainedModel_ExtraNet_WithWeightDecay/Exp20180514_Hw50_vgg16net/variables/',
 
 
               # generator && discriminator
@@ -76,13 +72,13 @@ input_args = [
               '--generator_residual_blocks','1',
               '--discriminator','DisMdy6conv',
 
-              '--batch_size','4',
+              '--batch_size','32',
               '--img_width','64',
               '--channels','1',
 
               # optimizer parameters
-              '--init_lr','0.0001',
-              '--epoch','50',
+              '--init_lr','0.0005',
+              '--epoch','1000',
               '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
 
               '--optimization_method','adam',
@@ -92,11 +88,11 @@ input_args = [
               # penalties
               '--generator_weight_decay_penalty','0.0001',
               '--discriminator_weight_decay_penalty','0.0003',
-              '--L1_Penalty','5',
-              '--Feature_Penalty','0',
-              '--Lconst_content_Penalty','5',
-              '--Lconst_style_Penalty','3',
-              '--Discriminative_Penalty', '3',
+              '--L1_Penalty','100',
+              '--Feature_Penalty','80',
+              '--Lconst_content_Penalty','3',
+              '--Lconst_style_Penalty','5',
+              '--Discriminative_Penalty', '15',
               '--Discriminator_Categorical_Penalty', '1',
               '--Generator_Categorical_Penalty', '0.2',
               '--Discriminator_Gradient_Penalty', '10']
