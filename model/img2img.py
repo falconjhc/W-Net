@@ -2067,10 +2067,10 @@ class Img2Img(object):
         # information output intervals
 
         if self.debug_mode == 1:
-            self.sample_seconds = 3
-            self.summary_seconds = 3
-            self.record_seconds = 3
-            self.print_info_seconds = 3
+            self.sample_seconds = 5
+            self.summary_seconds = 5
+            self.record_seconds = 5
+            self.print_info_seconds = 5
         else:
             self.summary_seconds = self.print_info_seconds * 1
             self.sample_seconds = self.print_info_seconds * 7
