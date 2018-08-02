@@ -2064,7 +2064,6 @@ class Img2Img(object):
         print(self.print_separater)
 
     def train_procedures(self):
-        # information output intervals
 
         if self.debug_mode == 1:
             self.sample_seconds = 5
