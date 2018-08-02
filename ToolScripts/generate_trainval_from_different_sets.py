@@ -16,7 +16,7 @@ input_args = [
 
               '--data_type','SINGLE', # 'SINGLE' or STANDARD'
               '--data_dir_path','/DataA/Harric/MSMC_Exp/CASIA_64/PrintedData/',
-              '--file_write_path', '../FileList/PrintedData/Char_0_3755_Writer_Selected32_Printed_Fonts_GB2312L1L2.txt',
+              '--file_write_path', '../FileList/PrintedData/Char_0_3755_Font_Selected15_Printed_Fonts_GB2312L1.txt',
 
 
 
@@ -25,7 +25,7 @@ input_args = [
               # '--file_write_path', '../FileList/StandardChars/char_0_3754',
 
               '--label0','0:1:3754',
-              '--label1','14,16,17,18,26,27,29,30,32,35,37,38,41,42,46,47,49,52,55,57,59,63,65,67,68,70,71,72,74,76,78,79']
+              '--label1','13,14,15,16,17,18,20,21,22,23,25,26,27,29,30']
 
 
 

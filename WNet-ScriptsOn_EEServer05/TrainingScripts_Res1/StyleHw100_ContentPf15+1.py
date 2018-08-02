@@ -21,8 +21,6 @@ exp_root_path = '/DataA/Harric/MSMC_Exp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
-              #'--training_from_model_dir',
-    #'../../Exp_MSMC/checkpoint/Exp20180720_StyleHw100_ContentPfSelected15+PfStandard1_StyleAdd_ExtrcVgg16_GenEncDec6-Res1@Lyr3_DisMdy6conv/',
               '--debug_mode','0',
               '--style_input_number','16', # how many style inputs
               '--init_training_epochs','3',
@@ -54,7 +52,7 @@ input_args = [
               '--file_list_txt_content', # file list of the standard data
     '../../FileList/StandardChars/Char_0_3754_GB2312L1.txt,'
     '../../FileList/StandardChars/Char_3755_6762_GB2312L2.txt,'
-    '../../FileList/PrintedData/Char_0_6762_Font_Selected15_Printed_Fonts_GB2312L1L2.txt',
+    '../../FileList/PrintedData/Char_0_3755_Font_Selected15_Printed_Fonts_GB2312L1.txt',
 
               '--file_list_txt_style_train', # file list of the training data
     '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1200_Isolated.txt,'

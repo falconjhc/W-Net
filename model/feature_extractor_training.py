@@ -122,12 +122,12 @@ def train_procedures(args_input):
 
         data_provider = DataProvider(batch_size=batch_size,
                                      image_width=args_input.image_size,
-                                     data_dir_train_path=args_input.data_dir_train_path.split(','),
-                                     data_dir_validation_path=args_input.data_dir_validation_path.split(','),
+                                     data_dir_train_path=args_input.data_dir_train_path,
+                                     data_dir_validation_path=args_input.data_dir_validation_path,
                                      epoch_num=epoch_num,
                                      input_filters=args_input.image_filters,
-                                     file_list_txt_path_train=args_input.file_list_txt_train.split(','),
-                                     file_list_txt_path_validation=args_input.file_list_txt_validation.split(','),
+                                     file_list_txt_path_train=args_input.file_list_txt_train,
+                                     file_list_txt_path_validation=args_input.file_list_txt_validation,
                                      cheat_mode=args_input.cheat_mode, sess=sess)
 
         cpu, gpu, cpu_num, gpu_num = get_available_gpus()
