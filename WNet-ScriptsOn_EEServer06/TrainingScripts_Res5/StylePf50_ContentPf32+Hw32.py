@@ -7,7 +7,7 @@ from tensorflow.python.client import device_lib
 import argparse
 import sys
 import os
-sys.path.append('..')
+sys.path.append('../../')
 
 from model.wnet import WNet as WNET
 eps = 1e-9
@@ -59,11 +59,6 @@ input_args = [
               '--file_list_txt_style_validation', # file list of the validation data
     '../../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt',
 
-              # pre-trained feature extractor to build the feature loss for the generator
-              '--feature_extractor','extr_vgg16net',
-              '--feature_extractor_model_dir',
-    'TrainedModel_ExtraNet_WithWeightDecay/Exp20180514_Hw50_vgg16net/variables/',
-
 
               # generator && discriminator
               '--generator_residual_at_layer','3',
@@ -87,13 +82,24 @@ input_args = [
               '--generator_weight_decay_penalty','0.0001',
               '--discriminator_weight_decay_penalty','0.0003',
               '--L1_Penalty','100',
-              '--Feature_Penalty','80',
               '--Lconst_content_Penalty','3',
               '--Lconst_style_Penalty','5',
               '--Discriminative_Penalty', '15',
               '--Discriminator_Categorical_Penalty', '1',
               '--Generator_Categorical_Penalty', '0.2',
-              '--Discriminator_Gradient_Penalty', '10']
+              '--Discriminator_Gradient_Penalty', '10',
+
+
+              # feature extractor parametrers
+              '--true_fake_target_extractor_dir',
+    'TrainedModel/ContentStyleBoth/Exp20180802_FeatureExtractor_StyleContent_PF50_vgg16net/variables/',
+              '--content_prototype_extractor_dir',
+    'TrainedModel/ContentOnly/Exp20180802_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
+              '--style_reference_extractor_dir',
+    'TrainedModel/StyleOnly/Exp20180802_FeatureExtractor_Style_PF50_vgg16net/variables/',
+              '--Feature_Penalty_True_Fake_Target', '100',
+              '--Feature_Penalty_Style_Reference','150',
+              '--Feature_Penalty_Content_Prototype','50']
 
 
 
@@ -125,9 +131,10 @@ parser.add_argument('--discriminator', dest='discriminator', type=str, required=
 parser.add_argument('--discriminator_device', dest='discriminator_device',type=str,required=True)
 
 
-parser.add_argument('--feature_extractor', dest='feature_extractor', type=str, required=True)
 parser.add_argument('--feature_extractor_device', dest='feature_extractor_device',type=str,required=True)
-parser.add_argument('--feature_extractor_model_dir', dest='feature_extractor_model_dir', type=str, required=True)
+parser.add_argument('--true_fake_target_extractor_dir', dest='true_fake_target_extractor_dir', type=str, required=True)
+parser.add_argument('--style_reference_extractor_dir', dest='style_reference_extractor_dir', type=str, required=True)
+parser.add_argument('--content_prototype_extractor_dir', dest='content_prototype_extractor_dir', type=str, required=True)
 
 
 
@@ -147,7 +154,6 @@ parser.add_argument('--img_width',dest='img_width',type=int,required=True)
 
 # for losses setting
 parser.add_argument('--L1_Penalty', dest='L1_Penalty', type=int, required=True)
-parser.add_argument('--Feature_Penalty', dest='Feature_Penalty', type=int, required=True)
 parser.add_argument('--Lconst_content_Penalty', dest='Lconst_content_Penalty', type=int, required=True)
 parser.add_argument('--Lconst_style_Penalty', dest='Lconst_style_Penalty', type=int, required=True)
 parser.add_argument('--Discriminative_Penalty', dest='Discriminative_Penalty', type=int, required=True)
@@ -156,6 +162,11 @@ parser.add_argument('--Generator_Categorical_Penalty', dest='Generator_Categoric
 parser.add_argument('--Discriminator_Gradient_Penalty', dest='Discriminator_Gradient_Penalty', type=int, required=True)
 parser.add_argument('--generator_weight_decay_penalty', dest='generator_weight_decay_penalty', type=float, required=True)
 parser.add_argument('--discriminator_weight_decay_penalty', dest='discriminator_weight_decay_penalty', type=float, required=True)
+
+
+parser.add_argument('--Feature_Penalty_True_Fake_Target', dest='Feature_Penalty_True_Fake_Target', type=int, required=True)
+parser.add_argument('--Feature_Penalty_Style_Reference', dest='Feature_Penalty_Style_Reference', type=int, required=True)
+parser.add_argument('--Feature_Penalty_Content_Prototype', dest='Feature_Penalty_Content_Prototype', type=int, required=True)
 
 
 # training param setting
@@ -210,12 +221,9 @@ def main(_):
     selected_device_list.append(generator_device)
     selected_device_list.append(discriminator_device)
 
-
-    if args.Feature_Penalty > 10*eps \
-        and not args.feature_extractor_device =='None' \
-        and not args.feature_extractor == 'None' \
-        and not args.feature_extractor_model_dir == 'None':
-
+    if args.Feature_Penalty_True_Fake_Target > 10*eps or \
+            args.Feature_Penalty_True_Fake_Target > 10*eps or \
+            args.Feature_Penalty_True_Fake_Target > 10*eps:
         if not available_gpu_num==0:
             feature_extractor_device = args.feature_extractor_device
         else:
@@ -223,9 +231,6 @@ def main(_):
         selected_device_list.append(feature_extractor_device)
     else:
         feature_extractor_device = 'None'
-        args.feature_extractor = 'None'
-        args.feature_extractor_model_dir = 'None'
-        args.Feature_Penalty = 0
 
 
     if not available_gpu_num == 0:
@@ -261,52 +266,55 @@ def main(_):
         style_validation_data_dir[ii] = os.path.join(exp_root_path, style_validation_data_dir[ii])
 
     model = WNET(debug_mode=args.debug_mode,
-                    print_info_seconds=args.print_info_seconds,
-                    experiment_dir=args.experiment_dir, experiment_id=args.experiment_id,
-                    log_dir=os.path.join(exp_root_path, args.log_dir),
-                    training_from_model=args.training_from_model_dir,
-                    train_data_augment=args.train_data_augment,
-                    style_input_number=args.style_input_number,
+                 print_info_seconds=args.print_info_seconds,
+                 experiment_dir=args.experiment_dir, experiment_id=args.experiment_id,
+                 log_dir=os.path.join(exp_root_path, args.log_dir),
+                 training_from_model=args.training_from_model_dir,
+                 train_data_augment=args.train_data_augment,
+                 style_input_number=args.style_input_number,
 
-                    content_data_dir=content_data_dir,
-                    style_train_data_dir=style_train_data_dir,
-                    style_validation_data_dir=style_validation_data_dir,
-                    file_list_txt_content=args.file_list_txt_content.split(','),
-                    file_list_txt_style_train=args.file_list_txt_style_train.split(','),
-                    file_list_txt_style_validation=args.file_list_txt_style_validation.split(','),
-                    channels=args.channels,
-                    epoch=args.epoch,
-                    init_training_epochs=args.init_training_epochs,
-                    final_training_epochs=args.final_training_epochs,
+                 content_data_dir=content_data_dir,
+                 style_train_data_dir=style_train_data_dir,
+                 style_validation_data_dir=style_validation_data_dir,
+                 file_list_txt_content=args.file_list_txt_content.split(','),
+                 file_list_txt_style_train=args.file_list_txt_style_train.split(','),
+                 file_list_txt_style_validation=args.file_list_txt_style_validation.split(','),
+                 channels=args.channels, epoch=args.epoch,
+                 init_training_epochs=args.init_training_epochs,
+                 final_training_epochs=args.final_training_epochs,
 
-                    optimization_method=args.optimization_method,
+                 optimization_method=args.optimization_method,
 
-                    batch_size=args.batch_size, img_width=args.img_width,
-                    lr=args.init_lr, final_learning_rate_pctg=args.final_learning_rate_pctg,
+                 batch_size=args.batch_size, img_width=args.img_width,
+                 lr=args.init_lr, final_learning_rate_pctg=args.final_learning_rate_pctg,
 
-                    L1_Penalty=args.L1_Penalty,
-                    Feature_Penalty=args.Feature_Penalty,
-                    Lconst_content_Penalty=args.Lconst_content_Penalty,
-                    Lconst_style_Penalty=args.Lconst_style_Penalty,
-                    Discriminative_Penalty=args.Discriminative_Penalty,
-                    Discriminator_Categorical_Penalty=args.Discriminator_Categorical_Penalty,
-                    Generator_Categorical_Penalty=args.Generator_Categorical_Penalty,
-                    Discriminator_Gradient_Penalty=args.Discriminator_Gradient_Penalty,
-                    generator_weight_decay_penalty=args.generator_weight_decay_penalty,
-                    discriminator_weight_decay_penalty=args.discriminator_weight_decay_penalty,
+                 L1_Penalty=args.L1_Penalty,
+                 Lconst_content_Penalty=args.Lconst_content_Penalty,
+                 Lconst_style_Penalty=args.Lconst_style_Penalty,
+                 Discriminative_Penalty=args.Discriminative_Penalty,
+                 Discriminator_Categorical_Penalty=args.Discriminator_Categorical_Penalty,
+                 Generator_Categorical_Penalty=args.Generator_Categorical_Penalty,
+                 Discriminator_Gradient_Penalty=args.Discriminator_Gradient_Penalty,
+                 generator_weight_decay_penalty=args.generator_weight_decay_penalty,
+                 discriminator_weight_decay_penalty=args.discriminator_weight_decay_penalty,
 
-                    resume_training=args.resume_training,
+                 Feature_Penalty_True_Fake_Target=args.Feature_Penalty_True_Fake_Target,
+                 Feature_Penalty_Style_Reference=args.Feature_Penalty_Style_Reference,
+                 Feature_Penalty_Content_Prototype=args.Feature_Penalty_Content_Prototype,
 
-                    generator_devices=generator_device,
-                    discriminator_devices=discriminator_device,
-                    feature_extractor_devices=feature_extractor_device,
+                 resume_training=args.resume_training,
 
-                    generator_residual_at_layer=args.generator_residual_at_layer,
-                    generator_residual_blocks=args.generator_residual_blocks,
-                    discriminator=args.discriminator,
-                    feature_extractor=args.feature_extractor,
-                    feature_extractor_model_dir=os.path.join(exp_root_path, args.feature_extractor_model_dir),
-                    )
+                 generator_devices=generator_device,
+                 discriminator_devices=discriminator_device,
+                 feature_extractor_devices=feature_extractor_device,
+
+                 generator_residual_at_layer=args.generator_residual_at_layer,
+                 generator_residual_blocks=args.generator_residual_blocks,
+                 discriminator=args.discriminator,
+                 true_fake_target_extractor_dir=os.path.join(exp_root_path, args.true_fake_target_extractor_dir),
+                 content_prototype_extractor_dir=os.path.join(exp_root_path, args.content_prototype_extractor_dir),
+                 style_reference_extractor_dir = os.path.join(exp_root_path, args.style_reference_extractor_dir)
+                 )
 
 
     model.train_procedures()

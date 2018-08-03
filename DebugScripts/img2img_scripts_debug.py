@@ -60,13 +60,6 @@ input_args = [
               '--file_list_txt_style_validation', # file list of the validation data
     '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Cursive.txt',
 
-              # pre-trained feature extractor to build the feature loss for the generator
-              '--true_fake_target_extractor_dir',
-    'TrainedModel_ExtraNet_WithWeightDecay/Exp20180514_Hw50_vgg16net/variables/',
-              '--content_prototype_extractor_dir',
-    'TrainedModel_ExtraNet_WithWeightDecay/Exp20180514_Hw50_vgg16net/variables/',
-              '--style_reference_extractor_dir',
-    'TrainedModel_ExtraNet_WithWeightDecay/Exp20180514_Hw50_vgg16net/variables/',
 
 
               # generator && discriminator
@@ -98,7 +91,14 @@ input_args = [
               '--Generator_Categorical_Penalty', '0.2',
               '--Discriminator_Gradient_Penalty', '10',
 
-              '--Feature_Penalty_True_Fake_Target', '100',
+              # feature extractor parametrers
+              '--true_fake_target_extractor_dir',
+    'TrainedModel/ContentStyleBoth/Exp20180802_FeatureExtractor_StyleContent_HW50_vgg16net/variables/',
+              '--content_prototype_extractor_dir',
+    'TrainedModel/ContentOnly/Exp20180802_FeatureExtractor_Content_PF15+Standard1_vgg16net/variables/',
+              '--style_reference_extractor_dir',
+    'TrainedModel/StyleOnly/Exp20180802_FeatureExtractor_Style_HW50_vgg16net/variables/',
+    		  '--Feature_Penalty_True_Fake_Target', '100',
               '--Feature_Penalty_Style_Reference','150',
               '--Feature_Penalty_Content_Prototype','50']
 
