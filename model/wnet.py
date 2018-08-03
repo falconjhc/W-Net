@@ -4,7 +4,6 @@ from __future__ import absolute_import
 GRAYSCALE_AVG = 127.5
 
 import matplotlib
-# matplotlib.use('Agg')
 
 FULL_CHARACTER_NUM = 3755
 
@@ -290,15 +289,15 @@ class WNet(object):
                 entropy = tf.nn.softmax_cross_entropy_with_logits(logits=infer_logits, labels=tf.nn.softmax(infer_logits))
                 entropy = tf.reduce_mean(entropy)
 
-        trn_acry_real = tf.summary.scalar("Acry_FeatureExtractor_Train_Real", acry)
-        val_acry_real = tf.summary.scalar("Acry_FeatureExtractor_Test_Real", acry)
-        trn_enpy_real = tf.summary.scalar("Enpy_FeatureExtractor_Train_Real", entropy)
-        val_enpy_real = tf.summary.scalar("Enpy_FeatureExtractor_Test_Real", entropy)
+        trn_acry_real = tf.summary.scalar("Accuracy_FeatureExtractor/Train_Real", acry)
+        val_acry_real = tf.summary.scalar("Accuracy_FeatureExtractor/Test_Real", acry)
+        trn_enpy_real = tf.summary.scalar("Entropy_FeatureExtractor/Train_Real", entropy)
+        val_enpy_real = tf.summary.scalar("Entropy_FeatureExtractorTest_Real", entropy)
 
-        trn_acry_fake = tf.summary.scalar("Acry_FeatureExtractor_Train_Fake", acry)
-        val_acry_fake = tf.summary.scalar("Acry_FeatureExtractor_Test_Fake", acry)
-        trn_enpy_fake = tf.summary.scalar("Enpy_FeatureExtractor_Train_Fake", entropy)
-        val_enpy_fake = tf.summary.scalar("Enpy_FeatureExtractor_Test_Fake", entropy)
+        trn_acry_fake = tf.summary.scalar("Accuracy_FeatureExtractor/Train_Fake", acry)
+        val_acry_fake = tf.summary.scalar("Accuracy_FeatureExtractor/Test_Fake", acry)
+        trn_enpy_fake = tf.summary.scalar("Entropy_FeatureExtractorTrain_Fake", entropy)
+        val_enpy_fake = tf.summary.scalar("Entropy_FeatureExtractorTest_Fake", entropy)
 
         trn_real_merged = tf.summary.merge([trn_acry_real, trn_enpy_real])
         trn_fake_merged = tf.summary.merge([trn_acry_fake, trn_enpy_fake])
@@ -1260,7 +1259,7 @@ class WNet(object):
         feature_loss = calculate_high_level_feature_loss(feature1=real_features,
                                                          feature2=fake_features)
         feature_loss = feature_loss * self.Feature_Penalty / len(real_features)
-        feature_loss_summary = tf.summary.scalar("Loss_Features", tf.abs(feature_loss) / self.Feature_Penalty)
+        feature_loss_summary = tf.summary.scalar("Loss_FeatureExtractor/L2_Features", tf.abs(feature_loss) / self.Feature_Penalty)
 
         g_loss+=feature_loss
         g_merged_summary=tf.summary.merge([g_merged_summary,feature_loss_summary])
@@ -1454,7 +1453,7 @@ class WNet(object):
             for ii in generator_weight_decay_loss:
                 weight_decay_loss = ii + weight_decay_loss
             weight_decay_loss = weight_decay_loss / len(generator_weight_decay_loss)
-            generator_weight_decay_loss_summary = tf.summary.scalar("Loss_Generator_WeightDecay",
+            generator_weight_decay_loss_summary = tf.summary.scalar("Loss_Generator/WeightDecay",
                                                                     tf.abs(weight_decay_loss)/self.generator_weight_decay_penalty)
             g_loss += weight_decay_loss
             g_merged_summary = tf.summary.merge([g_merged_summary, generator_weight_decay_loss_summary])
@@ -1466,14 +1465,14 @@ class WNet(object):
             const_loss_content = tf.reduce_mean(const_loss_content) * self.Lconst_content_Penalty
             const_loss_content = const_loss_content / self.content_input_num
             g_loss += const_loss_content
-            const_content_loss_summary = tf.summary.scalar("Loss_ConstContentPrototype",
+            const_content_loss_summary = tf.summary.scalar("Loss_Generator/ConstContentPrototype",
                                                            tf.abs(const_loss_content) / self.Lconst_content_Penalty)
             g_merged_summary=tf.summary.merge([g_merged_summary, const_content_loss_summary])
         if self.Lconst_style_Penalty > eps * 10:
             current_const_loss_style = tf.square(encoded_style_reference_train - encoded_style_reference_generated_target)
             current_const_loss_style = tf.reduce_mean(current_const_loss_style) * self.Lconst_style_Penalty
             g_loss += current_const_loss_style
-            const_style_loss_summary = tf.summary.scalar("Loss_ConstStyleReference",
+            const_style_loss_summary = tf.summary.scalar("Loss_Generator/ConstStyleReference",
                                                          tf.abs(current_const_loss_style) / self.Lconst_style_Penalty)
             g_merged_summary=tf.summary.merge([g_merged_summary, const_style_loss_summary])
 
@@ -1483,7 +1482,7 @@ class WNet(object):
         if self.L1_Penalty > eps * 10:
             l1_loss = tf.abs(generated_target_train - true_style)
             l1_loss = tf.reduce_mean(l1_loss) * self.L1_Penalty
-            l1_loss_summary = tf.summary.scalar("Loss_L1_ReConstruction",
+            l1_loss_summary = tf.summary.scalar("Loss_Generator/L1_Pixel",
                                                 tf.abs(l1_loss) / self.L1_Penalty)
             g_loss+=l1_loss
             g_merged_summary = tf.summary.merge([g_merged_summary, l1_loss_summary])
@@ -1500,11 +1499,11 @@ class WNet(object):
             category_loss_style = tf.reduce_mean(category_loss_style) * self.Generator_Categorical_Penalty
             category_loss = (category_loss_content + category_loss_style) / 2.0
 
-            content_category_loss_summary = tf.summary.scalar("Loss_Generator_CategoryContentPrototype",
+            content_category_loss_summary = tf.summary.scalar("Loss_Generator/CategoryContentPrototype",
                                                              tf.abs(category_loss_content) / self.Generator_Categorical_Penalty)
-            style_category_loss_summary = tf.summary.scalar("Loss_Generator_CategoryStyleReference",
+            style_category_loss_summary = tf.summary.scalar("Loss_Generator/CategoryStyleReference",
                                                              tf.abs(category_loss_style) / self.Generator_Categorical_Penalty)
-            category_loss_summary = tf.summary.scalar("Loss_Generator_Category",
+            category_loss_summary = tf.summary.scalar("Loss_Generator/Category",
                                                       tf.abs(category_loss) / self.Generator_Categorical_Penalty)
             generator_category_loss_summary_merged = tf.summary.merge([category_loss_summary,
                                                                        content_category_loss_summary,
@@ -1542,14 +1541,14 @@ class WNet(object):
                 style_entropy = tf.reduce_mean(style_entropy)
 
 
-        train_content_accuracy = tf.summary.scalar("Acry_Generator_ContentPrototype_Train", content_accuracy)
-        test_content_accuracy = tf.summary.scalar("Acry_Generator_ContentPrototype_Test", content_accuracy)
-        train_style_accuracy = tf.summary.scalar("Acry_Generator_StyleReference_Train", style_accuracy)
-        test_style_accuracy = tf.summary.scalar("Acry_Generator_StyleReference_Test", style_accuracy)
-        train_content_entropy = tf.summary.scalar("Enpy_Generator_ContentPrototype_Train", content_entropy)
-        test_content_entropy = tf.summary.scalar("Enpy_Generator_ContentPrototype_Test", content_entropy)
-        train_style_entropy = tf.summary.scalar("Enpy_Generator_StyleReference_Train", style_entropy)
-        test_style_entropy = tf.summary.scalar("Enpy_Generator_StyleReference_Test", style_entropy)
+        train_content_accuracy = tf.summary.scalar("Accuracy_Generator/ContentPrototype_Train", content_accuracy)
+        test_content_accuracy = tf.summary.scalar("Accuracy_Generator/ContentPrototype_Test", content_accuracy)
+        train_style_accuracy = tf.summary.scalar("Accuracy_Generator/StyleReference_Train", style_accuracy)
+        test_style_accuracy = tf.summary.scalar("Accuracy_Generator/StyleReference_Test", style_accuracy)
+        train_content_entropy = tf.summary.scalar("Entropy_Generator/ContentPrototype_Train", content_entropy)
+        test_content_entropy = tf.summary.scalar("Entropy_Generator/ContentPrototype_Test", content_entropy)
+        train_style_entropy = tf.summary.scalar("Entropy_Generator/StyleReference_Train", style_entropy)
+        test_style_entropy = tf.summary.scalar("Entropy_Generator/StyleReference_Test", style_entropy)
 
         train_summary = tf.summary.merge([train_content_accuracy,train_style_accuracy,train_content_entropy,train_style_entropy])
         test_summary = tf.summary.merge([test_content_accuracy, test_style_accuracy, test_content_entropy, test_style_entropy])
@@ -1728,7 +1727,7 @@ class WNet(object):
             for ii in discriminator_weight_decay_loss:
                 weight_decay_loss += ii
             weight_decay_loss = weight_decay_loss / len(discriminator_weight_decay_loss)
-            discriminator_weight_decay_loss_summary = tf.summary.scalar("Loss_Discriminator_WeightDecay",
+            discriminator_weight_decay_loss_summary = tf.summary.scalar("Loss_Discriminator/WeightDecay",
                                                                         tf.abs(weight_decay_loss)/self.discriminator_weight_decay_penalty)
             d_loss += weight_decay_loss
             d_merged_summary = tf.summary.merge([d_merged_summary,
@@ -1746,11 +1745,11 @@ class WNet(object):
             category_loss = (real_category_loss + fake_category_loss) / 2.0
 
 
-            real_category_loss_summary = tf.summary.scalar("Loss_Discriminator_CategoryReal",
+            real_category_loss_summary = tf.summary.scalar("Loss_Discriminator/CategoryReal",
                                                            tf.abs(real_category_loss) / self.Discriminator_Categorical_Penalty)
-            fake_category_loss_summary = tf.summary.scalar("Loss_Discriminator_CategoryFake",
+            fake_category_loss_summary = tf.summary.scalar("Loss_Discriminator/CategoryFake",
                                                            tf.abs(fake_category_loss) / self.Discriminator_Categorical_Penalty)
-            category_loss_summary = tf.summary.scalar("Loss_Discriminator_Category", tf.abs(category_loss) / self.Discriminator_Categorical_Penalty)
+            category_loss_summary = tf.summary.scalar("Loss_Discriminator/Category", tf.abs(category_loss) / self.Discriminator_Categorical_Penalty)
 
             d_loss += category_loss
             d_merged_summary = tf.summary.merge([d_merged_summary,
@@ -1774,11 +1773,11 @@ class WNet(object):
             d_norm_fake_loss = tf.reduce_mean(d_norm_fake_loss) * current_critic_logit_penalty
             d_norm_loss = (d_norm_real_loss + d_norm_fake_loss) / 2
 
-            d_norm_real_loss_summary = tf.summary.scalar("Loss_CriticLogit_Norm_Real",
+            d_norm_real_loss_summary = tf.summary.scalar("Loss_Discriminator/CriticLogit_NormReal",
                                                          d_norm_real_loss / current_critic_logit_penalty)
-            d_norm_fake_loss_summary = tf.summary.scalar("Loss_CriticLogit_Norm_Fake",
+            d_norm_fake_loss_summary = tf.summary.scalar("Loss_Discriminator/CriticLogit_NormFake",
                                                          d_norm_fake_loss / current_critic_logit_penalty)
-            d_norm_loss_summary = tf.summary.scalar("Loss_CriticLogit_Norm", d_norm_loss / current_critic_logit_penalty)
+            d_norm_loss_summary = tf.summary.scalar("Loss_Discriminator/CriticLogit_Norm", d_norm_loss / current_critic_logit_penalty)
 
             d_loss += d_norm_loss
             d_merged_summary = tf.summary.merge([d_merged_summary,
@@ -1794,7 +1793,7 @@ class WNet(object):
             if self.Discriminator_Gradient_Penalty > 10 * eps:
                 d_gradient_loss = discriminator_slopes
                 d_gradient_loss = tf.reduce_mean(d_gradient_loss) * self.Discriminator_Gradient_Penalty
-                d_gradient_loss_summary = tf.summary.scalar("Loss_DiscriminatorGradient",
+                d_gradient_loss_summary = tf.summary.scalar("Loss_Discriminator/D_Gradient",
                                                             tf.abs(
                                                                 d_gradient_loss) / self.Discriminator_Gradient_Penalty)
                 d_loss += d_gradient_loss
@@ -1805,9 +1804,9 @@ class WNet(object):
             cheat_loss = fake_Discriminator_logits
 
 
-            d_loss_real_summary = tf.summary.scalar("Loss_DiscriminatorReal",
+            d_loss_real_summary = tf.summary.scalar("Loss_Discriminator/AdversarialReal",
                                                     tf.abs(d_loss_real) / self.Discriminative_Penalty)
-            d_loss_fake_summary = tf.summary.scalar("Loss_DiscriminatorFake",
+            d_loss_fake_summary = tf.summary.scalar("Loss_Discriminator/AdversarialFake",
                                                     tf.abs(d_loss_fake) / self.Discriminative_Penalty)
 
             d_loss += (d_loss_real+d_loss_fake)/2
@@ -1816,15 +1815,15 @@ class WNet(object):
                                                  d_loss_real_summary])
 
             cheat_loss = tf.reduce_mean(cheat_loss) * self.Discriminative_Penalty
-            cheat_loss_summary = tf.summary.scalar("Loss_Cheat", tf.abs(cheat_loss) / self.Discriminative_Penalty)
+            cheat_loss_summary = tf.summary.scalar("Loss_Discriminator/Cheat", tf.abs(cheat_loss) / self.Discriminative_Penalty)
             g_loss+=cheat_loss
             g_merged_summary=tf.summary.merge([g_merged_summary,cheat_loss_summary])
 
 
 
         # d_loss_final and g_loss_final
-        d_loss_summary = tf.summary.scalar("Loss_Discriminator_Total", tf.abs(d_loss))
-        g_loss_summary = tf.summary.scalar("Loss_Generator_Total", tf.abs(g_loss))
+        d_loss_summary = tf.summary.scalar("Loss_Discriminator/Total", tf.abs(d_loss))
+        g_loss_summary = tf.summary.scalar("Loss_Generator/Total", tf.abs(g_loss))
         d_merged_summary=tf.summary.merge([d_merged_summary,d_loss_summary])
         g_merged_summary = tf.summary.merge([g_merged_summary, g_loss_summary])
 
@@ -1846,15 +1845,15 @@ class WNet(object):
                 shanon_entropy = tf.reduce_mean(shanon_entropy)
 
 
-        trn_real_acry = tf.summary.scalar("Acry_Discriminator_Train_Real",accuracy_prediction_category)
-        trn_fake_acry = tf.summary.scalar("Acry_Discriminator_Train_Fake",accuracy_prediction_category)
-        val_real_acry = tf.summary.scalar("Acry_Discriminator_Test_Real",accuracy_prediction_category)
-        val_fake_acry = tf.summary.scalar("Acry_Discriminator_Test_Fake",accuracy_prediction_category)
+        trn_real_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_Train_Real",accuracy_prediction_category)
+        trn_fake_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_Train_Fake",accuracy_prediction_category)
+        val_real_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_Test_Real",accuracy_prediction_category)
+        val_fake_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_Test_Fake",accuracy_prediction_category)
 
-        trn_real_enty = tf.summary.scalar("Enpy_Discriminator_Train_Real", shanon_entropy)
-        trn_fake_enty = tf.summary.scalar("Enpy_Discriminator_Train_Fake", shanon_entropy)
-        val_real_enty = tf.summary.scalar("Enpy_Discriminator_Test_Real", shanon_entropy)
-        val_fake_enty = tf.summary.scalar("Enpy_Discriminator_Test_Fake", shanon_entropy)
+        trn_real_enty = tf.summary.scalar("Entropy_Discriminator/AuxiliaryClassifier_Train_Real", shanon_entropy)
+        trn_fake_enty = tf.summary.scalar("Entropy_Discriminator/AuxiliaryClassifier_Train_Fake", shanon_entropy)
+        val_real_enty = tf.summary.scalar("Entropy_Discriminator/AuxiliaryClassifier_Test_Real", shanon_entropy)
+        val_fake_enty = tf.summary.scalar("Entropy_Discriminator/AuxiliaryClassifier_Test_Fake", shanon_entropy)
 
         trn_real_summary = tf.summary.merge([trn_real_acry,
                                              trn_real_enty])
@@ -2100,10 +2099,6 @@ class WNet(object):
 
             self.involved_label0_list, self.involved_label1_list = data_provider.get_involved_label_list()
             self.content_input_num = data_provider.content_input_num
-            # self.involved_label0_list = range(0,3754,1)
-            # self.involved_label1_list = range(1100,1150,1)
-            # self.style_input_number = 16
-            # self.content_input_num = 16
             self.display_style_reference_num = np.min([4, self.style_input_number])
             self.display_content_reference_num = np.min([4, self.content_input_num])
 

@@ -25,8 +25,6 @@ exp_root_path = '/DataA/Harric/MSMC_Exp/'
 #               = StyleReTrain:
 #               = FineTuneClassifier: FOR DISCRIMINATOR FINE TUNE ON THE CATEGORY LOSS
 input_args = [
-              '--training_from_model_dir',
-    '../../Exp_MSMC/checkpoint/Exp20180717_StyleHw50_ContentPfSelected15+PfStandard1_StyleAdd_ExtrcVgg16_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
               '--debug_mode','1',
               '--style_input_number','4', # how many style inputs
               '--init_training_epochs','5',
@@ -38,7 +36,7 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--experiment_id','20180410',# experiment name prefix
+              '--experiment_id','DEBUG',# experiment name prefix
               '--experiment_dir','../../Exp_MSMC', # model saving location
               '--log_dir','tfLogs_MSMC/',# log file saving location
               '--print_info_seconds','3',
@@ -57,7 +55,7 @@ input_args = [
               '--file_list_txt_content', # file list of the standard data
     '../FileList/StandardChars/Char_0_3754_GB2312L1.txt,'
     '../FileList/StandardChars/Char_3755_6762_GB2312L2.txt,'
-    '../FileList/PrintedData/Char_0_6762_Font_Selected15_Printed_Fonts_GB2312L1L2.txt',
+    '../FileList/PrintedData/Char_0_3755_Font_Selected15_Printed_Fonts_GB2312L1.txt',
 
               '--file_list_txt_style_train', # file list of the training data
     '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt',
