@@ -821,142 +821,7 @@ def discriminator_mdy_6_convs_tower_version1(image,
 
 
 
-### implementation for externet as embedders
-def alexnet(image,
-            batch_size,
-            device,
-            label0_length,
-            label1_length,
-            keep_prob,
-            initializer,
-            reuse=False,
-            network_usage='-1'
-            ):
-    is_training = False
-    weight_decay = False
-    weight_decay_rate=eps
-    return_str="AlexNet"
-
-    usage_scope = network_usage + '/ext_alexnet'
-    with tf.variable_scope(usage_scope):
-        if reuse:
-            tf.get_variable_scope().reuse_variables()
-
-        conv1 = relu(batch_norm(x=conv2d(x=image, output_filters=96,
-                                         sh=1, sw=1,
-                                         kh=11, kw=11,
-                                         padding='VALID',
-                                         parameter_update_device=device,
-                                         weight_decay=weight_decay,
-                                         initializer=initializer,
-                                         scope='conv1',
-                                         weight_decay_rate=weight_decay_rate),
-                                is_training=is_training,
-                                scope='bn1',
-                                parameter_update_device=device))
-        pool1 = tf.nn.max_pool(value=conv1,
-                               ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1],
-                               padding='VALID', name='pool1')
-
-        conv2 = relu(batch_norm(x=conv2d(x=pool1, output_filters=256,
-                                         sh=1, sw=1,
-                                         kh=5, kw=5,
-                                         padding='SAME',
-                                         parameter_update_device=device,
-                                         weight_decay=weight_decay,
-                                         initializer=initializer,
-                                         scope='conv2',
-                                         weight_decay_rate=weight_decay_rate),
-                                is_training=is_training,
-                                scope='bn2',
-                                parameter_update_device=device))
-        pool2 = tf.nn.max_pool(value=conv2,
-                               ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1],
-                               padding='VALID', name='pool2')
-
-        conv3 = relu(conv2d(x=pool2, output_filters=384,
-                            sh=1, sw=1,
-                            kh=3, kw=3,
-                            padding='SAME',
-                            parameter_update_device=device,
-                            weight_decay=weight_decay,
-                            initializer=initializer,
-                            scope='conv3',
-                            weight_decay_rate=weight_decay_rate))
-
-        conv4 = relu(conv2d(x=conv3, output_filters=384,
-                            sh=1, sw=1,
-                            kh=3, kw=3,
-                            padding='SAME',
-                            parameter_update_device=device,
-                            weight_decay=weight_decay,
-                            initializer=initializer,
-                            scope='conv4',
-                            weight_decay_rate=weight_decay_rate))
-
-        conv5 = relu(conv2d(x=conv4, output_filters=256,
-                            sh=1, sw=1,
-                            kh=3, kw=3,
-                            padding='SAME',
-                            parameter_update_device=device,
-                            weight_decay=weight_decay,
-                            initializer=initializer,
-                            scope='conv5',
-                            weight_decay_rate=weight_decay_rate))
-        pool5 = tf.nn.max_pool(value=conv5,
-                               ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1],
-                               padding='VALID', name='pool5')
-
-        fc6 = tf.nn.dropout(x=relu(fc(x=tf.reshape(pool5, [batch_size, -1]),
-                                      output_size=4096,
-                                      scope="fc6_",
-                                      weight_decay=weight_decay,
-                                      initializer=initializer,
-                                      parameter_update_device=device,
-                                      weight_decay_rate=weight_decay_rate)),
-                            keep_prob=keep_prob)
-
-        fc7 = tf.nn.dropout(x=relu(fc(x=fc6,
-                                      output_size=4096,
-                                      scope="fc7_",
-                                      weight_decay=weight_decay,
-                                      initializer=initializer,
-                                      parameter_update_device=device,
-                                      weight_decay_rate=weight_decay_rate)),
-                            keep_prob=keep_prob)
-
-        output_label1 = fc(x=fc7,
-                           output_size=label1_length,
-                           scope="output_label1",
-                           weight_decay=weight_decay,
-                           initializer=initializer,
-                           parameter_update_device=device,
-                           weight_decay_rate=weight_decay_rate)
-
-
-        output_label0 = fc(x=fc7,
-                           output_size=label0_length,
-                           scope="output_label0",
-                           weight_decay=weight_decay,
-                           initializer=initializer,
-                           parameter_update_device=device,
-                           weight_decay_rate=weight_decay_rate)
-
-
-
-
-        features = list()
-        features.append(conv1)
-        features.append(conv2)
-        features.append(conv3)
-        features.append(conv4)
-        features.append(conv5)
-        features.append(fc6)
-        features.append(fc7)
-
-        return output_label1,output_label0,features,return_str
-
-
+### implementation for externet as feature extractors
 def vgg_16_net(image,
                batch_size,
                device,
@@ -1195,25 +1060,32 @@ def vgg_16_net(image,
                                       weight_decay=weight_decay,
                                       initializer=initializer,
                                       parameter_update_device=device,
-                                         weight_decay_rate=weight_decay_rate)),
+                                      weight_decay_rate=weight_decay_rate)),
                             keep_prob=keep_prob)
 
         # block 8
-        output_label1 = fc(x=fc7,
-                           output_size=label1_length,
-                           scope="output_label1",
-                           weight_decay=weight_decay,
-                           initializer=initializer,
-                           parameter_update_device=device,
-                                     weight_decay_rate=weight_decay_rate)
+        if not label1_length == -1:
+            output_label1 = fc(x=fc7,
+                               output_size=label1_length,
+                               scope="output_label1",
+                               weight_decay=weight_decay,
+                               initializer=initializer,
+                               parameter_update_device=device,
+                               weight_decay_rate=weight_decay_rate)
+        else:
+            output_label1=-1
 
-        output_label0 = fc(x=fc7,
-                              output_size=label0_length,
-                              scope="output_label0",
-                           weight_decay=weight_decay,
-                           initializer=initializer,
-                              parameter_update_device=device,
-                                         weight_decay_rate=weight_decay_rate)
+
+        if not label0_length ==  -1:
+            output_label0 = fc(x=fc7,
+                               output_size=label0_length,
+                               scope="output_label0",
+                               weight_decay=weight_decay,
+                               initializer=initializer,
+                               parameter_update_device=device,
+                               weight_decay_rate=weight_decay_rate)
+        else:
+            output_label0 = -1
 
         features = list()
         features.append(conv1_2)
@@ -1221,8 +1093,6 @@ def vgg_16_net(image,
         features.append(conv3_3)
         features.append(conv4_3)
         features.append(conv5_3)
-        features.append(fc6)
-        features.append(fc7)
 
 
-        return output_label1, output_label0,features,return_str
+        return output_label1, output_label0, features, return_str

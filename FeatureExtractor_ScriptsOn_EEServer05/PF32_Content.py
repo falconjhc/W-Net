@@ -32,7 +32,7 @@ input_args = [
 
               '--image_filters','1',
               '--experiment_id','20180802_FeatureExtractor_Content_PF32',
-              '--train_resume_mode','0',
+              '--train_resume_mode','1',
 
               '--batch_size','64',
               '--image_size','64',

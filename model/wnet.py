@@ -5,7 +5,6 @@ GRAYSCALE_AVG = 127.5
 
 import matplotlib
 
-FULL_CHARACTER_NUM = 3755
 
 import sys
 sys.path.append('..')
@@ -30,8 +29,7 @@ from model.gan_networks import discriminator_mdy_6_convs
 from model.gan_networks import discriminator_mdy_6_convs_tower_version1
 
 
-from model.gan_networks import alexnet
-from model.gan_networks import vgg_16_net
+from model.gan_networks import vgg_16_net as feature_extractor_network
 
 
 from model.gan_networks import generator_framework as generator_implementation
@@ -39,17 +37,10 @@ from model.gan_networks import generator_inferring
 from model.gan_networks import encoder_framework as encoder_implementation
 
 
-import matplotlib.pyplot as plt
-import matplotlib.image as img
-import pylab
-import gc
 import math
 
 import utilities.infer_implementations as inf_tools
 
-from PIL import Image
-from PIL import ImageDraw
-from PIL import ImageFont
 
 
 
@@ -78,11 +69,9 @@ DiscriminatorHandle = namedtuple("Discriminator",
                                   "infer_C_logits","infer_Cr_logits"])
 
 FeatureExtractorHandle = namedtuple("FeatureExtractor",
-                                    ["target_infer",
-                                     "logit_infer"])
+                                    ["infer_input_img","selected_content_prototype","selected_style_reference"])
 
-feature_extractor_dict = {'extr_alexnet': alexnet,
-                          'extr_vgg16net': vgg_16_net}
+
 
 discriminator_dict = {"DisMdy5conv": discriminator_mdy_5_convs,
                       "DisMdy6conv": discriminator_mdy_6_convs,
@@ -120,11 +109,14 @@ class WNet(object):
 
 
                  L1_Penalty=100,
-                 Feature_Penalty=5,
                  Lconst_content_Penalty=15, Lconst_style_Penalty=15,
                  Discriminative_Penalty=1,
                  Discriminator_Categorical_Penalty=1,Generator_Categorical_Penalty=0.1,
                  Discriminator_Gradient_Penalty=1,
+
+                 Feature_Penalty_True_Fake_Target=5,
+                 Feature_Penalty_Style_Reference=5,
+                 Feature_Penalty_Content_Prototype=5,
 
                  generator_weight_decay_penalty = 0.001,
                  discriminator_weight_decay_penalty = 0.004,
@@ -138,8 +130,9 @@ class WNet(object):
                  generator_residual_at_layer=3,
                  generator_residual_blocks=5,
                  discriminator='DisMdy4conv',
-                 feature_extractor='extr_alexnet',
-                 feature_extractor_model_dir='/tmp/',
+                 true_fake_target_extractor_dir='/tmp/',
+                 content_prototype_extractor_dir='/tmp/',
+                 style_reference_extractor_dir='/tmp/',
 
                  ## for infer only
                  model_dir='./', infer_dir='./',
@@ -202,7 +195,9 @@ class WNet(object):
         self.Discriminative_Penalty = Discriminative_Penalty + eps
         self.Discriminator_Gradient_Penalty = Discriminator_Gradient_Penalty + eps
         self.L1_Penalty = L1_Penalty + eps
-        self.Feature_Penalty = Feature_Penalty + eps
+        self.Feature_Penalty_True_Fake_Target = Feature_Penalty_True_Fake_Target + eps
+        self.Feature_Penalty_Style_Reference = Feature_Penalty_Style_Reference + eps
+        self.Feature_Penalty_Content_Prototype = Feature_Penalty_Content_Prototype  + eps
         self.Lconst_content_Penalty = Lconst_content_Penalty + eps
         self.Lconst_style_Penalty = Lconst_style_Penalty + eps
         self.lr = lr
@@ -229,16 +224,34 @@ class WNet(object):
         self.generator_residual_at_layer = generator_residual_at_layer
         self.generator_residual_blocks = generator_residual_blocks
         self.discriminator = discriminator
-        self.feature_extractor = feature_extractor
+
+
 
         self.discriminator_implementation = discriminator_dict[self.discriminator]
-        if not self.feature_extractor == 'None':
-            self.feature_extractor_implementation = feature_extractor_dict[self.feature_extractor]
-            self.high_level_feature_extractor_regularizer_enabled = True
-        else:
-            self.high_level_feature_extractor_regularizer_enabled = False
 
-        self.feature_extractor_model_dir = feature_extractor_model_dir
+        if not self.Feature_Penalty_True_Fake_Target > 10*eps:
+            self.extractor_true_fake_enabled = False
+            self.true_fake_target_extractor_dir = 'None'
+        else:
+            self.extractor_true_fake_enabled = True
+            self.true_fake_target_extractor_dir = true_fake_target_extractor_dir
+
+
+
+        if not self.Feature_Penalty_Style_Reference > 10*eps:
+            self.extractor_style_reference_enabled = False
+            self.style_reference_extractor_dir = 'None'
+        else:
+            self.extractor_style_reference_enabled = True
+            self.style_reference_extractor_dir = style_reference_extractor_dir
+
+        if not self.Feature_Penalty_Content_Prototype > 10*eps:
+            self.extractor_content_prototype_enabled = False
+            self.content_prototype_extractor_dir = 'None'
+        else:
+            self.extractor_content_prototype_enabled = True
+            self.content_prototype_extractor_dir = content_prototype_extractor_dir
+
         self.accuracy_k=[1,3,5,10,20,50]
 
         # properties for inferring
@@ -265,48 +278,6 @@ class WNet(object):
         # init all the directories
         self.sess = None
         self.print_separater = "#################################################################"
-
-    def feature_extractor_inference(self):
-
-        device = self.feature_extractor_device
-
-
-        feature_extractor_handle = getattr(self,"feature_extractor_handle")
-        infer_logits = feature_extractor_handle.logit_infer
-
-        discriminator_handle = getattr(self, "discriminator_handle")
-
-        true_labels = discriminator_handle.discriminator_true_label
-
-        with tf.variable_scope(tf.get_variable_scope()):
-            with tf.device(device):
-                extr_prdt = tf.argmax(infer_logits, axis=1)
-                extr_true = tf.argmax(true_labels, axis=1)
-
-                correct = tf.equal(extr_prdt, extr_true)
-                acry = tf.reduce_mean(tf.cast(correct, tf.float32)) * 100
-
-                entropy = tf.nn.softmax_cross_entropy_with_logits(logits=infer_logits, labels=tf.nn.softmax(infer_logits))
-                entropy = tf.reduce_mean(entropy)
-
-        trn_acry_real = tf.summary.scalar("Accuracy_FeatureExtractor/Train_Real", acry)
-        val_acry_real = tf.summary.scalar("Accuracy_FeatureExtractor/Test_Real", acry)
-        trn_enpy_real = tf.summary.scalar("Entropy_FeatureExtractor/Train_Real", entropy)
-        val_enpy_real = tf.summary.scalar("Entropy_FeatureExtractorTest_Real", entropy)
-
-        trn_acry_fake = tf.summary.scalar("Accuracy_FeatureExtractor/Train_Fake", acry)
-        val_acry_fake = tf.summary.scalar("Accuracy_FeatureExtractor/Test_Fake", acry)
-        trn_enpy_fake = tf.summary.scalar("Entropy_FeatureExtractorTrain_Fake", entropy)
-        val_enpy_fake = tf.summary.scalar("Entropy_FeatureExtractorTest_Fake", entropy)
-
-        trn_real_merged = tf.summary.merge([trn_acry_real, trn_enpy_real])
-        trn_fake_merged = tf.summary.merge([trn_acry_fake, trn_enpy_fake])
-
-        val_real_merged = tf.summary.merge([val_acry_real, val_enpy_real])
-        val_fake_merged = tf.summary.merge([val_acry_fake, val_enpy_fake])
-
-        return trn_real_merged, trn_fake_merged, val_real_merged, val_fake_merged
-
 
     def find_bn_avg_var(self,var_list):
         var_list_new = list()
@@ -346,67 +317,13 @@ class WNet(object):
             var_output.update({renamed: ii})
         return var_output
 
-    def retrieve_trainable_vars(self):
-
-        t_vars = tf.trainable_variables()
-
-        dis_vars_save = [var for var in t_vars if 'dis_' in var.name]
-        gen_vars_save = [var for var in t_vars if 'gen_' in var.name]
-
-        gen_enc_vals_save = [var for var in t_vars if 'gen_enc' in var.name]
-        gen_dec_vals_save = [var for var in t_vars if 'gen_dec' in var.name]
-
-        extr_vars = [var for var in t_vars if 'feature_extractor' in var.name]
-
-        gen_vars_trainable = list()
-        dis_vars_trainable = list()
-
-
-
-        gen_vars_save = self.find_bn_avg_var(gen_vars_save)
-        dis_vars_save = self.find_bn_avg_var(dis_vars_save)
-        extr_vars = self.find_bn_avg_var(extr_vars)
-
-        extr_vars = self.variable_dict(var_input=extr_vars,delete_name_from_character='/')
-
-
-        return gen_vars_trainable, dis_vars_trainable, \
-               gen_vars_save, dis_vars_save,  extr_vars
-
-
-
     def get_model_id_and_dir_for_train(self):
-
-
-
-        if self.feature_extractor == 'extr_vgg16net':
-            extr_info='ExtrcVgg16'
-        elif self.feature_extractor == 'extr_alexnet':
-            extr_info = 'ExtrcAlexNet'
-        elif self.feature_extractor == 'None':
-            extr_info = 'ExtrcNone'
-        else:
-            raw_input("FeatureExtractor network erorr")
-            return
-
-        if self.weight_decay_generator:
-            generator_wd_mark ='-Wd'
-        else:
-            generator_wd_mark = ''
-
-        if self.weight_decay_discriminator:
-            discriminator_wd_mark='-Wd'
-        else:
-            discriminator_wd_mark = ''
-
         encoder_decoder_layer_num = int(np.floor(math.log(self.img2img_width) / math.log(2)))
-        model_id = "Exp%s_%s_%s_GenEncDec%d-Res%d@Lyr%d_%s" % (self.experiment_id,
-                                                               'StyleAdd',
-                                                               extr_info,
-                                                               encoder_decoder_layer_num,
-                                                               self.generator_residual_blocks,
-                                                               self.generator_residual_at_layer,
-                                                               self.discriminator)
+        model_id = "Exp%s_GenEncDec%d-Res%d@Lyr%d_%s" % (self.experiment_id,
+                                                         encoder_decoder_layer_num,
+                                                         self.generator_residual_blocks,
+                                                         self.generator_residual_at_layer,
+                                                         self.discriminator)
 
         model_ckpt_dir = os.path.join(self.checkpoint_dir, model_id)
         model_log_dir = os.path.join(self.log_dir, model_id)
@@ -422,11 +339,9 @@ class WNet(object):
         saver.save(self.sess, os.path.join(model_dir, model_name), global_step=int(step))
 
     def restore_model(self, saver, model_dir, model_name):
-
         ckpt = tf.train.get_checkpoint_state(model_dir)
         corrected_ckpt_path = correct_ckpt_path(real_dir=model_dir,
                                                 maybe_path=ckpt.model_checkpoint_path)
-
         if ckpt:
             saver.restore(self.sess, corrected_ckpt_path)
             print("ModelRestored:%s" % model_name)
@@ -437,8 +352,6 @@ class WNet(object):
             print("fail to restore model %s" % model_dir)
             print(self.print_separater)
             return False
-
-
 
     def generate_fake_samples(self,prototype,reference):
 
@@ -526,9 +439,8 @@ class WNet(object):
             output_dict.update({discriminator_handle.discriminator_infer_true_or_generated_style: current_specifying_target})
             output_dict.update({discriminator_handle.discriminator_true_label: batch_label1_one_hot})
 
-            if self.high_level_feature_extractor_regularizer_enabled:
-                feature_extractor_handle = getattr(self, "feature_extractor_handle")
-                output_dict.update({feature_extractor_handle.target_infer: current_specifying_target})
+            feature_extractor_handle = getattr(self, "feature_extractor_handle")
+            output_dict.update({feature_extractor_handle.infer_input_img: current_specifying_target})
 
 
 
@@ -536,6 +448,7 @@ class WNet(object):
             return output_dict
 
         summary_handle = getattr(self,"summary_handle")
+        feature_extractor_handle = getattr(self,"feature_extractor_handle")
         if train_mark:
             merged_real_summaries = summary_handle.trn_real_summaries
             merged_fake_summaries = summary_handle.trn_fake_summaries
@@ -553,6 +466,7 @@ class WNet(object):
         content_prototypes = batch_packs[:, :, :, channels:channels + self.content_input_num * channels]
         style_references = batch_packs[:, :, :, 1 + self.content_input_num * channels:]
 
+
         generated_batch = self.generate_fake_samples(prototype=content_prototypes,
                                                      reference=style_references)
 
@@ -567,12 +481,12 @@ class WNet(object):
         content_prototypes = scale_back_for_img(images=content_prototypes)
         style_references = scale_back_for_img(images=style_references)
         true_style = scale_back_for_img(images=true_style)
+
         if train_mark:
             generated_train_style = scale_back_for_img(images=generated_train_batch)
         diff_between_generated_and_true = scale_back_for_dif(generated_style - true_style)
 
         generated_style = merge(generated_style, [self.batch_size, 1])
-
         new_content_prototype = np.zeros(shape=[self.batch_size * self.img2img_width, self.img2img_width, 3, self.content_input_num],
                                          dtype=np.float32)
         for ii in range(self.content_input_num):
@@ -1183,7 +1097,7 @@ class WNet(object):
 
 
 
-    def high_level_feature_extractor_build(self, g_loss, g_merged_summary):
+    def feature_extractor_build(self, g_loss, g_merged_summary):
 
         def calculate_high_level_feature_loss(feature1,feature2):
             for counter in range(len(feature1)):
@@ -1200,81 +1114,248 @@ class WNet(object):
                     final_loss = this_feature_loss
                 else:
                     final_loss += this_feature_loss
+            final_loss = final_loss / len(feature1)
 
             return final_loss
 
-        label1_length = len(self.involved_label1_list)
+        def build_feature_extractor(input_target_infer,input_true_img,
+                                    label0_length, label1_length,
+                                    extractor_usage):
+            generator_handle = getattr(self,'generator_handle')
+            output_logit_list = list()
 
-        generator_handle = getattr(self,'generator_handle')
-        network_usage = 'feature_extractor'
 
-        with tf.variable_scope(tf.get_variable_scope()):
-            with tf.device(self.feature_extractor_device):
-                device = self.feature_extractor_device
-                input_target_infer = tf.placeholder(tf.float32,
-                                                    [self.batch_size,
-                                                     self.source_img_width,
-                                                     self.source_img_width,
-                                                     self.input_output_img_filter_num],
-                                                    name='feature_extractor_infer_img')
+            with tf.variable_scope(tf.get_variable_scope()):
+                with tf.device(self.feature_extractor_device):
 
-                _, _, real_features,network_info = \
-                    self.feature_extractor_implementation(image=generator_handle.true_style,
-                                                          batch_size=self.batch_size,
-                                                          device=self.feature_extractor_device,
-                                                          label0_length=FULL_CHARACTER_NUM,
-                                                          label1_length=label1_length,
-                                                          reuse=False,
-                                                          keep_prob=1,
-                                                          initializer=self.initializer,
-                                                          network_usage=network_usage)
-                _, _, fake_features, _ = \
-                    self.feature_extractor_implementation(image=generator_handle.generated_target_train,
-                                                          batch_size=self.batch_size,
-                                                          device=self.feature_extractor_device,
-                                                          label0_length=FULL_CHARACTER_NUM,
-                                                          label1_length=label1_length,
-                                                          reuse=True,
-                                                          keep_prob=1,
-                                                          initializer=self.initializer,
-                                                          network_usage=network_usage)
 
-                label1_logits, label0_logits, _, _ = \
-                    self.feature_extractor_implementation(image=input_target_infer,
-                                                          batch_size=self.batch_size,
-                                                          device=self.feature_extractor_device,
-                                                          label0_length=FULL_CHARACTER_NUM,
-                                                          label1_length=label1_length,
-                                                          reuse=True,
-                                                          keep_prob=1,
-                                                          initializer=self.initializer,
-                                                          network_usage=network_usage)
+                    _, _, real_features,network_info = \
+                        feature_extractor_network(image=input_true_img,
+                                                  batch_size=self.batch_size,
+                                                  device=self.feature_extractor_device,
+                                                  label0_length=label0_length,
+                                                  label1_length=label1_length,
+                                                  reuse=False,
+                                                  keep_prob=1,
+                                                  initializer=self.initializer,
+                                                  network_usage=extractor_usage)
+                    _, _, fake_features, _ = \
+                        feature_extractor_network(image=generator_handle.generated_target_train,
+                                                  batch_size=self.batch_size,
+                                                  device=self.feature_extractor_device,
+                                                  label0_length=label0_length,
+                                                  label1_length=label1_length,
+                                                  reuse=True,
+                                                  keep_prob=1,
+                                                  initializer=self.initializer,
+                                                  network_usage=extractor_usage)
 
-        output_infer_logits = label1_logits
+                    label1_logits, label0_logits, _, _ = \
+                        feature_extractor_network(image=input_target_infer,
+                                                  batch_size=self.batch_size,
+                                                  device=self.feature_extractor_device,
+                                                  label0_length=label0_length,
+                                                  label1_length=label1_length,
+                                                  reuse=True,
+                                                  keep_prob=1,
+                                                  initializer=self.initializer,
+                                                  network_usage=extractor_usage)
+            if not label0_length==-1:
+                output_logit_list.append(label0_logits)
+            if not label1_length==-1:
+                output_logit_list.append(label1_logits)
 
-        feature_extractor_handle = FeatureExtractorHandle(target_infer=input_target_infer,
-                                                          logit_infer=output_infer_logits)
+            feature_loss = calculate_high_level_feature_loss(feature1=real_features,
+                                                             feature2=fake_features)
 
+            return output_logit_list, feature_loss, network_info
+
+        def define_entropy_accuracy_calculation_op(true_labels, infer_logits, summary_name):
+            extr_prdt = tf.argmax(infer_logits, axis=1)
+            extr_true = tf.argmax(true_labels, axis=1)
+
+            correct = tf.equal(extr_prdt, extr_true)
+            acry = tf.reduce_mean(tf.cast(correct, tf.float32)) * 100
+
+            entropy = tf.nn.softmax_cross_entropy_with_logits(logits=infer_logits, labels=tf.nn.softmax(infer_logits))
+            entropy = tf.reduce_mean(entropy)
+
+            trn_acry_real = tf.summary.scalar("Accuracy_" + summary_name + "/TrainReal", acry)
+            val_acry_real = tf.summary.scalar("Accuracy_" + summary_name + "/TestReal", acry)
+            trn_acry_fake = tf.summary.scalar("Accuracy_" + summary_name + "/TrainFake", acry)
+            val_acry_fake = tf.summary.scalar("Accuracy_" + summary_name + "/TestFake", acry)
+
+
+            trn_enpy_real = tf.summary.scalar("Entropy_" + summary_name + "/TrainReal", entropy)
+            val_enpy_real = tf.summary.scalar("Entropy_" + summary_name + "/TestReal", entropy)
+            trn_enpy_fake = tf.summary.scalar("Entropy_" + summary_name + "/TrainFake", entropy)
+            val_enpy_fake = tf.summary.scalar("Entropy_" + summary_name + "/TestFake", entropy)
+
+            trn_real_merged = tf.summary.merge([trn_acry_real, trn_enpy_real])
+            trn_fake_merged = tf.summary.merge([trn_acry_fake, trn_enpy_fake])
+
+            val_real_merged = tf.summary.merge([val_acry_real, val_enpy_real])
+            val_fake_merged = tf.summary.merge([val_acry_fake, val_enpy_fake])
+
+            return trn_real_merged, trn_fake_merged, val_real_merged, val_fake_merged
+
+        extr_trn_real_merged = []
+        extr_trn_fake_merged = []
+        extr_val_real_merged = []
+        extr_val_fake_merged = []
+        saver_list = list()
+
+        input_target_infer = tf.placeholder(tf.float32,
+                                            [self.batch_size,
+                                             self.source_img_width,
+                                             self.source_img_width,
+                                             self.input_output_img_filter_num],
+                                            name='extractor_infer_img_input')
+        generator_handle = getattr(self, 'generator_handle')
+
+        if self.extractor_true_fake_enabled:
+            true_fake_infer_list, true_fake_feature_loss, network_info = \
+                build_feature_extractor(input_target_infer=input_target_infer,
+                                        input_true_img=generator_handle.true_style,
+                                        label0_length=len(self.involved_label0_list),
+                                        label1_length=len(self.involved_label1_list),
+                                        extractor_usage='TrueFake_FeatureExtractor')
+            g_loss += true_fake_feature_loss
+            feature_true_fake_loss_summary = tf.summary.scalar("Loss_FeatureExtractor/TrueFakeL2",
+                                                               tf.abs(true_fake_feature_loss) / self.Feature_Penalty_True_Fake_Target)
+            g_merged_summary = tf.summary.merge([g_merged_summary, feature_true_fake_loss_summary])
+
+            extr_vars_true_fake = [var for var in tf.trainable_variables() if 'TrueFake_FeatureExtractor' in var.name]
+            extr_vars_true_fake = self.find_bn_avg_var(extr_vars_true_fake)
+            extr_vars_true_fake = self.variable_dict(var_input=extr_vars_true_fake, delete_name_from_character='/')
+            saver_extractor_true_fake = tf.train.Saver(max_to_keep=1, var_list=extr_vars_true_fake)
+
+            summary_train_real_merged_label0, \
+            summary_train_fake_merged_label0, \
+            summary_val_real_merged_label0, \
+            summary_val_fake_merged_label0 = \
+                define_entropy_accuracy_calculation_op(true_labels=generator_handle.true_label0,
+                                                       infer_logits=true_fake_infer_list[0],
+                                                       summary_name="Extractor_TrueFake/Lb0")
+
+            summary_train_real_merged_label1, \
+            summary_train_fake_merged_label1, \
+            summary_val_real_merged_label1, \
+            summary_val_fake_merged_label1 = \
+                define_entropy_accuracy_calculation_op(true_labels=generator_handle.true_label1,
+                                                       infer_logits=true_fake_infer_list[1],
+                                                       summary_name="Extractor_TrueFake/Lb1")
+
+            extr_trn_real_merged = tf.summary.merge([extr_trn_real_merged, summary_train_real_merged_label0, summary_train_real_merged_label1])
+            extr_trn_fake_merged = tf.summary.merge([extr_trn_fake_merged, summary_train_fake_merged_label0, summary_train_fake_merged_label1])
+            extr_val_real_merged = tf.summary.merge([extr_val_real_merged, summary_val_real_merged_label0, summary_val_real_merged_label1])
+            extr_val_fake_merged = tf.summary.merge([extr_val_fake_merged, summary_val_fake_merged_label0, summary_val_fake_merged_label1])
+
+            print("TrueFakeExtractor @ %s with %s;" % (self.feature_extractor_device, network_info))
+
+
+
+        else:
+            true_fake_infer_list=list()
+            true_fake_infer_list.append(-1)
+            true_fake_infer_list.append(-1)
+            saver_extractor_true_fake = None
+
+
+        if self.extractor_content_prototype_enabled:
+            content_prototype = generator_handle.content_prototype
+            selected_index = tf.random_uniform(shape=[],minval=0,maxval=int(content_prototype.shape[3]),dtype=tf.int64)
+            selected_content_prototype = tf.expand_dims(content_prototype[:,:,:,selected_index], axis=3)
+            content_prototype_infer_list,content_prototype_feature_loss, network_info = \
+                build_feature_extractor(input_target_infer=input_target_infer,
+                                        input_true_img=selected_content_prototype,
+                                        label0_length=len(self.involved_label0_list),
+                                        label1_length=-1,
+                                        extractor_usage='ContentPrototype_FeatureExtractor')
+            g_loss += content_prototype_feature_loss
+            feature_content_prototype_loss_summary = tf.summary.scalar("Loss_FeatureExtractor/ContentPrototypeL2",
+                                                               tf.abs(content_prototype_feature_loss) / self.Feature_Penalty_Content_Prototype)
+            g_merged_summary = tf.summary.merge([g_merged_summary, feature_content_prototype_loss_summary])
+
+            extr_vars_content_prototype = [var for var in tf.trainable_variables() if 'ContentPrototype_FeatureExtractor' in var.name]
+            extr_vars_content_prototype = self.find_bn_avg_var(extr_vars_content_prototype)
+            extr_vars_content_prototype = self.variable_dict(var_input=extr_vars_content_prototype, delete_name_from_character='/')
+            saver_extractor_content_prototype = tf.train.Saver(max_to_keep=1, var_list=extr_vars_content_prototype)
+
+            summary_train_real_merged_label0, \
+            summary_train_fake_merged_label0, \
+            summary_val_real_merged_label0, \
+            summary_val_fake_merged_label0 = \
+                define_entropy_accuracy_calculation_op(true_labels=generator_handle.true_label0,
+                                                       infer_logits=content_prototype_infer_list[0],
+                                                       summary_name="Extractor_ContentPrototype/Lb0")
+
+            extr_trn_real_merged = tf.summary.merge([extr_trn_real_merged, summary_train_real_merged_label0])
+            extr_trn_fake_merged = tf.summary.merge([extr_trn_fake_merged, summary_train_fake_merged_label0])
+            extr_val_real_merged = tf.summary.merge([extr_val_real_merged, summary_val_real_merged_label0])
+            extr_val_fake_merged = tf.summary.merge([extr_val_fake_merged, summary_val_fake_merged_label0])
+
+            print("ContentPrototypeExtractor @ %s with %s;" % (self.feature_extractor_device, network_info))
+
+
+        else:
+            content_prototype_infer_list=list()
+            content_prototype_infer_list.append(-1)
+            saver_extractor_content_prototype = None
+
+        if self.extractor_style_reference_enabled:
+            style_reference = generator_handle.style_reference_list
+            selected_index = tf.random_uniform(shape=[], minval=0, maxval=self.style_input_number, dtype=tf.int64)
+            selected_style_reference = tf.gather(style_reference,selected_index)
+            style_reference_infer_list, style_reference_feature_loss, network_info = \
+                build_feature_extractor(input_target_infer=input_target_infer,
+                                        input_true_img = selected_style_reference,
+                                        label0_length=-1,
+                                        label1_length=len(self.involved_label1_list),
+                                        extractor_usage='StyleReference_FeatureExtractor')
+            g_loss += style_reference_feature_loss
+            feature_style_reference_loss_summary = tf.summary.scalar("Loss_FeatureExtractor/StyleReferenceL2",
+                                                                     tf.abs(style_reference_feature_loss) / self.Feature_Penalty_Style_Reference)
+            g_merged_summary = tf.summary.merge([g_merged_summary, feature_style_reference_loss_summary])
+
+            extr_vars_style_reference = [var for var in tf.trainable_variables() if 'StyleReference_FeatureExtractor' in var.name]
+            extr_vars_style_reference = self.find_bn_avg_var(extr_vars_style_reference)
+            extr_vars_style_reference = self.variable_dict(var_input=extr_vars_style_reference, delete_name_from_character='/')
+            saver_extractor_style_reference = tf.train.Saver(max_to_keep=1, var_list=extr_vars_style_reference)
+
+            summary_train_real_merged_label1, \
+            summary_train_fake_merged_label1, \
+            summary_val_real_merged_label1, \
+            summary_val_fake_merged_label1 = \
+                define_entropy_accuracy_calculation_op(true_labels=generator_handle.true_label1,
+                                                       infer_logits=style_reference_infer_list[0],
+                                                       summary_name="Extractor_StyleReference/Lb1")
+
+            extr_trn_real_merged = tf.summary.merge([extr_trn_real_merged, summary_train_real_merged_label1])
+            extr_trn_fake_merged = tf.summary.merge([extr_trn_fake_merged, summary_train_fake_merged_label1])
+            extr_val_real_merged = tf.summary.merge([extr_val_real_merged, summary_val_real_merged_label1])
+            extr_val_fake_merged = tf.summary.merge([extr_val_fake_merged, summary_val_fake_merged_label1])
+            print("StyleReferenceExtractor @ %s with %s;" % (self.feature_extractor_device, network_info))
+
+        else:
+            style_reference_infer_list=list()
+            style_reference_infer_list.append(-1)
+            saver_extractor_style_reference = None
+
+
+        feature_extractor_handle = FeatureExtractorHandle(infer_input_img=input_target_infer,
+                                                          selected_content_prototype=selected_content_prototype,
+                                                          selected_style_reference=selected_style_reference)
         setattr(self, "feature_extractor_handle", feature_extractor_handle)
-        feature_loss = calculate_high_level_feature_loss(feature1=real_features,
-                                                         feature2=fake_features)
-        feature_loss = feature_loss * self.Feature_Penalty / len(real_features)
-        feature_loss_summary = tf.summary.scalar("Loss_FeatureExtractor/L2_Features", tf.abs(feature_loss) / self.Feature_Penalty)
-
-        g_loss+=feature_loss
-        g_merged_summary=tf.summary.merge([g_merged_summary,feature_loss_summary])
 
 
-
-        extr_vars = [var for var in tf.trainable_variables() if 'feature_extractor' in var.name]
-        extr_vars = self.find_bn_avg_var(extr_vars)
-        extr_vars = self.variable_dict(var_input=extr_vars,delete_name_from_character='/')
-        saver_extractor = tf.train.Saver(max_to_keep=1, var_list=extr_vars)
+        saver_list.append(saver_extractor_true_fake)
+        saver_list.append(saver_extractor_content_prototype)
+        saver_list.append(saver_extractor_style_reference)
 
 
-        print("FeatureExtractor @ %s with %s;" % (device, network_info))
-
-        return g_loss, g_merged_summary,saver_extractor
+        return g_loss, g_merged_summary,saver_list,\
+               extr_trn_real_merged,extr_trn_fake_merged,extr_val_real_merged,extr_val_fake_merged
 
 
 
@@ -1845,24 +1926,21 @@ class WNet(object):
                 shanon_entropy = tf.reduce_mean(shanon_entropy)
 
 
-        trn_real_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_Train_Real",accuracy_prediction_category)
-        trn_fake_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_Train_Fake",accuracy_prediction_category)
-        val_real_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_Test_Real",accuracy_prediction_category)
-        val_fake_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_Test_Fake",accuracy_prediction_category)
+        trn_real_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_TrainReal",accuracy_prediction_category)
+        trn_fake_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_TrainFake",accuracy_prediction_category)
+        val_real_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_TestReal",accuracy_prediction_category)
+        val_fake_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_TestFake",accuracy_prediction_category)
 
-        trn_real_enty = tf.summary.scalar("Entropy_Discriminator/AuxiliaryClassifier_Train_Real", shanon_entropy)
-        trn_fake_enty = tf.summary.scalar("Entropy_Discriminator/AuxiliaryClassifier_Train_Fake", shanon_entropy)
-        val_real_enty = tf.summary.scalar("Entropy_Discriminator/AuxiliaryClassifier_Test_Real", shanon_entropy)
-        val_fake_enty = tf.summary.scalar("Entropy_Discriminator/AuxiliaryClassifier_Test_Fake", shanon_entropy)
+        trn_real_enty = tf.summary.scalar("Entropy_Discriminator/AuxClassifier_TrainReal", shanon_entropy)
+        trn_fake_enty = tf.summary.scalar("Entropy_Discriminator/AuxClassifier_TrainFake", shanon_entropy)
+        val_real_enty = tf.summary.scalar("Entropy_Discriminator/AuxClassifier_TestReal", shanon_entropy)
+        val_fake_enty = tf.summary.scalar("Entropy_Discriminator/AuxClassifier_TestFake", shanon_entropy)
 
-        trn_real_summary = tf.summary.merge([trn_real_acry,
-                                             trn_real_enty])
+        trn_real_summary = tf.summary.merge([trn_real_acry, trn_real_enty])
         trn_fake_summary = tf.summary.merge([trn_fake_acry, trn_fake_enty])
 
-        tst_real_summary = tf.summary.merge([val_real_acry,
-                                             val_real_enty])
-        tst_fake_summary = tf.summary.merge([val_fake_acry,
-                                             val_fake_enty])
+        tst_real_summary = tf.summary.merge([val_real_acry, val_real_enty])
+        tst_fake_summary = tf.summary.merge([val_fake_acry, val_fake_enty])
 
         dis_vars_train = [var for var in tf.trainable_variables() if 'discriminator' in var.name]
         dis_vars_save = self.find_bn_avg_var(dis_vars_train)
@@ -1911,9 +1989,6 @@ class WNet(object):
 
             print(
                 "Optimizer Generator @ %s;" % (self.generator_devices))
-
-
-
 
         else:
             g_optimizer = None
@@ -2019,26 +2094,36 @@ class WNet(object):
         if not self.training_from_model == None:
             variable_comparison_and_restore(current_saver=saver_generator,
                                             restore_model_dir=os.path.join(self.training_from_model, 'generator'),
-                                            model_name='Generator')
+                                            model_name='Generator_ForPreviousTrainedBaseModel')
             variable_comparison_and_restore(current_saver=saver_discriminator,
                                             restore_model_dir=os.path.join(self.training_from_model,
                                                                            'discriminator'),
-                                            model_name='Discriminator')
+                                            model_name='Discriminator_ForPreviousTrainedBaseModel')
 
     def model_initialization(self,
                              saver_generator, saver_discriminator,
                              saver_framework,
-                             saver_feature_extractor):
+                             feature_extractor_saver_list):
         # initialization of all the variables
         self.sess.run(tf.global_variables_initializer())
 
 
 
         # restore of high_level feature extractor
-        if self.high_level_feature_extractor_regularizer_enabled:
-            extr_restored = self.restore_model(saver=saver_feature_extractor,
-                                               model_dir=self.feature_extractor_model_dir,
-                                               model_name="FeatureExtractor")
+        if self.extractor_true_fake_enabled:
+            extr_restored = self.restore_model(saver=feature_extractor_saver_list[0],
+                                               model_dir=self.true_fake_target_extractor_dir,
+                                               model_name="TrueFakeExtractor")
+        if self.extractor_content_prototype_enabled:
+            extr_restored = self.restore_model(saver=feature_extractor_saver_list[1],
+                                               model_dir=self.content_prototype_extractor_dir,
+                                               model_name="ContentPrototypeExtractor")
+        if self.extractor_style_reference_enabled:
+            extr_restored = self.restore_model(saver=feature_extractor_saver_list[2],
+                                               model_dir=self.style_reference_extractor_dir,
+                                               model_name="StyleReferenceExtractor")
+
+
 
 
 
@@ -2160,12 +2245,10 @@ class WNet(object):
             generator_train_summary, generator_test_summary = self.generator_build()
 
             # for feature extractor
-            if self.high_level_feature_extractor_regularizer_enabled:
-                g_loss, g_merged_summary,saver_feature_extractor = \
-                    self.high_level_feature_extractor_build(g_loss=g_loss,
-                                                            g_merged_summary=g_merged_summary)
-            else:
-                saver_feature_extractor = None
+            g_loss, g_merged_summary, feature_extractor_saver_list, \
+            extr_trn_real_merged, extr_trn_fake_merged, extr_val_real_merged, extr_val_fake_merged= \
+                self.feature_extractor_build(g_loss=g_loss,
+                                             g_merged_summary=g_merged_summary)
 
             # for discriminator building
             discriminator_batch_c_logits, \
@@ -2191,22 +2274,9 @@ class WNet(object):
                                       dis_vars_train=dis_vars_train,
                                       discriminator_loss_train=d_loss)
 
-
-
-
-            if self.high_level_feature_extractor_regularizer_enabled:
-                extr_trn_real_merged, extr_trn_fake_merged, \
-                extr_val_real_merged, extr_val_fake_merged = \
-                    self.feature_extractor_inference()
-            else:
-                extr_trn_real_merged = []
-                extr_trn_fake_merged = []
-                extr_val_real_merged = []
-                extr_val_fake_merged = []
-
-            trn_real_summary_merged = tf.summary.merge([dis_trn_real_summary, extr_trn_real_merged, generator_train_summary])
+            trn_real_summary_merged = tf.summary.merge([dis_trn_real_summary, generator_train_summary, extr_trn_real_merged])
             trn_fake_summary_merged = tf.summary.merge([dis_trn_fake_summary, extr_trn_fake_merged])
-            val_real_summary_merged = tf.summary.merge([dis_val_real_summary, extr_val_real_merged, generator_test_summary])
+            val_real_summary_merged = tf.summary.merge([dis_val_real_summary, generator_test_summary, extr_val_real_merged])
             val_fake_summary_merged = tf.summary.merge([dis_val_fake_summary, extr_val_fake_merged])
 
             # summaries
@@ -2223,7 +2293,7 @@ class WNet(object):
             self.model_initialization(saver_framework=saver_frameworks,
                                       saver_generator=saver_generator,
                                       saver_discriminator=saver_discriminator,
-                                      saver_feature_extractor=saver_feature_extractor)
+                                      feature_extractor_saver_list=feature_extractor_saver_list)
             self.restore_from_previous_model(saver_generator=saver_generator,
                                              saver_discriminator=saver_discriminator)
             print(self.print_separater)
@@ -2257,16 +2327,18 @@ class WNet(object):
             print("DataAugment:%d, InputStyleNum:%d" % (self.train_data_augment, self.style_input_number))
             print(self.print_separater)
             print("Penalties:")
-            print("Generator: L1:%.3f,Ftr:%.3f,ConstCP/SR:%.3f/%.3f,Cat:%.3F,Wgt:%.6f;" % (self.L1_Penalty,
-                                                                                           self.Feature_Penalty,
-                                                                                           self.Lconst_content_Penalty,
-                                                                                           self.Lconst_style_Penalty,
-                                                                                           self.Generator_Categorical_Penalty,
-                                                                                           self.generator_weight_decay_penalty))
+            print("Generator: PixelL1:%.3f,ConstCP/SR:%.3f/%.3f,Cat:%.3F,Wgt:%.6f;" % (self.L1_Penalty,
+                                                                                       self.Lconst_content_Penalty,
+                                                                                       self.Lconst_style_Penalty,
+                                                                                       self.Generator_Categorical_Penalty,
+                                                                                       self.generator_weight_decay_penalty))
             print("Discriminator: Cat:%.3f,Dis:%.3f,WST-Grdt:%.3f,Wgt:%.6f;" % (self.Discriminator_Categorical_Penalty,
                                                                                 self.Discriminative_Penalty,
                                                                                 self.Discriminator_Gradient_Penalty,
                                                                                 self.discriminator_weight_decay_penalty))
+            print("FeatureExtractor: TrueFalse:%.3f, ContentPrototype:%.3f, StyleReference:%.3f;" % (self.Feature_Penalty_True_Fake_Target,
+                                                                                                     self.Feature_Penalty_Content_Prototype,
+                                                                                                     self.Feature_Penalty_Style_Reference))
             print("InitLearningRate:%.3f" % self.lr)
             print(self.print_separater)
             print("Initialization completed, and training started right now.")

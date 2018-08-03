@@ -32,11 +32,11 @@ input_args = [
 
               '--image_filters','1',
               '--experiment_id','20180802_FeatureExtractor_Content_Std1',
-              '--train_resume_mode','0',
+              '--train_resume_mode','1',
 
               '--batch_size','64',
               '--image_size','64',
-              '--epoch_num', '1000',
+              '--epoch_num', '100000',
               '--network', 'vgg16net',
               '--init_lr','0.0001',
               '--label0_loss','1',
