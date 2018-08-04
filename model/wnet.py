@@ -404,7 +404,7 @@ class WNet(object):
                        batch_packs,
                        train_mark,
                        summary_writer, global_step,
-                       generated_train_batch=None):
+                       training_img_list=list()):
 
         def feed_dict_tmp(current_specifying_target):
 
@@ -442,10 +442,8 @@ class WNet(object):
             feature_extractor_handle = getattr(self, "feature_extractor_handle")
             output_dict.update({feature_extractor_handle.infer_input_img: current_specifying_target})
 
-
-
-
             return output_dict
+
 
         summary_handle = getattr(self,"summary_handle")
         feature_extractor_handle = getattr(self,"feature_extractor_handle")
@@ -483,11 +481,15 @@ class WNet(object):
         true_style = scale_back_for_img(images=true_style)
 
         if train_mark:
-            generated_train_style = scale_back_for_img(images=generated_train_batch)
+            generated_train_style = scale_back_for_img(images=training_img_list[0])
+            extracted_training_content = scale_back_for_img(images=training_img_list[1])
+            extracted_training_style = scale_back_for_img(images=training_img_list[2])
         diff_between_generated_and_true = scale_back_for_dif(generated_style - true_style)
 
         generated_style = merge(generated_style, [self.batch_size, 1])
-        new_content_prototype = np.zeros(shape=[self.batch_size * self.img2img_width, self.img2img_width, 3, self.content_input_num],
+        new_content_prototype = np.zeros(shape=[self.batch_size * self.img2img_width,
+                                                self.img2img_width, 3,
+                                                self.content_input_num],
                                          dtype=np.float32)
         for ii in range(self.content_input_num):
             new_content_prototype[:, :, :, ii] = merge(np.reshape(content_prototypes[:, :, :, ii],
@@ -535,6 +537,8 @@ class WNet(object):
 
         if train_mark:
             generated_train_style = merge(generated_train_style,[self.batch_size,1])
+            extracted_training_content = merge(extracted_training_content, [self.batch_size, 1])
+            extracted_training_style = merge(extracted_training_style, [self.batch_size, 1])
             diff_between_generated_train_and_true = scale_back_for_dif(generated_train_style - true_style)
 
             merged_disp = np.concatenate([content_disp,
@@ -544,6 +548,10 @@ class WNet(object):
                                           diff_between_generated_train_and_true,
                                           true_style,
                                           style_disp], axis=1)
+            if self.extractor_content_prototype_enabled:
+                merged_disp = np.concatenate([extracted_training_content, merged_disp], axis=1)
+            if self.extractor_style_reference_enabled:
+                merged_disp = np.concatenate([merged_disp, extracted_training_style], axis=1)
 
         else:
             merged_disp = np.concatenate([content_disp,
@@ -576,9 +584,13 @@ class WNet(object):
                              trn_real_summaries, val_real_summaries,
                              trn_fake_summaries, val_fake_summaries,
                              learning_rate):
-
+        train_img_num = 5
+        if self.extractor_content_prototype_enabled:
+            train_img_num+=1
+        if self.extractor_style_reference_enabled:
+            train_img_num+=1
         check_train_image = tf.placeholder(tf.float32, [1, self.batch_size * self.img2img_width,
-                                                        self.img2img_width * (self.display_content_reference_num+self.display_style_reference_num+5),
+                                                        self.img2img_width * (self.display_content_reference_num+self.display_style_reference_num+train_img_num),
                                                         3])
 
         check_validate_image = tf.placeholder(tf.float32, [1, self.batch_size * self.img2img_width,
@@ -591,7 +603,7 @@ class WNet(object):
         check_validate_image_summary = tf.summary.image('ValImg', check_validate_image)
 
 
-        learning_rate_summary = tf.summary.scalar('Learning_Rate', learning_rate)
+        learning_rate_summary = tf.summary.scalar('LearningRate', learning_rate)
 
         summary_handle = SummaryHandle(d_merged=d_loss_summary,
                                        g_merged=g_loss_summary,
@@ -2183,6 +2195,9 @@ class WNet(object):
                                          file_list_txt_style_validation=self.file_list_txt_style_validation)
 
             self.involved_label0_list, self.involved_label1_list = data_provider.get_involved_label_list()
+            self.involved_label0_list = range(0, 3755)
+            self.involved_label1_list = range(0, 50)
+
             self.content_input_num = data_provider.content_input_num
             self.display_style_reference_num = np.min([4, self.style_input_number])
             self.display_content_reference_num = np.min([4, self.content_input_num])
@@ -2370,6 +2385,7 @@ class WNet(object):
                              ):
         def W_GAN(current_epoch):
             generator_handle = getattr(self, "generator_handle")
+            feature_extractor_handle = getattr(self,"feature_extractor_handle")
 
             if current_epoch <= self.final_training_epochs:
                 self.g_iters = 5
@@ -2399,6 +2415,17 @@ class WNet(object):
 
 
             # optimization for discriminator for all the iterations
+            training_img_tensor_list = list()
+            training_img_tensor_list.append(generator_handle.generated_target_train)
+            if self.extractor_content_prototype_enabled:
+                training_img_tensor_list.append(feature_extractor_handle.selected_content_prototype)
+            else:
+                training_img_tensor_list.append(generator_handle.generated_target_train)
+            if self.extractor_style_reference_enabled:
+                training_img_tensor_list.append(feature_extractor_handle.selected_style_reference)
+            else:
+                training_img_tensor_list.append(generator_handle.generated_target_train)
+
             optimization_start = time.time()
             if dis_vars_train \
                     or global_step.eval(session=self.sess) == global_step_start:
@@ -2411,13 +2438,12 @@ class WNet(object):
                                                                                   learning_rate=learning_rate,
                                                                                   critic_penalty_input=current_critic_logit_penalty_value))
 
-                generated_target \
-                    = self.sess.run(generator_handle.generated_target_train,
-                                    feed_dict=self.feed_dictionary_generation_for_g(batch_packs=batch_packs,
-                                                                                    batch_label0=batch_label0_one_hot,
-                                                                                    batch_label1=batch_label1_one_hot,
-                                                                                    current_lr=current_lr_real,
-                                                                                    learning_rate=learning_rate))
+                output_training_img_list = self.sess.run(training_img_tensor_list,
+                                                         feed_dict=self.feed_dictionary_generation_for_g(batch_packs=batch_packs,
+                                                                                                         batch_label0=batch_label0_one_hot,
+                                                                                                         batch_label1=batch_label1_one_hot,
+                                                                                                         current_lr=current_lr_real,
+                                                                                                         learning_rate=learning_rate))
 
 
                 info=info+"OptimizeOnD"
@@ -2426,17 +2452,21 @@ class WNet(object):
             if ((global_step.eval(session=self.sess)) % g_iters == 0
                 or global_step.eval(session=self.sess) == global_step_start + 1) and gen_vars_train:
                 _, \
-                generated_target \
+                output_training_img_list \
                     = self.sess.run([optimizer_g,
-                                     generator_handle.generated_target_train],
+                                     training_img_tensor_list],
                                     feed_dict=self.feed_dictionary_generation_for_g(batch_packs=batch_packs,
                                                                                     batch_label0=batch_label0_one_hot,
                                                                                     batch_label1=batch_label1_one_hot,
                                                                                     current_lr=current_lr_real,
                                                                                     learning_rate=learning_rate))
+
+
+
                 info = info + "&&G"
             optimization_elapsed = time.time() - optimization_start
-            return generated_target, \
+
+            return output_training_img_list, \
                    batch_packs,batch_label0_one_hot,batch_label1_one_hot,\
                    reading_data_consumed, optimization_elapsed,\
                    info
@@ -2518,7 +2548,7 @@ class WNet(object):
                     current_critic_logit_penalty_value = self.Discriminative_Penalty
                     current_lr_real = current_lr
 
-                generated_target,\
+                output_training_img_list,\
                 batch_packs_curt_train,batch_label0_one_hot_curt_train,batch_label1_one_hot_curt_train,\
                 reading_data_consumed, optimization_consumed, \
                 info = W_GAN(current_epoch=epoch_step.eval(session=self.sess))
@@ -2614,7 +2644,7 @@ class WNet(object):
                                         batch_label0_one_hot=batch_label0_one_hot_curt_train,
                                         batch_label1_one_hot=batch_label1_one_hot_curt_train,
                                         train_mark=True,
-                                        generated_train_batch=generated_target,
+                                        training_img_list=output_training_img_list,
                                         summary_writer=summary_writer,
                                         global_step=global_step)
 

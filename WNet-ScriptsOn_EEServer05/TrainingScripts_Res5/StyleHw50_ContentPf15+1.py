@@ -21,8 +21,6 @@ exp_root_path = '/DataA/Harric/MSMC_Exp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
-              '--training_from_model_dir',
-    '../../../Exp_MSMC/checkpoint/Exp20180720_StyleHw50_ContentPfSelected15+PfStandard1_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
               '--debug_mode','0',
               '--style_input_number','16', # how many style inputs
               '--init_training_epochs','5',
@@ -94,7 +92,6 @@ input_args = [
               '--Generator_Categorical_Penalty', '0.2',
               '--Discriminator_Gradient_Penalty', '10',
 
-              # feature extractor parametrers
               # feature extractor parametrers
               '--true_fake_target_extractor_dir',
     'TrainedModel/ContentStyleBoth/Exp20180802_FeatureExtractor_StyleContent_HW50_vgg16net/variables/',
