@@ -1314,6 +1314,7 @@ class WNet(object):
             content_prototype_infer_list=list()
             content_prototype_infer_list.append(-1)
             saver_extractor_content_prototype = None
+            selected_content_prototype = -1
 
         if self.extractor_style_reference_enabled:
             style_reference = generator_handle.style_reference_list
@@ -1353,6 +1354,7 @@ class WNet(object):
             style_reference_infer_list=list()
             style_reference_infer_list.append(-1)
             saver_extractor_style_reference = None
+            selected_style_reference = -1
 
 
         feature_extractor_handle = FeatureExtractorHandle(infer_input_img=input_target_infer,
@@ -1908,7 +1910,7 @@ class WNet(object):
                                                  d_loss_real_summary])
 
             cheat_loss = tf.reduce_mean(cheat_loss) * self.Discriminative_Penalty
-            cheat_loss_summary = tf.summary.scalar("Loss_Discriminator/Cheat", tf.abs(cheat_loss) / self.Discriminative_Penalty)
+            cheat_loss_summary = tf.summary.scalar("Loss_Generator/Cheat", tf.abs(cheat_loss) / self.Discriminative_Penalty)
             g_loss+=cheat_loss
             g_merged_summary=tf.summary.merge([g_merged_summary,cheat_loss_summary])
 

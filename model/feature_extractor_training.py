@@ -39,7 +39,7 @@ network_dict = {'alexnet':alexnet,
                 'encoder6layers':encoder6}
 
 
-lr_decay_factor = 0.999
+lr_decay_factor = 0.9995
 moving_avg_decay = 0.9999
 
 

@@ -40,7 +40,7 @@ input_args = [
 
               '--batch_size','64',
               '--image_size','64',
-              '--epoch_num', '1000',
+              '--epoch_num', '2000',
               '--network', 'vgg16net',
               '--init_lr','0.0001',
               '--label0_loss','1',

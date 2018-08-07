@@ -54,7 +54,7 @@ input_args = [
 
               '--file_list_txt_style_train', # file list of the training data
     '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated.txt,'
-    '../../ileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive.txt',
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive.txt',
 
               '--file_list_txt_style_validation', # file list of the validation data
     '../../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
@@ -71,7 +71,7 @@ input_args = [
               # optimizer parameters
               '--init_lr','0.0005',
               '--epoch','5000',
-              '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
+              '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
 
               '--optimization_method','adam',
               '--final_learning_rate_pctg','0.01',

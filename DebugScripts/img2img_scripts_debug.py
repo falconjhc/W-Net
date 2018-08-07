@@ -98,9 +98,9 @@ input_args = [
     'TrainedModel/ContentOnly/Exp20180802_FeatureExtractor_Content_PF15+Standard1_vgg16net/variables/',
               '--style_reference_extractor_dir',
     'TrainedModel/StyleOnly/Exp20180802_FeatureExtractor_Style_HW50_vgg16net/variables/',
-    		  '--Feature_Penalty_True_Fake_Target', '100',
-              '--Feature_Penalty_Style_Reference','150',
-              '--Feature_Penalty_Content_Prototype','50']
+    		  '--Feature_Penalty_True_Fake_Target', '0',
+              '--Feature_Penalty_Style_Reference','0',
+              '--Feature_Penalty_Content_Prototype','0']
 
 
 
