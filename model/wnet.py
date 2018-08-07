@@ -1831,9 +1831,9 @@ class WNet(object):
         # category loss
         if self.Discriminator_Categorical_Penalty > 10 * eps:
             real_category_loss = tf.nn.softmax_cross_entropy_with_logits(logits=real_C_logits,
-                                                                            labels=discriminator_true_label)
+                                                                         labels=discriminator_true_label)
             fake_category_loss = tf.nn.softmax_cross_entropy_with_logits(logits=fake_C_logits,
-                                                                            labels=discriminator_true_label)
+                                                                         labels=discriminator_true_label)
 
             real_category_loss = tf.reduce_mean(real_category_loss) * self.Discriminator_Categorical_Penalty
             fake_category_loss = tf.reduce_mean(fake_category_loss) * self.Discriminator_Categorical_Penalty
@@ -2197,9 +2197,6 @@ class WNet(object):
                                          file_list_txt_style_validation=self.file_list_txt_style_validation)
 
             self.involved_label0_list, self.involved_label1_list = data_provider.get_involved_label_list()
-            self.involved_label0_list = range(0, 3755)
-            self.involved_label1_list = range(0, 50)
-
             self.content_input_num = data_provider.content_input_num
             self.display_style_reference_num = np.min([4, self.style_input_number])
             self.display_content_reference_num = np.min([4, self.content_input_num])
