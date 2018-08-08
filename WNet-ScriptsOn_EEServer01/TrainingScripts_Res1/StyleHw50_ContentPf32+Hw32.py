@@ -20,7 +20,8 @@ exp_root_path = '/DataA/Harric/MSMC_Exp/'
 # OPTIONS SPECIFICATION
 # resume_training = 0: training from stratch
 #                   1: training from a based model
-input_args = [
+input_args = ['--training_from_model_dir',
+'../../../Exp_MSMC1/checkpoint/Exp20180723_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res1@Lyr3_DisMdy6conv/',
 			  '--debug_mode','0',
 			  '--style_input_number','4', # how many style inputs
 			  '--init_training_epochs','5',
@@ -32,7 +33,7 @@ input_args = [
 
 
 			  '--train_data_augment','1', # translation? rotation?
-			  '--experiment_id','20180723_StyleHw50_ContentPf32+Hw32',# experiment name prefix
+			  '--experiment_id','20180808_StyleHw50_ContentPf32+Hw32',# experiment name prefix
 			  '--experiment_dir','../../../Exp_MSMC', # model saving location
 			  '--log_dir','tfLogs_MSMC/',# log file saving location
 			  '--print_info_seconds','900',
@@ -86,7 +87,7 @@ input_args = [
 			  '--L1_Penalty','100',
 			  '--Lconst_content_Penalty','3',
 			  '--Lconst_style_Penalty','5',
-			  '--Discriminative_Penalty', '15',
+			  '--Pixel_Reconstruction_Penalty', '15',
 			  '--Discriminator_Categorical_Penalty', '1',
 			  '--Generator_Categorical_Penalty', '0.2',
 			  '--Discriminator_Gradient_Penalty', '10',
@@ -159,7 +160,7 @@ parser.add_argument('--img_width',dest='img_width',type=int,required=True)
 parser.add_argument('--L1_Penalty', dest='L1_Penalty', type=int, required=True)
 parser.add_argument('--Lconst_content_Penalty', dest='Lconst_content_Penalty', type=int, required=True)
 parser.add_argument('--Lconst_style_Penalty', dest='Lconst_style_Penalty', type=int, required=True)
-parser.add_argument('--Discriminative_Penalty', dest='Discriminative_Penalty', type=int, required=True)
+parser.add_argument('--Pixel_Reconstruction_Penalty', dest='Pixel_Reconstruction_Penalty', type=int, required=True)
 parser.add_argument('--Discriminator_Categorical_Penalty', dest='Discriminator_Categorical_Penalty', type=int, required=True)
 parser.add_argument('--Generator_Categorical_Penalty', dest='Generator_Categorical_Penalty', type=float, required=True)
 parser.add_argument('--Discriminator_Gradient_Penalty', dest='Discriminator_Gradient_Penalty', type=int, required=True)
@@ -294,7 +295,7 @@ def main(_):
                  L1_Penalty=args.L1_Penalty,
                  Lconst_content_Penalty=args.Lconst_content_Penalty,
                  Lconst_style_Penalty=args.Lconst_style_Penalty,
-                 Discriminative_Penalty=args.Discriminative_Penalty,
+                 Pixel_Reconstruction_Penalty=args.Pixel_Reconstruction_Penalty,
                  Discriminator_Categorical_Penalty=args.Discriminator_Categorical_Penalty,
                  Generator_Categorical_Penalty=args.Generator_Categorical_Penalty,
                  Discriminator_Gradient_Penalty=args.Discriminator_Gradient_Penalty,

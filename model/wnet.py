@@ -109,10 +109,12 @@ class WNet(object):
                  lr=0.001, final_learning_rate_pctg=0.2,
 
 
-                 L1_Penalty=100,
-                 Lconst_content_Penalty=15, Lconst_style_Penalty=15,
+                 Pixel_Reconstruction_Penalty=100,
+                 Lconst_content_Penalty=15, 
+                 Lconst_style_Penalty=15,
                  Discriminative_Penalty=1,
-                 Discriminator_Categorical_Penalty=1,Generator_Categorical_Penalty=0.1,
+                 Discriminator_Categorical_Penalty=1,
+                 Generator_Categorical_Penalty=0.1,
                  Discriminator_Gradient_Penalty=1,
 
                  Feature_Penalty_True_Fake_Target=5,
@@ -195,7 +197,7 @@ class WNet(object):
 
         self.Discriminative_Penalty = Discriminative_Penalty + eps
         self.Discriminator_Gradient_Penalty = Discriminator_Gradient_Penalty + eps
-        self.L1_Penalty = L1_Penalty + eps
+        self.Pixel_Reconstruction_Penalty = Pixel_Reconstruction_Penalty + eps
         self.Feature_Penalty_True_Fake_Target = Feature_Penalty_True_Fake_Target + eps
         self.Feature_Penalty_Style_Reference = Feature_Penalty_Style_Reference + eps
         self.Feature_Penalty_Content_Prototype = Feature_Penalty_Content_Prototype  + eps
@@ -1123,13 +1125,26 @@ class WNet(object):
                 square_root_mean_squared_feature_diff = tf.sqrt(eps+mean_squared_feature_diff)
                 this_feature_loss = tf.reduce_mean(square_root_mean_squared_feature_diff)
 
-                if counter == 0:
-                    final_loss = this_feature_loss
-                else:
-                    final_loss += this_feature_loss
-            final_loss = final_loss / len(feature1)
 
-            return final_loss
+                feature1_normed = (feature1[counter] + 1) / 2
+                feature2_normed = (feature2[counter] + 1) / 2
+
+                vn_loss = tf.trace(tf.multiply(feature1_normed, tf.log(feature1_normed)) -
+                                   tf.multiply(feature1_normed, tf.log(feature2_normed)) +
+                                   - feature1_normed + feature2_normed + eps)
+                vn_loss = tf.reduce_mean(vn_loss)
+
+
+                if counter == 0:
+                    final_loss_mse = this_feature_loss
+                    final_loss_vn = vn_loss
+                else:
+                    final_loss_mse += this_feature_loss
+                    final_loss_vn += vn_loss
+            final_loss_mse = final_loss_mse / len(feature1)
+            final_loss_vn = final_loss_vn / len(feature1)
+
+            return final_loss_mse, final_loss_vn
 
         def build_feature_extractor(input_target_infer,input_true_img,
                                     label0_length, label1_length,
@@ -1178,10 +1193,10 @@ class WNet(object):
             if not label1_length==-1:
                 output_logit_list.append(label1_logits)
 
-            feature_loss = calculate_high_level_feature_loss(feature1=real_features,
-                                                             feature2=fake_features)
+            feature_loss_mse, feature_loss_vn = calculate_high_level_feature_loss(feature1=real_features,
+                                                                                  feature2=fake_features)
 
-            return output_logit_list, feature_loss, network_info
+            return output_logit_list, feature_loss_mse, feature_loss_vn, network_info
 
         def define_entropy_accuracy_calculation_op(true_labels, infer_logits, summary_name):
             extr_prdt = tf.argmax(infer_logits, axis=1)
@@ -1227,16 +1242,22 @@ class WNet(object):
         generator_handle = getattr(self, 'generator_handle')
 
         if self.extractor_true_fake_enabled:
-            true_fake_infer_list, true_fake_feature_loss, network_info = \
+            true_fake_infer_list, true_fake_feature_loss_mse, true_fake_feature_loss_vn, network_info = \
                 build_feature_extractor(input_target_infer=input_target_infer,
                                         input_true_img=generator_handle.true_style,
                                         label0_length=len(self.involved_label0_list),
                                         label1_length=len(self.involved_label1_list),
                                         extractor_usage='TrueFake_FeatureExtractor')
-            g_loss += true_fake_feature_loss
-            feature_true_fake_loss_summary = tf.summary.scalar("Loss_FeatureExtractor/TrueFakeL2",
-                                                               tf.abs(true_fake_feature_loss) / self.Feature_Penalty_True_Fake_Target)
-            g_merged_summary = tf.summary.merge([g_merged_summary, feature_true_fake_loss_summary])
+            g_loss += true_fake_feature_loss_mse * self.Feature_Penalty_True_Fake_Target
+            feature_true_fake_loss_l2_summary = tf.summary.scalar("Loss_Reconstruction/TrueFake_L2",
+                                                                  tf.abs(true_fake_feature_loss_mse))
+            g_merged_summary = tf.summary.merge([g_merged_summary, feature_true_fake_loss_l2_summary])
+
+            g_loss += true_fake_feature_loss_vn * self.Feature_Penalty_True_Fake_Target
+            feature_true_fake_loss_vn_summary = tf.summary.scalar("Loss_Reconstruction/TrueFake_VN",
+                                                                  tf.abs(true_fake_feature_loss_vn))
+            g_merged_summary = tf.summary.merge([g_merged_summary, feature_true_fake_loss_vn_summary])
+
 
             extr_vars_true_fake = [var for var in tf.trainable_variables() if 'TrueFake_FeatureExtractor' in var.name]
             extr_vars_true_fake = self.find_bn_avg_var(extr_vars_true_fake)
@@ -1279,16 +1300,23 @@ class WNet(object):
             content_prototype = generator_handle.content_prototype
             selected_index = tf.random_uniform(shape=[],minval=0,maxval=int(content_prototype.shape[3]),dtype=tf.int64)
             selected_content_prototype = tf.expand_dims(content_prototype[:,:,:,selected_index], axis=3)
-            content_prototype_infer_list,content_prototype_feature_loss, network_info = \
+            content_prototype_infer_list,content_prototype_feature_mse_loss, content_prototype_feature_vn_loss, network_info = \
                 build_feature_extractor(input_target_infer=input_target_infer,
                                         input_true_img=selected_content_prototype,
                                         label0_length=len(self.involved_label0_list),
                                         label1_length=-1,
                                         extractor_usage='ContentPrototype_FeatureExtractor')
-            g_loss += content_prototype_feature_loss
-            feature_content_prototype_loss_summary = tf.summary.scalar("Loss_FeatureExtractor/ContentPrototypeL2",
-                                                               tf.abs(content_prototype_feature_loss) / self.Feature_Penalty_Content_Prototype)
-            g_merged_summary = tf.summary.merge([g_merged_summary, feature_content_prototype_loss_summary])
+            g_loss += content_prototype_feature_mse_loss * self.Feature_Penalty_Content_Prototype
+            feature_content_prototype_mse_loss_summary = tf.summary.scalar("Loss_Reconstruction/ContentPrototype_L2",
+                                                                           tf.abs(content_prototype_feature_mse_loss))
+            g_merged_summary = tf.summary.merge([g_merged_summary, feature_content_prototype_mse_loss_summary])
+
+            g_loss += content_prototype_feature_vn_loss * self.Feature_Penalty_Content_Prototype
+            feature_content_prototype_vn_loss_summary = tf.summary.scalar("Loss_Reconstruction/ContentPrototype_VN",
+                                                                           tf.abs(content_prototype_feature_vn_loss))
+            g_merged_summary = tf.summary.merge([g_merged_summary, feature_content_prototype_vn_loss_summary])
+
+
 
             extr_vars_content_prototype = [var for var in tf.trainable_variables() if 'ContentPrototype_FeatureExtractor' in var.name]
             extr_vars_content_prototype = self.find_bn_avg_var(extr_vars_content_prototype)
@@ -1321,16 +1349,22 @@ class WNet(object):
             style_reference = generator_handle.style_reference_list
             selected_index = tf.random_uniform(shape=[], minval=0, maxval=self.style_input_number, dtype=tf.int64)
             selected_style_reference = tf.gather(style_reference,selected_index)
-            style_reference_infer_list, style_reference_feature_loss, network_info = \
+            style_reference_infer_list, style_reference_feature_mse_loss, style_reference_feature_vn_loss, network_info = \
                 build_feature_extractor(input_target_infer=input_target_infer,
                                         input_true_img = selected_style_reference,
                                         label0_length=-1,
                                         label1_length=len(self.involved_label1_list),
                                         extractor_usage='StyleReference_FeatureExtractor')
-            g_loss += style_reference_feature_loss
-            feature_style_reference_loss_summary = tf.summary.scalar("Loss_FeatureExtractor/StyleReferenceL2",
-                                                                     tf.abs(style_reference_feature_loss) / self.Feature_Penalty_Style_Reference)
-            g_merged_summary = tf.summary.merge([g_merged_summary, feature_style_reference_loss_summary])
+            g_loss += style_reference_feature_mse_loss * self.Feature_Penalty_Style_Reference
+            feature_style_reference_mse_loss_summary = tf.summary.scalar("Loss_Reconstruction/StyleReference_L2",
+                                                                         tf.abs(style_reference_feature_mse_loss))
+            g_merged_summary = tf.summary.merge([g_merged_summary, feature_style_reference_mse_loss_summary])
+
+            g_loss += style_reference_feature_vn_loss * self.Feature_Penalty_Style_Reference
+            feature_style_reference_vn_loss_summary = tf.summary.scalar("Loss_Reconstruction/StyleReference_VN",
+                                                                        tf.abs(style_reference_feature_vn_loss))
+            g_merged_summary = tf.summary.merge([g_merged_summary, feature_style_reference_vn_loss_summary])
+
 
             extr_vars_style_reference = [var for var in tf.trainable_variables() if 'StyleReference_FeatureExtractor' in var.name]
             extr_vars_style_reference = self.find_bn_avg_var(extr_vars_style_reference)
@@ -1575,13 +1609,25 @@ class WNet(object):
 
 
         # l1 loss
-        if self.L1_Penalty > eps * 10:
+        if self.Pixel_Reconstruction_Penalty > eps * 10:
             l1_loss = tf.abs(generated_target_train - true_style)
-            l1_loss = tf.reduce_mean(l1_loss) * self.L1_Penalty
-            l1_loss_summary = tf.summary.scalar("Loss_Generator/L1_Pixel",
-                                                tf.abs(l1_loss) / self.L1_Penalty)
+            l1_loss = tf.reduce_mean(l1_loss) * self.Pixel_Reconstruction_Penalty
+            l1_loss_summary = tf.summary.scalar("Loss_Reconstruction/Pixel_L1",
+                                                tf.abs(l1_loss) / self.Pixel_Reconstruction_Penalty)
             g_loss+=l1_loss
             g_merged_summary = tf.summary.merge([g_merged_summary, l1_loss_summary])
+
+            generated_target_train_normed = (generated_target_train + 1) / 2
+            true_style_normed = (true_style + 1) / 2
+            vn_loss = tf.trace(tf.multiply(generated_target_train_normed, tf.log(generated_target_train_normed))-
+                               tf.multiply(generated_target_train_normed, tf.log(true_style_normed)) +
+                               -generated_target_train_normed + true_style_normed)
+            vn_loss = tf.reduce_mean(vn_loss) * self.Pixel_Reconstruction_Penalty
+            vn_loss_summary = tf.summary.scalar("Loss_Reconstruction/Pixel_VN",
+                                                tf.abs(vn_loss) / self.Pixel_Reconstruction_Penalty)
+            g_loss += l1_loss
+            g_merged_summary = tf.summary.merge([g_merged_summary, vn_loss_summary])
+
 
         # category loss
         if self.Generator_Categorical_Penalty > 10 * eps:
@@ -2198,6 +2244,9 @@ class WNet(object):
                                          file_list_txt_style_validation=self.file_list_txt_style_validation)
 
             self.involved_label0_list, self.involved_label1_list = data_provider.get_involved_label_list()
+            if self.debug_mode:
+                self.involved_label0_list = range(0, 3755)
+                self.involved_label1_list = range(0, 50)
             self.content_input_num = data_provider.content_input_num
             self.display_style_reference_num = np.min([4, self.style_input_number])
             self.display_content_reference_num = np.min([4, self.content_input_num])
@@ -2342,7 +2391,7 @@ class WNet(object):
             print("DataAugment:%d, InputStyleNum:%d" % (self.train_data_augment, self.style_input_number))
             print(self.print_separater)
             print("Penalties:")
-            print("Generator: PixelL1:%.3f,ConstCP/SR:%.3f/%.3f,Cat:%.3F,Wgt:%.6f;" % (self.L1_Penalty,
+            print("Generator: PixelL1:%.3f,ConstCP/SR:%.3f/%.3f,Cat:%.3F,Wgt:%.6f;" % (self.Pixel_Reconstruction_Penalty,
                                                                                        self.Lconst_content_Penalty,
                                                                                        self.Lconst_style_Penalty,
                                                                                        self.Generator_Categorical_Penalty,
@@ -2351,13 +2400,14 @@ class WNet(object):
                                                                                 self.Discriminative_Penalty,
                                                                                 self.Discriminator_Gradient_Penalty,
                                                                                 self.discriminator_weight_decay_penalty))
-            print("FeatureExtractor: TrueFalse:%.3f, ContentPrototype:%.3f, StyleReference:%.3f;" % (self.Feature_Penalty_True_Fake_Target,
-                                                                                                     self.Feature_Penalty_Content_Prototype,
-                                                                                                     self.Feature_Penalty_Style_Reference))
+            print("FeatureReconstructionOnExtractor: TrueFalse:%.3f, ContentPrototype:%.3f, StyleReference:%.3f;" %
+                  (self.Feature_Penalty_True_Fake_Target,
+                   self.Feature_Penalty_Content_Prototype,
+                   self.Feature_Penalty_Style_Reference))
+
             print("InitLearningRate:%.3f" % self.lr)
             print(self.print_separater)
             print("Initialization completed, and training started right now.")
-
 
             self.train_implementation(data_provider=data_provider,
                                       summary_writer=summary_writer,

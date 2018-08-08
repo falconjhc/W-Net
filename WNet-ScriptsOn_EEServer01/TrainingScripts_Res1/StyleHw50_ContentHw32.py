@@ -20,7 +20,8 @@ exp_root_path = '/DataA/Harric/MSMC_Exp/'
 # OPTIONS SPECIFICATION
 # resume_training = 0: training from stratch
 #                   1: training from a based model
-input_args = [
+input_args = ['--training_from_model_dir',
+'../../../Exp_MSMC1/checkpoint/Exp20180723_StyleHw50_ContentHw32_GenEncDec6-Res1@Lyr3_DisMdy6conv/',
 			  '--debug_mode','0',
 			  '--style_input_number','4', # how many style inputs
 			  '--init_training_epochs','5',
@@ -32,7 +33,7 @@ input_args = [
 
 
 			  '--train_data_augment','1', # translation? rotation?
-			  '--experiment_id','20180723_StyleHw50_ContentHw32',# experiment name prefix
+			  '--experiment_id','20180808_StyleHw50_ContentHw32',# experiment name prefix
 			  '--experiment_dir','../../../Exp_MSMC', # model saving location
 			  '--log_dir','tfLogs_MSMC/',# log file saving location
 			  '--print_info_seconds','900',
@@ -80,7 +81,7 @@ input_args = [
 			  # penalties
 			  '--generator_weight_decay_penalty','0.0001',
 			  '--discriminator_weight_decay_penalty','0.0003',
-			  '--L1_Penalty','100',
+			  '--Pixel_Reconstruction_Penalty','100',
 			  '--Lconst_content_Penalty','3',
 			  '--Lconst_style_Penalty','5',
 			  '--Discriminative_Penalty', '15',
@@ -153,7 +154,7 @@ parser.add_argument('--img_width',dest='img_width',type=int,required=True)
 
 
 # for losses setting
-parser.add_argument('--L1_Penalty', dest='L1_Penalty', type=int, required=True)
+parser.add_argument('--Pixel_Reconstruction_Penalty', dest='Pixel_Reconstruction_Penalty', type=int, required=True)
 parser.add_argument('--Lconst_content_Penalty', dest='Lconst_content_Penalty', type=int, required=True)
 parser.add_argument('--Lconst_style_Penalty', dest='Lconst_style_Penalty', type=int, required=True)
 parser.add_argument('--Discriminative_Penalty', dest='Discriminative_Penalty', type=int, required=True)
@@ -288,7 +289,7 @@ def main(_):
                  batch_size=args.batch_size, img_width=args.img_width,
                  lr=args.init_lr, final_learning_rate_pctg=args.final_learning_rate_pctg,
 
-                 L1_Penalty=args.L1_Penalty,
+                 Pixel_Reconstruction_Penalty=args.Pixel_Reconstruction_Penalty,
                  Lconst_content_Penalty=args.Lconst_content_Penalty,
                  Lconst_style_Penalty=args.Lconst_style_Penalty,
                  Discriminative_Penalty=args.Discriminative_Penalty,

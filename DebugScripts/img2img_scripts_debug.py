@@ -83,7 +83,7 @@ input_args = [
               # penalties
               '--generator_weight_decay_penalty','0.0001',
               '--discriminator_weight_decay_penalty','0.0003',
-              '--L1_Penalty','5',
+              '--Pixel_Reconstruction_Penalty','5',
               '--Lconst_content_Penalty','5',
               '--Lconst_style_Penalty','3',
               '--Discriminative_Penalty', '3',
@@ -98,9 +98,9 @@ input_args = [
     'TrainedModel/ContentOnly/Exp20180802_FeatureExtractor_Content_PF15+Standard1_vgg16net/variables/',
               '--style_reference_extractor_dir',
     'TrainedModel/StyleOnly/Exp20180802_FeatureExtractor_Style_HW50_vgg16net/variables/',
-    		  '--Feature_Penalty_True_Fake_Target', '0',
-              '--Feature_Penalty_Style_Reference','0',
-              '--Feature_Penalty_Content_Prototype','0']
+    		  '--Feature_Penalty_True_Fake_Target', '1',
+              '--Feature_Penalty_Style_Reference','1',
+              '--Feature_Penalty_Content_Prototype','1']
 
 
 
@@ -154,7 +154,7 @@ parser.add_argument('--img_width',dest='img_width',type=int,required=True)
 
 
 # for losses setting
-parser.add_argument('--L1_Penalty', dest='L1_Penalty', type=int, required=True)
+parser.add_argument('--Pixel_Reconstruction_Penalty', dest='Pixel_Reconstruction_Penalty', type=int, required=True)
 parser.add_argument('--Lconst_content_Penalty', dest='Lconst_content_Penalty', type=int, required=True)
 parser.add_argument('--Lconst_style_Penalty', dest='Lconst_style_Penalty', type=int, required=True)
 parser.add_argument('--Discriminative_Penalty', dest='Discriminative_Penalty', type=int, required=True)
@@ -289,7 +289,7 @@ def main(_):
                  batch_size=args.batch_size, img_width=args.img_width,
                  lr=args.init_lr, final_learning_rate_pctg=args.final_learning_rate_pctg,
 
-                 L1_Penalty=args.L1_Penalty,
+                 Pixel_Reconstruction_Penalty=args.Pixel_Reconstruction_Penalty,
                  Lconst_content_Penalty=args.Lconst_content_Penalty,
                  Lconst_style_Penalty=args.Lconst_style_Penalty,
                  Discriminative_Penalty=args.Discriminative_Penalty,
