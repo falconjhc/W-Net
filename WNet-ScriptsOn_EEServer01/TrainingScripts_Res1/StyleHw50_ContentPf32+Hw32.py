@@ -84,10 +84,10 @@ input_args = ['--training_from_model_dir',
 			  # penalties
 			  '--generator_weight_decay_penalty','0.0001',
 			  '--discriminator_weight_decay_penalty','0.0003',
-			  '--L1_Penalty','100',
+			  '--Pixel_Reconstruction_Penalty','100',
 			  '--Lconst_content_Penalty','3',
 			  '--Lconst_style_Penalty','5',
-			  '--Pixel_Reconstruction_Penalty', '15',
+			  '--Discriminative_Penalty', '15',
 			  '--Discriminator_Categorical_Penalty', '1',
 			  '--Generator_Categorical_Penalty', '0.2',
 			  '--Discriminator_Gradient_Penalty', '10',
@@ -157,7 +157,7 @@ parser.add_argument('--img_width',dest='img_width',type=int,required=True)
 
 
 # for losses setting
-parser.add_argument('--L1_Penalty', dest='L1_Penalty', type=int, required=True)
+parser.add_argument('--Discriminative_Penalty', dest='Discriminative_Penalty', type=int, required=True)
 parser.add_argument('--Lconst_content_Penalty', dest='Lconst_content_Penalty', type=int, required=True)
 parser.add_argument('--Lconst_style_Penalty', dest='Lconst_style_Penalty', type=int, required=True)
 parser.add_argument('--Pixel_Reconstruction_Penalty', dest='Pixel_Reconstruction_Penalty', type=int, required=True)
@@ -292,10 +292,10 @@ def main(_):
                  batch_size=args.batch_size, img_width=args.img_width,
                  lr=args.init_lr, final_learning_rate_pctg=args.final_learning_rate_pctg,
 
-                 L1_Penalty=args.L1_Penalty,
+                 Pixel_Reconstruction_Penalty=args.Pixel_Reconstruction_Penalty,
                  Lconst_content_Penalty=args.Lconst_content_Penalty,
                  Lconst_style_Penalty=args.Lconst_style_Penalty,
-                 Pixel_Reconstruction_Penalty=args.Pixel_Reconstruction_Penalty,
+                 Discriminative_Penalty=args.Discriminative_Penalty,
                  Discriminator_Categorical_Penalty=args.Discriminator_Categorical_Penalty,
                  Generator_Categorical_Penalty=args.Generator_Categorical_Penalty,
                  Discriminator_Gradient_Penalty=args.Discriminator_Gradient_Penalty,
