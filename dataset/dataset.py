@@ -111,6 +111,7 @@ class Dataset_Iterator(object):
         self.augment = augment
         self.style_input_num = style_input_num
         self.content_input_num = len(content_prototype_list)
+        self.label0_vec = np.unique(self.true_style.label0_list)
 
         self.content_data_list_alignment_with_true_style_data(content_prototype_list=content_prototype_list,
                                                               print_marks=print_marks,
@@ -519,7 +520,7 @@ class DataProvider(object):
                                                info_print_interval=info_print_interval,
                                                print_marks='ForTrainIterator:')
         self.style_label1_vec = np.unique(self.train_iterator.true_style.label1_list)
-        self.style_label0_vec = np.unique(self.train_iterator.true_style.label0_list)
+        self.style_label0_vec = self.train_iterator.label0_vec
 
         # building for style data set for validation
         validation_style_label1_list, validation_style_label0_list, validation_style_data_path_list = \

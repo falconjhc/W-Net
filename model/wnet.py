@@ -6,6 +6,7 @@ GRAYSCALE_AVG = 127.5
 import matplotlib
 
 
+
 import sys
 sys.path.append('..')
 
@@ -2519,7 +2520,6 @@ class WNet(object):
 
             if not ei == ei_start:
                 update_lr = current_lr * learning_rate_decay_rate
-                # update_lr = max(update_lr, 0.00009)
                 print("decay learning rate from %.7f to %.7f" % (current_lr, update_lr))
                 print(self.print_separater)
                 current_lr = update_lr
@@ -2541,7 +2541,7 @@ class WNet(object):
 
 
                 if epoch_step.eval(session=self.sess) < self.init_training_epochs:
-                    current_critic_logit_penalty_value = (float(global_step.eval(session=self.sess))/float(self.init_training_epochs*self.itrs_for_current_epoch))*self.Discriminative_Penalty
+                    current_critic_logit_penalty_value = (float(global_step.eval(session=self.sess))/float(self.init_training_epochs*self.itrs_for_current_epoch))*self.Discriminative_Penalty + eps
                     current_lr_real = current_lr * 0.1
                 else:
                     current_critic_logit_penalty_value = self.Discriminative_Penalty
