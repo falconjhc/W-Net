@@ -2591,11 +2591,12 @@ class WNet(object):
 
 
                 if epoch_step.eval(session=self.sess) < self.init_training_epochs:
-                    current_critic_logit_penalty_value = (float(global_step.eval(session=self.sess))/float(self.init_training_epochs*self.itrs_for_current_epoch))*self.Discriminative_Penalty + eps
+                    current_critic_logit_penalty_value = (float(global_step.eval(session=self.sess))/float(self.init_training_epochs*self.itrs_for_current_epoch))*self.Discriminative_Penalty + ep
                     current_lr_real = current_lr * 0.1
                 else:
                     current_critic_logit_penalty_value = self.Discriminative_Penalty
                     current_lr_real = current_lr
+                current_critic_logit_penalty_value = current_critic_logit_penalty_value * 0.1
 
                 output_training_img_list,\
                 batch_packs_curt_train,batch_label0_one_hot_curt_train,batch_label1_one_hot_curt_train,\
