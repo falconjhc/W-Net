@@ -56,8 +56,8 @@ input_args = ['--training_from_model_dir',
     '../../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1L2.txt',
     
               '--file_list_txt_style_train', # file list of the training data
-    '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated.txt,'
-    '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive.txt',
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1200_Isolated.txt,'
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1200_Cursive.txt',
 
               '--file_list_txt_style_validation', # file list of the validation data
     '../../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
