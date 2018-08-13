@@ -456,18 +456,18 @@ def train_procedures(args_input):
                         print(print_separater)
 
 
-                label0_hightest_accuracy, label1_hightest_accuracy = \
-                    performance_evaluation(sess=sess,
-                                           data_provider=data_provider,
-                                           batch_size=batch_size,
-                                           evalHandle=eval_handle,
-                                           batch_label0_logits_op=acry_0_lgt,
-                                           batch_label1_logits_op=acry_1_lgt,
-                                           ei=epoch_step.eval(session=sess),
-                                           label0_highest=label0_hightest_accuracy,
-                                           label1_highest=label1_hightest_accuracy,
-                                           record=record_print_info,
-                                           print_info_second=summary_seconds)
+                # label0_hightest_accuracy, label1_hightest_accuracy = \
+                #     performance_evaluation(sess=sess,
+                #                            data_provider=data_provider,
+                #                            batch_size=batch_size,
+                #                            evalHandle=eval_handle,
+                #                            batch_label0_logits_op=acry_0_lgt,
+                #                            batch_label1_logits_op=acry_1_lgt,
+                #                            ei=epoch_step.eval(session=sess),
+                #                            label0_highest=label0_hightest_accuracy,
+                #                            label1_highest=label1_hightest_accuracy,
+                #                            record=record_print_info,
+                #                            print_info_second=summary_seconds)
 
                 checkpoint(sess=sess,
                            saver=saver_full_model,
