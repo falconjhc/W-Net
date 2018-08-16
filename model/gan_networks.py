@@ -829,7 +829,8 @@ def vgg_16_net(image,
                keep_prob,
                initializer,
                reuse=False,
-               network_usage='-1'):
+               network_usage='-1',
+               output_high_level_features=[-1]):
     is_training = False
     weight_decay = False
     return_str="Vgg16Net"
@@ -1088,11 +1089,16 @@ def vgg_16_net(image,
             output_label0 = -1
 
         features = list()
-        features.append(conv1_2)
-        features.append(conv2_2)
-        features.append(conv3_3)
-        features.append(conv4_3)
-        features.append(conv5_3)
+        if 1 in output_high_level_features:
+            features.append(conv1_2)
+        if 2 in output_high_level_features:
+            features.append(conv2_2)
+        if 3 in output_high_level_features:
+            features.append(conv3_3)
+        if 4 in output_high_level_features:
+            features.append(conv4_3)
+        if 5 in output_high_level_features:
+            features.append(conv5_3)
 
 
         return output_label1, output_label0, features, return_str

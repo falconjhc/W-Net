@@ -1148,7 +1148,7 @@ class WNet(object):
 
         def build_feature_extractor(input_target_infer,input_true_img,
                                     label0_length, label1_length,
-                                    extractor_usage):
+                                    extractor_usage,output_high_level_features):
             generator_handle = getattr(self,'generator_handle')
             output_logit_list = list()
 
@@ -1166,7 +1166,8 @@ class WNet(object):
                                                   reuse=False,
                                                   keep_prob=1,
                                                   initializer=self.initializer,
-                                                  network_usage=extractor_usage)
+                                                  network_usage=extractor_usage,
+                                                  output_high_level_features=output_high_level_features)
                     _, _, fake_features, _ = \
                         feature_extractor_network(image=generator_handle.generated_target_train,
                                                   batch_size=self.batch_size,
@@ -1176,7 +1177,8 @@ class WNet(object):
                                                   reuse=True,
                                                   keep_prob=1,
                                                   initializer=self.initializer,
-                                                  network_usage=extractor_usage)
+                                                  network_usage=extractor_usage,
+                                                  output_high_level_features=output_high_level_features)
 
                     label1_logits, label0_logits, _, _ = \
                         feature_extractor_network(image=input_target_infer,
@@ -1187,7 +1189,8 @@ class WNet(object):
                                                   reuse=True,
                                                   keep_prob=1,
                                                   initializer=self.initializer,
-                                                  network_usage=extractor_usage)
+                                                  network_usage=extractor_usage,
+                                                  output_high_level_features=output_high_level_features)
             if not label0_length==-1:
                 output_logit_list.append(label0_logits)
             if not label1_length==-1:
@@ -1247,7 +1250,8 @@ class WNet(object):
                                         input_true_img=generator_handle.true_style,
                                         label0_length=len(self.involved_label0_list),
                                         label1_length=len(self.involved_label1_list),
-                                        extractor_usage='TrueFake_FeatureExtractor')
+                                        extractor_usage='TrueFake_FeatureExtractor',
+                                        output_high_level_features=[1,2,3,4,5])
             g_loss += true_fake_feature_loss_mse * self.Feature_Penalty_True_Fake_Target
             feature_true_fake_loss_l2_summary = tf.summary.scalar("Loss_Reconstruction/TrueFake_L2",
                                                                   tf.abs(true_fake_feature_loss_mse))
@@ -1305,7 +1309,8 @@ class WNet(object):
                                         input_true_img=selected_content_prototype,
                                         label0_length=len(self.involved_label0_list),
                                         label1_length=-1,
-                                        extractor_usage='ContentPrototype_FeatureExtractor')
+                                        extractor_usage='ContentPrototype_FeatureExtractor',
+                                        output_high_level_features=[3,4,5])
             g_loss += content_prototype_feature_mse_loss * self.Feature_Penalty_Content_Prototype
             feature_content_prototype_mse_loss_summary = tf.summary.scalar("Loss_Reconstruction/ContentPrototype_L2",
                                                                            tf.abs(content_prototype_feature_mse_loss))
@@ -1354,7 +1359,8 @@ class WNet(object):
                                         input_true_img = selected_style_reference,
                                         label0_length=-1,
                                         label1_length=len(self.involved_label1_list),
-                                        extractor_usage='StyleReference_FeatureExtractor')
+                                        extractor_usage='StyleReference_FeatureExtractor',
+                                        output_high_level_features=[3,4,5])
             g_loss += style_reference_feature_mse_loss * self.Feature_Penalty_Style_Reference
             feature_style_reference_mse_loss_summary = tf.summary.scalar("Loss_Reconstruction/StyleReference_L2",
                                                                          tf.abs(style_reference_feature_mse_loss))
