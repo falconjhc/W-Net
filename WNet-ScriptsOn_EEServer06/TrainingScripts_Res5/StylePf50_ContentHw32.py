@@ -20,9 +20,7 @@ exp_root_path = '/DataA/Harric/MSMC_Exp/'
 # OPTIONS SPECIFICATION
 # resume_training = 0: training from stratch
 #                   1: training from a based model
-input_args = ['--training_from_model_dir',
-'../../../Exp_MSMC1/checkpoint/Exp20180724_StylePf50_ContentHw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
-              '--debug_mode','0',
+input_args = ['--debug_mode','0',
               '--style_input_number','4', # how many style inputs
               '--init_training_epochs','5',
               '--final_training_epochs','250',
@@ -71,7 +69,7 @@ input_args = ['--training_from_model_dir',
               # optimizer parameters
               '--init_lr','0.0005',
               '--epoch','5000',
-              '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
+              '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
 
               '--optimization_method','adam',
               '--final_learning_rate_pctg','0.01',
