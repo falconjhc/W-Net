@@ -82,7 +82,7 @@ input_args = ['--debug_mode','0',
               # penalties
               '--generator_weight_decay_penalty','0.0001',
               '--discriminator_weight_decay_penalty','0.0003',
-              '--Pixel_Reconstruction_Penalty','100',
+              '--Pixel_Reconstruction_Penalty','15',
               '--Lconst_content_Penalty','3',
               '--Lconst_style_Penalty','5',
               '--Discriminative_Penalty', '15',
@@ -98,9 +98,9 @@ input_args = ['--debug_mode','0',
     'TrainedModel/ContentOnly/Exp20180802_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
               '--style_reference_extractor_dir',
     'TrainedModel/StyleOnly/Exp20180802_FeatureExtractor_Style_HW100_vgg16net/variables/',
-              '--Feature_Penalty_True_Fake_Target', '100',
-              '--Feature_Penalty_Style_Reference','150',
-              '--Feature_Penalty_Content_Prototype','50']
+              '--Feature_Penalty_True_Fake_Target', '500',
+              '--Feature_Penalty_Style_Reference','1000',
+              '--Feature_Penalty_Content_Prototype','1000']
 
 
 
