@@ -49,8 +49,9 @@ SummaryHandle = namedtuple("SummaryHandle", ["d_merged", "g_merged",
                                              "check_validate_image_summary", "check_train_image_summary",
                                              "check_validate_image", "check_train_image",
                                              "learning_rate",
-                                             "trn_real_summaries","val_real_summaries",
-                                             "trn_fake_summaries","val_fake_summaries"])
+                                             "trn_real_dis_extr_summaries","val_real_dis_extr_summaries",
+                                             "trn_fake_dis_extr_summaries","val_fake_dis_extr_summaries",
+                                             "trn_generator_summary","val_generator_summary"])
 
 EvalHandle = namedtuple("EvalHandle",["inferring_generated_images","training_generated_images"])
 
@@ -349,7 +350,7 @@ class WNet(object):
             print(self.print_separater)
             return False
 
-    def generate_fake_samples(self,training_mark,current_iterator,
+    def generate_fake_samples(self,training_mark,current_iterator,generator_summary,
                               training_img_tensor_list):
 
         evalHandle = getattr(self, "eval_handle")
@@ -358,7 +359,8 @@ class WNet(object):
             true_style,content_prototypes,style_references,\
             label0_onehot, label1_onehot,\
             label0_dense,label1_dense,\
-            output_training_img_list \
+            output_training_img_list,\
+            gen_summary_output \
                 = self.sess.run([evalHandle.training_generated_images,
                                  current_iterator.output_tensor_list[0],
                                  current_iterator.output_tensor_list[1],
@@ -367,12 +369,14 @@ class WNet(object):
                                  current_iterator.output_tensor_list[4],
                                  current_iterator.output_tensor_list[5],
                                  current_iterator.output_tensor_list[6],
-                                 training_img_tensor_list])
+                                 training_img_tensor_list,
+                                 generator_summary])
         else:
             fake_images, \
             true_style, content_prototypes, style_references, \
             label0_onehot, label1_onehot, \
-            label0_dense, label1_dense, \
+            label0_dense, label1_dense\
+                , gen_summary_output\
                 = self.sess.run([evalHandle.inferring_generated_images,
                                  current_iterator.output_tensor_list[0],
                                  current_iterator.output_tensor_list[1],
@@ -380,12 +384,14 @@ class WNet(object):
                                  current_iterator.output_tensor_list[3],
                                  current_iterator.output_tensor_list[4],
                                  current_iterator.output_tensor_list[5],
-                                 current_iterator.output_tensor_list[6],])
+                                 current_iterator.output_tensor_list[6],
+                                 generator_summary])
             output_training_img_list=list()
 
         return fake_images,\
                true_style, content_prototypes, style_references, output_training_img_list, \
-               label0_onehot, label1_onehot, label0_dense, label1_dense
+               label0_onehot, label1_onehot, label0_dense, label1_dense, \
+               gen_summary_output
 
     def evaluate_samples(self,source,target,input_style):
 
@@ -415,18 +421,12 @@ class WNet(object):
                        summary_writer, global_step,
                        data_provider,
                        discriminator_handle,generator_handle,feature_extractor_handle):
-
-
-
-
-
-
-
         summary_handle = getattr(self,"summary_handle")
 
         if train_mark:
-            merged_real_summaries = summary_handle.trn_real_summaries
-            merged_fake_summaries = summary_handle.trn_fake_summaries
+            merged_real_dis_extr_summaries = summary_handle.trn_real_dis_extr_summaries
+            merged_fake_dis_extr_summaries = summary_handle.trn_fake_dis_extr_summaries
+            generator_summary = summary_handle.trn_generator_summary
             check_image = summary_handle.check_train_image_summary
             check_image_input = summary_handle.check_train_image
             current_iterator = data_provider.train_iterator
@@ -448,8 +448,9 @@ class WNet(object):
                 training_img_tensor_list.append(generator_handle.generated_target_train)
 
         else:
-            merged_real_summaries = summary_handle.val_real_summaries
-            merged_fake_summaries = summary_handle.val_fake_summaries
+            merged_real_dis_extr_summaries = summary_handle.val_real_dis_extr_summaries
+            merged_fake_dis_extr_summaries = summary_handle.val_fake_dis_extr_summaries
+            generator_summary = summary_handle.val_generator_summary
             check_image = summary_handle.check_validate_image_summary
             check_image_input = summary_handle.check_validate_image
             current_iterator = data_provider.validate_iterator
@@ -468,18 +469,28 @@ class WNet(object):
         true_style,content_prototypes,style_references,\
         training_img_list,\
         label0_onehot,label1_onehot,\
-        label0_dense,label1_dense \
+        label0_dense,label1_dense,\
+        generator_summary_output \
             = self.generate_fake_samples(training_mark=train_mark,
                                          current_iterator=current_iterator,
+                                         generator_summary=generator_summary,
                                          training_img_tensor_list=training_img_tensor_list)
         random_content_prototype_index = rnd.randint(a=0,b=self.content_input_num-1)
         random_style_reference_index = rnd.randint(a=0,b=self.style_input_number-1)
         selected_content = np.expand_dims(content_prototypes[:, :, :, random_content_prototype_index],axis=3)
         selected_style = np.expand_dims(style_references[:, :, :, random_style_reference_index],axis=3)
 
+        summary_fake_output = self.sess.run(merged_fake_dis_extr_summaries,
+                                            feed_dict={feature_extractor_handle.infer_input_img: generated_batch,
+                                                       feature_extractor_handle.true_label0: label0_onehot,
+                                                       feature_extractor_handle.true_label1: label1_onehot,
+                                                       discriminator_handle.infer_label1: label1_onehot,
+                                                       discriminator_handle.infer_content_prototype: selected_content,
+                                                       discriminator_handle.infer_style_reference: selected_style,
+                                                       discriminator_handle.infer_true_fake: generated_batch})
 
 
-        summary_real_output = self.sess.run(merged_real_summaries,
+        summary_real_output = self.sess.run(merged_real_dis_extr_summaries,
                                             feed_dict={feature_extractor_handle.infer_input_img:true_style,
                                                        feature_extractor_handle.true_label0: label0_onehot,
                                                        feature_extractor_handle.true_label1: label1_onehot,
@@ -487,14 +498,7 @@ class WNet(object):
                                                        discriminator_handle.infer_content_prototype:selected_content,
                                                        discriminator_handle.infer_style_reference:selected_style,
                                                        discriminator_handle.infer_true_fake:true_style})
-        summary_fake_output = self.sess.run(merged_fake_summaries,
-                                            feed_dict={feature_extractor_handle.infer_input_img:generated_batch,
-                                                       feature_extractor_handle.true_label0: label0_onehot,
-                                                       feature_extractor_handle.true_label1: label1_onehot,
-                                                       discriminator_handle.infer_label1:label1_onehot,
-                                                       discriminator_handle.infer_content_prototype:selected_content,
-                                                       discriminator_handle.infer_style_reference:selected_style,
-                                                       discriminator_handle.infer_true_fake:generated_batch})
+
 
 
         generated_style = scale_back_for_img(images=generated_batch)
@@ -590,11 +594,10 @@ class WNet(object):
                                                                             merged_disp.shape[2]))})
         summary_writer.add_summary(summray_img, global_step.eval(session=self.sess))
 
-        if self.debug_mode or ((not self.debug_mode) and global_step.eval(session=self.sess)>=5000):
+        if self.debug_mode==1 or ((self.debug_mode==0) and global_step.eval(session=self.sess)>=500):
             summary_writer.add_summary(summary_real_output, global_step.eval(session=self.sess))
             summary_writer.add_summary(summary_fake_output, global_step.eval(session=self.sess))
-
-
+            summary_writer.add_summary(generator_summary_output, global_step.eval(session=self.sess))
 
 
 
@@ -606,8 +609,9 @@ class WNet(object):
     def summary_finalization(self,
                              g_loss_summary,
                              d_loss_summary,
-                             trn_real_summaries, val_real_summaries,
-                             trn_fake_summaries, val_fake_summaries,
+                             trn_real_dis_extr_summaries, val_real_dis_extr_summaries,
+                             trn_fake_dis_extr_summaries, val_fake_dis_extr_summaries,
+                             trn_generator_summary,val_generator_summary,
                              learning_rate):
         train_img_num = 5
         if self.extractor_content_prototype_enabled:
@@ -637,11 +641,12 @@ class WNet(object):
                                        check_validate_image=check_validate_image,
                                        check_train_image=check_train_image,
                                        learning_rate=learning_rate_summary,
-                                       trn_real_summaries=trn_real_summaries,
-                                       val_real_summaries=val_real_summaries,
-                                       trn_fake_summaries=trn_fake_summaries,
-                                       val_fake_summaries=val_fake_summaries,
-                                       )
+                                       trn_real_dis_extr_summaries=trn_real_dis_extr_summaries,
+                                       val_real_dis_extr_summaries=val_real_dis_extr_summaries,
+                                       trn_fake_dis_extr_summaries=trn_fake_dis_extr_summaries,
+                                       val_fake_dis_extr_summaries=val_fake_dis_extr_summaries,
+                                       trn_generator_summary=trn_generator_summary,
+                                       val_generator_summary=val_generator_summary )
         setattr(self, "summary_handle", summary_handle)
 
 
@@ -1970,16 +1975,16 @@ class WNet(object):
         # build accuracy and entropy claculation
         # discriminator reference build here
         trn_real_acry, trn_real_enty = _calculate_accuracy_and_entropy(logits=infer_categorical_logits,
-                                                                       true_labels=data_provider.train_iterator.output_tensor_list[4],
+                                                                       true_labels=infer_label1,
                                                                        summary_name_parafix="TrainReal")
         trn_fake_acry, trn_fake_enty = _calculate_accuracy_and_entropy(logits=infer_categorical_logits,
-                                                                       true_labels=data_provider.train_iterator.output_tensor_list[4],
+                                                                       true_labels=infer_label1,
                                                                        summary_name_parafix="TrainFake")
         val_real_acry, val_real_enty = _calculate_accuracy_and_entropy(logits=infer_categorical_logits,
-                                                                       true_labels=data_provider.validate_iterator.output_tensor_list[4],
+                                                                       true_labels=infer_label1,
                                                                        summary_name_parafix="TestReal")
         val_fake_acry, val_fake_enty = _calculate_accuracy_and_entropy(logits=infer_categorical_logits,
-                                                                       true_labels=data_provider.validate_iterator.output_tensor_list[4],
+                                                                       true_labels=infer_label1,
                                                                        summary_name_parafix="TestFake")
 
 
@@ -2322,18 +2327,25 @@ class WNet(object):
                                       dis_vars_train=dis_vars_train,
                                       discriminator_loss_train=d_loss)
 
-            trn_real_summary_merged = tf.summary.merge([dis_trn_real_summary, generator_train_summary, extr_trn_real_merged])
-            trn_fake_summary_merged = tf.summary.merge([dis_trn_fake_summary, extr_trn_fake_merged])
-            val_real_summary_merged = tf.summary.merge([dis_val_real_summary, generator_test_summary, extr_val_real_merged])
-            val_fake_summary_merged = tf.summary.merge([dis_val_fake_summary, extr_val_fake_merged])
+            # trn_real_summary_merged = tf.summary.merge([dis_trn_real_summary, generator_train_summary, extr_trn_real_merged])
+            # trn_fake_summary_merged = tf.summary.merge([dis_trn_fake_summary, extr_trn_fake_merged])
+            # val_real_summary_merged = tf.summary.merge([dis_val_real_summary, generator_test_summary, extr_val_real_merged])
+            # val_fake_summary_merged = tf.summary.merge([dis_val_fake_summary, extr_val_fake_merged])
+
+            trn_real_dis_extr_summary_merged = tf.summary.merge([dis_trn_real_summary, extr_trn_real_merged])
+            trn_fake_dis_extr_summary_merged = tf.summary.merge([dis_trn_fake_summary, extr_trn_fake_merged])
+            val_real_dis_extr_summary_merged = tf.summary.merge([dis_val_real_summary, extr_val_real_merged])
+            val_fake_dis_extr_summary_merged = tf.summary.merge([dis_val_fake_summary, extr_val_fake_merged])
 
             # summaries
             self.summary_finalization(g_loss_summary=g_merged_summary,
                                       d_loss_summary=d_merged_summary,
-                                      trn_real_summaries=trn_real_summary_merged,
-                                      val_real_summaries=val_real_summary_merged,
-                                      trn_fake_summaries=trn_fake_summary_merged,
-                                      val_fake_summaries=val_fake_summary_merged,
+                                      trn_real_dis_extr_summaries=trn_real_dis_extr_summary_merged,
+                                      val_real_dis_extr_summaries=val_real_dis_extr_summary_merged,
+                                      trn_fake_dis_extr_summaries=trn_fake_dis_extr_summary_merged,
+                                      val_fake_dis_extr_summaries=val_fake_dis_extr_summary_merged,
+                                      trn_generator_summary=generator_train_summary,
+                                      val_generator_summary=generator_test_summary,
                                       learning_rate=learning_rate)
 
 
@@ -2418,8 +2430,6 @@ class WNet(object):
                              epoch_step
                              ):
         def W_GAN(current_epoch,discriminator_handle):
-            generator_handle = getattr(self, "generator_handle")
-            feature_extractor_handle = getattr(self,"feature_extractor_handle")
 
             if current_epoch <= self.final_training_epochs:
                 self.g_iters = 5
@@ -2451,8 +2461,7 @@ class WNet(object):
             # optimization for generator every (g_iters) iterations
             if ((global_step.eval(session=self.sess)) % g_iters == 0
                 or global_step.eval(session=self.sess) == global_step_start + 1) and gen_vars_train:
-                _, \
-                    = self.sess.run([optimizer_g], feed_dict={learning_rate: current_lr_real})
+                _ = self.sess.run(optimizer_g, feed_dict={learning_rate: current_lr_real})
 
 
 
@@ -2586,7 +2595,8 @@ class WNet(object):
                         print(self.print_separater)
 
 
-                if time.time()-summary_start>summary_seconds or global_step.eval(session=self.sess)==global_step_start+300:
+                if ((time.time()-summary_start>summary_seconds) and (self.debug_mode==0) and global_step.eval(session=self.sess)>=500) \
+                        or self.debug_mode==1:
                     summary_start = time.time()
 
                     if dis_vars_train:
@@ -2608,13 +2618,12 @@ class WNet(object):
 
 
 
-                if time.time()-sample_start>sample_seconds or global_step.eval(session=self.sess)==global_step_start+300:
+                if time.time()-sample_start>sample_seconds or global_step.eval(session=self.sess)==global_step_start:
                     sample_start = time.time()
 
 
-
-                    # check for validation set
-                    self.validate_model(train_mark=False,
+                    # check for train set
+                    self.validate_model(train_mark=True,
                                         summary_writer=summary_writer,
                                         global_step=global_step,
                                         discriminator_handle=discriminator_handle,
@@ -2622,8 +2631,8 @@ class WNet(object):
                                         generator_handle=generator_handle,
                                         data_provider=data_provider)
 
-                    # check for train set
-                    self.validate_model(train_mark=True,
+                    # check for validation set
+                    self.validate_model(train_mark=False,
                                         summary_writer=summary_writer,
                                         global_step=global_step,
                                         discriminator_handle=discriminator_handle,
