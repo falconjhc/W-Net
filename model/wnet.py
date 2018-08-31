@@ -39,9 +39,7 @@ from model.gan_networks import encoder_framework as encoder_implementation
 
 
 import math
-
 import utilities.infer_implementations as inf_tools
-
 
 
 
@@ -54,23 +52,18 @@ SummaryHandle = namedtuple("SummaryHandle", ["d_merged", "g_merged",
                                              "trn_real_summaries","val_real_summaries",
                                              "trn_fake_summaries","val_fake_summaries"])
 
-EvalHandle = namedtuple("EvalHandle",["inferred_generated_images",
-                                      "inferred_categorical_logits"])
+EvalHandle = namedtuple("EvalHandle",["inferring_generated_images","training_generated_images"])
 
 GeneratorHandle = namedtuple("Generator",
-                             ["content_prototype","true_style","style_reference_list",
-                              "true_label0","true_label1",
-                              "generated_target_train","generated_target_infer"])
+                             ["generated_target_train","generated_target_infer"])
 
 DiscriminatorHandle = namedtuple("Discriminator",
-                                 ["discriminator_true_label",
-                                 "current_critic_logit_penalty",
-                                  "content_prototype","true_style","style_reference",
-                                  "infer_content_prototype","discriminator_infer_true_or_generated_style","infer_style_reference",
-                                  "infer_C_logits","infer_Cr_logits"])
+                                 ["current_critic_logit_penalty",
+                                  "infer_label1","infer_content_prototype","infer_style_reference","infer_true_fake"])
 
 FeatureExtractorHandle = namedtuple("FeatureExtractor",
-                                    ["infer_input_img","selected_content_prototype","selected_style_reference"])
+                                    ["infer_input_img","true_label0","true_label1",
+                                     "selected_content_prototype","selected_style_reference"])
 
 
 
@@ -356,27 +349,43 @@ class WNet(object):
             print(self.print_separater)
             return False
 
-    def generate_fake_samples(self,prototype,reference):
-
-        def feed_dict_for_g_tmp(reference,prototype):
-            output_dict = {}
-            generator_handle = getattr(self, "generator_handle")
-
-            output_dict.update({generator_handle.content_prototype:prototype})
-            for ii in range(self.style_input_number):
-                output_dict.update({generator_handle.style_reference_list[ii]:
-                                        np.reshape(reference[:, :, :, ii],
-                                                   [self.batch_size,
-                                                    self.img2img_width,
-                                                    self.img2img_width,1])})
-            return output_dict
+    def generate_fake_samples(self,training_mark,current_iterator,
+                              training_img_tensor_list):
 
         evalHandle = getattr(self, "eval_handle")
-        fake_images = self.sess.run(evalHandle.inferred_generated_images,
-                                    feed_dict=feed_dict_for_g_tmp(reference=reference,
-                                                                  prototype=prototype))
-        return fake_images
+        if training_mark:
+            fake_images,\
+            true_style,content_prototypes,style_references,\
+            label0_onehot, label1_onehot,\
+            label0_dense,label1_dense,\
+            output_training_img_list \
+                = self.sess.run([evalHandle.training_generated_images,
+                                 current_iterator.output_tensor_list[0],
+                                 current_iterator.output_tensor_list[1],
+                                 current_iterator.output_tensor_list[2],
+                                 current_iterator.output_tensor_list[3],
+                                 current_iterator.output_tensor_list[4],
+                                 current_iterator.output_tensor_list[5],
+                                 current_iterator.output_tensor_list[6],
+                                 training_img_tensor_list])
+        else:
+            fake_images, \
+            true_style, content_prototypes, style_references, \
+            label0_onehot, label1_onehot, \
+            label0_dense, label1_dense, \
+                = self.sess.run([evalHandle.inferring_generated_images,
+                                 current_iterator.output_tensor_list[0],
+                                 current_iterator.output_tensor_list[1],
+                                 current_iterator.output_tensor_list[2],
+                                 current_iterator.output_tensor_list[3],
+                                 current_iterator.output_tensor_list[4],
+                                 current_iterator.output_tensor_list[5],
+                                 current_iterator.output_tensor_list[6],])
+            output_training_img_list=list()
 
+        return fake_images,\
+               true_style, content_prototypes, style_references, output_training_img_list, \
+               label0_onehot, label1_onehot, label0_dense, label1_dense
 
     def evaluate_samples(self,source,target,input_style):
 
@@ -395,87 +404,97 @@ class WNet(object):
             return output_dict
 
         evalHandle = getattr(self,'eval_handle')
-        c_logits = self.sess.run(evalHandle.inferred_categorical_logits,
+        c_logits = self.sess.run(evalHandle.inferring_categorical_logits,
                                  feed_dict=feed_dict_for_d_tmp())
 
         return c_logits
 
 
     def validate_model(self,
-                       batch_label0_one_hot,
-                       batch_label1_one_hot,
-                       batch_packs,
                        train_mark,
                        summary_writer, global_step,
-                       training_img_list=list()):
-
-        def feed_dict_tmp(current_specifying_target):
-
-            output_dict = {}
-            discriminator_handle = getattr(self, "discriminator_handle")
-
-            generator_handle = getattr(self, "generator_handle")
-
-            output_dict.update({generator_handle.content_prototype:content_prototypes})
-            for ii in range(self.style_input_number):
-                output_dict.update({generator_handle.style_reference_list[ii]:np.reshape(style_references[:,:,:,ii],
-                                                                                      [self.batch_size,
-                                                                                       self.img2img_width,
-                                                                                       self.img2img_width,1])})
-            output_dict.update({generator_handle.true_label0: batch_label0_one_hot})
-            output_dict.update({generator_handle.true_label1: batch_label1_one_hot})
+                       data_provider,
+                       discriminator_handle,generator_handle,feature_extractor_handle):
 
 
-            rnd_index_style = rnd.sample(range(self.style_input_number), 1)[0]
-            rnd_index_content = rnd.sample(range(self.content_input_num), 1)[0]
 
-            output_dict.update({discriminator_handle.infer_content_prototype:
-                                    np.reshape(content_prototypes[:,:,:,rnd_index_content],
-                                               [self.batch_size,
-                                                self.img2img_width,
-                                                self.img2img_width, 1])})
-            output_dict.update({discriminator_handle.infer_style_reference:
-                                    np.reshape(style_references[:,:,:,rnd_index_style],
-                                               [self.batch_size,
-                                                self.img2img_width,
-                                                self.img2img_width, 1])})
-            output_dict.update({discriminator_handle.discriminator_infer_true_or_generated_style: current_specifying_target})
-            output_dict.update({discriminator_handle.discriminator_true_label: batch_label1_one_hot})
 
-            feature_extractor_handle = getattr(self, "feature_extractor_handle")
-            output_dict.update({feature_extractor_handle.infer_input_img: current_specifying_target})
 
-            return output_dict
 
 
         summary_handle = getattr(self,"summary_handle")
-        feature_extractor_handle = getattr(self,"feature_extractor_handle")
+
         if train_mark:
             merged_real_summaries = summary_handle.trn_real_summaries
             merged_fake_summaries = summary_handle.trn_fake_summaries
             check_image = summary_handle.check_train_image_summary
             check_image_input = summary_handle.check_train_image
+            current_iterator = data_provider.train_iterator
+            # batch_true_style, \
+            # batch_prototype, batch_reference, \
+            # batch_label0_onehot, batch_label1_onehot, \
+            # batch_label0_dense, batch_label1_dense = \
+            #     current_iterator.get_next_batch(sess=self.sess)
+
+            training_img_tensor_list = list()
+            training_img_tensor_list.append(generator_handle.generated_target_train)
+            if self.extractor_content_prototype_enabled:
+                training_img_tensor_list.append(feature_extractor_handle.selected_content_prototype)
+            else:
+                training_img_tensor_list.append(generator_handle.generated_target_train)
+            if self.extractor_style_reference_enabled:
+                training_img_tensor_list.append(feature_extractor_handle.selected_style_reference)
+            else:
+                training_img_tensor_list.append(generator_handle.generated_target_train)
 
         else:
             merged_real_summaries = summary_handle.val_real_summaries
             merged_fake_summaries = summary_handle.val_fake_summaries
             check_image = summary_handle.check_validate_image_summary
             check_image_input = summary_handle.check_validate_image
+            current_iterator = data_provider.validate_iterator
+            # batch_true_style, \
+            # batch_prototype, batch_reference, \
+            # batch_label0_onehot, batch_label1_onehot, \
+            # batch_label0_dense, batch_label1_dense = \
+            #     current_iterator.get_next_batch(sess=self.sess)
 
-        channels = self.input_output_img_filter_num
-        true_style = batch_packs[:, :, :, 0:channels]
-        content_prototypes = batch_packs[:, :, :, channels:channels + self.content_input_num * channels]
-        style_references = batch_packs[:, :, :, 1 + self.content_input_num * channels:]
+            training_img_tensor_list=list()
 
 
-        generated_batch = self.generate_fake_samples(prototype=content_prototypes,
-                                                     reference=style_references)
+
+
+        generated_batch, \
+        true_style,content_prototypes,style_references,\
+        training_img_list,\
+        label0_onehot,label1_onehot,\
+        label0_dense,label1_dense \
+            = self.generate_fake_samples(training_mark=train_mark,
+                                         current_iterator=current_iterator,
+                                         training_img_tensor_list=training_img_tensor_list)
+        random_content_prototype_index = rnd.randint(a=0,b=self.content_input_num-1)
+        random_style_reference_index = rnd.randint(a=0,b=self.style_input_number-1)
+        selected_content = np.expand_dims(content_prototypes[:, :, :, random_content_prototype_index],axis=3)
+        selected_style = np.expand_dims(style_references[:, :, :, random_style_reference_index],axis=3)
+
 
 
         summary_real_output = self.sess.run(merged_real_summaries,
-                                            feed_dict=feed_dict_tmp(current_specifying_target=true_style))
+                                            feed_dict={feature_extractor_handle.infer_input_img:true_style,
+                                                       feature_extractor_handle.true_label0: label0_onehot,
+                                                       feature_extractor_handle.true_label1: label1_onehot,
+                                                       discriminator_handle.infer_label1:label1_onehot,
+                                                       discriminator_handle.infer_content_prototype:selected_content,
+                                                       discriminator_handle.infer_style_reference:selected_style,
+                                                       discriminator_handle.infer_true_fake:true_style})
         summary_fake_output = self.sess.run(merged_fake_summaries,
-                                            feed_dict=feed_dict_tmp(current_specifying_target=generated_batch))
+                                            feed_dict={feature_extractor_handle.infer_input_img:generated_batch,
+                                                       feature_extractor_handle.true_label0: label0_onehot,
+                                                       feature_extractor_handle.true_label1: label1_onehot,
+                                                       discriminator_handle.infer_label1:label1_onehot,
+                                                       discriminator_handle.infer_content_prototype:selected_content,
+                                                       discriminator_handle.infer_style_reference:selected_style,
+                                                       discriminator_handle.infer_true_fake:generated_batch})
 
 
         generated_style = scale_back_for_img(images=generated_batch)
@@ -569,9 +588,12 @@ class WNet(object):
                                                    np.reshape(merged_disp, (1, merged_disp.shape[0],
                                                                             merged_disp.shape[1],
                                                                             merged_disp.shape[2]))})
-        summary_writer.add_summary(summary_real_output, global_step.eval(session=self.sess))
-        summary_writer.add_summary(summary_fake_output, global_step.eval(session=self.sess))
         summary_writer.add_summary(summray_img, global_step.eval(session=self.sess))
+
+        if self.debug_mode or ((not self.debug_mode) and global_step.eval(session=self.sess)>=5000):
+            summary_writer.add_summary(summary_real_output, global_step.eval(session=self.sess))
+            summary_writer.add_summary(summary_fake_output, global_step.eval(session=self.sess))
+
 
 
 
@@ -1112,7 +1134,7 @@ class WNet(object):
 
 
 
-    def feature_extractor_build(self, g_loss, g_merged_summary):
+    def feature_extractor_build(self, g_loss, g_merged_summary,data_provider):
 
         def calculate_high_level_feature_loss(feature1,feature2):
             for counter in range(len(feature1)):
@@ -1206,15 +1228,15 @@ class WNet(object):
             extr_true = tf.argmax(true_labels, axis=1)
 
             correct = tf.equal(extr_prdt, extr_true)
-            acry = tf.reduce_mean(tf.cast(correct, tf.float32)) * 100
+            accuarcy = tf.reduce_mean(tf.cast(correct, tf.float32)) * 100
 
             entropy = tf.nn.softmax_cross_entropy_with_logits(logits=infer_logits, labels=tf.nn.softmax(infer_logits))
             entropy = tf.reduce_mean(entropy)
 
-            trn_acry_real = tf.summary.scalar("Accuracy_" + summary_name + "/TrainReal", acry)
-            val_acry_real = tf.summary.scalar("Accuracy_" + summary_name + "/TestReal", acry)
-            trn_acry_fake = tf.summary.scalar("Accuracy_" + summary_name + "/TrainFake", acry)
-            val_acry_fake = tf.summary.scalar("Accuracy_" + summary_name + "/TestFake", acry)
+            trn_acry_real = tf.summary.scalar("Accuracy_" + summary_name + "/TrainReal", accuarcy)
+            val_acry_real = tf.summary.scalar("Accuracy_" + summary_name + "/TestReal", accuarcy)
+            trn_acry_fake = tf.summary.scalar("Accuracy_" + summary_name + "/TrainFake", accuarcy)
+            val_acry_fake = tf.summary.scalar("Accuracy_" + summary_name + "/TestFake", accuarcy)
 
 
             trn_enpy_real = tf.summary.scalar("Entropy_" + summary_name + "/TrainReal", entropy)
@@ -1242,12 +1264,13 @@ class WNet(object):
                                              self.source_img_width,
                                              self.input_output_img_filter_num],
                                             name='extractor_infer_img_input')
-        generator_handle = getattr(self, 'generator_handle')
+        true_label0 = tf.placeholder(tf.float32, [self.batch_size, len(self.involved_label0_list)])
+        true_label1 = tf.placeholder(tf.float32, [self.batch_size, len(self.involved_label1_list)])
 
         if self.extractor_true_fake_enabled:
             true_fake_infer_list, true_fake_feature_loss_mse, true_fake_feature_loss_vn, network_info = \
                 build_feature_extractor(input_target_infer=input_target_infer,
-                                        input_true_img=generator_handle.true_style,
+                                        input_true_img=data_provider.train_iterator.output_tensor_list[0],
                                         label0_length=len(self.involved_label0_list),
                                         label1_length=len(self.involved_label1_list),
                                         extractor_usage='TrueFake_FeatureExtractor',
@@ -1268,11 +1291,14 @@ class WNet(object):
             extr_vars_true_fake = self.variable_dict(var_input=extr_vars_true_fake, delete_name_from_character='/')
             saver_extractor_true_fake = tf.train.Saver(max_to_keep=1, var_list=extr_vars_true_fake)
 
+
+
+
             summary_train_real_merged_label0, \
             summary_train_fake_merged_label0, \
             summary_val_real_merged_label0, \
             summary_val_fake_merged_label0 = \
-                define_entropy_accuracy_calculation_op(true_labels=generator_handle.true_label0,
+                define_entropy_accuracy_calculation_op(true_labels=true_label0,
                                                        infer_logits=true_fake_infer_list[0],
                                                        summary_name="Extractor_TrueFake/Lb0")
 
@@ -1280,7 +1306,7 @@ class WNet(object):
             summary_train_fake_merged_label1, \
             summary_val_real_merged_label1, \
             summary_val_fake_merged_label1 = \
-                define_entropy_accuracy_calculation_op(true_labels=generator_handle.true_label1,
+                define_entropy_accuracy_calculation_op(true_labels=true_label1,
                                                        infer_logits=true_fake_infer_list[1],
                                                        summary_name="Extractor_TrueFake/Lb1")
 
@@ -1301,7 +1327,7 @@ class WNet(object):
 
 
         if self.extractor_content_prototype_enabled:
-            content_prototype = generator_handle.content_prototype
+            content_prototype = data_provider.train_iterator.output_tensor_list[1]
             selected_index = tf.random_uniform(shape=[],minval=0,maxval=int(content_prototype.shape[3]),dtype=tf.int64)
             selected_content_prototype = tf.expand_dims(content_prototype[:,:,:,selected_index], axis=3)
             content_prototype_infer_list,content_prototype_feature_mse_loss, content_prototype_feature_vn_loss, network_info = \
@@ -1332,7 +1358,7 @@ class WNet(object):
             summary_train_fake_merged_label0, \
             summary_val_real_merged_label0, \
             summary_val_fake_merged_label0 = \
-                define_entropy_accuracy_calculation_op(true_labels=generator_handle.true_label0,
+                define_entropy_accuracy_calculation_op(true_labels=true_label0,
                                                        infer_logits=content_prototype_infer_list[0],
                                                        summary_name="Extractor_ContentPrototype/Lb0")
 
@@ -1351,9 +1377,9 @@ class WNet(object):
             selected_content_prototype = -1
 
         if self.extractor_style_reference_enabled:
-            style_reference = generator_handle.style_reference_list
-            selected_index = tf.random_uniform(shape=[], minval=0, maxval=self.style_input_number, dtype=tf.int64)
-            selected_style_reference = tf.gather(style_reference,selected_index)
+            style_reference = data_provider.train_iterator.output_tensor_list[2]
+            selected_index = tf.random_uniform(shape=[], minval=0, maxval=int(style_reference.shape[3]), dtype=tf.int64)
+            selected_style_reference = tf.expand_dims(style_reference[:, :, :, selected_index], axis=3)
             style_reference_infer_list, style_reference_feature_mse_loss, style_reference_feature_vn_loss, network_info = \
                 build_feature_extractor(input_target_infer=input_target_infer,
                                         input_true_img = selected_style_reference,
@@ -1381,7 +1407,7 @@ class WNet(object):
             summary_train_fake_merged_label1, \
             summary_val_real_merged_label1, \
             summary_val_fake_merged_label1 = \
-                define_entropy_accuracy_calculation_op(true_labels=generator_handle.true_label1,
+                define_entropy_accuracy_calculation_op(true_labels=true_label1,
                                                        infer_logits=style_reference_infer_list[0],
                                                        summary_name="Extractor_StyleReference/Lb1")
 
@@ -1399,6 +1425,8 @@ class WNet(object):
 
 
         feature_extractor_handle = FeatureExtractorHandle(infer_input_img=input_target_infer,
+                                                          true_label0=true_label0,
+                                                          true_label1=true_label1,
                                                           selected_content_prototype=selected_content_prototype,
                                                           selected_style_reference=selected_style_reference)
         setattr(self, "feature_extractor_handle", feature_extractor_handle)
@@ -1414,7 +1442,7 @@ class WNet(object):
 
 
 
-    def generator_build(self):
+    def generator_build(self,data_provider):
 
         name_prefix = 'generator'
 
@@ -1422,51 +1450,22 @@ class WNet(object):
         with tf.variable_scope(tf.get_variable_scope()):
             with tf.device(self.generator_devices):
 
-                # input definitions of the generator
-                content_prototype = tf.placeholder(tf.float32,
-                                                   [self.batch_size,
-                                                    self.source_img_width,
-                                                    self.source_img_width,
-                                                    self.input_output_img_filter_num * self.content_input_num],
-                                                   name='generator_content_prototype')
 
-                style_reference_list = list()
+                content_prototype_train = data_provider.train_iterator.output_tensor_list[1]
+                style_reference_train_list = list()
                 for ii in range(self.style_input_number):
-                    style_reference = tf.placeholder(tf.float32,
-                                                     [self.batch_size,
-                                                      self.source_img_width,
-                                                      self.source_img_width,
-                                                      self.input_output_img_filter_num],
-                                                     name='generator_style_reference_%d' % ii)
-                    style_reference_list.append(style_reference)
+                    style_reference_train = tf.expand_dims(data_provider.train_iterator.output_tensor_list[2][:,:,:,ii], axis=3)
+                    style_reference_train_list.append(style_reference_train)
 
-
-
-                true_style = tf.placeholder(tf.float32,
-                                            [self.batch_size,
-                                             self.source_img_width,
-                                             self.source_img_width,
-                                             self.input_output_img_filter_num],
-                                            name='generator_true_target')
-                true_label0 = tf.placeholder(tf.float32,
-                                             [self.batch_size,
-                                              len(self.involved_label0_list)],
-                                             name='generator_true_label0')
-                true_label1 = tf.placeholder(tf.float32,
-                                             [self.batch_size,
-                                              len(self.involved_label1_list)],
-                                             name='generator_true_label1')
-
-
-
-
-
+                true_style_train = data_provider.train_iterator.output_tensor_list[0]
+                true_label0_train = data_provider.train_iterator.output_tensor_list[3]
+                true_label1_train = data_provider.train_iterator.output_tensor_list[4]
 
                 # build the generator
                 generated_target_train, encoded_content_prototype_train, encoded_style_reference_train,\
                 content_category_logits_train, style_category_logits_train, network_info = \
-                    generator_implementation(content_prototype=content_prototype,
-                                             style_reference=style_reference_list,
+                    generator_implementation(content_prototype=content_prototype_train,
+                                             style_reference=style_reference_train_list,
                                              is_training=True,
                                              batch_size=self.batch_size,
                                              generator_device=self.generator_devices,
@@ -1513,9 +1512,18 @@ class WNet(object):
 
 
                 # for inferring
+                content_prototype_infer = data_provider.validate_iterator.output_tensor_list[1]
+                true_label0_infer = data_provider.validate_iterator.output_tensor_list[3]
+                true_label1_infer = data_provider.validate_iterator.output_tensor_list[4]
+                style_reference_infer_list = list()
+                for ii in range(self.style_input_number):
+                    style_reference_infer = tf.expand_dims(data_provider.validate_iterator.output_tensor_list[2][:, :, :, ii], axis=3)
+                    style_reference_infer_list.append(style_reference_infer)
+
+
                 generated_target_infer = \
-                    generator_implementation(content_prototype=content_prototype,
-                                             style_reference=style_reference_list,
+                    generator_implementation(content_prototype=content_prototype_infer,
+                                             style_reference=style_reference_infer_list,
                                              is_training=False,
                                              batch_size=self.batch_size,
                                              generator_device=self.generator_devices,
@@ -1532,7 +1540,7 @@ class WNet(object):
                                              weight_decay_rate=eps)[0]
 
                 content_prototype_category_infer = \
-                        encoder_implementation(images=content_prototype,
+                        encoder_implementation(images=content_prototype_infer,
                                                is_training=False,
                                                encoder_device=self.generator_devices,
                                                residual_at_layer=self.generator_residual_at_layer,
@@ -1547,7 +1555,7 @@ class WNet(object):
                 style_reference_category_list_infer = list()
                 for ii in range(self.style_input_number):
                     encoded_style_category_logit = \
-                            encoder_implementation(images=style_reference_list[ii],
+                            encoder_implementation(images=style_reference_infer_list[ii],
                                                    is_training=False,
                                                    encoder_device=self.generator_devices,
                                                    residual_at_layer=self.generator_residual_at_layer,
@@ -1567,12 +1575,7 @@ class WNet(object):
 
 
 
-                curt_generator_handle = GeneratorHandle(content_prototype=content_prototype,
-                                                        true_style=true_style,
-                                                        style_reference_list=style_reference_list,
-                                                        true_label0=true_label0,
-                                                        true_label1=true_label1,
-                                                        generated_target_train=generated_target_train,
+                curt_generator_handle = GeneratorHandle(generated_target_train=generated_target_train,
                                                         generated_target_infer=generated_target_infer)
                 setattr(self, "generator_handle", curt_generator_handle)
 
@@ -1616,7 +1619,7 @@ class WNet(object):
 
         # l1 loss
         if self.Pixel_Reconstruction_Penalty > eps * 10:
-            l1_loss = tf.abs(generated_target_train - true_style)
+            l1_loss = tf.abs(generated_target_train - true_style_train)
             l1_loss = tf.reduce_mean(l1_loss) * self.Pixel_Reconstruction_Penalty
             l1_loss_summary = tf.summary.scalar("Loss_Reconstruction/Pixel_L1",
                                                 tf.abs(l1_loss) / self.Pixel_Reconstruction_Penalty)
@@ -1624,7 +1627,7 @@ class WNet(object):
             g_merged_summary = tf.summary.merge([g_merged_summary, l1_loss_summary])
 
             generated_target_train_normed = (generated_target_train + 1) / 2
-            true_style_normed = (true_style + 1) / 2
+            true_style_normed = (true_style_train + 1) / 2
             vn_loss = tf.trace(tf.multiply(generated_target_train_normed, tf.log(generated_target_train_normed))-
                                tf.multiply(generated_target_train_normed, tf.log(true_style_normed)) +
                                -generated_target_train_normed + true_style_normed)
@@ -1638,12 +1641,12 @@ class WNet(object):
         # category loss
         if self.Generator_Categorical_Penalty > 10 * eps:
             category_loss_content = tf.nn.softmax_cross_entropy_with_logits(logits=content_category_logits_train,
-                                                                            labels=true_label0)
+                                                                            labels=true_label0_train)
             category_loss_content = tf.reduce_mean(category_loss_content) * self.Generator_Categorical_Penalty
             category_loss_content = category_loss_content / self.content_input_num
 
             category_loss_style = tf.nn.softmax_cross_entropy_with_logits(logits=style_category_logits_train,
-                                                                          labels=true_label1)
+                                                                          labels=true_label1_train)
             category_loss_style = tf.reduce_mean(category_loss_style) * self.Generator_Categorical_Penalty
             category_loss = (category_loss_content + category_loss_style) / 2.0
 
@@ -1668,7 +1671,7 @@ class WNet(object):
         # build accuracy and entropy calculation
         with tf.variable_scope(tf.get_variable_scope()):
             with tf.device(self.generator_devices):
-                content_true = tf.argmax(true_label0,axis=1)
+                content_true = tf.argmax(true_label0_infer,axis=1)
                 content_prdt = tf.argmax(content_prototype_category_infer, axis=1)
                 content_accuracy = tf.equal(content_true,content_prdt)
                 content_accuracy = tf.reduce_mean(tf.cast(content_accuracy,tf.float32)) * 100
@@ -1680,7 +1683,7 @@ class WNet(object):
                 content_entropy = tf.reduce_mean(content_entropy)
                 content_entropy = content_entropy / self.content_input_num
 
-                style_true = tf.argmax(true_label1, axis=1)
+                style_true = tf.argmax(true_label1_infer, axis=1)
                 style_prdt = tf.argmax(style_reference_category_infer, axis=1)
                 style_accuracy = tf.equal(style_true, style_prdt)
                 style_accuracy = tf.reduce_mean(tf.cast(style_accuracy, tf.float32)) * 100
@@ -1709,7 +1712,8 @@ class WNet(object):
 
         print(
             "Generator @%s with %s;" % (self.generator_devices, network_info))
-        return generated_target_infer, g_loss, g_merged_summary, \
+        return generated_target_infer, generated_target_train,\
+               g_loss, g_merged_summary, \
                gen_vars_train, saver_generator,\
                category_loss,generator_category_loss_summary_merged,train_summary, test_summary
 
@@ -1718,10 +1722,24 @@ class WNet(object):
                             g_loss,
                             g_merged_summary,
                             generator_category_loss,
-                            generator_category_loss_summary):
+                            generator_category_loss_summary,
+                            data_provider):
+
+
+        def _calculate_accuracy_and_entropy(logits, true_labels, summary_name_parafix):
+            prdt_labels = tf.argmax(logits,axis=1)
+            true_labels = tf.argmax(true_labels,axis=1)
+            correct_prediction = tf.equal(prdt_labels,true_labels)
+            accuracy = tf.reduce_mean(tf.cast(correct_prediction,tf.float32)) * 100
+            entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=tf.nn.softmax(logits))
+            entropy = tf.reduce_mean(entropy)
+            acry_summary = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_"+summary_name_parafix, accuracy)
+            enpy_summary = tf.summary.scalar("Entropy_Discriminator/AuxClassifier_"+summary_name_parafix, entropy)
+            return acry_summary,enpy_summary
 
         generator_handle = getattr(self,'generator_handle')
-        fake_style = generator_handle.generated_target_train
+        fake_style_train = generator_handle.generated_target_train
+        fake_style_infer = generator_handle.generated_target_infer
 
         name_prefix = 'discriminator'
 
@@ -1734,37 +1752,20 @@ class WNet(object):
 
         with tf.variable_scope(tf.get_variable_scope()):
             with tf.device(self.discriminator_devices):
+                true_label1_train = data_provider.train_iterator.output_tensor_list[4]
+                true_style_train = data_provider.train_iterator.output_tensor_list[0]
 
-
-                discriminator_true_label = tf.placeholder(tf.float32,
-                                                          [self.batch_size,
-                                                           discriminator_category_logit_length],
-                                                          name='discriminator_label')
-                content_prototype = tf.placeholder(tf.float32,
-                                                   [self.batch_size,
-                                                    self.source_img_width,
-                                                    self.source_img_width,
-                                                    self.input_output_img_filter_num],
-                                                   name='discriminator_content_prototype_image')
-                true_style = tf.placeholder(tf.float32,
-                                             [self.batch_size,
-                                              self.source_img_width,
-                                              self.source_img_width,
-                                              self.input_output_img_filter_num],
-                                             name='discriminator_true_style_image')
-                style_reference = tf.placeholder(tf.float32,
-                                              [self.batch_size,
-                                               self.source_img_width,
-                                               self.source_img_width,
-                                               self.input_output_img_filter_num],
-                                              name='discriminator_style_reference_image')
-
-
-                real_pack = tf.concat([content_prototype, true_style, style_reference], axis=3)
-                fake_pack = tf.concat([content_prototype, fake_style, style_reference], axis=3)
+                content_prototype_train_all = data_provider.train_iterator.output_tensor_list[1]
+                style_reference_train_all = data_provider.train_iterator.output_tensor_list[2]
+                content_train_random_index = tf.random_uniform(shape=[], minval=0,maxval=self.content_input_num,dtype=tf.int64)
+                style_train_random_index = tf.random_uniform(shape=[], minval=0, maxval=self.style_input_number,dtype=tf.int64)
+                content_prototype_train = tf.expand_dims(content_prototype_train_all[:,:,:,content_train_random_index], axis=3)
+                style_reference_train = tf.expand_dims(style_reference_train_all[:, :, :, style_train_random_index], axis=3)
+                real_pack_train = tf.concat([content_prototype_train, true_style_train, style_reference_train], axis=3)
+                fake_pack_train = tf.concat([content_prototype_train, fake_style_train, style_reference_train], axis=3)
 
                 real_C_logits,real_Discriminator_logits,network_info = \
-                    self.discriminator_implementation(image=real_pack,
+                    self.discriminator_implementation(image=real_pack_train,
                                                       is_training=True,
                                                       parameter_update_device=self.discriminator_devices,
                                                       category_logit_num=discriminator_category_logit_length,
@@ -1777,7 +1778,7 @@ class WNet(object):
                                                       weight_decay_rate=self.discriminator_weight_decay_penalty)
 
                 fake_C_logits,fake_Discriminator_logits,_ = \
-                    self.discriminator_implementation(image=fake_pack,
+                    self.discriminator_implementation(image=fake_pack_train,
                                                       is_training=True,
                                                       parameter_update_device=self.discriminator_devices,
                                                       category_logit_num=discriminator_category_logit_length,
@@ -1790,7 +1791,7 @@ class WNet(object):
                                                       weight_decay_rate=self.discriminator_weight_decay_penalty)
 
                 epsilon = tf.random_uniform([], 0.0, 1.0)
-                interpolated_pair = real_pack*epsilon + (1-epsilon)*fake_pack
+                interpolated_pair = real_pack_train*epsilon + (1-epsilon)*fake_pack_train
                 _,intepolated_Cr_logits,_ = self.discriminator_implementation(image=interpolated_pair,
                                                                               is_training=True,
                                                                               parameter_update_device=self.discriminator_devices,
@@ -1806,32 +1807,26 @@ class WNet(object):
                 discriminator_slopes = tf.sqrt(eps+tf.reduce_sum(tf.square(discriminator_gradients),reduction_indices=[1]))
                 discriminator_slopes = (discriminator_slopes-1.0)**2
 
-                discriminator_infer_content = tf.placeholder(tf.float32,
-                                                            [self.batch_size,
-                                                             self.source_img_width,
-                                                             self.source_img_width,
-                                                             self.input_output_img_filter_num],
-                                                            name='discriminator_infer_source')
-                discriminator_infer_true_or_generated_style = tf.placeholder(tf.float32,
-                                                                              [self.batch_size,
-                                                                               self.source_img_width,
-                                                                               self.source_img_width,
-                                                                               self.input_output_img_filter_num],
-                                                                              name='discriminator_infer_true_or_generated_target')
-                discriminator_infer_style = tf.placeholder(tf.float32,
-                                                                  [self.batch_size,
-                                                                   self.source_img_width,
-                                                                   self.source_img_width,
-                                                                   self.input_output_img_filter_num],
-                                                                  name='discriminator_infer_input_target')
 
-                discriminator_input_pack = tf.concat([discriminator_infer_content,
-                                                      discriminator_infer_true_or_generated_style,
-                                                      discriminator_infer_style],
-                                                     axis=3)
 
-                infer_C_logits,infer_Cr_logits,_ = \
-                    self.discriminator_implementation(image=discriminator_input_pack,
+
+                # discriminator infer
+                infer_content_prototype = tf.placeholder(tf.float32, [self.batch_size,
+                                                                      self.img2img_width,
+                                                                      self.img2img_width,
+                                                                      self.input_output_img_filter_num])
+                infer_true_fake = tf.placeholder(tf.float32, [self.batch_size,
+                                                                      self.img2img_width,
+                                                                      self.img2img_width,
+                                                                      self.input_output_img_filter_num])
+                infer_style_reference = tf.placeholder(tf.float32, [self.batch_size,
+                                                                    self.img2img_width,
+                                                                    self.img2img_width,
+                                                                    self.input_output_img_filter_num])
+                infer_label1 = tf.placeholder(tf.float32,[self.batch_size,len(self.involved_label1_list)])
+                infer_pack = tf.concat([infer_content_prototype, infer_true_fake, infer_style_reference], axis=3)
+                infer_categorical_logits,_,_ = \
+                    self.discriminator_implementation(image=infer_pack,
                                                       is_training=False,
                                                       parameter_update_device=self.discriminator_devices,
                                                       category_logit_num=discriminator_category_logit_length,
@@ -1842,19 +1837,13 @@ class WNet(object):
                                                       weight_decay=False,
                                                       weight_decay_rate=eps,
                                                       scope=name_prefix)
-                infer_C_logits = tf.nn.softmax(infer_C_logits)
+                infer_categorical_logits = tf.nn.softmax(infer_categorical_logits)
 
-                curt_discriminator_handle = DiscriminatorHandle(discriminator_true_label=discriminator_true_label,
-                                                                content_prototype=content_prototype,
-                                                                true_style=true_style,
-                                                                style_reference=style_reference,
-                                                                infer_content_prototype=discriminator_infer_content,
-                                                                discriminator_infer_true_or_generated_style=discriminator_infer_true_or_generated_style,
-                                                                infer_style_reference=discriminator_infer_style,
-                                                                infer_C_logits=infer_C_logits,
-                                                                infer_Cr_logits=infer_Cr_logits,
-                                                                current_critic_logit_penalty=current_critic_logit_penalty)
-
+                curt_discriminator_handle = DiscriminatorHandle(current_critic_logit_penalty=current_critic_logit_penalty,
+                                                                infer_content_prototype=infer_content_prototype,
+                                                                infer_style_reference=infer_style_reference,
+                                                                infer_true_fake=infer_true_fake,
+                                                                infer_label1=infer_label1)
                 setattr(self, "discriminator_handle", curt_discriminator_handle)
 
 
@@ -1884,9 +1873,9 @@ class WNet(object):
         # category loss
         if self.Discriminator_Categorical_Penalty > 10 * eps:
             real_category_loss = tf.nn.softmax_cross_entropy_with_logits(logits=real_C_logits,
-                                                                         labels=discriminator_true_label)
+                                                                         labels=true_label1_train)
             fake_category_loss = tf.nn.softmax_cross_entropy_with_logits(logits=fake_C_logits,
-                                                                         labels=discriminator_true_label)
+                                                                         labels=true_label1_train)
 
             real_category_loss = tf.reduce_mean(real_category_loss) * self.Discriminator_Categorical_Penalty
             fake_category_loss = tf.reduce_mean(fake_category_loss) * self.Discriminator_Categorical_Penalty
@@ -1980,28 +1969,19 @@ class WNet(object):
 
         # build accuracy and entropy claculation
         # discriminator reference build here
-        with tf.variable_scope(tf.get_variable_scope()):
-            with tf.device(self.discriminator_devices):
-                c_labels_prdt = tf.argmax(infer_C_logits, axis=1)
-                c_labels_true = tf.argmax(discriminator_true_label, axis=1)
+        trn_real_acry, trn_real_enty = _calculate_accuracy_and_entropy(logits=infer_categorical_logits,
+                                                                       true_labels=data_provider.train_iterator.output_tensor_list[4],
+                                                                       summary_name_parafix="TrainReal")
+        trn_fake_acry, trn_fake_enty = _calculate_accuracy_and_entropy(logits=infer_categorical_logits,
+                                                                       true_labels=data_provider.train_iterator.output_tensor_list[4],
+                                                                       summary_name_parafix="TrainFake")
+        val_real_acry, val_real_enty = _calculate_accuracy_and_entropy(logits=infer_categorical_logits,
+                                                                       true_labels=data_provider.validate_iterator.output_tensor_list[4],
+                                                                       summary_name_parafix="TestReal")
+        val_fake_acry, val_fake_enty = _calculate_accuracy_and_entropy(logits=infer_categorical_logits,
+                                                                       true_labels=data_provider.validate_iterator.output_tensor_list[4],
+                                                                       summary_name_parafix="TestFake")
 
-                correct_prediction_category = tf.equal(c_labels_prdt, c_labels_true)
-                accuracy_prediction_category = tf.reduce_mean(tf.cast(correct_prediction_category, tf.float32)) * 100
-
-                shanon_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=infer_C_logits,
-                                                                            labels=tf.nn.softmax(infer_C_logits ))
-                shanon_entropy = tf.reduce_mean(shanon_entropy)
-
-
-        trn_real_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_TrainReal",accuracy_prediction_category)
-        trn_fake_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_TrainFake",accuracy_prediction_category)
-        val_real_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_TestReal",accuracy_prediction_category)
-        val_fake_acry = tf.summary.scalar("Accuracy_Discriminator/AuxClassifier_TestFake",accuracy_prediction_category)
-
-        trn_real_enty = tf.summary.scalar("Entropy_Discriminator/AuxClassifier_TrainReal", shanon_entropy)
-        trn_fake_enty = tf.summary.scalar("Entropy_Discriminator/AuxClassifier_TrainFake", shanon_entropy)
-        val_real_enty = tf.summary.scalar("Entropy_Discriminator/AuxClassifier_TestReal", shanon_entropy)
-        val_fake_enty = tf.summary.scalar("Entropy_Discriminator/AuxClassifier_TestFake", shanon_entropy)
 
         trn_real_summary = tf.summary.merge([trn_real_acry, trn_real_enty])
         trn_fake_summary = tf.summary.merge([trn_fake_acry, trn_fake_enty])
@@ -2018,8 +1998,7 @@ class WNet(object):
 
 
         print("Discriminator @ %s with %s;" % (self.discriminator_devices,network_info))
-        return infer_C_logits,\
-               g_merged_summary, d_merged_summary,\
+        return g_merged_summary, d_merged_summary,\
                g_loss,d_loss, \
                trn_real_summary, trn_fake_summary, tst_real_summary, tst_fake_summary, \
                dis_vars_train,saver_discriminator
@@ -2173,6 +2152,7 @@ class WNet(object):
                              feature_extractor_saver_list):
         # initialization of all the variables
         self.sess.run(tf.global_variables_initializer())
+        self.sess.run(tf.tables_initializer())
 
 
 
@@ -2236,7 +2216,6 @@ class WNet(object):
 
             # define the data set
             data_provider = DataProvider(batch_size=self.batch_size,
-                                         epoch=self.epoch,
                                          info_print_interval=self.print_info_seconds / 10,
                                          input_width=self.source_img_width,
                                          input_filters=self.input_output_img_filter_num,
@@ -2247,12 +2226,10 @@ class WNet(object):
                                          style_validation_data_dir=self.style_validation_data_dir,
                                          file_list_txt_content=self.file_list_txt_content,
                                          file_list_txt_style_train=self.file_list_txt_style_train,
-                                         file_list_txt_style_validation=self.file_list_txt_style_validation)
+                                         file_list_txt_style_validation=self.file_list_txt_style_validation,
+                                         debug_mode=self.debug_mode)
 
             self.involved_label0_list, self.involved_label1_list = data_provider.get_involved_label_list()
-            if self.debug_mode:
-                self.involved_label0_list = range(0, 3755)
-                self.involved_label1_list = range(0, 50)
             self.content_input_num = data_provider.content_input_num
             self.display_style_reference_num = np.min([4, self.style_input_number])
             self.display_content_reference_num = np.min([4, self.content_input_num])
@@ -2308,20 +2285,20 @@ class WNet(object):
 
 
             # for generator building
-            generated_batch_infer, \
+            generated_batch_infer, generated_batch_train,\
             g_loss, g_merged_summary, \
             gen_vars_train, saver_generator,\
             generator_category_loss,generator_category_loss_summary_merged,\
-            generator_train_summary, generator_test_summary = self.generator_build()
+            generator_train_summary, generator_test_summary = self.generator_build(data_provider=data_provider)
 
             # for feature extractor
             g_loss, g_merged_summary, feature_extractor_saver_list, \
             extr_trn_real_merged, extr_trn_fake_merged, extr_val_real_merged, extr_val_fake_merged= \
                 self.feature_extractor_build(g_loss=g_loss,
-                                             g_merged_summary=g_merged_summary)
+                                             g_merged_summary=g_merged_summary,
+                                             data_provider=data_provider)
 
             # for discriminator building
-            discriminator_batch_c_logits, \
             g_merged_summary, d_merged_summary, \
             g_loss, d_loss, \
             dis_trn_real_summary, dis_trn_fake_summary, dis_val_real_summary, dis_val_fake_summary, \
@@ -2329,9 +2306,10 @@ class WNet(object):
                 self.discriminator_build(g_loss=g_loss,
                                          g_merged_summary=g_merged_summary,
                                          generator_category_loss=generator_category_loss,
-                                         generator_category_loss_summary=generator_category_loss_summary_merged)
-            evalHandle = EvalHandle(inferred_generated_images=generated_batch_infer,
-                                    inferred_categorical_logits=discriminator_batch_c_logits)
+                                         generator_category_loss_summary=generator_category_loss_summary_merged,
+                                         data_provider=data_provider)
+            evalHandle = EvalHandle(inferring_generated_images=generated_batch_infer,
+                                    training_generated_images=generated_batch_train)
             setattr(self, "eval_handle", evalHandle)
 
 
@@ -2439,7 +2417,7 @@ class WNet(object):
                              saver_discriminator,saver_generator,saver_frameworks,
                              epoch_step
                              ):
-        def W_GAN(current_epoch):
+        def W_GAN(current_epoch,discriminator_handle):
             generator_handle = getattr(self, "generator_handle")
             feature_extractor_handle = getattr(self,"feature_extractor_handle")
 
@@ -2455,52 +2433,18 @@ class WNet(object):
 
             info=""
 
-            reading_data_start = time.time()
-            if ((global_step.eval(session=self.sess)) % g_iters == 0
-                or global_step.eval(session=self.sess) == global_step_start) and gen_vars_train:
-                    batch_packs, batch_label1, batch_label0 = \
-                    data_provider.train_iterator.get_next_batch(sess=self.sess)
-            else:
-                batch_packs, batch_label1, batch_label0 = \
-                    data_provider.train_iterator.get_next_batch(sess=self.sess)
-            batch_label1_one_hot = self.dense_to_one_hot(input_label=batch_label1,
-                                                         involved_label_list=self.involved_label1_list)
-            batch_label0_one_hot = self.dense_to_one_hot(input_label=batch_label0,
-                                                         involved_label_list=self.involved_label0_list)
-            reading_data_consumed = time.time() - reading_data_start
-
-
-            # optimization for discriminator for all the iterations
-            training_img_tensor_list = list()
-            training_img_tensor_list.append(generator_handle.generated_target_train)
-            if self.extractor_content_prototype_enabled:
-                training_img_tensor_list.append(feature_extractor_handle.selected_content_prototype)
-            else:
-                training_img_tensor_list.append(generator_handle.generated_target_train)
-            if self.extractor_style_reference_enabled:
-                training_img_tensor_list.append(feature_extractor_handle.selected_style_reference)
-            else:
-                training_img_tensor_list.append(generator_handle.generated_target_train)
+            # batch_true_style_train,\
+            # batch_train_prototype, batch_train_reference, \
+            # batch_train_label0_onehot, batch_train_label1_onehot,\
+            # batch_train_label0_dense, batch_train_label1_dense = \
+            #     data_provider.train_iterator.get_next_batch(sess=self.sess)
 
             optimization_start = time.time()
+
             if dis_vars_train \
                     or global_step.eval(session=self.sess) == global_step_start:
-
-                _ = self.sess.run(optimizer_d,
-                                  feed_dict=self.feed_dictionary_generation_for_d(batch_packs=batch_packs,
-                                                                                  batch_label0=batch_label0_one_hot,
-                                                                                  batch_label1=batch_label1_one_hot,
-                                                                                  current_lr=current_lr_real,
-                                                                                  learning_rate=learning_rate,
-                                                                                  critic_penalty_input=current_critic_logit_penalty_value))
-
-                output_training_img_list = self.sess.run(training_img_tensor_list,
-                                                         feed_dict=self.feed_dictionary_generation_for_g(batch_packs=batch_packs,
-                                                                                                         batch_label0=batch_label0_one_hot,
-                                                                                                         batch_label1=batch_label1_one_hot,
-                                                                                                         current_lr=current_lr_real,
-                                                                                                         learning_rate=learning_rate))
-
+                _ = self.sess.run(optimizer_d, feed_dict={learning_rate: current_lr_real,
+                                                          discriminator_handle.current_critic_logit_penalty: current_critic_logit_penalty_value})
 
                 info=info+"OptimizeOnD"
 
@@ -2508,24 +2452,14 @@ class WNet(object):
             if ((global_step.eval(session=self.sess)) % g_iters == 0
                 or global_step.eval(session=self.sess) == global_step_start + 1) and gen_vars_train:
                 _, \
-                output_training_img_list \
-                    = self.sess.run([optimizer_g,
-                                     training_img_tensor_list],
-                                    feed_dict=self.feed_dictionary_generation_for_g(batch_packs=batch_packs,
-                                                                                    batch_label0=batch_label0_one_hot,
-                                                                                    batch_label1=batch_label1_one_hot,
-                                                                                    current_lr=current_lr_real,
-                                                                                    learning_rate=learning_rate))
+                    = self.sess.run([optimizer_g], feed_dict={learning_rate: current_lr_real})
 
 
 
                 info = info + "&&G"
             optimization_elapsed = time.time() - optimization_start
 
-            return output_training_img_list, \
-                   batch_packs,batch_label0_one_hot,batch_label1_one_hot,\
-                   reading_data_consumed, optimization_elapsed,\
-                   info
+            return optimization_elapsed,info
 
 
 
@@ -2534,6 +2468,9 @@ class WNet(object):
         print_info_start = time.time()
         record_start = time.time()
         training_start_time = time.time()
+        discriminator_handle = getattr(self, "discriminator_handle")
+        feature_extractor_handle = getattr(self, "feature_extractor_handle")
+        generator_handle = getattr(self, "generator_handle")
 
         
 
@@ -2602,12 +2539,12 @@ class WNet(object):
                 else:
                     current_critic_logit_penalty_value = self.Discriminative_Penalty
                     current_lr_real = current_lr
-                current_critic_logit_penalty_value = current_critic_logit_penalty_value * 0.01
+                current_critic_logit_penalty_value = current_critic_logit_penalty_value * 0.001
 
-                output_training_img_list,\
-                batch_packs_curt_train,batch_label0_one_hot_curt_train,batch_label1_one_hot_curt_train,\
-                reading_data_consumed, optimization_consumed, \
-                info = W_GAN(current_epoch=epoch_step.eval(session=self.sess))
+
+                optimization_consumed, \
+                info = W_GAN(current_epoch=epoch_step.eval(session=self.sess),
+                             discriminator_handle=discriminator_handle)
 
                 passed_full = time.time() - training_start_time
                 passed_itr = time.time() - this_itr_start
@@ -2623,9 +2560,6 @@ class WNet(object):
 
                     print("ItrDuration:%.2fses,FullDuration:%.2fhrs(%.2fdays);" %
                           (passed_itr, passed_full / 3600, passed_full / (3600 * 24)))
-                    print("ReadingData:%f,Optimization:%f;" %(reading_data_consumed,
-                                                              optimization_consumed))
-
 
 
                     percentage_completed = float(global_step.eval(session=self.sess)) / float(
@@ -2656,35 +2590,14 @@ class WNet(object):
                     summary_start = time.time()
 
                     if dis_vars_train:
-                        batch_packs, batch_label1, batch_label0 = \
-                            data_provider.train_iterator.get_next_batch(sess=self.sess)
-                        batch_label1_one_hot = self.dense_to_one_hot(input_label=batch_label1,
-                                                                     involved_label_list=self.involved_label1_list)
-                        batch_label0_one_hot = self.dense_to_one_hot(input_label=batch_label0,
-                                                                     involved_label_list=self.involved_label0_list)
-
                         d_summary = self.sess.run(
                             summary_handle.d_merged,
-                            feed_dict=self.feed_dictionary_generation_for_d(batch_packs=batch_packs,
-                                                                            batch_label0=batch_label0_one_hot,
-                                                                            batch_label1=batch_label1_one_hot,
-                                                                            current_lr=current_lr_real,
-                                                                            learning_rate=learning_rate,
-                                                                            critic_penalty_input=current_critic_logit_penalty_value))
+                            feed_dict={discriminator_handle.current_critic_logit_penalty:current_critic_logit_penalty_value})
+
+
                         summary_writer.add_summary(d_summary, global_step.eval(session=self.sess))
                     if gen_vars_train:
-                        batch_packs, batch_label1, batch_label0 = \
-                            data_provider.train_iterator.get_next_batch(sess=self.sess)
-                        batch_label1_one_hot = self.dense_to_one_hot(input_label=batch_label1,
-                                                                     involved_label_list=self.involved_label1_list)
-                        batch_label0_one_hot = self.dense_to_one_hot(input_label=batch_label0,
-                                                                     involved_label_list=self.involved_label0_list)
-                        g_summary = self.sess.run(summary_handle.g_merged,
-                                                  feed_dict=self.feed_dictionary_generation_for_g(batch_packs=batch_packs,
-                                                                                                  batch_label0=batch_label0_one_hot,
-                                                                                                  batch_label1=batch_label1_one_hot,
-                                                                                                  current_lr=current_lr_real,
-                                                                                                  learning_rate=learning_rate))
+                        g_summary = self.sess.run(summary_handle.g_merged)
                         summary_writer.add_summary(g_summary, global_step.eval(session=self.sess))
 
                     learning_rate_summary = self.sess.run(summary_handle.learning_rate,
@@ -2692,33 +2605,31 @@ class WNet(object):
                     summary_writer.add_summary(learning_rate_summary, global_step.eval(session=self.sess))
                     summary_writer.flush()
 
+
+
+
                 if time.time()-sample_start>sample_seconds or global_step.eval(session=self.sess)==global_step_start+300:
                     sample_start = time.time()
 
-                    # check for train set
-                    self.validate_model(batch_packs=batch_packs_curt_train,
-                                        batch_label0_one_hot=batch_label0_one_hot_curt_train,
-                                        batch_label1_one_hot=batch_label1_one_hot_curt_train,
-                                        train_mark=True,
-                                        training_img_list=output_training_img_list,
-                                        summary_writer=summary_writer,
-                                        global_step=global_step)
+
 
                     # check for validation set
-                    batch_packs_val,  batch_label1_val, batch_label0_val = \
-                        data_provider.validate_iterator.get_next_batch(sess=self.sess)
-
-                    batch_label1_val_one_hot = self.dense_to_one_hot(input_label=batch_label1_val,
-                                                                     involved_label_list=self.involved_label1_list)
-                    batch_label0_val_one_hot = self.dense_to_one_hot(input_label=batch_label0_val,
-                                                                     involved_label_list=self.involved_label0_list)
-
-                    self.validate_model(batch_packs=batch_packs_val,
-                                        batch_label0_one_hot=batch_label0_val_one_hot,
-                                        batch_label1_one_hot=batch_label1_val_one_hot,
-                                        train_mark=False,
+                    self.validate_model(train_mark=False,
                                         summary_writer=summary_writer,
-                                        global_step=global_step)
+                                        global_step=global_step,
+                                        discriminator_handle=discriminator_handle,
+                                        feature_extractor_handle=feature_extractor_handle,
+                                        generator_handle=generator_handle,
+                                        data_provider=data_provider)
+
+                    # check for train set
+                    self.validate_model(train_mark=True,
+                                        summary_writer=summary_writer,
+                                        global_step=global_step,
+                                        discriminator_handle=discriminator_handle,
+                                        feature_extractor_handle=feature_extractor_handle,
+                                        generator_handle=generator_handle,
+                                        data_provider=data_provider)
 
                     summary_writer.flush()
 
@@ -2742,336 +2653,7 @@ class WNet(object):
 
 
 
-    def infer_network_g2d_for_train(self,
-                                    data_provider,
-                                    save_image_path,
-                                    ei,
-                                    saver_discriminator, saver_generator,saver_frameworks,
-                                    global_step):
-        def top_k_accuracy(logits,true_label,label_vec,k):
-            top_k_indices = np.argsort(-logits,axis=1)[:,0:k]
-            for ii in range(k):
-                estm_label = label_vec[top_k_indices[:,ii]]
-                diff = np.abs(estm_label - true_label)
-                if ii==0:
-                    full_diff=np.reshape(diff,[diff.shape[0],1])
-                else:
-                    full_diff=np.concatenate([full_diff,np.reshape(diff,[diff.shape[0],1])],axis=1)
-            top_k_accuracy_list=list()
-            for ii in range(len(self.accuracy_k)):
-                this_k = self.accuracy_k[ii]
-                this_k_diff = full_diff[:,0:this_k]
-                if this_k==0:
-                    this_k_diff=np.reshape(this_k_diff,[this_k_diff.shape[0],1])
-                min_v = np.min(this_k_diff,axis=1)
-                correct = [i for i, v in enumerate(min_v) if v == 0]
-                accuracy = float(len(correct)) / float(len(true_label)) * 100
-                top_k_accuracy_list.append(accuracy)
-            return top_k_accuracy_list
 
 
-        def TDR(parafix):
 
 
-            label_vec = np.array(self.involved_label1_list)
-            print_info_start=time.time()
-            evalHandle = getattr(self, "eval_handle")
-
-            iter_num = len(data_provider.validate_iterator.data_list) / (self.batch_size) + 1
-
-            start_time = time.time()
-            print(self.print_separater)
-            full_category_logits = np.zeros([iter_num*self.batch_size,len(label_vec)])
-            true_label = np.zeros([iter_num*self.batch_size])
-            counter=0
-            for bid in range(iter_num):
-                iter_start_time = time.time()
-
-                batch_packs,  batch_label1, batch_label0 = \
-                    data_provider.validate_iterator.get_next_batch(sess=self.sess)
-
-
-                label_disc = batch_label1
-
-                generate_start=time.time()
-                channels = self.input_output_img_filter_num
-                source_batch = batch_packs[:, :, :, 0:channels]
-                input_batch = batch_packs[:, :, :, channels * 2:]
-                generated_target_imgs = self.generate_fake_samples(source=source_batch,
-                                                                   input_target=input_batch)
-                generate_elapsed = time.time()-generate_start
-
-                discriminate_start = time.time()
-                category_logits = self.evaluate_samples(source=source_batch,
-                                                        target=generated_target_imgs,
-                                                        input_style=input_batch)
-                discriminate_elapsed = time.time()-discriminate_start
-
-                get_logit_start = time.time()
-
-                full_category_logits[bid*self.batch_size:(bid+1)*self.batch_size,:] = category_logits
-                true_label[bid * self.batch_size:(bid + 1) * self.batch_size] = label_disc
-
-
-                get_logits_elapsed = time.time()-get_logit_start
-                counter=counter+self.batch_size
-
-                if time.time() - print_info_start > self.print_info_seconds or bid == 0 or bid == iter_num-1:
-                    print_info_start = time.time()
-                    full_estm_indices = np.argmax(full_category_logits[0:counter,:], axis=1)
-                    full_estm_label = label_vec[full_estm_indices]
-                    full_diff = true_label[0:counter] - full_estm_label
-                    full_correct = [i for i, v in enumerate(full_diff) if v == 0]
-                    full_arcy_label = float(len(full_correct)) / float(counter) * 100
-
-                    print("EvlEpc:%d,Itr:%d/%d,Elps:%.2fsecs/%.2fmins,Smp:%d/%d,Acry:%.3f" %
-                          (ei, bid + 1, iter_num, time.time() - iter_start_time, float(time.time() - start_time) / 60,
-                           bid * self.batch_size+1,
-                           len(data_provider.validate_iterator.data_list),
-                           full_arcy_label))
-
-                    print("G:%.3f,D:%.3f,Lgt:%.3f" %
-                          (generate_elapsed,
-                           discriminate_elapsed,
-                           get_logits_elapsed))
-
-                    print(self.print_separater)
-
-
-            full_category_logits = full_category_logits[0:len(data_provider.validate_iterator.data_list), :]
-
-            label_estm_indices = np.argmax(full_category_logits,axis=1)
-            label_estm = label_vec[label_estm_indices]
-
-            true_label = true_label[0:len(data_provider.validate_iterator.data_list)]
-            top_k_acry_list = top_k_accuracy(logits=full_category_logits,
-                                             true_label=true_label, label_vec=label_vec, k=self.accuracy_k[len(self.accuracy_k)-1])
-
-            return full_category_logits, label_estm, top_k_acry_list
-
-
-
-        if (not self.found_new_record_on_the_previous_epoch):
-            shutil.rmtree(self.previous_inf_dir)
-            print("Removed:%s" % self.previous_inf_dir)
-
-        full_category_logits, \
-        label0_estm, label0_acry_list \
-            = TDR(parafix='_validation.txt')
-
-
-
-        print(self.print_separater)
-        print("Crrt:Top@",end="")
-        curt_acry_info = "Top@"
-        for ii in self.accuracy_k:
-            if not ii == self.accuracy_k[len(self.accuracy_k)-1]:
-                curt_acry_info = curt_acry_info + ("%d_" % ii)
-                print("%d/" % ii, end="")
-            else:
-                curt_acry_info = curt_acry_info + ("%d@" % ii)
-                print("%d:" % ii, end="")
-        for ii in label0_acry_list:
-            if not ii == label0_acry_list[len(label0_acry_list)-1]:
-                curt_acry_info=curt_acry_info+("%.3f_" % ii)
-                print("%.3f/" % ii, end="")
-            else:
-                curt_acry_info = curt_acry_info + ("%.3f" % ii)
-                print("%.3f;" % ii, end="")
-        print("")
-
-        print("Prvs:Top@", end="")
-        prev_acry_info="Top@"
-        for ii in self.accuracy_k:
-            if not ii == self.accuracy_k[len(self.accuracy_k)-1]:
-                prev_acry_info = prev_acry_info + ("%d_" % ii)
-                print("%d/" % ii, end="")
-            else:
-                prev_acry_info = prev_acry_info + ("%d@" % ii)
-                print("%d:" % ii, end="")
-        for ii in self.previous_highest_arcy_label:
-            if not ii == label0_acry_list[len(label0_acry_list)-1]:
-                prev_acry_info=prev_acry_info+("%.3f_" % ii)
-                print("%.3f/" % ii, end="")
-            else:
-                prev_acry_info = prev_acry_info + ("%.3f" % ii)
-                print("%.3f;" % ii, end="")
-        print("")
-
-        print(self.print_separater)
-
-        save_image_path = os.path.join(save_image_path, curt_acry_info)
-        if os.path.exists(save_image_path):
-            shutil.rmtree(save_image_path)
-        os.makedirs(save_image_path)
-        write_image_list_path = (os.path.join(save_image_path, curt_acry_info+".txt"))
-        self.previous_inf_dir = save_image_path
-
-
-
-        prev_acry = self.previous_highest_arcy_label
-        found_new_record=False
-        for ii in range(len(prev_acry)):
-            if prev_acry[ii]<label0_acry_list[ii]:
-                found_new_record=True
-                break
-
-
-        if found_new_record:
-            if found_new_record:
-                self.previous_highest_arcy_label = label0_acry_list
-
-            self.found_new_record_on_the_previous_epoch = True
-
-            current_accuracy_info0 = time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())
-            current_accuracy_info1 = current_accuracy_info0 + (",Epc:%d,Rnd:%d:" %
-                                                               (ei,len(self.previous_highest_accuracy_info_list)/3 + 1))
-            current_accuracy_info2 = ('CurtHghstAcry:%s' % self.previous_highest_arcy_label)
-            self.previous_highest_accuracy_info_list.append(current_accuracy_info1)
-            self.previous_highest_accuracy_info_list.append(current_accuracy_info2)
-            self.previous_highest_accuracy_info_list.append(self.print_separater)
-            current_time = time.strftime('%Y-%m-%d @ %H:%M:%S', time.localtime())
-            print("Time:%s,Checkpoint:SaveCheckpoint@step:%d" % (current_time, global_step.eval(session=self.sess)))
-
-            self.checkpoint(saver=saver_discriminator,
-                            model_dir=os.path.join(self.checkpoint_dir, 'discriminator'),
-                            global_step=global_step)
-            self.checkpoint(saver=saver_generator,
-                            model_dir=os.path.join(self.checkpoint_dir, 'generator'),
-                            global_step=global_step)
-            self.checkpoint(saver=saver_frameworks,
-                            model_dir=os.path.join(self.checkpoint_dir, 'frameworks'),
-                            global_step=global_step)
-            print(self.print_separater)
-        else:
-            self.found_new_record_on_the_previous_epoch = False
-
-
-        return write_image_list_path
-
-
-    def dense_to_one_hot(self,
-                         input_label,
-                         involved_label_list):
-
-        # for abnormal label process:
-        # for those labels in the test list not occurring in the training
-        abnormal_marker_indices = list()
-        for ii in range(len(input_label)):
-            if not input_label[ii] in involved_label_list:
-                abnormal_marker_indices.append(ii)
-        data_indices = np.arange(len(input_label))
-        data_indices_list = data_indices.tolist()
-        for ii in abnormal_marker_indices:
-            data_indices_list.remove(data_indices[ii])
-        data_indices = np.array(data_indices_list)
-
-        label_length = len(involved_label_list)
-        input_label_matrix = np.tile(np.asarray(input_label), [len(involved_label_list), 1])
-        fine_tune_martix = np.transpose(np.tile(involved_label_list, [self.batch_size, 1]))
-        # print(involved_label_list)
-        # print(input_label)
-
-
-        diff = input_label_matrix - fine_tune_martix
-        find_positions = np.argwhere(np.transpose(diff) == 0)
-        input_label_indices = np.transpose(find_positions[:, 1:]).tolist()
-
-        output_one_hot_label = np.zeros((len(input_label), label_length), dtype=np.float32)
-        if data_indices.tolist():
-            output_one_hot_label[data_indices, input_label_indices] = 1
-        return output_one_hot_label
-
-
-
-    def feed_dictionary_generation_for_d(self,
-                                         critic_penalty_input,
-                                         batch_packs,
-                                         batch_label0,batch_label1,
-                                         current_lr,
-                                         learning_rate):
-
-        channels = self.input_output_img_filter_num
-        true_style = batch_packs[:, :, :,0:channels]
-        content_prototypes = batch_packs[:, :, :, channels:channels+self.content_input_num*channels]
-        style_references = batch_packs[:, :, :, 1+self.content_input_num*channels:]
-        rnd_index_style = rnd.sample(range(self.style_input_number), 1)[0]
-        rnd_index_content = rnd.sample(range(self.content_input_num),1)[0]
-        output_dict = {}
-
-        generator_handle = getattr(self, "generator_handle")
-        discriminator_handle = getattr(self, "discriminator_handle")
-
-
-
-        output_dict.update({discriminator_handle.current_critic_logit_penalty:critic_penalty_input})
-        output_dict.update({discriminator_handle.true_style: true_style})
-        output_dict.update({discriminator_handle.content_prototype: np.reshape(content_prototypes[:,:,:, rnd_index_content],
-                                                                               [self.batch_size,
-                                                                                self.img2img_width,
-                                                                                self.img2img_width,1])})
-        output_dict.update({discriminator_handle.style_reference: np.reshape(style_references[:,:,:, rnd_index_style],
-                                                                             [self.batch_size,
-                                                                              self.img2img_width,
-                                                                              self.img2img_width,1])})
-        output_dict.update({discriminator_handle.discriminator_true_label: batch_label1})
-
-        output_dict.update({generator_handle.true_style: true_style})
-        output_dict.update({generator_handle.true_label0: batch_label0})
-        output_dict.update({generator_handle.true_label1: batch_label1})
-        for ii in range(self.style_input_number):
-            output_dict.update({generator_handle.style_reference_list[ii]:
-                                    np.reshape(style_references[:, :, :, ii],
-                                               [self.batch_size,
-                                                self.img2img_width,
-                                                self.img2img_width,1])})
-        output_dict.update({generator_handle.content_prototype:content_prototypes})
-
-
-        output_dict.update({learning_rate: current_lr})
-        return output_dict
-
-    def feed_dictionary_generation_for_g(self,
-                                         batch_packs,
-                                         batch_label0,batch_label1,
-                                         current_lr,
-                                         learning_rate):
-
-        channels = self.input_output_img_filter_num
-        true_style = batch_packs[:, :, :, 0:channels]
-        content_prototypes = batch_packs[:, :, :, channels:channels + self.content_input_num * channels]
-        style_references = batch_packs[:, :, :, 1 + self.content_input_num * channels:]
-        rnd_index_style = rnd.sample(range(self.style_input_number), 1)[0]
-        rnd_index_content = rnd.sample(range(self.content_input_num), 1)[0]
-        output_dict = {}
-
-
-        generator_handle = getattr(self, "generator_handle")
-        discriminator_handle = getattr(self, "discriminator_handle")
-
-        output_dict.update({generator_handle.true_style: true_style})
-        output_dict.update({generator_handle.true_label0: batch_label0})
-        output_dict.update({generator_handle.true_label1: batch_label1})
-        for ii in range(self.style_input_number):
-            output_dict.update({generator_handle.style_reference_list[ii]: np.reshape(style_references[:, :, :, ii],
-                                                                                      [self.batch_size,
-                                                                                       self.img2img_width,
-                                                                                       self.img2img_width,1])})
-        output_dict.update({generator_handle.content_prototype:content_prototypes})
-
-        output_dict.update({discriminator_handle.discriminator_true_label:batch_label1})
-        output_dict.update({discriminator_handle.true_style: true_style})
-        output_dict.update({discriminator_handle.content_prototype:
-                                np.reshape(content_prototypes[:, :, :, rnd_index_content],
-                                           [self.batch_size,
-                                            self.img2img_width,
-                                            self.img2img_width, 1])})
-        output_dict.update({discriminator_handle.style_reference:
-                                np.reshape(style_references[:, :, :, rnd_index_style],
-                                           [self.batch_size,
-                                            self.img2img_width,
-                                            self.img2img_width, 1])})
-
-        output_dict.update({learning_rate: current_lr})
-
-        return output_dict

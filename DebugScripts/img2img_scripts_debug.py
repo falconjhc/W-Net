@@ -314,7 +314,7 @@ def main(_):
                  discriminator=args.discriminator,
                  true_fake_target_extractor_dir=os.path.join(exp_root_path, args.true_fake_target_extractor_dir),
                  content_prototype_extractor_dir=os.path.join(exp_root_path, args.content_prototype_extractor_dir),
-                 style_reference_extractor_dir = os.path.join(exp_root_path, args.style_reference_extractor_dir)
+                 style_reference_extractor_dir=os.path.join(exp_root_path, args.style_reference_extractor_dir)
                  )
 
 

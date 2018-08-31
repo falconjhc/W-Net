@@ -82,11 +82,11 @@ input_args = ['--debug_mode','0',
 			  # penalties
 			  '--generator_weight_decay_penalty','0.0001',
 			  '--discriminator_weight_decay_penalty','0.0003',
-			  '--Pixel_Reconstruction_Penalty','15',
+			  '--Pixel_Reconstruction_Penalty','50',
 			  '--Lconst_content_Penalty','3',
 			  '--Lconst_style_Penalty','5',
-			  '--Discriminative_Penalty', '15',
-			  '--Discriminator_Categorical_Penalty', '1',
+			  '--Discriminative_Penalty', '50',
+			  '--Discriminator_Categorical_Penalty', '100',
 			  '--Generator_Categorical_Penalty', '0.2',
 			  '--Discriminator_Gradient_Penalty', '10',
 
@@ -99,8 +99,8 @@ input_args = ['--debug_mode','0',
               '--style_reference_extractor_dir',
     'TrainedModel/StyleOnly/Exp20180802_FeatureExtractor_Style_HW50_vgg16net/variables/',
     		  '--Feature_Penalty_True_Fake_Target', '500',
-              '--Feature_Penalty_Style_Reference','1000',
-              '--Feature_Penalty_Content_Prototype','1000']
+              '--Feature_Penalty_Style_Reference','1500',
+              '--Feature_Penalty_Content_Prototype','1500']
 
 
 

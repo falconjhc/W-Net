@@ -1,18 +1,11 @@
 import numpy as np
-import random
 import tensorflow as tf
 import os
 
 import sys
-import gc
 sys.path.append('..')
 from utilities.utils import image_show
-
-from utilities.utils import shift_and_resize_image
-from tensorflow.python.framework import ops
-from tensorflow.python.framework import dtypes
 import random as rnd
-import scipy.misc as misc
 import time
 import multiprocessing as multi_thread
 print_separator = "#################################################################"
@@ -67,31 +60,6 @@ class Dataset(object):
 
 
 
-
-    def read_style_file_list(self,data_path_list_txt_file,data_dir):
-
-        self.label0_list = list()
-        self.label1_list = list()
-        self.data_list = list()
-
-        for ii in range(len(data_path_list_txt_file)):
-
-            file_handle = open(data_path_list_txt_file[ii], 'r')
-            lines = file_handle.readlines()
-
-            for line in lines:
-                curt_line = line.split('@')
-                self.label0_list.append(int(curt_line[1]))
-                self.label1_list.append(int(curt_line[2]))
-                curt_data = curt_line[3].split('\n')[0]
-                if curt_data[0] == '/':
-                    curt_data = curt_data[1:]
-                curt_data_path = os.path.join(data_dir[ii], curt_data)
-                self.data_list.append(curt_data_path)
-
-            file_handle.close()
-
-
 class Dataset_Iterator(object):
     def __init__(self,thread_num,
                  batch_size,style_input_num,
@@ -99,7 +67,8 @@ class Dataset_Iterator(object):
                  true_style,
                  style_reference_list,content_prototype_list,
                  info_print_interval,print_marks,
-                 augment=False
+                 augment=False,train_iterator_mark=False,
+                 label0_vec=-1,label1_vec=-1,debug_mode=False,
                  ):
         self.batch_size = batch_size
         self.input_width = input_width
@@ -111,11 +80,23 @@ class Dataset_Iterator(object):
         self.augment = augment
         self.style_input_num = style_input_num
         self.content_input_num = len(content_prototype_list)
-        self.label0_vec = np.unique(self.true_style.label0_list)
 
         self.content_data_list_alignment_with_true_style_data(content_prototype_list=content_prototype_list,
                                                               print_marks=print_marks,
                                                               info_print_interval=info_print_interval)
+
+        if train_iterator_mark:
+            self.label0_vec = np.unique(self.true_style.label0_list)
+            self.label1_vec = np.unique(self.true_style.label1_list)
+            if debug_mode:
+                self.label0_vec = np.concatenate([range(176161, 176191),
+                                                  range(0,3725)],axis=0)
+                self.label1_vec = range(1001, 1051)
+                self.label0_vec = map(str, self.label0_vec)
+                self.label1_vec = map(str, self.label1_vec)
+        else:
+            self.label0_vec = label0_vec
+            self.label1_vec = label1_vec
 
 
     def content_data_list_alignment_with_true_style_data(self, content_prototype_list, print_marks,info_print_interval):
@@ -237,7 +218,7 @@ class Dataset_Iterator(object):
             if time.time() - time_start > info_print_interval or label1_counter == len(
                     label1_vec) or label1_counter == 1:
                 time_start = time.time()
-                print('%s:DatasetReInitialization@CurrentLabel1:%d(%d)/%d' % (
+                print('%s:DatasetReInitialization@CurrentLabel1:%d(%s)/%d' % (
                 info, label1_counter, label1, len(label1_vec)))
 
     def iterator_reset(self,sess):
@@ -260,8 +241,8 @@ class Dataset_Iterator(object):
     def create_dataset_op(self):
         def _get_tensor_slice():
             data_list_placeholder = tf.placeholder(dtype=tf.string, shape=[None])
-            label0_list_placeholder = tf.placeholder(dtype=tf.float32, shape=[None])
-            label1_list_placeholder = tf.placeholder(dtype=tf.float32, shape=[None])
+            label0_list_placeholder = tf.placeholder(dtype=tf.string, shape=[None])
+            label1_list_placeholder = tf.placeholder(dtype=tf.string, shape=[None])
             dataset_op = tf.data.Dataset.from_tensor_slices((data_list_placeholder,
                                                              label0_list_placeholder,
                                                              label1_list_placeholder))
@@ -282,6 +263,12 @@ class Dataset_Iterator(object):
                                      tf.constant(1, tf.float32))
             return img_output, label0_list, label1_list
 
+        def _convert_label_to_one_hot(dense_label,voc):
+            table = tf.contrib.lookup.index_table_from_tensor(mapping=voc, default_value=0)
+            encoded = tf.one_hot(table.lookup(dense_label),len(voc), dtype=tf.float32)
+            return encoded
+
+
 
 
 
@@ -295,9 +282,9 @@ class Dataset_Iterator(object):
             true_style_dataset.map(map_func=_parser_for_data,
                                    num_parallel_calls=self.thread_num).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(3)
         true_style_iterator = true_style_dataset.make_initializable_iterator()
-        true_style_img_tensor, true_style_label0_tensor, true_style_label1_tensor = \
+        true_style_img_tensor, true_style_label0_tensor_dense, true_style_label1_tensor_dense = \
             true_style_iterator.get_next()
-        output_img_tensor = true_style_img_tensor
+        # output_img_tensor = true_style_img_tensor
 
         self.true_style_iterator = true_style_iterator
         self.true_style_data_list_input_op = true_style_data_list_input_op
@@ -325,7 +312,10 @@ class Dataset_Iterator(object):
             prototype_label0_list_input_op_list.append(prototype_label0_list_input_op)
             prototype_label1_list_input_op_list.append(prototype_label1_list_input_op)
 
-            output_img_tensor = tf.concat([output_img_tensor,prototype_img_tensor], axis=3)
+            if ii == 0:
+                all_prototype_tensor = prototype_img_tensor
+            else:
+                all_prototype_tensor = tf.concat([all_prototype_tensor,prototype_img_tensor], axis=3)
 
         self.prototype_iterator_list = prototype_iterator_list
         self.prototype_data_list_input_op_list = prototype_data_list_input_op_list
@@ -354,36 +344,57 @@ class Dataset_Iterator(object):
             reference_label0_list_input_op_list.append(reference_label0_list_input_op)
             reference_label1_list_input_op_list.append(reference_label1_list_input_op)
 
-            output_img_tensor = tf.concat([output_img_tensor, reference_img_tensor], axis=3)
+            if ii == 0:
+                all_reference_tensor = reference_img_tensor
+            else:
+                all_reference_tensor = tf.concat([all_reference_tensor, reference_img_tensor], axis=3)
+
 
         self.reference_iterator_list=reference_iterator_list
         self.reference_data_list_input_op_list = reference_data_list_input_op_list
         self.reference_label0_list_input_op_list = reference_label0_list_input_op_list
         self.reference_label1_list_input_op_list = reference_label1_list_input_op_list
 
-        self.output_batch_image_tensor = output_img_tensor
-        self.output_batch_label0_tensor = true_style_label0_tensor
-        self.output_batch_label1_tensor = true_style_label1_tensor
+        true_style_label0_tensor_onehot =_convert_label_to_one_hot(dense_label=true_style_label0_tensor_dense, voc=self.label0_vec)
+        true_style_label1_tensor_onehot =_convert_label_to_one_hot(dense_label=true_style_label1_tensor_dense, voc=self.label1_vec)
 
+
+        self.output_tensor_list = list()
+        self.output_tensor_list.append(true_style_img_tensor) # 0
+        self.output_tensor_list.append(all_prototype_tensor)  # 1
+        self.output_tensor_list.append(all_reference_tensor)  # 2
+        self.output_tensor_list.append(true_style_label0_tensor_onehot)  # 3
+        self.output_tensor_list.append(true_style_label1_tensor_onehot)  # 4
+        self.output_tensor_list.append(true_style_label0_tensor_dense)   # 5
+        self.output_tensor_list.append(true_style_label1_tensor_dense)   # 6
 
 
 
     def get_next_batch(self, sess):
-        img, label0, label1 = sess.run([self.output_batch_image_tensor,
-                                        self.output_batch_label0_tensor,
-                                        self.output_batch_label1_tensor])
-        return img, label1, label0
+        true_style,prototype,reference, \
+        onehot_label0, onehot_label1, \
+        dense_label0, dense_label1 = \
+            sess.run([self.output_tensor_list[0],
+                      self.output_tensor_list[1],
+                      self.output_tensor_list[2],
+                      self.output_tensor_list[3],
+                      self.output_tensor_list[4],
+                      self.output_tensor_list[5],
+                      self.output_tensor_list[6]])
+        return true_style,prototype,reference, \
+               onehot_label0, onehot_label1, \
+               dense_label0, dense_label1
 
 class DataProvider(object):
     def __init__(self,
-                 epoch,
                  batch_size,
                  input_width,
                  input_filters,style_input_num,
                  info_print_interval,
                  file_list_txt_content, file_list_txt_style_train, file_list_txt_style_validation,
                  content_data_dir, style_train_data_dir,style_validation_data_dir,
-                 augment_train_data=True):
+                 augment_train_data=True,
+                 debug_mode=False):
 
         local_device_protos = device_lib.list_local_devices()
         gpu_device = [x.name for x in local_device_protos if x.device_type == 'GPU']
@@ -396,16 +407,15 @@ class DataProvider(object):
         self.augment_train_data=augment_train_data
         self.input_width = input_width
         self.input_filters = input_filters
-
         self.style_input_num=style_input_num
-
         self.dataset_iterator_create(content_data_dir=content_data_dir,
                                      file_list_txt_content=file_list_txt_content,
                                      style_train_data_dir=style_train_data_dir,
                                      file_list_txt_style_train=file_list_txt_style_train,
                                      style_validation_data_dir=style_validation_data_dir,
                                      file_list_txt_style_validation=file_list_txt_style_validation,
-                                     info_print_interval=info_print_interval)
+                                     info_print_interval=info_print_interval,
+                                     debug_mode=debug_mode)
 
     def dataset_reinitialization(self, sess, init_for_val, info_interval):
         self.train_iterator.reproduce_dataset_lists(info="TrainData", shuffle=True, info_print_interval=info_interval)
@@ -428,8 +438,8 @@ class DataProvider(object):
 
             for line in lines:
                 curt_line = line.split('@')
-                label1_list.append(int(curt_line[2]))
-                label0_list.append(int(curt_line[1]))
+                label1_list.append(curt_line[2])
+                label0_list.append(curt_line[1])
                 curt_data = curt_line[3].split('\n')[0]
                 if curt_data[0] == '/':
                     curt_data = curt_data[1:]
@@ -443,7 +453,8 @@ class DataProvider(object):
     def dataset_iterator_create(self,info_print_interval,
                                 content_data_dir,file_list_txt_content,
                                 style_train_data_dir, file_list_txt_style_train,
-                                style_validation_data_dir, file_list_txt_style_validation):
+                                style_validation_data_dir, file_list_txt_style_validation,
+                                debug_mode=False):
 
         def _filter_current_label1_data(current_label1, full_data_list, full_label1_list,full_label0_list):
             selected_indices = [ii for ii in range(len(full_label1_list)) if full_label1_list[ii] == current_label1]
@@ -518,9 +529,15 @@ class DataProvider(object):
                                                augment=self.augment_train_data,
                                                style_input_num=self.style_input_num,
                                                info_print_interval=info_print_interval,
-                                               print_marks='ForTrainIterator:')
-        self.style_label1_vec = np.unique(self.train_iterator.true_style.label1_list)
-        self.style_label0_vec = self.train_iterator.label0_vec
+                                               print_marks='ForTrainIterator:',
+                                               train_iterator_mark=True,
+                                               debug_mode=debug_mode)
+        self.style_label0_vec = np.unique(self.train_iterator.label0_vec)
+        self.style_label1_vec = np.unique(self.train_iterator.label1_vec)
+
+
+
+        
 
         # building for style data set for validation
         validation_style_label1_list, validation_style_label0_list, validation_style_data_path_list = \
@@ -557,7 +574,11 @@ class DataProvider(object):
                                                   augment=False,
                                                   style_input_num=self.style_input_num,
                                                   info_print_interval=info_print_interval,
-                                                  print_marks='ForValidationIterator:')
+                                                  print_marks='ForValidationIterator:',
+                                                  train_iterator_mark=False,
+                                                  label0_vec=self.train_iterator.label0_vec,
+                                                  label1_vec=self.train_iterator.label1_vec,
+                                                  debug_mode=debug_mode)
         self.train_iterator.create_dataset_op()
         self.validate_iterator.create_dataset_op()
 

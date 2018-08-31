@@ -4,11 +4,6 @@ import sys
 import math
 sys.path.append('..')
 
-FACE_AVG_IMG_CHANNEL_0 = 129.1862793
-FACE_AVG_IMG_CHANNEL_1 = 104.76238251
-FACE_AVG_IMG_CHANNEL_2 = 93.59396362
-
-
 
 import numpy as np
 from utilities.ops import lrelu, relu,  batch_norm,layer_norm
