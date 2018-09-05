@@ -1572,10 +1572,7 @@ class WNet(object):
                                                    weight_decay_rate=self.generator_weight_decay_penalty,
                                                    final_layer_logit_length=len(self.involved_label1_list))[1]
                     style_reference_category_list_infer.append(encoded_style_category_logit)
-                style_reference_category_infer = 0
-                for ii in range(self.style_input_number):
-                    style_reference_category_infer += style_reference_category_list_infer[ii]
-                style_reference_category_infer = style_reference_category_infer / self.style_input_number
+
 
 
 
@@ -1689,12 +1686,20 @@ class WNet(object):
                 content_entropy = content_entropy / self.content_input_num
 
                 style_true = tf.argmax(true_label1_infer, axis=1)
-                style_prdt = tf.argmax(style_reference_category_infer, axis=1)
-                style_accuracy = tf.equal(style_true, style_prdt)
-                style_accuracy = tf.reduce_mean(tf.cast(style_accuracy, tf.float32)) * 100
-                style_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=style_reference_category_infer,
-                                                                           labels=tf.nn.softmax(style_reference_category_infer))
-                style_entropy = tf.reduce_mean(style_entropy)
+
+                full_accuarcy_add = 0
+                full_entropy_add = 0
+                for style_reference_logit_infer in style_reference_category_list_infer:
+                    curt_style_prdt = tf.argmax(style_reference_logit_infer, axis=1)
+                    curt_style_accuracy = tf.equal(style_true, curt_style_prdt)
+                    curt_style_accuracy = tf.reduce_mean(tf.cast(curt_style_accuracy, tf.float32)) * 100
+                    curt_style_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=style_reference_logit_infer,
+                                                                                 labels=tf.nn.softmax(style_reference_logit_infer))
+                    curt_style_entropy = tf.reduce_mean(curt_style_entropy)
+                    full_accuarcy_add += curt_style_accuracy
+                    full_entropy_add += curt_style_entropy
+                style_accuracy = full_accuarcy_add / len(style_reference_category_list_infer)
+                style_entropy = full_entropy_add / len(style_reference_category_list_infer)
 
 
         train_content_accuracy = tf.summary.scalar("Accuracy_Generator/ContentPrototype_Train", content_accuracy)
@@ -2571,8 +2576,7 @@ class WNet(object):
                           (passed_itr, passed_full / 3600, passed_full / (3600 * 24)))
 
 
-                    percentage_completed = float(global_step.eval(session=self.sess)) / float(
-                        self.epoch * self.itrs_for_current_epoch) * 100
+                    percentage_completed = float(global_step.eval(session=self.sess)) / float((self.epoch - ei_start) * self.itrs_for_current_epoch) * 100
                     percentage_to_be_fulfilled = 100 - percentage_completed
                     hrs_estimated_remaining = (float(passed_full) / (
                             percentage_completed + eps)) * percentage_to_be_fulfilled / 3600
