@@ -81,10 +81,6 @@ class Dataset_Iterator(object):
         self.style_input_num = style_input_num
         self.content_input_num = len(content_prototype_list)
 
-        self.content_data_list_alignment_with_true_style_data(content_prototype_list=content_prototype_list,
-                                                              print_marks=print_marks,
-                                                              info_print_interval=info_print_interval)
-
         if train_iterator_mark:
             self.label0_vec = np.unique(self.true_style.label0_list)
             self.label1_vec = np.unique(self.true_style.label1_list)
@@ -97,6 +93,12 @@ class Dataset_Iterator(object):
         else:
             self.label0_vec = label0_vec
             self.label1_vec = label1_vec
+
+        self.content_data_list_alignment_with_true_style_data(content_prototype_list=content_prototype_list,
+                                                              print_marks=print_marks,
+                                                              info_print_interval=info_print_interval)
+
+        
 
 
     def content_data_list_alignment_with_true_style_data(self, content_prototype_list, print_marks,info_print_interval):

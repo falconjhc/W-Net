@@ -20,9 +20,11 @@ exp_root_path = '/DataA/Harric/MSMC_Exp/'
 # OPTIONS SPECIFICATION
 # resume_training = 0: training from stratch
 #                   1: training from a based model
-input_args = ['--debug_mode','0',
+input_args = ['--training_from_model_dir',
+	'../../../Exp_MSMC/checkpoint/Exp20180808_StyleHw300_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
+			  '--debug_mode','0',
               '--style_input_number','4', # how many style inputs
-              '--init_training_epochs','5',
+              '--init_training_epochs','2',
               '--final_training_epochs','100',
 
               '--generator_device','/device:GPU:0',
@@ -31,7 +33,7 @@ input_args = ['--debug_mode','0',
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--experiment_id','20180808_StyleHw300_ContentPf32+Hw32',# experiment name prefix
+              '--experiment_id','20180903_StyleHw300_ContentPf32+Hw32',# experiment name prefix
               '--experiment_dir','../../../Exp_MSMC', # model saving location
               '--log_dir','tfLogs_MSMC/',# log file saving location
               '--print_info_seconds','900',
@@ -81,7 +83,7 @@ input_args = ['--debug_mode','0',
               # penalties
               '--generator_weight_decay_penalty','0.0001',
               '--discriminator_weight_decay_penalty','0.0003',
-              '--Pixel_Reconstruction_Penalty','50',
+              '--Pixel_Reconstruction_Penalty','75',
               '--Lconst_content_Penalty','3',
               '--Lconst_style_Penalty','5',
               '--Discriminative_Penalty', '50',
@@ -98,7 +100,7 @@ input_args = ['--debug_mode','0',
               '--style_reference_extractor_dir',
     'TrainedModel/StyleOnly/Exp20180802_FeatureExtractor_Style_HW300_vgg16net/variables/',
               '--Feature_Penalty_True_Fake_Target', '750',
-              '--Feature_Penalty_Style_Reference','1000',
+              '--Feature_Penalty_Style_Reference','1250',
               '--Feature_Penalty_Content_Prototype','1500']
 
 
