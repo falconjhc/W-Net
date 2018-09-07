@@ -2222,6 +2222,7 @@ class WNet(object):
             self.record_seconds = self.print_info_seconds * 9
 
         with tf.Graph().as_default():
+
             # tensorflow parameters
             # DO NOT MODIFY!!!
             config = tf.ConfigProto(allow_soft_placement=True, log_device_placement=False)
@@ -2340,11 +2341,6 @@ class WNet(object):
                                       generator_loss_train=g_loss,
                                       dis_vars_train=dis_vars_train,
                                       discriminator_loss_train=d_loss)
-
-            # trn_real_summary_merged = tf.summary.merge([dis_trn_real_summary, generator_train_summary, extr_trn_real_merged])
-            # trn_fake_summary_merged = tf.summary.merge([dis_trn_fake_summary, extr_trn_fake_merged])
-            # val_real_summary_merged = tf.summary.merge([dis_val_real_summary, generator_test_summary, extr_val_real_merged])
-            # val_fake_summary_merged = tf.summary.merge([dis_val_fake_summary, extr_val_fake_merged])
 
             trn_real_dis_extr_summary_merged = tf.summary.merge([dis_trn_real_summary, extr_trn_real_merged])
             trn_fake_dis_extr_summary_merged = tf.summary.merge([dis_trn_fake_summary, extr_trn_fake_merged])
