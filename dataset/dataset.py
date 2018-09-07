@@ -66,7 +66,7 @@ class Dataset_Iterator(object):
                  input_width, input_channel,
                  true_style,
                  style_reference_list,content_prototype_list,
-                 info_print_interval,print_marks,
+                 info_print_interval,print_marks,content_input_number_actual,
                  augment=False,train_iterator_mark=False,
                  label0_vec=-1,label1_vec=-1,debug_mode=False,
                  ):
@@ -80,6 +80,7 @@ class Dataset_Iterator(object):
         self.augment = augment
         self.style_input_num = style_input_num
         self.content_input_num = len(content_prototype_list)
+        self.content_input_number_actual=content_input_number_actual
 
         if train_iterator_mark:
             self.label0_vec = np.unique(self.true_style.label0_list)
@@ -318,6 +319,19 @@ class Dataset_Iterator(object):
                 all_prototype_tensor = prototype_img_tensor
             else:
                 all_prototype_tensor = tf.concat([all_prototype_tensor,prototype_img_tensor], axis=3)
+        
+
+        if not self.content_input_number_actual == 0:
+            selected_indices = tf.random_uniform(shape=[self.content_input_number_actual,1], minval=0,maxval=self.content_input_num,dtype=tf.int64)
+            all_prototype_tensor_swapped = tf.transpose(all_prototype_tensor, [3,0,1,2])
+            selected_prototype_swapped = tf.squeeze(tf.nn.embedding_lookup(all_prototype_tensor_swapped,selected_indices))
+            selected_prototype = tf.transpose(selected_prototype_swapped,
+                                            [1,2,3,0])
+
+            all_prototype_tensor = selected_prototype
+        else:
+            self.content_input_number_actual = self.content_input_num
+
 
         self.prototype_iterator_list = prototype_iterator_list
         self.prototype_data_list_input_op_list = prototype_data_list_input_op_list
@@ -394,7 +408,7 @@ class DataProvider(object):
                  input_filters,style_input_num,
                  info_print_interval,
                  file_list_txt_content, file_list_txt_style_train, file_list_txt_style_validation,
-                 content_data_dir, style_train_data_dir,style_validation_data_dir,
+                 content_data_dir, style_train_data_dir,style_validation_data_dir,content_input_number_actual,
                  augment_train_data=True,
                  debug_mode=False):
 
@@ -410,6 +424,7 @@ class DataProvider(object):
         self.input_width = input_width
         self.input_filters = input_filters
         self.style_input_num=style_input_num
+        self.content_input_number_actual=content_input_number_actual
         self.dataset_iterator_create(content_data_dir=content_data_dir,
                                      file_list_txt_content=file_list_txt_content,
                                      style_train_data_dir=style_train_data_dir,
@@ -418,6 +433,7 @@ class DataProvider(object):
                                      file_list_txt_style_validation=file_list_txt_style_validation,
                                      info_print_interval=info_print_interval,
                                      debug_mode=debug_mode)
+        # self.content_input_num = self.train_iterator.content_input_num
 
     def dataset_reinitialization(self, sess, init_for_val, info_interval):
         self.train_iterator.reproduce_dataset_lists(info="TrainData", shuffle=True, info_print_interval=info_interval)
@@ -478,6 +494,8 @@ class DataProvider(object):
         self.content_label0_vec = np.unique(content_label0_list)
         self.content_input_num = len(np.unique(content_label1_list))
 
+
+
         content_prototype_list = list()
         for content_label1 in self.content_label1_vec:
             current_data_list, current_label0_list, current_label1_list = \
@@ -499,8 +517,6 @@ class DataProvider(object):
         train_style_label1_list, train_style_label0_list, train_style_data_path_list = \
             self.data_file_list_read(file_list_txt=file_list_txt_style_train,
                                      file_data_dir=style_train_data_dir)
-        # self.style_label1_vec = np.unique(train_style_label1_list)
-        # self.style_label0_vec = np.unique(train_style_label0_list)
 
         train_style_reference_list = list()
         for ii in range(self.style_input_num):
@@ -533,7 +549,8 @@ class DataProvider(object):
                                                info_print_interval=info_print_interval,
                                                print_marks='ForTrainIterator:',
                                                train_iterator_mark=True,
-                                               debug_mode=debug_mode)
+                                               debug_mode=debug_mode,
+                                               content_input_number_actual=self.content_input_number_actual)
         self.style_label0_vec = np.unique(self.train_iterator.label0_vec)
         self.style_label1_vec = np.unique(self.train_iterator.label1_vec)
 
@@ -580,7 +597,8 @@ class DataProvider(object):
                                                   train_iterator_mark=False,
                                                   label0_vec=self.train_iterator.label0_vec,
                                                   label1_vec=self.train_iterator.label1_vec,
-                                                  debug_mode=debug_mode)
+                                                  debug_mode=debug_mode,
+                                                  content_input_number_actual=self.content_input_number_actual)
         self.train_iterator.create_dataset_op()
         self.validate_iterator.create_dataset_op()
 

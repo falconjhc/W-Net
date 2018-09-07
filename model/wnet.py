@@ -142,6 +142,7 @@ class WNet(object):
                  style_add_target_file_list='./tmp.txt',
                  target_label1_selection=[0000],
                  style_input_number=5,
+                 content_input_number_actual=0,
                  source_font='./tmp.txt',
                  infer_mode=-1,
 
@@ -267,6 +268,7 @@ class WNet(object):
         self.style_add_target_file_list=style_add_target_file_list
         self.target_label1_selection=target_label1_selection
         self.style_input_number=style_input_number
+        self.content_input_number_actual=content_input_number_actual
         self.source_font=source_font
 
         self.softmax_temperature=softmax_temperature
@@ -321,6 +323,9 @@ class WNet(object):
                                                          self.generator_residual_blocks,
                                                          self.generator_residual_at_layer,
                                                          self.discriminator)
+
+        if not self.content_input_number_actual == 0:
+            model_id = model_id + "_Random%dContent" % self.content_input_number_actual
 
         model_ckpt_dir = os.path.join(self.checkpoint_dir, model_id)
         model_log_dir = os.path.join(self.log_dir, model_id)
@@ -475,7 +480,7 @@ class WNet(object):
                                          current_iterator=current_iterator,
                                          generator_summary=generator_summary,
                                          training_img_tensor_list=training_img_tensor_list)
-        random_content_prototype_index = rnd.randint(a=0,b=self.content_input_num-1)
+        random_content_prototype_index = rnd.randint(a=0,b=self.content_input_number_actual-1)
         random_style_reference_index = rnd.randint(a=0,b=self.style_input_number-1)
         selected_content = np.expand_dims(content_prototypes[:, :, :, random_content_prototype_index],axis=3)
         selected_style = np.expand_dims(style_references[:, :, :, random_style_reference_index],axis=3)
@@ -515,9 +520,9 @@ class WNet(object):
         generated_style = merge(generated_style, [self.batch_size, 1])
         new_content_prototype = np.zeros(shape=[self.batch_size * self.img2img_width,
                                                 self.img2img_width, 3,
-                                                self.content_input_num],
+                                                self.content_input_number_actual],
                                          dtype=np.float32)
-        for ii in range(self.content_input_num):
+        for ii in range(self.content_input_number_actual):
             new_content_prototype[:, :, :, ii] = merge(np.reshape(content_prototypes[:, :, :, ii],
                                                                   [content_prototypes[:, :, :, ii].shape[0],
                                                                    content_prototypes[:, :, :, ii].shape[1],
@@ -535,7 +540,7 @@ class WNet(object):
         true_style = merge(true_style, [self.batch_size, 1])
         diff_between_generated_and_true = merge(diff_between_generated_and_true, [self.batch_size, 1])
 
-        current_display_content_prototype_indices = rnd.sample(range(self.content_input_num),
+        current_display_content_prototype_indices = rnd.sample(range(self.content_input_number_actual),
                                                                self.display_content_reference_num)
 
         for ii in range(len(current_display_content_prototype_indices)):
@@ -1483,13 +1488,13 @@ class WNet(object):
                                              initializer=self.initializer,
                                              weight_decay=self.weight_decay_generator,
                                              style_input_number=self.style_input_number,
-                                             content_prototype_number=self.content_input_num,
+                                             content_prototype_number=self.content_input_number_actual,
                                              weight_decay_rate=self.generator_weight_decay_penalty)
 
                 # encoded of the generated target on the content prototype encoder
                 encoded_content_prototype_generated_target = \
                     encoder_implementation(images=tf.tile(generated_target_train,
-                                                          [1,1,1,self.content_input_num]),
+                                                          [1,1,1,self.content_input_number_actual]),
                                            is_training=True,
                                            encoder_device=self.generator_devices,
                                            residual_at_layer=self.generator_residual_at_layer,
@@ -1541,7 +1546,7 @@ class WNet(object):
                                              initializer=self.initializer,
                                              weight_decay=False,
                                              style_input_number=self.style_input_number,
-                                             content_prototype_number=self.content_input_num,
+                                             content_prototype_number=self.content_input_number_actual,
                                              weight_decay_rate=eps)[0]
 
                 content_prototype_category_infer = \
@@ -1604,7 +1609,7 @@ class WNet(object):
         if self.Lconst_content_Penalty > eps * 10:
             const_loss_content = tf.square(encoded_content_prototype_generated_target - encoded_content_prototype_train)
             const_loss_content = tf.reduce_mean(const_loss_content) * self.Lconst_content_Penalty
-            const_loss_content = const_loss_content / self.content_input_num
+            const_loss_content = const_loss_content / self.content_input_number_actual
             g_loss += const_loss_content
             const_content_loss_summary = tf.summary.scalar("Loss_Generator/ConstContentPrototype",
                                                            tf.abs(const_loss_content) / self.Lconst_content_Penalty)
@@ -1645,7 +1650,7 @@ class WNet(object):
             category_loss_content = tf.nn.softmax_cross_entropy_with_logits(logits=content_category_logits_train,
                                                                             labels=true_label0_train)
             category_loss_content = tf.reduce_mean(category_loss_content) * self.Generator_Categorical_Penalty
-            category_loss_content = category_loss_content / self.content_input_num
+            category_loss_content = category_loss_content / self.content_input_number_actual
 
             category_loss_style = tf.nn.softmax_cross_entropy_with_logits(logits=style_category_logits_train,
                                                                           labels=true_label1_train)
@@ -1677,13 +1682,13 @@ class WNet(object):
                 content_prdt = tf.argmax(content_prototype_category_infer, axis=1)
                 content_accuracy = tf.equal(content_true,content_prdt)
                 content_accuracy = tf.reduce_mean(tf.cast(content_accuracy,tf.float32)) * 100
-                content_accuracy = content_accuracy / self.content_input_num
+                content_accuracy = content_accuracy / self.content_input_number_actual
 
                 content_entropy = \
                     tf.nn.softmax_cross_entropy_with_logits(logits=content_prototype_category_infer,
                                                             labels=tf.nn.softmax(content_prototype_category_infer))
                 content_entropy = tf.reduce_mean(content_entropy)
-                content_entropy = content_entropy / self.content_input_num
+                content_entropy = content_entropy / self.content_input_number_actual
 
                 style_true = tf.argmax(true_label1_infer, axis=1)
 
@@ -1767,7 +1772,7 @@ class WNet(object):
 
                 content_prototype_train_all = data_provider.train_iterator.output_tensor_list[1]
                 style_reference_train_all = data_provider.train_iterator.output_tensor_list[2]
-                content_train_random_index = tf.random_uniform(shape=[], minval=0,maxval=self.content_input_num,dtype=tf.int64)
+                content_train_random_index = tf.random_uniform(shape=[], minval=0,maxval=self.content_input_number_actual,dtype=tf.int64)
                 style_train_random_index = tf.random_uniform(shape=[], minval=0, maxval=self.style_input_number,dtype=tf.int64)
                 content_prototype_train = tf.expand_dims(content_prototype_train_all[:,:,:,content_train_random_index], axis=3)
                 style_reference_train = tf.expand_dims(style_reference_train_all[:, :, :, style_train_random_index], axis=3)
@@ -2237,12 +2242,16 @@ class WNet(object):
                                          file_list_txt_content=self.file_list_txt_content,
                                          file_list_txt_style_train=self.file_list_txt_style_train,
                                          file_list_txt_style_validation=self.file_list_txt_style_validation,
-                                         debug_mode=self.debug_mode)
+                                         debug_mode=self.debug_mode,
+                                         content_input_number_actual=self.content_input_number_actual)
 
             self.involved_label0_list, self.involved_label1_list = data_provider.get_involved_label_list()
             self.content_input_num = data_provider.content_input_num
             self.display_style_reference_num = np.min([4, self.style_input_number])
-            self.display_content_reference_num = np.min([4, self.content_input_num])
+            if self.content_input_number_actual==0:
+                self.content_input_number_actual = self.content_input_num
+            self.display_content_reference_num = np.min([4, self.content_input_number_actual])
+
 
             # ignore
             delete_items=list()
