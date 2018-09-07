@@ -322,12 +322,17 @@ class Dataset_Iterator(object):
         
 
         if not self.content_input_number_actual == 0:
-            selected_indices = tf.random_uniform(shape=[self.content_input_number_actual, 1], minval=0,maxval=self.content_input_num,dtype=tf.int64)
-            all_prototype_tensor_swapped = tf.transpose(all_prototype_tensor, [3, 0, 1, 2])
-            selected_prototype_swapped = tf.squeeze(tf.nn.embedding_lookup(all_prototype_tensor_swapped,selected_indices))
-            selected_prototype = tf.transpose(selected_prototype_swapped, [1, 2, 3, 0])
-
-            all_prototype_tensor = selected_prototype
+            for ii in range(self.batch_size):
+                current_prototype = tf.expand_dims(all_prototype_tensor[ii,:,:,:],axis=0)
+                selected_indices = tf.random_uniform(shape=[self.content_input_number_actual, 1], minval=0,maxval=self.content_input_num,dtype=tf.int64)
+                current_prototype_swapped = tf.transpose(current_prototype,[3,0,1,2])
+                current_selected_prototype_swapped = tf.expand_dims(tf.squeeze(tf.nn.embedding_lookup(current_prototype_swapped,selected_indices)),axis=1)
+                current_selected_prototype = tf.transpose(current_selected_prototype_swapped, [1, 2, 3, 0])
+                if ii == 0:
+                    all_prototype_tensor_new = current_selected_prototype
+                else:
+                    all_prototype_tensor_new = tf.concat([all_prototype_tensor_new,current_selected_prototype],axis=0)
+            all_prototype_tensor = all_prototype_tensor_new
         else:
             self.content_input_number_actual = self.content_input_num
 
