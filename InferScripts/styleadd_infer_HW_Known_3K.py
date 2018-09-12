@@ -8,11 +8,11 @@ import argparse
 import sys
 sys.path.append('..')
 
-from model.img2img import Img2Img
+from model.wnet import WNet as WNET
 
-# OPTIONS SPECIFICATION
-# resume_training = 0: training from stratch
-#                   1: training from a based model
+exp_root_path = '/DataA/Harric/MSMC_Exp/'
+
+
 
 
 input_args = ['--debug_mode','1',
@@ -115,32 +115,32 @@ def main(_):
         target_label1_selection = range(int(tmp[0]), int(tmp[2])+1, int(tmp[1]))
 
 
-    model = Img2Img(debug_mode=args.debug_mode,
+    model = WNET(debug_mode=args.debug_mode,
 
-                    targeted_chars_txt=args.targeted_chars_txt,
-                    infer_dir=args.infer_dir,
-                    save_mode=args.save_mode,
-                    source_font=args.source_font,
+                 targeted_chars_txt=args.targeted_chars_txt,
+                 infer_dir=args.infer_dir,
+                 save_mode=args.save_mode,
+                 source_font=args.source_font,
 
-                    style_add_target_model_dir=args.style_add_target_model_dir.split(','),
-                    style_add_target_file_list=args.style_add_target_file_list.split(','),
-                    target_label1_selection=target_label1_selection,
-                    style_input_number=args.style_input_number,
+                 style_add_target_model_dir=args.style_add_target_model_dir.split(','),
+                 style_add_target_file_list=args.style_add_target_file_list.split(','),
+                 target_label1_selection=target_label1_selection,
+                 style_input_number=args.style_input_number,
 
-                    channels=args.channels,
-                    img_width=args.img_width,
+                 channels=args.channels,
+                 img_width=args.img_width,
 
-                    discriminator=args.discriminator,
-                    generator_residual_at_layer=args.generator_residual_at_layer,
-                    generator_residual_blocks=args.generator_residual_blocks,
+                 discriminator=args.discriminator,
+                 generator_residual_at_layer=args.generator_residual_at_layer,
+                 generator_residual_blocks=args.generator_residual_blocks,
 
-                    generator_devices=args.generator_device,
-                    discriminator_devices=args.discriminator_device,
+                 generator_devices=args.generator_device,
+                 discriminator_devices=args.discriminator_device,
 
-                    model_dir=args.model_dir,
-                    softmax_temperature=args.softmax_temperature,
+                 model_dir=args.model_dir,
+                 softmax_temperature=args.softmax_temperature,
 
-                    batch_size=args.batch_size)
+                 batch_size=args.batch_size)
 
 
     if args.infer_dir == 0:

@@ -269,6 +269,7 @@ class WNet(object):
         self.target_label1_selection=target_label1_selection
         self.style_input_number=style_input_number
         self.content_input_number_actual=content_input_number_actual
+        self.random_content = not self.content_input_number_actual == 0
         self.source_font=source_font
 
         self.softmax_temperature=softmax_temperature
@@ -324,7 +325,7 @@ class WNet(object):
                                                          self.generator_residual_at_layer,
                                                          self.discriminator)
 
-        if not self.content_input_number_actual == 0:
+        if self.random_content:
             model_id = model_id + "_Random%dContent" % self.content_input_number_actual
 
         model_ckpt_dir = os.path.join(self.checkpoint_dir, model_id)
@@ -2228,6 +2229,7 @@ class WNet(object):
             config = tf.ConfigProto(allow_soft_placement=True, log_device_placement=False)
             config.gpu_options.allow_growth = True
             self.sess = tf.Session(config=config)
+
 
 
             # define the data set
