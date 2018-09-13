@@ -3,7 +3,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 GRAYSCALE_AVG = 127.5
 
-import matplotlib
+import matplotlib.pyplot as plt
 
 
 
@@ -83,6 +83,7 @@ class WNet(object):
                  train_data_augment=-1,
                  init_training_epochs=-1,
                  final_training_epochs=-1,
+                 style_input_number=-1,
 
                  experiment_dir='/tmp/',
                  log_dir='/tmp/',
@@ -126,31 +127,26 @@ class WNet(object):
 
                  generator_residual_at_layer=3,
                  generator_residual_blocks=5,
-                 discriminator='DisMdy4conv',
+                 discriminator='DisMdy6conv',
                  true_fake_target_extractor_dir='/tmp/',
                  content_prototype_extractor_dir='/tmp/',
                  style_reference_extractor_dir='/tmp/',
 
                  ## for infer only
-                 model_dir='./', infer_dir='./',
+                 model_dir='./', save_path='./',
 
                  # for styleadd infer only
-                 targeted_chars_txt='./',
+                 targeted_content_input_txt='./',
                  target_file_path='-1',
                  save_mode='-1',
-                 style_add_target_model_dir='./',
-                 style_add_target_file_list='./tmp.txt',
-                 target_label1_selection=[0000],
-                 style_input_number=5,
                  content_input_number_actual=0,
-                 source_font='./tmp.txt',
-                 infer_mode=-1,
+                 known_style_img_path='./',
 
-                 softmax_temperature=1
 
                  ):
 
         self.initializer = 'XavierInit'
+        self.style_input_number=style_input_number
 
         self.print_info_seconds=print_info_seconds
         self.discriminator_initialization_iters=25
@@ -254,25 +250,19 @@ class WNet(object):
 
         # properties for inferring
         self.model_dir=model_dir
-        self.infer_dir=infer_dir
-        if os.path.exists(self.infer_dir) and not (self.infer_dir == './'):
-            shutil.rmtree(self.infer_dir)
-        if not self.infer_dir == './':
-            os.makedirs(self.infer_dir)
+        self.save_path=save_path
+        if os.path.exists(self.save_path) and not (self.save_path == './'):
+            shutil.rmtree(self.save_path)
+        if not self.save_path == './':
+            os.makedirs(self.save_path)
 
         # for styleadd infer only
-        self.targeted_chars_txt=targeted_chars_txt
+        self.targeted_content_input_txt=targeted_content_input_txt
         self.target_file_path=target_file_path
         self.save_mode=save_mode
-        self.style_add_target_model_dir=style_add_target_model_dir
-        self.style_add_target_file_list=style_add_target_file_list
-        self.target_label1_selection=target_label1_selection
-        self.style_input_number=style_input_number
         self.content_input_number_actual=content_input_number_actual
         self.random_content = not self.content_input_number_actual == 0
-        self.source_font=source_font
-
-        self.softmax_temperature=softmax_temperature
+        self.known_style_img_path=known_style_img_path
 
 
         # init all the directories
@@ -330,8 +320,8 @@ class WNet(object):
 
         model_ckpt_dir = os.path.join(self.checkpoint_dir, model_id)
         model_log_dir = os.path.join(self.log_dir, model_id)
-        model_infer_dir = os.path.join(self.inf_data_dir, model_id)
-        return model_id, model_ckpt_dir, model_log_dir, model_infer_dir
+        model_save_path = os.path.join(self.inf_data_dir, model_id)
+        return model_id, model_ckpt_dir, model_log_dir, model_save_path
 
     def checkpoint(self, saver, model_dir,global_step):
         model_name = "img2img.model"
@@ -656,7 +646,9 @@ class WNet(object):
         setattr(self, "summary_handle", summary_handle)
 
 
-    def styleadd_infer_procedures_mode0(self):
+
+
+    def styleadd_infer_procedures(self):
 
         charset_level1, character_label_level1 = \
             inf_tools.get_chars_set_from_level1_2(path='../FontAndChars/GB2312_Level_1.txt',
@@ -665,23 +657,25 @@ class WNet(object):
             inf_tools.get_chars_set_from_level1_2(path='../FontAndChars/GB2312_Level_2.txt',
                                                   level=2)
 
-        targeted_charset, targeted_label0_list = \
-            inf_tools.get_chars_set_from_searching(path=self.targeted_chars_txt,
-                                                   level1_charlist=charset_level1,
-                                                   level2_charlist=charset_level2,
-                                                   level1_labellist=character_label_level1,
-                                                   level2_labellist=character_label_level2)
+        # get data available
+        content_prototype, content_label1_vec = \
+            inf_tools.get_prototype_on_targeted_content_input_txt(targeted_content_input_txt=self.targeted_content_input_txt,
+                                                                  level1_charlist=charset_level1,
+                                                                  level2_charlist=charset_level2,
+                                                                  level1_labellist=character_label_level1,
+                                                                  level2_labellist=character_label_level2,
+                                                                  content_file_list_txt=self.file_list_txt_content,
+                                                                  content_file_data_dir=self.content_data_dir,
+                                                                  img_width=self.img2img_width,
+                                                                  img_filters=self.input_output_img_filter_num)
 
-        source_imgs = inf_tools.find_source_char_img(charset=targeted_charset,
-                                                     fontpath=self.source_font,
-                                                     img_width=self.source_img_width,
-                                                     img_filters=self.input_output_img_filter_num,
-                                                     batch_size=self.batch_size)
+        style_reference = inf_tools.get_style_references(img_path=self.known_style_img_path,
+                                                         style_input_number=self.style_input_number)
 
         output_paper_shape = self.save_mode.split(':')
         output_paper_rows = int(output_paper_shape[0])
         output_paper_cols = int(output_paper_shape[1])
-        if output_paper_rows * output_paper_cols < len(targeted_charset):
+        if output_paper_rows * output_paper_cols < content_prototype.shape[0]:
             print('Incorrect Paper Size !@!~!@~!~@~!@~')
             return
 
@@ -692,61 +686,66 @@ class WNet(object):
             config.gpu_options.allow_growth = True
             self.sess = tf.Session(config=config)
 
-            # build embedder
+            # build style reference encoder
             with tf.device(self.generator_devices):
+                style_reference_placeholder = tf.placeholder(tf.float32, [1, self.source_img_width,
+                                                                          self.source_img_width,
+                                                                          style_reference.shape[3]],
+                                             name='placeholder_style_reference')
+                style_short_cut_interface_list = list()
+                style_residual_interface_list = list()
+                for ii in range(style_reference.shape[3]):
+                    if ii == 0:
+                        reuse=False
+                    else:
+                        reuse=True
+                    _, _, current_style_short_cut_interface, current_style_residual_interface, _ = \
+                        encoder_implementation(images=tf.expand_dims(style_reference_placeholder[:,:,:,ii],axis=3),
+                                               is_training=False,
+                                               encoder_device=self.generator_devices,
+                                               residual_at_layer=self.generator_residual_at_layer,
+                                               residual_connection_mode='Single',
+                                               scope='generator/style_encoder',
+                                               reuse=reuse,
+                                               initializer='XavierInit',
+                                               weight_decay=False,
+                                               weight_decay_rate=0,
+                                               final_layer_logit_length=-1)
+                    style_short_cut_interface_list.append(current_style_short_cut_interface)
+                    style_residual_interface_list.append(current_style_residual_interface)
 
-
-
-
-                input_batch = tf.placeholder(tf.float32,
-                                             [self.batch_size,
-                                              self.source_img_width,
-                                              self.source_img_width,
-                                              self.input_output_img_filter_num],
-                                             name='input_batch')
-                _, _, encoded_list_obtained, residual_list_obtained, _ = \
-                    encoder_implementation(images=input_batch,
-                                           is_training=False,
-                                           encoder_device=self.generator_devices,
-                                           residual_at_layer=self.generator_residual_at_layer,
-                                           residual_connection_mode='Single',
-                                           scope='generator/target_encoder',
-                                           reuse=False,
-                                           initializer='XavierInit',
-                                           weight_decay=False,
-                                           weight_decay_rate=0,
-                                           final_layer_logit_length=-1)
+                for ii in range(style_reference.shape[3]):
+                    if ii == 0:
+                        style_short_cut_interface = style_short_cut_interface_list[ii]
+                        style_residual_interface = style_residual_interface_list[ii]
+                    else:
+                        for jj in range(len(style_short_cut_interface_list[ii])):
+                            style_short_cut_interface[jj] += style_short_cut_interface_list[ii][jj]
+                        for jj in range(len(style_residual_interface_list[ii])):
+                            style_residual_interface[jj] += style_residual_interface_list[ii][jj]
+                for ii in range(len(style_short_cut_interface)):
+                    style_short_cut_interface[ii] = style_short_cut_interface[ii] / style_reference.shape[3]
+                for ii in range(len(style_residual_interface)):
+                    style_residual_interface[ii] = style_residual_interface[ii] / style_reference.shape[3]
 
 
 
 
             with tf.device(self.generator_devices):
-                source = tf.placeholder(tf.float32,
-                                        [self.batch_size,
+                content_prototype_placeholder = tf.placeholder(tf.float32,
+                                        [1,
                                          self.source_img_width,
                                          self.source_img_width,
-                                         self.input_output_img_filter_num],
-                                        name='geneartor_source_image')
+                                         content_prototype.shape[3]],
+                                        name='placeholder_content_prototype')
 
-                encoded_list_input = list()
-                for ii in range(len(encoded_list_obtained)):
-                    tmp = tf.placeholder(shape=encoded_list_obtained[ii].shape,
-                                         dtype=encoded_list_obtained[ii].dtype)
-                    encoded_list_input.append(tmp)
-                residual_list_input = list()
-                for ii in range(len(residual_list_obtained)):
-                    tmp = tf.placeholder(shape=residual_list_obtained[ii].shape,
-                                         dtype=residual_list_obtained[ii].dtype)
-                    residual_list_input.append(tmp)
-
-
-                generated_infer = generator_inferring(source=source,
-                                                      batch_size=self.batch_size,
+                generated_infer = generator_inferring(content=content_prototype_placeholder,
                                                       generator_device=self.generator_devices,
                                                       residual_at_layer=self.generator_residual_at_layer,
                                                       residual_block_num=self.generator_residual_blocks,
-                                                      target_encoded_list=encoded_list_input,
-                                                      residual_input_list=residual_list_input)
+                                                      style_short_cut_interface=style_short_cut_interface,
+                                                      style_residual_interface=style_residual_interface,
+                                                      img_filters=self.input_output_img_filter_num)
 
                 gen_vars_save = self.find_bn_avg_var([var for var in tf.trainable_variables() if 'generator' in var.name])
 
@@ -764,352 +763,42 @@ class WNet(object):
             print(self.print_separater)
             print(self.print_separater)
 
+        # generating characters
+        full_content = np.zeros(dtype=np.float32,
+                                shape=[content_prototype.shape[0],
+                                       self.img2img_width,self.img2img_width,
+                                       content_prototype.shape[3]])
+        full_generated = np.zeros(dtype=np.float32,
+                                  shape=[content_prototype.shape[0],
+                                         self.img2img_width,self.img2img_width,
+                                         self.input_output_img_filter_num])
+        current_counter=0
+        for current_generating_content_counter in range(content_prototype.shape[0]):
+            current_content_char = np.expand_dims(np.squeeze(content_prototype[current_generating_content_counter,:,:,:]),axis=0)
+            current_generated_char=self.sess.run(generated_infer, feed_dict={content_prototype_placeholder: current_content_char,
+                                                                             style_reference_placeholder: style_reference})
+            full_generated[current_counter,:,:,:]=current_generated_char
+            for ii in range(content_prototype.shape[3]):
+                full_content[current_counter,:,:,ii]=current_content_char[:,:,:,ii]
+            current_counter+=1
+
+        # saving chars
+        generated_paper = inf_tools.matrix_paper_generation(images=full_generated,
+                                                            rows=output_paper_rows,
+                                                            columns=output_paper_cols)
+        misc.imsave(os.path.join(self.save_path, 'Generated.png'), generated_paper)
+        style_paper = inf_tools.matrix_paper_generation(images=np.transpose(style_reference,axes=(3,1,2,0)),
+                                                        rows=output_paper_rows,
+                                                        columns=output_paper_cols)
+        misc.imsave(os.path.join(self.save_path, 'RealStyle.png'), style_paper)
+        for ii in range(content_prototype.shape[3]):
+            content_paper=inf_tools.matrix_paper_generation(images=np.expand_dims(full_content[:,:,:,ii],axis=3),
+                                                            rows=output_paper_rows,
+                                                            columns=output_paper_cols)
+            if not os.path.exists(os.path.join(self.save_path,'Content')):
+                os.makedirs(os.path.join(self.save_path,'Content'))
+            misc.imsave(os.path.join(os.path.join(self.save_path,'Content'), 'Content%s.png' % content_label1_vec[ii]), content_paper)
 
-
-
-
-        # implementation
-        save_dir_true = os.path.join(self.infer_dir, 'TrueChars')
-        save_dir_generated = os.path.join(self.infer_dir,'GeneratedChars')
-        if os.path.exists(save_dir_true):
-            shutil.rmtree(save_dir_true)
-        if os.path.exists(save_dir_generated):
-            shutil.rmtree(save_dir_generated)
-        os.makedirs(save_dir_true)
-        os.makedirs(save_dir_generated)
-
-        for target_label1 in self.target_label1_selection:
-
-            transfer_targets = inf_tools.find_transfer_targets(data_dir=self.style_add_target_model_dir,
-                                                               txt_path=self.style_add_target_file_list,
-                                                               selected_label1=int(target_label1),
-                                                               style_input_number=self.style_input_number,
-                                                               img_width=self.source_img_width,
-                                                               filter_num=self.input_output_img_filter_num,
-                                                               batch_size=self.batch_size)
-
-            true_targets = inf_tools.find_true_targets(data_dir=self.style_add_target_model_dir,
-                                                       txt_path=self.style_add_target_file_list,
-                                                       selected_label1=int(target_label1),
-                                                       selected_label0_list=targeted_label0_list,
-                                                       charset=targeted_charset, font=self.source_font,
-                                                       img_width=self.source_img_width,
-                                                       filter_num=self.input_output_img_filter_num,
-                                                       batch_size=self.batch_size)
-
-            # calculate ebdd_vec
-            style_calculate_iters = transfer_targets.shape[0]/self.batch_size
-            encoded_list_input_calculated = list()
-            for ii in range(len(encoded_list_obtained)):
-                tmp = np.zeros(shape=[style_calculate_iters*self.batch_size,
-                                      int(encoded_list_obtained[ii].shape[1]),
-                                      int(encoded_list_obtained[ii].shape[2]),
-                                      int(encoded_list_obtained[ii].shape[3])],
-                               dtype=np.float32)
-                encoded_list_input_calculated.append(tmp)
-            residual_list_input_calculated = list()
-            for ii in range(len(residual_list_obtained)):
-                tmp = np.zeros(shape=[style_calculate_iters * self.batch_size,
-                                      int(residual_list_obtained[ii].shape[1]),
-                                      int(residual_list_obtained[ii].shape[2]),
-                                      int(residual_list_obtained[ii].shape[3])],
-                               dtype=np.float32)
-                residual_list_input_calculated.append(tmp)
-
-            for iter in range(style_calculate_iters):
-                this_batch_encoded_list, this_batch_residual_list\
-                    =self.sess.run([encoded_list_obtained,residual_list_obtained],
-                                   feed_dict={input_batch:transfer_targets[iter*self.batch_size:(iter+1)*self.batch_size,:,:,:]})
-                for ii in range(len(encoded_list_obtained)):
-                    encoded_list_input_calculated[ii][iter*self.batch_size:(iter+1)*self.batch_size,:,:,:] = this_batch_encoded_list[ii]
-                for ii in range(len(residual_list_obtained)):
-                    residual_list_input_calculated[ii][iter*self.batch_size:(iter+1)*self.batch_size,:,:,:] = this_batch_residual_list[ii]
-
-            for ii in range(len(encoded_list_obtained)):
-                encoded_list_input_calculated[ii] = encoded_list_input_calculated[ii][0:self.style_input_number,:,:,:]
-                encoded_list_input_calculated[ii] = np.mean(encoded_list_input_calculated[ii],axis=0)
-                encoded_list_input_calculated[ii] = np.tile(np.reshape(encoded_list_input_calculated[ii],
-                                                                       [1,encoded_list_input_calculated[ii].shape[0],
-                                                                        encoded_list_input_calculated[ii].shape[1],
-                                                                        encoded_list_input_calculated[ii].shape[2]]),
-                                                            [self.batch_size,1,1,1])
-            for ii in range(len(residual_list_obtained)):
-                residual_list_input_calculated[ii] = residual_list_input_calculated[ii][0:self.style_input_number, :, :,:]
-                residual_list_input_calculated[ii] = np.mean(residual_list_input_calculated[ii], axis=0)
-                residual_list_input_calculated[ii] = np.tile(np.reshape(residual_list_input_calculated[ii],
-                                                                       [1, residual_list_input_calculated[ii].shape[0],
-                                                                        residual_list_input_calculated[ii].shape[1],
-                                                                        residual_list_input_calculated[ii].shape[2]]),
-                                                            [self.batch_size, 1, 1, 1])
-
-
-
-
-
-            # build feed_dictionary
-            output_dict = {}
-            for ii in range(len(encoded_list_obtained)):
-                output_dict.update({encoded_list_input[ii]:encoded_list_input_calculated[ii]})
-            for ii in range(len(residual_list_obtained)):
-                output_dict.update({residual_list_input[ii]:residual_list_input_calculated[ii]})
-
-
-
-
-            # run generator
-            generator_infer_iter_num = source_imgs.shape[0] / self.batch_size
-            generated_target = np.zeros([source_imgs.shape[0],self.img2img_width,self.img2img_width,self.input_output_img_filter_num])
-            all_start_time=time.time()
-            for iter in range(generator_infer_iter_num):
-                iter_start_time=time.time()
-                current_feed_dict = output_dict
-                current_feed_dict.update({source:source_imgs[iter*self.batch_size:(iter+1)*self.batch_size,:,:,:]})
-                generated_target[iter*self.batch_size:(iter+1)*self.batch_size,:,:,:] \
-                    = self.sess.run(generated_infer,
-                                    feed_dict=current_feed_dict)
-
-                print("Style:%s,Iter:%d/%d,Elapsed:%.3f/%.3f" %  (target_label1,iter+1,generator_infer_iter_num,
-                                                                  time.time()-iter_start_time,time.time()-all_start_time))
-
-
-            # for save
-
-            generated_target=generated_target[0:len(targeted_charset),:,:,:]
-            true_targets = true_targets[0:len(targeted_charset), :, :, :]
-
-            output_paper_generated = inf_tools.matrix_paper_generation(images=generated_target,
-                                                                       rows=output_paper_rows,
-                                                                       columns=output_paper_cols)
-            output_paper_true = inf_tools.matrix_paper_generation(images=true_targets,
-                                                                  rows=output_paper_rows,
-                                                                  columns=output_paper_cols)
-
-
-
-            output_paper_generated.save(os.path.join(save_dir_generated,'GeneratedFont:%s.png' % target_label1))
-            output_paper_true.save(os.path.join(save_dir_true, 'RealFont:%s.png' % target_label1))
-            print("ImgSaved:%s" % target_label1)
-            print(self.print_separater)
-            print(self.print_separater)
-
-
-    def styleadd_infer_procedures_mode1(self):
-
-        self.batch_size = 1
-
-        charset_level1, character_label_level1 = \
-            inf_tools.get_chars_set_from_level1_2(path='../FontAndChars/GB2312_Level_1.txt',
-                                                  level=1)
-        charset_level2, character_label_level2 = \
-            inf_tools.get_chars_set_from_level1_2(path='../FontAndChars/GB2312_Level_2.txt',
-                                                  level=2)
-
-        targeted_charset, targeted_label0_list = \
-            inf_tools.get_chars_set_from_searching(path=self.targeted_chars_txt,
-                                                   level1_charlist=charset_level1,
-                                                   level2_charlist=charset_level2,
-                                                   level1_labellist=character_label_level1,
-                                                   level2_labellist=character_label_level2)
-
-        source_imgs = inf_tools.find_source_char_img(charset=targeted_charset,
-                                                     fontpath=self.source_font,
-                                                     img_width=self.source_img_width,
-                                                     img_filters=self.input_output_img_filter_num,
-                                                     batch_size=self.batch_size)
-
-        output_paper_shape = self.save_mode.split(':')
-        output_paper_rows = int(output_paper_shape[0])
-        output_paper_cols = int(output_paper_shape[1])
-        if output_paper_rows * output_paper_cols < len(targeted_charset):
-            print('Incorrect Paper Size !@!~!@~!~@~!@~')
-            return
-
-
-
-        with tf.Graph().as_default():
-            config = tf.ConfigProto(allow_soft_placement=True, log_device_placement=False)
-            config.gpu_options.allow_growth = True
-            self.sess = tf.Session(config=config)
-
-            # build embedder
-            with tf.device(self.generator_devices):
-
-
-
-
-                input_batch = tf.placeholder(tf.float32,
-                                             [self.batch_size,
-                                              self.source_img_width,
-                                              self.source_img_width,
-                                              self.input_output_img_filter_num],
-                                             name='input_batch')
-                _, _, encoded_list_obtained, residual_list_obtained, _ = \
-                    encoder_implementation(images=input_batch,
-                                           is_training=False,
-                                           encoder_device=self.generator_devices,
-                                           residual_at_layer=self.generator_residual_at_layer,
-                                           residual_connection_mode='Single',
-                                           scope='generator/target_encoder',
-                                           reuse=False,
-                                           initializer='XavierInit',
-                                           weight_decay=False,
-                                           weight_decay_rate=0,
-                                           final_layer_logit_length=-1)
-
-
-
-
-            with tf.device(self.generator_devices):
-                source = tf.placeholder(tf.float32,
-                                        [self.batch_size,
-                                         self.source_img_width,
-                                         self.source_img_width,
-                                         self.input_output_img_filter_num],
-                                        name='geneartor_source_image')
-
-                encoded_list_input = list()
-                for ii in range(len(encoded_list_obtained)):
-                    tmp = tf.placeholder(shape=encoded_list_obtained[ii].shape,
-                                         dtype=encoded_list_obtained[ii].dtype)
-                    encoded_list_input.append(tmp)
-                residual_list_input = list()
-                for ii in range(len(residual_list_obtained)):
-                    tmp = tf.placeholder(shape=residual_list_obtained[ii].shape,
-                                         dtype=residual_list_obtained[ii].dtype)
-                    residual_list_input.append(tmp)
-
-
-                generated_infer = generator_inferring(source=source,
-                                                      batch_size=self.batch_size,
-                                                      generator_device=self.generator_devices,
-                                                      residual_at_layer=self.generator_residual_at_layer,
-                                                      residual_block_num=self.generator_residual_blocks,
-                                                      target_encoded_list=encoded_list_input,
-                                                      residual_input_list=residual_list_input)
-
-                gen_vars_save = self.find_bn_avg_var([var for var in tf.trainable_variables() if 'generator' in var.name])
-
-
-
-            # model load
-            saver_generator = tf.train.Saver(max_to_keep=1, var_list=gen_vars_save)
-            generator_restored = self.restore_model(saver=saver_generator,
-                                                    model_dir=self.model_dir,
-                                                    model_name='Generator')
-
-            if not generator_restored:
-                return
-            print(self.print_separater)
-            print(self.print_separater)
-            print(self.print_separater)
-
-
-
-        for target_label1 in self.target_label1_selection:
-
-            true_targets = inf_tools.find_true_targets(data_dir=self.style_add_target_model_dir,
-                                                       txt_path=self.style_add_target_file_list,
-                                                       selected_label1=int(target_label1),
-                                                       selected_label0_list=targeted_label0_list,
-                                                       charset=targeted_charset, font=self.source_font,
-                                                       img_width=self.source_img_width,
-                                                       filter_num=self.input_output_img_filter_num,
-                                                       batch_size=self.batch_size)
-
-            transfer_target_counter=0
-            for current_transfer_target in true_targets:
-
-                if transfer_target_counter == 10:
-                    transfer_target_counter +=1
-                    continue
-                # transfer_targets = np.zeros(shape=transfer_targets.shape,
-                #                             dtype=transfer_targets.dtype)
-                transfer_targets = current_transfer_target
-                transfer_targets = np.expand_dims(transfer_targets,axis=0)
-
-                # calculate ebdd_vec
-                style_calculate_iters = 1
-                encoded_list_input_calculated = list()
-                for ii in range(len(encoded_list_obtained)):
-                    tmp = np.zeros(shape=[style_calculate_iters*self.batch_size,
-                                          int(encoded_list_obtained[ii].shape[1]),
-                                          int(encoded_list_obtained[ii].shape[2]),
-                                          int(encoded_list_obtained[ii].shape[3])],
-                                   dtype=np.float32)
-                    encoded_list_input_calculated.append(tmp)
-                residual_list_input_calculated = list()
-                for ii in range(len(residual_list_obtained)):
-                    tmp = np.zeros(shape=[style_calculate_iters * self.batch_size,
-                                          int(residual_list_obtained[ii].shape[1]),
-                                          int(residual_list_obtained[ii].shape[2]),
-                                          int(residual_list_obtained[ii].shape[3])],
-                                   dtype=np.float32)
-                    residual_list_input_calculated.append(tmp)
-
-                for iter in range(style_calculate_iters):
-                    this_batch_encoded_list, this_batch_residual_list\
-                        =self.sess.run([encoded_list_obtained,residual_list_obtained],
-                                       feed_dict={input_batch:transfer_targets})
-                    for ii in range(len(encoded_list_obtained)):
-                        encoded_list_input_calculated[ii][iter*self.batch_size:(iter+1)*self.batch_size,:,:,:] = this_batch_encoded_list[ii]
-                    for ii in range(len(residual_list_obtained)):
-                        residual_list_input_calculated[ii][iter*self.batch_size:(iter+1)*self.batch_size,:,:,:] = this_batch_residual_list[ii]
-
-                for ii in range(len(encoded_list_obtained)):
-                    encoded_list_input_calculated[ii] = encoded_list_input_calculated[ii][0:self.style_input_number,:,:,:]
-                    encoded_list_input_calculated[ii] = np.mean(encoded_list_input_calculated[ii],axis=0)
-                    encoded_list_input_calculated[ii] = np.tile(np.reshape(encoded_list_input_calculated[ii],
-                                                                           [1,encoded_list_input_calculated[ii].shape[0],
-                                                                            encoded_list_input_calculated[ii].shape[1],
-                                                                            encoded_list_input_calculated[ii].shape[2]]),
-                                                                [self.batch_size,1,1,1])
-                for ii in range(len(residual_list_obtained)):
-                    residual_list_input_calculated[ii] = residual_list_input_calculated[ii][0:self.style_input_number, :, :,:]
-                    residual_list_input_calculated[ii] = np.mean(residual_list_input_calculated[ii], axis=0)
-                    residual_list_input_calculated[ii] = np.tile(np.reshape(residual_list_input_calculated[ii],
-                                                                           [1, residual_list_input_calculated[ii].shape[0],
-                                                                            residual_list_input_calculated[ii].shape[1],
-                                                                            residual_list_input_calculated[ii].shape[2]]),
-                                                                [self.batch_size, 1, 1, 1])
-
-
-
-
-
-                # build feed_dictionary
-                output_dict = {}
-                for ii in range(len(encoded_list_obtained)):
-                    output_dict.update({encoded_list_input[ii]:encoded_list_input_calculated[ii]})
-                for ii in range(len(residual_list_obtained)):
-                    output_dict.update({residual_list_input[ii]:residual_list_input_calculated[ii]})
-
-
-
-
-                current_feed_dict = output_dict
-                current_feed_dict.update(
-                    {source: source_imgs[transfer_target_counter * self.batch_size:(transfer_target_counter + 1) * self.batch_size, :, :, :]})
-                current_generated = self.sess.run(generated_infer, feed_dict=current_feed_dict)
-                current_true = transfer_targets
-                current_prototype = source_imgs[transfer_target_counter * self.batch_size:(transfer_target_counter + 1) * self.batch_size, :, :, :]
-                current_prototype = np.squeeze(current_prototype)
-                current_true_fake = np.concatenate([np.squeeze(current_generated), np.squeeze(current_true)], axis=0)
-
-                if transfer_target_counter == 0:
-                    full_save = current_true_fake
-                    full_prototype = current_prototype
-                else:
-                    full_save = np.concatenate([full_save, current_true_fake], axis=1)
-                    full_prototype = np.concatenate([full_prototype, current_prototype], axis=1)
-
-                transfer_target_counter += 1
-
-
-
-            misc.imsave(os.path.join(self.infer_dir, 'Comparsion:%s.png' % target_label1),full_save)
-            print("ImgSaved:%s" % target_label1)
-            print(self.print_separater)
-            print(self.print_separater)
 
 
 
@@ -2505,6 +2194,8 @@ class WNet(object):
         global_step_start = global_step.eval(session=self.sess)
         print("InitTrainingEpochs:%d, FinalTrainingEpochStartAt:%d" % (self.init_training_epochs,self.final_training_epochs))
         print("TrainingStart:Epoch:%d, GlobalStep:%d, LearnRate:%.5f" % (ei_start+1,global_step_start+1,current_lr))
+        print("ContentLabel1Vec:")
+        print(data_provider.content_label1_vec)
 
 
         if self.debug_mode == 0:

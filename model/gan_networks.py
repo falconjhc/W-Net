@@ -280,13 +280,13 @@ def decoder_framework(encoded_layer_list,
 
 
 
-def generator_inferring(source,
-                        batch_size,
+def generator_inferring(content,
                         generator_device,
                         residual_at_layer,
                         residual_block_num,
-                        target_encoded_list,
-                        residual_input_list):
+                        style_short_cut_interface,
+                        style_residual_interface,
+                        img_filters):
     reuse = False
     weight_decay_rate = 0
     weight_decay = False
@@ -296,71 +296,97 @@ def generator_inferring(source,
     is_training = False
 
     # source encoder part
-    encoded_source, source_category, source_encoded_layer, source_residual_input_list, _ = \
-        encoder_framework(images=source,
+    encoded_content_final, content_category, content_short_cut_interface, content_residual_interface, _ = \
+        encoder_framework(images=content,
                           is_training=is_training,
                           encoder_device=generator_device,
                           residual_at_layer=residual_at_layer,
                           residual_connection_mode='Multi',
-                          scope=scope + '/source_encoder',
+                          scope=scope + '/content_encoder',
                           reuse=reuse,
                           initializer=initializer,
                           weight_decay=weight_decay,
                           weight_decay_rate=weight_decay_rate,
                           final_layer_logit_length=label0_length)
 
-    encoded_layer_list = list()
-    for ii in range(len(source_encoded_layer)):
-        encoded_layer_list.append(tf.concat([source_encoded_layer[ii],
-                                             target_encoded_list[ii]], axis=3))
+    # residual interfaces && short cut interfaces are fused together
+    fused_residual_interfaces = list()
+    fused_shortcut_interfaces = list()
+    for ii in range(len(content_residual_interface)):
+        current_content_residual_size = int(content_residual_interface[ii].shape[1])
+        output_current_residual = content_residual_interface[ii]
+        for jj in range(len(style_residual_interface)):
+            current_style_residual_size = int(style_residual_interface[jj].shape[1])
+            if current_style_residual_size == current_content_residual_size:
+                output_current_residual = tf.concat([output_current_residual, style_residual_interface[jj]], axis=3)
+        fused_residual_interfaces.append(output_current_residual)
+    for ii in range(len(content_short_cut_interface)):
+        current_content_shortcut_size = int(content_short_cut_interface[ii].shape[1])
+        output_current_shortcut = content_short_cut_interface[ii]
+        for jj in range(len(style_short_cut_interface)):
+            current_style_short_cut_size = int(style_short_cut_interface[jj].shape[1])
+            if current_style_short_cut_size == current_content_shortcut_size:
+                output_current_shortcut = tf.concat([output_current_shortcut, style_short_cut_interface[jj]], axis=3)
+        fused_shortcut_interfaces.append(output_current_shortcut)
+
+
+
+
+
+
+    # residual interfaces && short cut interfaces are fused together
+    fused_residual_interfaces = list()
+    fused_shortcut_interfaces = list()
+    for ii in range(len(content_residual_interface)):
+        current_content_residual_size = int(content_residual_interface[ii].shape[1])
+        output_current_residual = content_residual_interface[ii]
+        for jj in range(len(style_residual_interface)):
+            current_style_residual_size = int(style_residual_interface[jj].shape[1])
+            if current_style_residual_size == current_content_residual_size:
+                output_current_residual = tf.concat([output_current_residual, style_residual_interface[jj]], axis=3)
+        fused_residual_interfaces.append(output_current_residual)
+
+    for ii in range(len(content_short_cut_interface)):
+        current_content_shortcut_size = int(content_short_cut_interface[ii].shape[1])
+        output_current_shortcut = content_short_cut_interface[ii]
+        for jj in range(len(style_short_cut_interface)):
+            current_style_short_cut_size = int(style_short_cut_interface[jj].shape[1])
+            if current_style_short_cut_size == current_content_shortcut_size:
+                output_current_shortcut = tf.concat([output_current_shortcut, style_short_cut_interface[jj]], axis=3)
+        fused_shortcut_interfaces.append(output_current_shortcut)
+
+    # fused resudual interfaces are put into the residual blocks
+    if not residual_block_num == 0 or not residual_at_layer == -1:
+        residual_output_list, _ = residual_block(input_list=fused_residual_interfaces,
+                                                 residual_num=residual_block_num,
+                                                 residual_at_layer=residual_at_layer,
+                                                 is_training=is_training,
+                                                 residual_device=generator_device,
+                                                 scope=scope + '/resblock',
+                                                 reuse=reuse,
+                                                 initializer=initializer,
+                                                 weight_decay=weight_decay,
+                                                 weight_decay_rate=weight_decay_rate)
+
+    # combination of all the encoder outputs
+    fused_shortcut_interfaces.reverse()
+    encoded_layer_list = fused_shortcut_interfaces
+    encoded_layer_list.extend(residual_output_list)
 
     return_str = ("GeneratorEncoderDecoder %d Layers with %d ResidualBlocks connecting %d-th layer"
-                  % (int(np.floor(math.log(int(source.shape[1])) / math.log(2))),
+                  % (int(np.floor(math.log(int(content.shape[1])) / math.log(2))),
                      residual_block_num,
                      residual_at_layer))
 
-    # residual blocks
-    if not residual_block_num == 0 or not residual_at_layer == -1:
-        source_residual_output_list, _ = \
-            residual_block(input_list=source_residual_input_list,
-                           residual_num=residual_block_num,
-                           residual_at_layer=residual_at_layer,
-                           is_training=is_training,
-                           residual_device=generator_device,
-                           scope=scope + '/source_resblock',
-                           reuse=reuse,
-                           initializer=initializer,
-                           weight_decay=weight_decay,
-                           weight_decay_rate=weight_decay_rate)
-        target_residual_output_list, _ = \
-            residual_block(input_list=residual_input_list,
-                           residual_num=residual_block_num,
-                           residual_at_layer=residual_at_layer,
-                           is_training=is_training,
-                           residual_device=generator_device,
-                           scope=scope + '/target_resblock',
-                           reuse=reuse,
-                           initializer=initializer,
-                           weight_decay=weight_decay,
-                           weight_decay_rate=weight_decay_rate)
-
-        residual_output_list = residual_block_concatenation(input_res_list1=source_residual_output_list,
-                                                            input_res_list2=target_residual_output_list)
-    else:
-        residual_output_list = None
-
     # decoder part
-    img_width = int(source.shape[1])
-    img_filters = int(source.shape[3])
+    img_width = int(content.shape[1])
     generated_img, _ = \
-        decoder_framework(residual_list=residual_output_list,
-                          encoding_layer_list=encoded_layer_list,
+        decoder_framework(encoded_layer_list=encoded_layer_list,
                           is_training=is_training,
                           output_width=img_width,
                           output_filters=img_filters,
-                          batch_size=batch_size,
+                          batch_size=1,
                           decoder_device=generator_device,
-                          residual_at_layer=residual_at_layer,
                           scope=scope + '/decoder',
                           reuse=reuse,
                           weight_decay=weight_decay,
