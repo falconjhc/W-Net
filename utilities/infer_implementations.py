@@ -291,6 +291,11 @@ def get_style_references(img_path, style_input_number):
 
 
     img = cv2.imread(img_path)
+    img_new = img
+    img_new[np.where(img<150)]=0
+    img_new[np.where(img>=150)]=255
+    img = img_new
+
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     adaptive_threshold = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
                                                cv2.THRESH_BINARY_INV, 11, 2)

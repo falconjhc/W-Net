@@ -21,9 +21,9 @@ input_args = ['--debug_mode','0',
               '--targeted_content_input_txt',
     '../FontAndChars/滚滚长江东逝水_简体.txt',
               '--save_path',
-    '/home/harric/Desktop/ContentAndGenerated_CF_Random4Content/',
+    '/home/harric/Desktop/ContentAndGenerated_LYJ_Random4Content/',
               '--known_style_img_path',
-    '../StyleExampleChars/cf.jpg',
+    '../StyleExampleChars/lyj.jpg',
 
               '--save_mode','8:8',
 
