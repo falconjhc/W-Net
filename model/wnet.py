@@ -1318,7 +1318,7 @@ class WNet(object):
                                                            tf.abs(const_loss_content) / self.Lconst_content_Penalty)
             g_merged_summary=tf.summary.merge([g_merged_summary, const_content_loss_summary])
         if self.Lconst_style_Penalty > eps * 10:
-            current_const_loss_style = tf.square(encoded_style_reference_train - encoded_style_reference_generated_target)
+            current_const_loss_style = tf.square(encoded_style_reference_train[:,:,:,0:int(encoded_style_reference_generated_target.shape[3])] - encoded_style_reference_generated_target)
             current_const_loss_style = tf.reduce_mean(current_const_loss_style) * self.Lconst_style_Penalty
             g_loss += current_const_loss_style
             const_style_loss_summary = tf.summary.scalar("Loss_Generator/ConstStyleReference",

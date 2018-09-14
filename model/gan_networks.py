@@ -458,24 +458,39 @@ def generator_framework(content_prototype,style_reference,
     # multiple encoded information average calculation for style reference encoder
     for ii in range(style_input_number):
         if ii==0:
-            encoded_style_final = encoded_style_final_list[ii]
-            style_category = style_category_list[ii]
-            style_short_cut_interface = style_short_cut_interface_list[ii]
-            style_residual_interface = style_residual_interface_list[ii]
-        else:
-            encoded_style_final += encoded_style_final_list[ii]
-            style_category += style_category_list[ii]
+            encoded_style_final = tf.expand_dims(encoded_style_final_list[ii],axis=0)
+            style_category = tf.expand_dims(style_category_list[ii],axis=0)
+            style_short_cut_interface=list()
             for jj in range(len(style_short_cut_interface_list[ii])):
-                style_short_cut_interface[jj]+=style_short_cut_interface_list[ii][jj]
+                style_short_cut_interface.append(tf.expand_dims(style_short_cut_interface_list[ii][jj],axis=0))
+            style_residual_interface=list()
             for jj in range(len(style_residual_interface_list[ii])):
-                style_residual_interface[jj]+=style_residual_interface_list[ii][jj]
-    encoded_style_final = encoded_style_final / style_input_number
-    style_category = style_category / style_input_number
-    for ii in range(len(style_short_cut_interface)):
-        style_short_cut_interface[ii]=style_short_cut_interface[ii] / style_input_number
-    for ii in range(len(style_residual_interface)):
-        style_residual_interface[ii] = style_residual_interface[ii] / style_input_number
+                style_residual_interface.append(tf.expand_dims(style_residual_interface_list[ii][jj],axis=0))
+        else:
+            encoded_style_final = tf.concat([encoded_style_final, tf.expand_dims(encoded_style_final_list[ii],axis=0)], axis=0)
+            style_category = tf.concat([style_category, tf.expand_dims(style_category_list[ii],axis=0)], axis=0)
+            for jj in range(len(style_short_cut_interface_list[ii])):
+                style_short_cut_interface[jj] = tf.concat([style_short_cut_interface[jj], tf.expand_dims(style_short_cut_interface_list[ii][jj],axis=0)], axis=0)
 
+            for jj in range(len(style_residual_interface_list[ii])):
+                style_residual_interface[jj] = tf.concat([style_residual_interface[jj], tf.expand_dims(style_residual_interface_list[ii][jj], axis=0)], axis=0)
+
+    style_category = tf.reduce_mean(style_category,axis=0)
+    encoded_style_final_avg = tf.reduce_mean(encoded_style_final,axis=0)
+    encoded_style_final_max = tf.reduce_max(encoded_style_final,axis=0)
+    encoded_style_final_min = tf.reduce_min(encoded_style_final,axis=0)
+    encoded_style_final = tf.concat([encoded_style_final_avg, encoded_style_final_max, encoded_style_final_min], axis=3)
+
+    for ii in range(len(style_short_cut_interface)):
+        style_short_cut_avg = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
+        style_short_cut_max = tf.reduce_max(style_short_cut_interface[ii], axis=0)
+        style_short_cut_min = tf.reduce_min(style_short_cut_interface[ii], axis=0)
+        style_short_cut_interface[ii]= tf.concat([style_short_cut_avg,style_short_cut_max,style_short_cut_min],axis=3)
+    for ii in range(len(style_residual_interface)):
+        style_residual_avg = tf.reduce_mean(style_residual_interface[ii], axis=0)
+        style_residual_max = tf.reduce_max(style_residual_interface[ii], axis=0)
+        style_residual_min = tf.reduce_min(style_residual_interface[ii], axis=0)
+        style_residual_interface[ii] = tf.concat([style_residual_avg, style_residual_max, style_residual_min], axis=3)
 
     # residual interfaces && short cut interfaces are fused together
     fused_residual_interfaces = list()
