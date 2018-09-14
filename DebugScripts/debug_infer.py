@@ -26,6 +26,7 @@ input_args = ['--debug_mode','0',
 
               '--save_path',
     '/Users/harric/Desktop/ContentAndGenerated_JN_Random4Content/',
+    #'/home/harric/Desktop/ContentAndGenerated_LYJ_Random4Content/',
 
 
               '--known_style_img_path',
@@ -54,6 +55,7 @@ input_args = ['--debug_mode','0',
 
               '--model_dir',
     '/Users/harric/Data/Exp20180808_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
+    #'/home/harric/Desktop/Exp20180808_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
 
               ]
 
