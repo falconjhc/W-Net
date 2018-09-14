@@ -10,7 +10,7 @@ sys.setdefaultencoding("utf-8")
 
 GRAYSCALE_AVG = 127.5
 
-
+print_separater = "#################################################################"
 
 from PIL import Image
 from PIL import ImageDraw
@@ -100,11 +100,12 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
                     else:
                         print("Fails! Didnt find %s" % unicode(char))
                         character_id = 0
-                        return False
+                        return -1, -1, False
 
                     targeted_character_label0_list.append(str(character_id))
                     targeted_chars_list.append(current_char)
     actual_char_list=line
+    print("In total %d targeted chars are found in the standard GB2312 set" % len(targeted_chars_list))
 
 
     # read all content data
@@ -145,7 +146,7 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
         for ii in targeted_character_label0_list:
             if ii not in current_label0_on_current_label1:
                 print("Fails! Didnt find %s" % unicode(actual_char_list[target_counter]))
-                return False
+                return -1, -1, False
             else:
                 index_found = current_label0_on_current_label1.index(ii)
                 char_img = misc.imread(current_data_on_current_label1[index_found])
@@ -161,11 +162,13 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
 
         label1_counter+=1
 
+    print("In total %d targeted chars are corresponded with content prototypes" % len(targeted_chars_list))
+    print(print_separater)
 
-    return corresponding_content_prototype, content_label1_vec
+    return corresponding_content_prototype, content_label1_vec, True
 
 
-def get_style_references(img_path, style_input_number):
+def get_style_references(img_path, resave_path,style_input_number):
     def extract_peek(array_vals):
         minimun_val = 10
         minimun_range = 60
@@ -202,7 +205,7 @@ def get_style_references(img_path, style_input_number):
 
                 avg = np.mean(cv2.resize(img_matrix, (150, 150)))
                 if avg < 250 and 0 in img_matrix:
-                    print("FullCounter%d StyleCounter%d Avg:%f" % (full_counter, style_counter,avg))
+                    # print("FullCounter%d StyleCounter%d Avg:%f" % (full_counter, style_counter,avg))
 
                     img_matrix = np.floor(np.mean(img_matrix,axis=2))
 
@@ -291,6 +294,9 @@ def get_style_references(img_path, style_input_number):
 
 
     img = cv2.imread(img_path)
+    img_misc = misc.imread(img_path)
+    misc.imsave(os.path.join(resave_path,'InputStyleImg.png'), img_misc)
+
     img_new = img
     img_new[np.where(img<150)]=0
     img_new[np.where(img>=150)]=255
@@ -322,6 +328,7 @@ def get_style_references(img_path, style_input_number):
         vertical_peek_ranges2d.append(vertical_peek_ranges)
 
     style_reference = cutImage(img, peek_ranges)
+    print("In total %d style references are extracted from %s" % (style_reference.shape[2],img_path))
 
 
 
@@ -338,7 +345,8 @@ def get_style_references(img_path, style_input_number):
         style_reference=new_style_reference
 
     style_reference = np.expand_dims(style_reference, axis=0)
-
+    print("Selected %d style references for generation" % style_reference.shape[3])
+    print(print_separater)
 
     return style_reference
 

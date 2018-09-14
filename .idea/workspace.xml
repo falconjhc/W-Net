@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="bcb38d68-d2d3-4a21-b107-184be9e45f9e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/StyleExampleChars/jn.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/StyleExampleChars/lyj.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DebugScripts/debug_infer.py" beforeDir="false" afterPath="$PROJECT_DIR$/DebugScripts/debug_infer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utilities/infer_implementations.py" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/infer_implementations.py" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/W_Net_MSMC$img2img_scripts_debug.coverage" NAME="img2img_scripts_debug Coverage Results" MODIFIED="1536736895602" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
+    <SUITE FILE_PATH="coverage/W_Net_MSMC$StyleHw50_ContentHw32.coverage" NAME="StyleHw50_ContentHw32 Coverage Results" MODIFIED="1536818150609" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5" />
+    <SUITE FILE_PATH="coverage/W_Net_MSMC$StyleHw50_ContentPf32_Hw32_ContentRandom16.coverage" NAME="StyleHw50_ContentPf32+Hw32_ContentRandom16 Coverage Results" MODIFIED="1536827423955" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5" />
+    <SUITE FILE_PATH="coverage/W_Net_MSMC$debug_infer.coverage" NAME="debug_infer Coverage Results" MODIFIED="1536845376021" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
+    <SUITE FILE_PATH="coverage/W_Net_MSMC$styleadd_infer_HW_Known_3K.coverage" NAME="styleadd_infer_HW_Known_3K Coverage Results" MODIFIED="1536843887962" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/InferScripts" />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-546551923">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="12" />
+          <entry key="project.open.time.2" value="1" />
+          <entry key="project.open.time.4" value="2" />
+          <entry key="project.open.time.5" value="8" />
+          <entry key="project.open.time.6" value="3" />
+          <entry key="project.open.time.7" value="2" />
+          <entry key="project.open.time.8" value="2" />
+          <entry key="project.opened" value="18" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="Python Console" value="1820" />
+          <entry key="py" value="5535" />
+          <entry key="txt" value="214" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="PLAIN_TEXT" value="214" />
+          <entry key="Python" value="7355" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="py" value="79" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="Python" value="79" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.js.language.service.starts" />
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/DebugScripts/debug_infer.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="17" selection-start-line="17" selection-end-line="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>infer_dir</find>
+      <find>source_font</find>
+      <find>target_label1_selection</find>
+      <find>discriminator</find>
+      <find>infer_mode</find>
+      <find>softmax_temperature</find>
+      <find>style_add_target_model_dir</find>
+      <find>style_add_target_file_list</find>
+      <find>imread</find>
+      <find>extend</find>
+      <find>axis=3</find>
+      <find>draw_single_char</find>
+      <find>generator_imp</find>
+      <find>generator_buoi</find>
+      <find>generator_build</find>
+      <find>generator_infer</find>
+      <find>source</find>
+      <find>source_encoder</find>
+      <find>generator_inferring</find>
+      <find>generator_inf</find>
+      <find>Agg</find>
+      <find>multi_thread</find>
+      <find>styleadd</find>
+      <find>known_style_char_dir</find>
+      <find>batch_size</find>
+      <find>get_style_references</find>
+      <find>style_input_number</find>
+      <find>train_procedures</find>
+      <find>240</find>
+      <find>where</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>targeted_content_input_txt</replace>
+      <replace>save_path</replace>
+      <replace>known_style_img_path</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/DebugScripts/img2img_scripts_debug.py" />
+        <option value="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StylePf50_ContentPf32+Hw32_ContentRandom16.py" />
+        <option value="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentPf32+Hw32_ContentRandom16.py" />
+        <option value="$PROJECT_DIR$/dataset/dataset.py" />
+        <option value="$PROJECT_DIR$/dataset/dataset_freeinput.py" />
+        <option value="$PROJECT_DIR$/model/gan_networks.py" />
+        <option value="$PROJECT_DIR$/model/wnet.py" />
+        <option value="$PROJECT_DIR$/InferScripts/styleadd_infer_HW_Known_3K.py" />
+        <option value="$PROJECT_DIR$/utilities/infer_implementations.py" />
+        <option value="$PROJECT_DIR$/DebugScripts/debug_infer.py" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="508" />
+    <option name="width" value="1079" />
+    <option name="height" value="466" />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="W-Net-MSMC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net-MSMC" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net-MSMC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net-MSMC" type="462c0819:PsiDirectoryNode" />
+              <item name="DataPreProcessing" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net-MSMC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net-MSMC" type="462c0819:PsiDirectoryNode" />
+              <item name="DataPreProcessing" type="462c0819:PsiDirectoryNode" />
+              <item name="Handwriting_Chinese_Character" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net-MSMC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net-MSMC" type="462c0819:PsiDirectoryNode" />
+              <item name="DebugScripts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net-MSMC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net-MSMC" type="462c0819:PsiDirectoryNode" />
+              <item name="ToolScripts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net-MSMC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net-MSMC" type="462c0819:PsiDirectoryNode" />
+              <item name="utilities" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net-MSMC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net-MSMC" type="462c0819:PsiDirectoryNode" />
+              <item name="WNet-ScriptsOn_EEServer05" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net-MSMC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net-MSMC" type="462c0819:PsiDirectoryNode" />
+              <item name="WNet-ScriptsOn_EEServer05" type="462c0819:PsiDirectoryNode" />
+              <item name="TrainingScripts_Res5" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net-MSMC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Scratches and Consoles" type="1a2a3e82:ScratchProjectViewPane$MyProjectNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///home/harric/Desktop/W-Net-MSMC/utilities/infer_implementations.py" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Python.debug_infer">
+    <configuration name="StyleHw50_ContentHw32" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="W-Net-MSMC" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentHw32.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="StyleHw50_ContentPf32+Hw32_ContentRandom16" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="W-Net-MSMC" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentPf32+Hw32_ContentRandom16.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="debug_infer" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="W-Net-MSMC" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/DebugScripts" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DebugScripts/debug_infer.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="img2img_scripts_debug" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="W-Net-MSMC" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/DebugScripts" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DebugScripts/img2img_scripts_debug.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="styleadd_infer_HW_Known_3K" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="W-Net-MSMC" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/InferScripts" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/InferScripts/styleadd_infer_HW_Known_3K.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.img2img_scripts_debug" />
+      <item itemvalue="Python.StyleHw50_ContentHw32" />
+      <item itemvalue="Python.styleadd_infer_HW_Known_3K" />
+      <item itemvalue="Python.StyleHw50_ContentPf32+Hw32_ContentRandom16" />
+      <item itemvalue="Python.debug_infer" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.debug_infer" />
+        <item itemvalue="Python.styleadd_infer_HW_Known_3K" />
+        <item itemvalue="Python.StyleHw50_ContentPf32+Hw32_ContentRandom16" />
+        <item itemvalue="Python.StyleHw50_ContentHw32" />
+        <item itemvalue="Python.img2img_scripts_debug" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bcb38d68-d2d3-4a21-b107-184be9e45f9e" name="Default Changelist" comment="" />
+      <created>1536139162213</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1536139162213</updated>
+    </task>
+    <task id="LOCAL-00001" summary="20180905 Bup">
+      <created>1536139274930</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1536139274930</updated>
+    </task>
+    <task id="LOCAL-00002" summary="20180905 Correct style reference category accuracy calculation">
+      <created>1536140370119</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1536140370119</updated>
+    </task>
+    <task id="LOCAL-00003" summary="20180905 Correct style reference category accuracy calculation">
+      <created>1536309932515</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1536309932515</updated>
+    </task>
+    <task id="LOCAL-00004" summary="20180907 Add random select content prototype">
+      <created>1536312009023</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1536312009023</updated>
+    </task>
+    <task id="LOCAL-00005" summary="20180907 Add random select content prototype with complete shuffle within the batch">
+      <created>1536323060756</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1536323060756</updated>
+    </task>
+    <task id="LOCAL-00006" summary="20180912 Bug Corrected">
+      <created>1536758575764</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1536758575765</updated>
+    </task>
+    <task id="LOCAL-00007" summary="20180913 Complete demo">
+      <created>1536844297948</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1536844297948</updated>
+    </task>
+    <task id="LOCAL-00008" summary="20180913 Complete demo">
+      <created>1536845757670</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1536845757671</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="51" y="25" width="1229" height="999" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13693999" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.46919432" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3329384" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="11" />
+      <window_info anchor="bottom" id="Python Console" order="12" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.24936602" />
+      <window_info anchor="right" id="SciView" order="3" weight="0.4133559" />
+      <window_info anchor="right" id="Database" order="4" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="20180905 Bup" />
+    <MESSAGE value="20180905 Correct style reference category accuracy calculation" />
+    <MESSAGE value="20180907 Add random select content prototype" />
+    <MESSAGE value="20180907 Add random select content prototype with complete shuffle within the batch" />
+    <MESSAGE value="20180912 Bug Corrected" />
+    <MESSAGE value="20180913 Complete demo" />
+    <option name="LAST_COMMIT_MESSAGE" value="20180913 Complete demo" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/wnet.py</url>
+          <line>530</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/wnet.py</url>
+          <line>2325</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/DebugScripts/img2img_scripts_debug.py</url>
+          <line>214</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/wnet.py</url>
+          <line>2051</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentPf32+Hw32_ContentRandom16.py</url>
+          <line>324</line>
+          <option name="timeStamp" value="68" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/wnet.py</url>
+          <line>1939</line>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/utilities/infer_implementations.py</url>
+          <line>327</line>
+          <option name="timeStamp" value="129" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/utilities/infer_implementations.py</url>
+          <line>292</line>
+          <option name="timeStamp" value="130" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>DataProvider</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/model/feature_extractor_training.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="877" column="29" selection-start-line="877" selection-start-column="23" selection-end-line="877" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utilities/ops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="193" column="42" selection-start-line="193" selection-start-column="19" selection-end-line="193" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentHw32.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="490">
+          <caret line="317" selection-start-line="317" selection-end-line="317" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DebugScripts/img2img_scripts_debug.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-432">
+          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentPf32+Hw32.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="40" column="46" selection-start-line="40" selection-start-column="46" selection-end-line="40" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/multiprocessing/pool.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="93">
+          <caret line="571" selection-start-line="571" selection-end-line="571" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentPf32+Hw32_ContentRandom16.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="59">
+          <caret line="324" column="21" lean-forward="true" selection-start-line="324" selection-start-column="10" selection-end-line="324" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ToolScripts/generate_trainval_from_different_sets.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="82" column="25" selection-start-line="82" selection-start-column="16" selection-end-line="82" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1117">
+          <caret line="1072" column="30" lean-forward="true" selection-start-line="1072" selection-start-column="30" selection-end-line="1072" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="307">
+          <caret line="438" selection-start-line="438" selection-end-line="438" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/gan_networks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="445">
+          <caret line="345" column="106" selection-start-line="345" selection-start-column="78" selection-end-line="345" selection-end-column="106" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dataset/dataset_freeinput.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" column="11" selection-start-line="18" selection-start-column="11" selection-end-line="18" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/scipy/optimize/_trlib/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/platform/app.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="833">
+          <caret line="124" selection-start-line="124" selection-end-line="124" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/numpy/core/fromnumeric.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="551" column="4" selection-start-line="551" selection-start-column="4" selection-end-line="551" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StylePf50_ContentPf32+Hw32_ContentRandom16.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="29" column="56" lean-forward="true" selection-start-line="29" selection-start-column="56" selection-end-line="29" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/wnet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="625">
+          <caret line="2196" column="32" selection-start-line="2196" selection-start-column="32" selection-end-line="2196" selection-end-column="32" />
+          <folding>
+            <element signature="e#24#61#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/InferScripts/styleadd_infer_HW_Known_3K.py" />
+    <entry file="file://$PROJECT_DIR$/DataPreProcessing/Handwriting_Chinese_Character/script_full_hw.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="61" column="27" selection-start-line="61" selection-start-column="27" selection-end-line="61" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utilities/infer_implementations.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="289" column="30" lean-forward="true" selection-start-line="289" selection-start-column="30" selection-end-line="289" selection-end-column="30" />
+          <folding>
+            <element signature="e#24#61#0" expanded="true" />
+            <marker date="1536845135783" expanded="true" signature="13985:13990" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DebugScripts/debug_infer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

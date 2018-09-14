@@ -658,7 +658,8 @@ class WNet(object):
                                                   level=2)
 
         # get data available
-        content_prototype, content_label1_vec = \
+        print(self.print_separater)
+        content_prototype, content_label1_vec, valid_mark = \
             inf_tools.get_prototype_on_targeted_content_input_txt(targeted_content_input_txt=self.targeted_content_input_txt,
                                                                   level1_charlist=charset_level1,
                                                                   level2_charlist=charset_level2,
@@ -668,8 +669,11 @@ class WNet(object):
                                                                   content_file_data_dir=self.content_data_dir,
                                                                   img_width=self.img2img_width,
                                                                   img_filters=self.input_output_img_filter_num)
+        if not valid_mark:
+        	print("Generation Terminated.")
 
         style_reference = inf_tools.get_style_references(img_path=self.known_style_img_path,
+        												 resave_path=self.save_path,
                                                          style_input_number=self.style_input_number)
 
         output_paper_shape = self.save_mode.split(':')
@@ -760,8 +764,6 @@ class WNet(object):
             if not generator_restored:
                 return
             print(self.print_separater)
-            print(self.print_separater)
-            print(self.print_separater)
 
         # generating characters
         full_content = np.zeros(dtype=np.float32,
@@ -780,17 +782,26 @@ class WNet(object):
             full_generated[current_counter,:,:,:]=current_generated_char
             for ii in range(content_prototype.shape[3]):
                 full_content[current_counter,:,:,ii]=current_content_char[:,:,:,ii]
+            
+            if current_counter % 5 == 0:
+            	print("Generated %d/%d samples already" % (current_counter+1,content_prototype.shape[0]))
             current_counter+=1
+        print("In total %d chars have been generated" % full_generated.shape[0])
+        print(self.print_separater)
 
         # saving chars
         generated_paper = inf_tools.matrix_paper_generation(images=full_generated,
                                                             rows=output_paper_rows,
                                                             columns=output_paper_cols)
         misc.imsave(os.path.join(self.save_path, 'Generated.png'), generated_paper)
+        print("Generated Paper Saved @ %s" % os.path.join(self.save_path, 'Generated.png'))
+
         style_paper = inf_tools.matrix_paper_generation(images=np.transpose(style_reference,axes=(3,1,2,0)),
                                                         rows=output_paper_rows,
                                                         columns=output_paper_cols)
         misc.imsave(os.path.join(self.save_path, 'RealStyle.png'), style_paper)
+        print("Style Paper Saved @ %s" % os.path.join(self.save_path, 'ActualStyles.png'))
+
         for ii in range(content_prototype.shape[3]):
             content_paper=inf_tools.matrix_paper_generation(images=np.expand_dims(full_content[:,:,:,ii],axis=3),
                                                             rows=output_paper_rows,
@@ -798,8 +809,10 @@ class WNet(object):
             if not os.path.exists(os.path.join(self.save_path,'Content')):
                 os.makedirs(os.path.join(self.save_path,'Content'))
             misc.imsave(os.path.join(os.path.join(self.save_path,'Content'), 'Content%s.png' % content_label1_vec[ii]), content_paper)
-
-
+        print("Content Papers Saved @ %s" % os.path.join(os.path.join(self.save_path,'Content')))
+        
+        print(self.print_separater)
+        print("Generated Completed")
 
 
     def framework_building(self):

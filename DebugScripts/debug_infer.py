@@ -11,7 +11,10 @@ import os
 
 from model.wnet import WNet as WNET
 
-exp_root_path = '/DataA/Harric/MSMC_Exp/'
+exp_root_path = '/Users/harric/Data/'
+# exp_root_path = '/home/Harric/MSMC_Exp/'
+
+print_separater = "#################################################################"
 
 
 
@@ -20,10 +23,13 @@ input_args = ['--debug_mode','0',
               '--style_input_number','4',
               '--targeted_content_input_txt',
     '../FontAndChars/滚滚长江东逝水_简体.txt',
+
               '--save_path',
-    '/home/harric/Desktop/ContentAndGenerated_LYJ_Random4Content/',
+    '/Users/harric/Desktop/ContentAndGenerated_JN_Random4Content/',
+
+
               '--known_style_img_path',
-    '../StyleExampleChars/lyj.jpg',
+    '../StyleExampleChars/jn.jpeg',
 
               '--save_mode','8:8',
 
@@ -47,7 +53,7 @@ input_args = ['--debug_mode','0',
               '--generator_device','/device:GPU:0',
 
               '--model_dir',
-    '/home/harric/Desktop/Exp20180808_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
+    '/Users/harric/Data/Exp20180808_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
 
               ]
 
@@ -94,6 +100,7 @@ def get_available_gpus():
 
 
 def main(_):
+    print(print_separater)
     avalialbe_cpu, available_gpu, available_cpu_num, available_gpu_num = get_available_gpus()
 
     if available_gpu_num==0:
