@@ -2,37 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bcb38d68-d2d3-4a21-b107-184be9e45f9e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DebugScripts/img2img_scripts_debug.py" beforeDir="false" afterPath="$PROJECT_DIR$/DebugScripts/img2img_scripts_debug.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer01/TrainingScripts_Res1/StyleHw100_ContentPf15+1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer01/TrainingScripts_Res1/StyleHw300_ContentPf15+1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer01/TrainingScripts_Res1/StyleHw50_ContentPf15+1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer01/TrainingScripts_Res1/StyleHw50_ContentStandard1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer01/TrainingScripts_Res5/StyleHw100_ContentPf15+1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer01/TrainingScripts_Res5/StyleHw300_ContentPf15+1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer01/TrainingScripts_Res5/StyleHw50_ContentPf15+1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer01/TrainingScripts_Res5/StyleHw50_ContentStandard1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer02/TrainingScripts_Res1/StyleHw100_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer02/TrainingScripts_Res1/StyleHw300_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer02/TrainingScripts_Res5/StyleHw100_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer02/TrainingScripts_Res5/StyleHw300_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer02/TrainingScripts_Res9/StyleHw300_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res1/StyleHw50_ContentHw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res1/StyleHw50_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res1/StyleHw50_ContentPf32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res1/StylePf50_ContentPf32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentHw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentPf32+Hw32_ContentRandom16.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentPf32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StylePf50_ContentPf32+Hw32_ContentRandom16.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StylePf50_ContentPf32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer06/TrainingScripts_Res1/StylePf50_ContentHw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer06/TrainingScripts_Res1/StylePf50_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer06/TrainingScripts_Res5/StylePf50_ContentHw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer06/TrainingScripts_Res5/StylePf50_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/gan_networks.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/gan_networks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/wnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/StyleHw50_ContentPf32+Hw32.py" beforeDir="false" afterPath="$PROJECT_DIR$/WNet-ScriptsOn_EEServer05/StyleHw50_ContentPf32+Hw32.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,42 +17,11 @@
     <SUITE FILE_PATH="coverage/W_Net_MSMC$debug_infer.coverage" NAME="debug_infer Coverage Results" MODIFIED="1536897285449" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
     <SUITE FILE_PATH="coverage/W_Net_MSMC$styleadd_infer_HW_Known_3K.coverage" NAME="styleadd_infer_HW_Known_3K Coverage Results" MODIFIED="1536843887962" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/InferScripts" />
   </component>
-  <component name="DockManager">
-    <window id="1">
-      <content type="file-editors">
-        <state>
-          <leaf>
-            <file pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/model/wnet.py">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="496">
-                    <caret line="2021" selection-start-line="2021" selection-end-line="2021" />
-                    <folding>
-                      <element signature="e#24#61#0" expanded="true" />
-                    </folding>
-                  </state>
-                </provider>
-              </entry>
-            </file>
-            <file pinned="false" current-in-tab="false">
-              <entry file="file://$PROJECT_DIR$/model/gan_networks.py">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="262">
-                    <caret line="515" selection-start-line="515" selection-end-line="515" />
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
-  </component>
   <component name="FUSProjectUsageTrigger">
     <session id="-546551923">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="13" />
+          <entry key="project.closed" value="14" />
           <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.4" value="2" />
           <entry key="project.open.time.5" value="8" />
@@ -96,12 +35,12 @@
         <counts>
           <entry key="Python Console" value="2028" />
           <entry key="py" value="6114" />
-          <entry key="txt" value="229" />
+          <entry key="txt" value="259" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="229" />
+          <entry key="PLAIN_TEXT" value="259" />
           <entry key="Python" value="8142" />
         </counts>
       </usages-collector>
@@ -132,7 +71,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DebugScripts/img2img_scripts_debug.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="206">
+            <state relative-caret-position="-388">
               <caret line="67" column="48" selection-start-line="67" selection-start-column="48" selection-end-line="67" selection-end-column="48" />
               <folding>
                 <element signature="e#24#61#0" expanded="true" />
@@ -489,7 +428,14 @@
       <option name="project" value="LOCAL" />
       <updated>1536897317074</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="20180914 modify to max min avg">
+      <created>1536904374341</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1536904374341</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -501,7 +447,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.46919432" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.46919432" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.6658768" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -533,7 +479,8 @@
     <MESSAGE value="20180912 Bug Corrected" />
     <MESSAGE value="20180913 Complete demo" />
     <MESSAGE value="20180914 demo upgraded" />
-    <option name="LAST_COMMIT_MESSAGE" value="20180914 demo upgraded" />
+    <MESSAGE value="20180914 modify to max min avg" />
+    <option name="LAST_COMMIT_MESSAGE" value="20180914 modify to max min avg" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -719,7 +666,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DebugScripts/img2img_scripts_debug.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
+        <state relative-caret-position="-388">
           <caret line="67" column="48" selection-start-line="67" selection-start-column="48" selection-end-line="67" selection-end-column="48" />
           <folding>
             <element signature="e#24#61#0" expanded="true" />
