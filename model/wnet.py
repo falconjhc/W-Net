@@ -720,18 +720,21 @@ class WNet(object):
 
                 for ii in range(style_reference.shape[3]):
                     if ii == 0:
-                        style_short_cut_interface = style_short_cut_interface_list[ii]
-                        style_residual_interface = style_residual_interface_list[ii]
+                        style_short_cut_interface = list()
+                        style_residual_interface = list()
+                        for jj in range(len(style_short_cut_interface_list[ii])):
+                            style_short_cut_interface.append(tf.expand_dims(style_short_cut_interface_list[ii][jj],axis=0))
+                        for jj in range(len(style_residual_interface_list[ii])):
+                            style_residual_interface.append(tf.expand_dims(style_residual_interface_list[ii][jj],axis=0))
                     else:
                         for jj in range(len(style_short_cut_interface_list[ii])):
-                            style_short_cut_interface[jj] += style_short_cut_interface_list[ii][jj]
+                            style_short_cut_interface[jj] = tf.concat([style_short_cut_interface[jj], tf.expand_dims(style_short_cut_interface_list[ii][jj],axis=0)], axis=0)
                         for jj in range(len(style_residual_interface_list[ii])):
-                            style_residual_interface[jj] += style_residual_interface_list[ii][jj]
+                            style_residual_interface[jj] = tf.concat([style_residual_interface[jj], tf.expand_dims(style_residual_interface_list[ii][jj],axis=0)], axis=0)
                 for ii in range(len(style_short_cut_interface)):
-                    style_short_cut_interface[ii] = style_short_cut_interface[ii] / style_reference.shape[3]
+                    style_short_cut_interface[ii] = tf.reduce_mean(style_short_cut_interface[ii],axis=0)
                 for ii in range(len(style_residual_interface)):
-                    style_residual_interface[ii] = style_residual_interface[ii] / style_reference.shape[3]
-
+                    style_residual_interface[ii] = tf.reduce_mean(style_residual_interface[ii],axis=0)
 
 
 

@@ -295,7 +295,7 @@ def generator_inferring(content,
     label0_length = -1
     is_training = False
 
-    # source encoder part
+    # content encoder part
     encoded_content_final, content_category, content_short_cut_interface, content_residual_interface, _ = \
         encoder_framework(images=content,
                           is_training=is_training,
@@ -330,10 +330,6 @@ def generator_inferring(content,
         fused_shortcut_interfaces.append(output_current_shortcut)
 
 
-
-
-
-
     # residual interfaces && short cut interfaces are fused together
     fused_residual_interfaces = list()
     fused_shortcut_interfaces = list()
@@ -354,6 +350,7 @@ def generator_inferring(content,
             if current_style_short_cut_size == current_content_shortcut_size:
                 output_current_shortcut = tf.concat([output_current_shortcut, style_short_cut_interface[jj]], axis=3)
         fused_shortcut_interfaces.append(output_current_shortcut)
+
 
     # fused resudual interfaces are put into the residual blocks
     if not residual_block_num == 0 or not residual_at_layer == -1:
