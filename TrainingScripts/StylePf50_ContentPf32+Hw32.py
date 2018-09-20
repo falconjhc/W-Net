@@ -13,14 +13,15 @@ from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-exp_root_path = '/DataA/Harric/MSMC_Exp/'
+exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
 
 # OPTIONS SPECIFICATION
 # resume_training = 0: training from stratch
 #                   1: training from a based model
-input_args = ['--debug_mode','0',
+input_args = [
+			        '--debug_mode','0',
               '--style_input_number','32', # how many style inputs
               '--init_training_epochs','3',
               '--final_training_epochs','500',
@@ -31,30 +32,33 @@ input_args = ['--debug_mode','0',
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--experiment_id','20180914_StyleHw50_ContentPf32',# experiment name prefix
-              '--experiment_dir','../../../Exp_MSMC', # model saving location
-              '--log_dir','tfLogs_MSMC/',# log file saving location
+              '--experiment_id','20180914_StylePf50_ContentPf32+Hw32',# experiment name prefix
+              '--experiment_dir','../../Exp_WNet', # model saving location
+              '--log_dir','tfLogs_WNet/',# log file saving location
               '--print_info_seconds','900',
 
               '--content_data_dir', # standard data location
-    'CASIA_64/PrintedData/',
+    'CASIA_64_Dataset/HandWritingData/CASIA-HWDB1.1/,'
+    'CASIA_64_Dataset/HandWritingData/CASIA-HWDB2.1/,'
+    'CASIA_64_Dataset/PrintedData/',
 
               '--style_train_data_dir', # training data location
-    'CASIA_64/HandWritingData/CASIA-HWDB1.1/,'
-    'CASIA_64/HandWritingData/CASIA-HWDB2.1/',
+    'CASIA_64_Dataset/PrintedData/GB2312_L1/',
 
               '--style_validation_data_dir',# validation data location
-    'CASIA_64/HandWritingData/CASIA-HWDB2.1/',
+    'CASIA_64_Dataset/PrintedData/GB2312_L1/',
 
               '--file_list_txt_content', # file list of the standard data
+    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt,'
+    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt,'
     '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1L2.txt',
-
+    
               '--file_list_txt_style_train', # file list of the training data
-    '../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated.txt,'
-    '../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive.txt',
+    '../FileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1.txt',
 
               '--file_list_txt_style_validation', # file list of the validation data
-    '../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
+    '../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt',
+
 
               # generator && discriminator
               '--generator_residual_at_layer','3',
@@ -66,7 +70,7 @@ input_args = ['--debug_mode','0',
               '--channels','1',
 
               # optimizer parameters
-              '--init_lr','0.001'
+              '--init_lr','0.001',
               '--epoch','5000',
               '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
 
@@ -77,25 +81,26 @@ input_args = ['--debug_mode','0',
               # penalties
               '--generator_weight_decay_penalty','0.0001',
               '--discriminator_weight_decay_penalty','0.0003',
-              '--Pixel_Reconstruction_Penalty','35',
+              '--Pixel_Reconstruction_Penalty','15',
               '--Lconst_content_Penalty','3',
               '--Lconst_style_Penalty','5',
               '--Discriminative_Penalty', '50',
-              '--Discriminator_Categorical_Penalty', '100',
+              '--Discriminator_Categorical_Penalty', '50',
               '--Generator_Categorical_Penalty', '0.2',
               '--Discriminator_Gradient_Penalty', '10',
 
 
-              # feature extractor parametrers
+        # feature extractor parametrers
               '--true_fake_target_extractor_dir',
-    'TrainedModel/ContentStyleBoth/Exp20180802_FeatureExtractor_StyleContent_HW50_vgg16net/variables/',
+    'TrainedModel_CNN/ContentStyleBoth/Exp20180802_FeatureExtractor_StyleContent_PF50_vgg16net/variables/',
               '--content_prototype_extractor_dir',
-    'TrainedModel/ContentOnly/Exp20180802_FeatureExtractor_Content_PF32_vgg16net/variables/',
+    'TrainedModel_CNN/ContentOnly/Exp20180802_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
               '--style_reference_extractor_dir',
-    'TrainedModel/StyleOnly/Exp20180802_FeatureExtractor_Style_HW50_vgg16net/variables/',
-          '--Feature_Penalty_True_Fake_Target', '550',
-              '--Feature_Penalty_Style_Reference','1650',
+    'TrainedModel_CNN/StyleOnly/Exp20180802_FeatureExtractor_Style_PF50_vgg16net/variables/',
+              '--Feature_Penalty_True_Fake_Target', '100',
+              '--Feature_Penalty_Style_Reference','1500',
               '--Feature_Penalty_Content_Prototype','1500']
+
 
 
 

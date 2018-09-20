@@ -283,7 +283,7 @@ class Dataset_Iterator(object):
 
         true_style_dataset = \
             true_style_dataset.map(map_func=_parser_for_data,
-                                   num_parallel_calls=self.thread_num).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(3)
+                                   num_parallel_calls=self.thread_num).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
         true_style_iterator = true_style_dataset.make_initializable_iterator()
         true_style_img_tensor, true_style_label0_tensor_dense, true_style_label1_tensor_dense = \
             true_style_iterator.get_next()
@@ -307,7 +307,7 @@ class Dataset_Iterator(object):
                 _get_tensor_slice()
             prototype_dataset = \
                 prototype_dataset.map(map_func=_parser_for_data,
-                                      num_parallel_calls=self.thread_num).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(3)
+                                      num_parallel_calls=self.thread_num).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
             prototype_iterator = prototype_dataset.make_initializable_iterator()
             prototype_img_tensor, prototype_label0_tensor, prototype_label1_tensor = prototype_iterator.get_next()
             prototype_iterator_list.append(prototype_iterator)

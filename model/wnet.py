@@ -720,21 +720,18 @@ class WNet(object):
 
                 for ii in range(style_reference.shape[3]):
                     if ii == 0:
-                        style_short_cut_interface = list()
-                        style_residual_interface = list()
-                        for jj in range(len(style_short_cut_interface_list[ii])):
-                            style_short_cut_interface.append(tf.expand_dims(style_short_cut_interface_list[ii][jj],axis=0))
-                        for jj in range(len(style_residual_interface_list[ii])):
-                            style_residual_interface.append(tf.expand_dims(style_residual_interface_list[ii][jj],axis=0))
+                        style_short_cut_interface = style_short_cut_interface_list[ii]
+                        style_residual_interface = style_residual_interface_list[ii]
                     else:
                         for jj in range(len(style_short_cut_interface_list[ii])):
-                            style_short_cut_interface[jj] = tf.concat([style_short_cut_interface[jj], tf.expand_dims(style_short_cut_interface_list[ii][jj],axis=0)], axis=0)
+                            style_short_cut_interface[jj] += style_short_cut_interface_list[ii][jj]
                         for jj in range(len(style_residual_interface_list[ii])):
-                            style_residual_interface[jj] = tf.concat([style_residual_interface[jj], tf.expand_dims(style_residual_interface_list[ii][jj],axis=0)], axis=0)
+                            style_residual_interface[jj] += style_residual_interface_list[ii][jj]
                 for ii in range(len(style_short_cut_interface)):
-                    style_short_cut_interface[ii] = tf.reduce_mean(style_short_cut_interface[ii],axis=0)
+                    style_short_cut_interface[ii] = style_short_cut_interface[ii] / style_reference.shape[3]
                 for ii in range(len(style_residual_interface)):
-                    style_residual_interface[ii] = tf.reduce_mean(style_residual_interface[ii],axis=0)
+                    style_residual_interface[ii] = style_residual_interface[ii] / style_reference.shape[3]
+
 
 
 
@@ -1338,17 +1335,6 @@ class WNet(object):
                                                 tf.abs(l1_loss) / self.Pixel_Reconstruction_Penalty)
             g_loss+=l1_loss
             g_merged_summary = tf.summary.merge([g_merged_summary, l1_loss_summary])
-
-            generated_target_train_normed = (generated_target_train + 1) / 2
-            true_style_normed = (true_style_train + 1) / 2
-            vn_loss = tf.trace(tf.multiply(generated_target_train_normed, tf.log(generated_target_train_normed))-
-                               tf.multiply(generated_target_train_normed, tf.log(true_style_normed)) +
-                               -generated_target_train_normed + true_style_normed)
-            vn_loss = tf.reduce_mean(vn_loss) * self.Pixel_Reconstruction_Penalty
-            vn_loss_summary = tf.summary.scalar("Loss_Reconstruction/Pixel_VN",
-                                                tf.abs(vn_loss) / self.Pixel_Reconstruction_Penalty)
-            g_loss += l1_loss
-            g_merged_summary = tf.summary.merge([g_merged_summary, vn_loss_summary])
 
 
         # category loss
@@ -2336,7 +2322,7 @@ class WNet(object):
 
 
 
-                if time.time()-sample_start>sample_seconds or global_step.eval(session=self.sess)==global_step_start:
+                if time.time()-sample_start>sample_seconds or global_step.eval(session=self.sess)==global_step_start+1 or bid==self.itrs_for_current_epoch-1:
                     sample_start = time.time()
 
 
