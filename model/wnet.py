@@ -648,7 +648,7 @@ class WNet(object):
 
 
 
-    def styleadd_infer_procedures(self):
+    def character_generation(self):
 
         charset_level1, character_label_level1 = \
             inf_tools.get_chars_set_from_level1_2(path='../FontAndChars/GB2312_Level_1.txt',
@@ -670,7 +670,7 @@ class WNet(object):
                                                                   img_width=self.img2img_width,
                                                                   img_filters=self.input_output_img_filter_num)
         if not valid_mark:
-        	print("Generation Terminated.")
+            print("Generation Terminated.")
 
         style_reference = inf_tools.get_style_references(img_path=self.known_style_img_path,
         												 resave_path=self.save_path,

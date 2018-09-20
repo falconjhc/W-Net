@@ -24,6 +24,23 @@ import os
 import random as rnd
 import scipy.misc as misc
 
+def get_chars(path):
+    chars = list()
+    with open(path) as f:
+        for line in f:
+
+            line = u"%s" % line
+            char_counter = 0
+            for char in line:
+
+                current_char = line[char_counter]
+                chars.append(current_char)
+
+
+
+                char_counter += 1
+    return chars
+
 def get_chars_set_from_level1_2(path,level):
     """
     Expect a text file that each line is a char
@@ -168,7 +185,182 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
     return corresponding_content_prototype, content_label1_vec, True
 
 
-def get_style_references(img_path, resave_path,style_input_number):
+def get_style_references(img_path, resave_path, style_input_number):
+    if os.path.isdir(img_path):
+        style_reference = \
+            collect_chars_from_directory(img_path, resave_path)
+    else:
+        file_extension=os.path.splitext(img_path)[1]
+        if file_extension=='.ttf':
+            style_reference = \
+                generated_from_ttf_otf_files(img_path, resave_path)
+        else:
+            style_reference = \
+                crop_from_full_handwriting_essay_paper(img_path, resave_path)
+
+    if (not style_input_number == 0) and style_input_number<style_reference.shape[2]:
+        rnd_indices=rnd.sample(range(style_reference.shape[2]),style_input_number)
+        rnd_counter=0
+        for ii in rnd_indices:
+            current_style_ref=np.expand_dims(style_reference[:,:,ii],axis=2)
+            if rnd_counter == 0:
+                new_style_reference=current_style_ref
+            else:
+                new_style_reference=np.concatenate([new_style_reference,current_style_ref],axis=2)
+            rnd_counter+=1
+        style_reference=new_style_reference
+    style_reference = np.expand_dims(style_reference, axis=0)
+    print("Selected %d style references for generation" % style_reference.shape[3])
+    print(print_separater)
+    return style_reference
+
+def collect_chars_from_directory(img_path, resave_path):
+    counter=0
+    for root, dirs, files in os.walk(img_path):
+        files.sort()
+        for name in files:
+            if not ((name.find("DS") == -1) and (name.find("Th") == -1)):
+                continue
+            file_path = (os.path.join(root, name))
+            file_extension = os.path.splitext(file_path)[1]
+            if file_extension=='.png':
+                char_read=misc.imread(os.path.join(root,name))
+                char_read=char_read[:,:,0]
+                char_read = char_read / GRAYSCALE_AVG - 1
+                char_read = np.expand_dims(char_read, axis=2)
+                if counter == 0:
+                    style_reference = char_read
+                else:
+                    style_reference = np.concatenate([style_reference, char_read], axis=2)
+                counter+=1
+
+    style_num = style_reference.shape[2]
+    row_col_num = np.int64(np.ceil(np.sqrt(style_num)))
+    resave_paper = matrix_paper_generation(images=np.expand_dims(np.transpose(style_reference,[2,0,1]),axis=3),
+                                           rows=row_col_num,columns=row_col_num)
+    misc.imsave(os.path.join(resave_path, 'InputStyleImg.png'), resave_paper)
+
+
+    return style_reference
+
+def generated_from_ttf_otf_files(img_path, resave_path):
+
+    def draw_single_char(ch, font):
+        canvas_size = 256
+        x_offset = 20
+        y_offset = 20
+
+        img = Image.new("RGB", (canvas_size, canvas_size), (255, 255, 255))
+        draw = ImageDraw.Draw(img)
+        draw.text((x_offset, y_offset), ch, (0, 0, 0), font=font)
+
+        img_matrix = np.asarray(img)[:, :, 0]
+        zero_indices = np.where(img_matrix == 0)
+        exceed = 'NONE'
+
+        if np.min(img_matrix) == np.max(img_matrix) or (0 not in img_matrix):
+
+            img_output = np.zeros(shape=[256,256,3])
+            img_output = Image.fromarray(np.uint8(img_output))
+        else:
+            up_p = np.min(zero_indices[0])
+            down_p = np.max(zero_indices[0])
+            left_p = np.min(zero_indices[1])
+            right_p = np.max(zero_indices[1])
+
+            up_down = down_p - up_p
+            right_left = right_p - left_p
+            if up_down > right_left:
+                character_size = up_down
+                if not character_size % 2 == 0:
+                    character_size = character_size + 1
+                    down_p = down_p + 1
+                right_left_avg = (right_p + left_p) / 2
+                right_p = right_left_avg + int(character_size / 2)
+                left_p = right_left_avg - int(character_size / 2)
+                if left_p < 0:
+                    exceed = 'LEFT'
+                    exceed_pixels = np.abs(left_p)
+                    left_p = 0
+                if right_p > 255:
+                    exceed = 'RIGHT'
+                    exceed_pixels = right_p - 255
+                    right_p = 255
+
+            else:
+                character_size = right_left
+                if not character_size % 2 == 0:
+                    character_size = character_size + 1
+                    right_p = right_p + 1
+
+                up_down_avg = (up_p + down_p) / 2
+                down_p = up_down_avg + int(character_size / 2)
+                up_p = up_down_avg - int(character_size / 2)
+                if up_p < 0:
+                    exceed = 'UP'
+                    exceed_pixels = np.abs(up_p)
+                    up_p = 0
+                if down_p > 255:
+                    exceed = 'DOWN'
+                    exceed_pixels = down_p - 255
+                    down_p = 255
+
+
+
+            img_matrix_cut = img_matrix[up_p:down_p, left_p:right_p]
+
+            if not exceed=='NONE':
+                if exceed=='LEFT':
+                    added_pixels = np.ones([img_matrix_cut.shape[0],exceed_pixels]) * 255
+                    img_matrix_cut = np.concatenate([added_pixels, img_matrix_cut], axis=1)
+                elif exceed=='RIGHT':
+                    added_pixels = np.ones([img_matrix_cut.shape[0], exceed_pixels]) * 255
+                    img_matrix_cut = np.concatenate([img_matrix_cut,added_pixels], axis=1)
+                elif exceed=='UP':
+                    added_pixels = np.ones([exceed_pixels, img_matrix_cut.shape[1]]) * 255
+                    img_matrix_cut = np.concatenate([added_pixels, img_matrix_cut], axis=0)
+                elif exceed=='DOWN':
+                    added_pixels = np.ones([exceed_pixels, img_matrix_cut.shape[1]]) * 255
+                    img_matrix_cut = np.concatenate([img_matrix_cut, added_pixels], axis=0)
+
+
+            img_matrix_cut = np.tile(np.reshape(img_matrix_cut,
+                                                [img_matrix_cut.shape[0], img_matrix_cut.shape[1], 1]),
+                                     [1, 1, 3])
+            img_cut = Image.fromarray(np.uint8(img_matrix_cut))
+            img_resize = img_cut.resize((150, 150), Image.ANTIALIAS)
+            img_output = Image.new("RGB", (256, 256), (255, 255, 255))
+            img_output.paste(img_resize, (52, 52))
+            img_output.resize((64,64), Image.ANTIALIAS)
+
+
+
+        return img_output.resize((64,64), Image.ANTIALIAS)
+
+    sample_char_set = get_chars(path='../StyleExampleChars/SampleChars.txt')
+    sample_font = ImageFont.truetype(img_path, size=150)
+    counter=0
+    for current_char in sample_char_set:
+        char_misc = draw_single_char(ch=current_char,font=sample_font)
+        char_np = np.asarray(char_misc)[:, :, 0]
+        char_np = char_np / GRAYSCALE_AVG - 1
+        char_np = np.expand_dims(char_np,axis=2)
+        if counter==0:
+            style_reference = char_np
+        else:
+            style_reference = np.concatenate([style_reference,char_np],axis=2)
+        counter+=1
+
+    style_num = style_reference.shape[2]
+    row_col_num = np.int64(np.ceil(np.sqrt(style_num)))
+    resave_paper = matrix_paper_generation(images=np.expand_dims(np.transpose(style_reference, [2, 0, 1]), axis=3),
+                                           rows=row_col_num, columns=row_col_num)
+    misc.imsave(os.path.join(resave_path, 'InputStyleImg.png'), resave_paper)
+
+
+    return style_reference
+
+def crop_from_full_handwriting_essay_paper(img_path, resave_path):
     def extract_peek(array_vals):
         minimun_val = 10
         minimun_range = 60
@@ -329,24 +521,6 @@ def get_style_references(img_path, resave_path,style_input_number):
 
     style_reference = cutImage(img, peek_ranges)
     print("In total %d style references are extracted from %s" % (style_reference.shape[2],img_path))
-
-
-
-    if (not style_input_number == 0) and style_input_number<style_reference.shape[2]:
-        rnd_indices=rnd.sample(range(style_reference.shape[2]),style_input_number)
-        rnd_counter=0
-        for ii in rnd_indices:
-            current_style_ref=np.expand_dims(style_reference[:,:,ii],axis=2)
-            if rnd_counter == 0:
-                new_style_reference=current_style_ref
-            else:
-                new_style_reference=np.concatenate([new_style_reference,current_style_ref],axis=2)
-            rnd_counter+=1
-        style_reference=new_style_reference
-
-    style_reference = np.expand_dims(style_reference, axis=0)
-    print("Selected %d style references for generation" % style_reference.shape[3])
-    print(print_separater)
 
     return style_reference
 
