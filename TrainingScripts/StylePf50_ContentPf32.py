@@ -20,10 +20,11 @@ exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
 # OPTIONS SPECIFICATION
 # resume_training = 0: training from stratch
 #                   1: training from a based model
-input_args = [
+input_args = ['--training_from_model_dir',
+              '/home/harric/Desktop/Exp_WNet/checkpoint/Exp20180914_StylePf50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
 			        '--debug_mode','0',
               '--style_input_number','32', # how many style inputs
-              '--init_training_epochs','3',
+              '--init_training_epochs','1',
               '--final_training_epochs','500',
 
               '--generator_device','/device:GPU:0',
@@ -32,14 +33,12 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--experiment_id','20180914_StylePf50_ContentPf32+Hw32',# experiment name prefix
+              '--experiment_id','20180921_StylePf50_ContentPf32',# experiment name prefix
               '--experiment_dir','../../Exp_WNet', # model saving location
               '--log_dir','tfLogs_WNet/',# log file saving location
               '--print_info_seconds','900',
 
               '--content_data_dir', # standard data location
-    'CASIA_64_Dataset/HandWritingData/CASIA-HWDB1.1/,'
-    'CASIA_64_Dataset/HandWritingData/CASIA-HWDB2.1/,'
     'CASIA_64_Dataset/PrintedData/',
 
               '--style_train_data_dir', # training data location
@@ -49,8 +48,6 @@ input_args = [
     'CASIA_64_Dataset/PrintedData/GB2312_L1/',
 
               '--file_list_txt_content', # file list of the standard data
-    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt,'
-    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt,'
     '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1L2.txt',
     
               '--file_list_txt_style_train', # file list of the training data
@@ -72,7 +69,7 @@ input_args = [
               # optimizer parameters
               '--init_lr','0.001',
               '--epoch','5000',
-              '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
+              '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
 
               '--optimization_method','adam',
               '--final_learning_rate_pctg','0.01',
@@ -94,7 +91,7 @@ input_args = [
               '--true_fake_target_extractor_dir',
     'TrainedModel_CNN/ContentStyleBoth/Exp20180802_FeatureExtractor_StyleContent_PF50_vgg16net/variables/',
               '--content_prototype_extractor_dir',
-    'TrainedModel_CNN/ContentOnly/Exp20180802_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
+    'TrainedModel_CNN/ContentOnly/Exp20180802_FeatureExtractor_Content_PF32_vgg16net/variables/',
               '--style_reference_extractor_dir',
     'TrainedModel_CNN/StyleOnly/Exp20180802_FeatureExtractor_Style_PF50_vgg16net/variables/',
               '--Feature_Penalty_True_Fake_Target', '100',
