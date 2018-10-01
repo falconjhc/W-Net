@@ -117,6 +117,7 @@ class Dataset_Iterator(object):
         label0_vec = np.unique(self.true_style.label0_list)
         delete_label_add = 0
         delete_data_add = 0
+        print(print_separator)
         for label0 in label0_vec:
             current_label0_indices_on_the_style_data = [ii for ii in range(len(self.true_style.label0_list)) if self.true_style.label0_list[ii] == label0]
 
