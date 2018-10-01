@@ -16,7 +16,50 @@ print_separater="#########################################################"
 
 eps = 1e-9
 
+def minibatch_discrimination(parameter_update_device,
+                             input_pattern,
+                             weight_decay,weight_decay_rate,initializer,batch_size,scope, is_training, build_type):
 
+    def res_block(x, scope):
+        filters = int(x.shape[3])
+        bn = batch_norm(x=x,
+                        is_training=is_training,
+                        scope=scope+'_Res_Bn',
+                        parameter_update_device=parameter_update_device)
+        act = relu(bn)
+        conv = conv2d(x=act,
+                      output_filters=filters,
+                      scope=scope+'_Res_Conv',
+                      parameter_update_device=parameter_update_device,
+                      kh=3,kw=3,sh=1,sw=1,
+                      initializer=initializer,
+                      weight_decay=weight_decay,
+                      name_prefix=scope,
+                      weight_decay_rate=weight_decay_rate)
+
+        output = x + conv
+
+        return output
+
+
+    if build_type=='FC':
+        input_pattern_reshaped = tf.reshape(input_pattern,[batch_size,-1])
+        x=fc(x=input_pattern_reshaped,
+             output_size=int(input_pattern_reshaped.shape[1]),
+             scope=scope,
+             parameter_update_device=parameter_update_device,
+             weight_decay=weight_decay,
+             weight_decay_rate=weight_decay_rate,
+             initializer=initializer)
+        activation = tf.reshape(x, (-1, int(input_pattern.shape[1]), int(input_pattern.shape[2]), int(input_pattern.shape[3])))
+    elif build_type=='ResDual':
+        activation = res_block(x=input_pattern,scope=scope)
+
+
+    diffs = tf.abs(tf.expand_dims(activation,4)- tf.expand_dims(tf.transpose(activation,[1,2,3,0]), 0))
+    minibatch_features = tf.reduce_sum(tf.exp(-diffs), 4)
+    concatenated = tf.concat([input_pattern, minibatch_features],axis=3)
+    return concatenated, tf.reduce_mean(diffs)
 
 
 def encoder_framework(images,
@@ -47,7 +90,12 @@ def encoder_framework(images,
     return_str = "Encoder %d Layers" % int(np.floor(math.log(int(images.shape[1])) / math.log(2)))
     if not residual_at_layer == -1:
         return_str = return_str + " with residual blocks at layer %d" % residual_at_layer
-    generator_dim = 64
+    if 'style' in scope:
+        generator_dim = 32
+    elif 'content' in scope:
+        generator_dim = 64
+
+
     residual_input_list = list()
     batch_size = int(images.shape[0])
 
@@ -456,41 +504,78 @@ def generator_framework(content_prototype,style_reference,
         style_residual_interface_list.append(current_style_residual_interface)
 
     # multiple encoded information average calculation for style reference encoder
-    for ii in range(style_input_number):
-        if ii==0:
-            encoded_style_final = tf.expand_dims(encoded_style_final_list[ii],axis=0)
-            style_category = tf.expand_dims(style_category_list[ii],axis=0)
-            style_short_cut_interface=list()
-            for jj in range(len(style_short_cut_interface_list[ii])):
-                style_short_cut_interface.append(tf.expand_dims(style_short_cut_interface_list[ii][jj],axis=0))
-            style_residual_interface=list()
-            for jj in range(len(style_residual_interface_list[ii])):
-                style_residual_interface.append(tf.expand_dims(style_residual_interface_list[ii][jj],axis=0))
-        else:
-            encoded_style_final = tf.concat([encoded_style_final, tf.expand_dims(encoded_style_final_list[ii],axis=0)], axis=0)
-            style_category = tf.concat([style_category, tf.expand_dims(style_category_list[ii],axis=0)], axis=0)
-            for jj in range(len(style_short_cut_interface_list[ii])):
-                style_short_cut_interface[jj] = tf.concat([style_short_cut_interface[jj], tf.expand_dims(style_short_cut_interface_list[ii][jj],axis=0)], axis=0)
+    with tf.variable_scope(tf.get_variable_scope()):
+        with tf.device(generator_device):
+            with tf.variable_scope(scope):
+                if reuse:
+                    tf.get_variable_scope().reuse_variables()
+                for ii in range(style_input_number):
+                    if ii==0:
+                        encoded_style_final = tf.expand_dims(encoded_style_final_list[ii],axis=0)
+                        style_category = tf.expand_dims(style_category_list[ii],axis=0)
+                        style_short_cut_interface=list()
+                        for jj in range(len(style_short_cut_interface_list[ii])):
+                            style_short_cut_interface.append(tf.expand_dims(style_short_cut_interface_list[ii][jj],axis=0))
+                        style_residual_interface=list()
+                        for jj in range(len(style_residual_interface_list[ii])):
+                            style_residual_interface.append(tf.expand_dims(style_residual_interface_list[ii][jj],axis=0))
+                    else:
+                        encoded_style_final = tf.concat([encoded_style_final, tf.expand_dims(encoded_style_final_list[ii],axis=0)], axis=0)
+                        style_category = tf.concat([style_category, tf.expand_dims(style_category_list[ii],axis=0)], axis=0)
+                        for jj in range(len(style_short_cut_interface_list[ii])):
+                            style_short_cut_interface[jj] = tf.concat([style_short_cut_interface[jj], tf.expand_dims(style_short_cut_interface_list[ii][jj],axis=0)], axis=0)
 
-            for jj in range(len(style_residual_interface_list[ii])):
-                style_residual_interface[jj] = tf.concat([style_residual_interface[jj], tf.expand_dims(style_residual_interface_list[ii][jj], axis=0)], axis=0)
+                        for jj in range(len(style_residual_interface_list[ii])):
+                            style_residual_interface[jj] = tf.concat([style_residual_interface[jj], tf.expand_dims(style_residual_interface_list[ii][jj], axis=0)], axis=0)
 
-    style_category = tf.reduce_mean(style_category,axis=0)
-    encoded_style_final_avg = tf.reduce_mean(encoded_style_final,axis=0)
-    encoded_style_final_max = tf.reduce_max(encoded_style_final,axis=0)
-    encoded_style_final_min = tf.reduce_min(encoded_style_final,axis=0)
-    encoded_style_final = tf.concat([encoded_style_final_avg, encoded_style_final_max, encoded_style_final_min], axis=3)
+                style_category = tf.reduce_mean(style_category,axis=0)
+                encoded_style_final_avg = tf.reduce_mean(encoded_style_final,axis=0)
+                encoded_style_final_max = tf.reduce_max(encoded_style_final,axis=0)
+                encoded_style_final_min = tf.reduce_min(encoded_style_final,axis=0)
+                encoded_style_final = tf.concat([encoded_style_final_avg, encoded_style_final_max, encoded_style_final_min], axis=3)
 
-    for ii in range(len(style_short_cut_interface)):
-        style_short_cut_avg = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
-        style_short_cut_max = tf.reduce_max(style_short_cut_interface[ii], axis=0)
-        style_short_cut_min = tf.reduce_min(style_short_cut_interface[ii], axis=0)
-        style_short_cut_interface[ii]= tf.concat([style_short_cut_avg,style_short_cut_max,style_short_cut_min],axis=3)
-    for ii in range(len(style_residual_interface)):
-        style_residual_avg = tf.reduce_mean(style_residual_interface[ii], axis=0)
-        style_residual_max = tf.reduce_max(style_residual_interface[ii], axis=0)
-        style_residual_min = tf.reduce_min(style_residual_interface[ii], axis=0)
-        style_residual_interface[ii] = tf.concat([style_residual_avg, style_residual_max, style_residual_min], axis=3)
+                style_shortcut_batch_diff=0
+                mb_counter=0
+                for ii in range(len(style_short_cut_interface)):
+                    style_short_cut_avg = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
+                    style_short_cut_max = tf.reduce_max(style_short_cut_interface[ii], axis=0)
+                    style_short_cut_min = tf.reduce_min(style_short_cut_interface[ii], axis=0)
+                    style_short_cut_interface[ii]= tf.concat([style_short_cut_avg,style_short_cut_max,style_short_cut_min],axis=3)
+                    if ii == 0 or ii == 1:
+                        style_short_cut_interface[ii],current_shortcut_diff = \
+                            minibatch_discrimination(parameter_update_device=generator_device,
+                                                     input_pattern=style_short_cut_interface[ii],
+                                                     weight_decay=weight_decay,
+                                                     weight_decay_rate=weight_decay_rate,
+                                                     initializer=initializer,
+                                                     batch_size=batch_size,
+                                                     scope=scope + '/MiniBatchDiscrimination_ShortCut%d' % (ii+1),
+                                                     is_training=is_training,
+                                                     build_type='ResDual')
+                        mb_counter+=1
+                        style_shortcut_batch_diff+=current_shortcut_diff
+                style_shortcut_batch_diff = style_shortcut_batch_diff / mb_counter
+
+                style_residual_batch_diff=0
+                for ii in range(len(style_residual_interface)):
+                    style_residual_avg = tf.reduce_mean(style_residual_interface[ii], axis=0)
+                    style_residual_max = tf.reduce_max(style_residual_interface[ii], axis=0)
+                    style_residual_min = tf.reduce_min(style_residual_interface[ii], axis=0)
+                    style_residual_interface[ii] = tf.concat([style_residual_avg, style_residual_max, style_residual_min], axis=3)
+                    style_residual_interface[ii], current_residual_diff = \
+                        minibatch_discrimination(parameter_update_device=generator_device,
+                                                 input_pattern=style_residual_interface[ii],
+                                                 weight_decay=weight_decay,
+                                                 weight_decay_rate=weight_decay_rate,
+                                                 initializer=initializer,
+                                                 batch_size=batch_size,
+                                                 scope=scope + '/MiniBatchDiscrimination_Residual%d' % (ii+1),
+                                                 is_training=is_training,
+                                                 build_type='ResDual')
+                    style_residual_batch_diff += current_residual_diff
+                style_residual_batch_diff = style_residual_batch_diff / len(style_residual_interface)
+
+
 
     # residual interfaces && short cut interfaces are fused together
     fused_residual_interfaces = list()
@@ -554,7 +639,9 @@ def generator_framework(content_prototype,style_reference,
                           weight_decay_rate=weight_decay_rate)
 
     return generated_img, encoded_content_final, encoded_style_final, \
-           content_category, style_category, return_str
+           content_category, style_category, return_str, \
+           style_shortcut_batch_diff, style_residual_batch_diff
+
 
 
 def discriminator_mdy_5_convs(image,

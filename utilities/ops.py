@@ -124,22 +124,7 @@ def relu (x):
 
 
 
-def minibatch_discrimination(parameter_update_device,
-                             input,
-                             num_kernels,
-                             kernel_dim=5):
 
-    x=fc(x=input,
-         output_size=num_kernels*kernel_dim,
-         scope="md",
-         parameter_update_device=parameter_update_device)
-    activation = tf.reshape(x, (-1, num_kernels, kernel_dim))
-    diffs = tf.expand_dims(activation, 3) - \
-        tf.expand_dims(tf.transpose(activation, [1, 2, 0]), 0)
-    abs_diffs = tf.reduce_sum(tf.abs(diffs), 2)
-    minibatch_features = tf.reduce_sum(tf.exp(-abs_diffs), 2)
-    concatenated = tf.concat([input, minibatch_features],axis=1)
-    return concatenated
 
 
 def fc(x,

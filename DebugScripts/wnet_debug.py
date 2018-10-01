@@ -14,7 +14,7 @@ eps = 1e-9
 
 
 
-exp_root_path = '/DataA/Harric/MSMC_Exp/'
+exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
 
@@ -40,15 +40,15 @@ input_args = [
               '--print_info_seconds','3',
 
               '--content_data_dir', # standard data location
-    'CASIA_64/StandardChars/GB2312_L1/,'
-    'CASIA_64/StandardChars/GB2312_L2/,'
-    'CASIA_64/PrintedData/',
+    'CASIA_64_Dataset/StandardChars/GB2312_L1/,'
+    'CASIA_64_Dataset/StandardChars/GB2312_L2/,'
+    'CASIA_64_Dataset/PrintedData/',
 
               '--style_train_data_dir', # training data location
-    'CASIA_64/HandWritingData/CASIA-HWDB1.1/',
+    'CASIA_64_Dataset/HandWritingData/CASIA-HWDB1.1/',
 
               '--style_validation_data_dir',# validation data location
-    'CASIA_64/HandWritingData/CASIA-HWDB2.1/',
+    'CASIA_64_Dataset/HandWritingData/CASIA-HWDB2.1/',
 
               '--file_list_txt_content', # file list of the standard data
     '../FileList/StandardChars/Char_0_3754_GB2312L1.txt,'
@@ -94,11 +94,11 @@ input_args = [
 
               # feature extractor parametrers
               '--true_fake_target_extractor_dir',
-    'TrainedModel/ContentStyleBoth/Exp20180802_FeatureExtractor_StyleContent_HW50_vgg16net/variables/',
+    'TrainedModel_CNN/ContentStyleBoth/Exp20180802_FeatureExtractor_StyleContent_HW50_vgg16net/variables/',
               '--content_prototype_extractor_dir',
-    'TrainedModel/ContentOnly/Exp20180802_FeatureExtractor_Content_PF15+Standard1_vgg16net/variables/',
+    'TrainedModel_CNN/ContentOnly/Exp20180802_FeatureExtractor_Content_PF15+Standard1_vgg16net/variables/',
               '--style_reference_extractor_dir',
-    'TrainedModel/StyleOnly/Exp20180802_FeatureExtractor_Style_HW50_vgg16net/variables/',
+    'TrainedModel_CNN/StyleOnly/Exp20180802_FeatureExtractor_Style_HW50_vgg16net/variables/',
     		  '--Feature_Penalty_True_Fake_Target', '1',
               '--Feature_Penalty_Style_Reference','1',
               '--Feature_Penalty_Content_Prototype','1']

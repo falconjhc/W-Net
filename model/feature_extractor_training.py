@@ -47,7 +47,7 @@ InputHandle = namedtuple("InputHandle", ["batch_images", "batch_label1_labels","
 EvalHandle = namedtuple("InputHandle", ["batch_images", "batch_label1_labels","batch_label0_labels"])
 SummaryHandle = namedtuple("SummaryHandle",["CrossEntropy_Loss","TrainingAccuracy","TestAccuracy"])
 eps= 1e-3
-print_separater="#########################################################"
+print_separater="####################################################################################"
 
 def get_model_id_and_create_dirs(experiment_id,experiment_dir,
                                  log_dir,
@@ -295,8 +295,54 @@ def train_procedures(args_input):
 
 
 
-
+            highest_label0_accuracy=-1
+            highest_label1_accuracy=-1
+            highest_accuracy_line1_info = ''
+            highest_accuracy_line2_info = ''
+            highest_accuracy_line3_info = ''
+            accuracy_k = [1, 3, 5, 10, 20, 50]
             for ei in ei_ranges:
+
+                final_accuracy_label0, final_accuracy_label1, final_label0_top_k_correct_list = \
+                    performance_evaluation(sess=sess,
+                                           data_provider=data_provider,
+                                           batch_size=batch_size,
+                                           evalHandle=eval_handle,
+                                           batch_label0_logits_op=acry_0_lgt,
+                                           batch_label1_logits_op=acry_1_lgt,
+                                           ei=epoch_step.eval(session=sess),
+                                           print_info_second=summary_seconds,
+                                           accuracy_k=accuracy_k)
+                print(print_separater)
+                print(print_separater)
+                print(print_separater)
+                print(print_separater)
+                print(print_separater)
+
+                if final_accuracy_label0 > highest_label0_accuracy:
+                    highest_label0_accuracy = final_accuracy_label0
+                    highest_accuracy_line1_info = "CurrentTestHighestAccuracy@Label0:%.3f @ Epoch:%d;" % (highest_label0_accuracy,ei)
+                    line2 = "Label0_TopK @: "
+                    for ii in accuracy_k:
+                        if not ii == accuracy_k[len(accuracy_k) - 1]:
+                            line2 = line2 + '%d/' % ii
+                        else:
+                            line2 = line2 + '%d:' % ii
+                    tmp_counter = 0
+                    for ii in final_label0_top_k_correct_list:
+                        if not tmp_counter == len(final_label0_top_k_correct_list) - 1:
+                            line2 = line2 + '%.3f/' % ii
+                        else:
+                            line2 = line2 + '%.3f;' % ii
+                        tmp_counter += 1
+                    highest_accuracy_line2_info = line2
+
+                if final_accuracy_label1 > highest_label1_accuracy:
+                    highest_label1_accuracy = final_accuracy_label1
+                    highest_accuracy_line3_info = "CurrentTestHighestAccuracy@Label1:%.3f @ Epoch:%d;" % (highest_label1_accuracy, ei)
+
+
+
 
                 for bid in range(data_provider.iters_for_each_epoch):
                     this_itr_start = time.time()
@@ -395,6 +441,7 @@ def train_procedures(args_input):
                         print("ReadData:%f,Optimization:%f" % (read_data_consumed,optimizing_consumed))
 
 
+
                         ## test on validation
                         batch_images_val, batch_label1_labels_val, batch_label0_labels_val = \
                             data_provider.val.get_next_batch(sess=sess,augment=False)
@@ -425,9 +472,13 @@ def train_procedures(args_input):
                         print("TrainEntropy_onlabel1/_onlabel0:%f/%f" % (train_entropy_label1, train_entropy_label0))
                         print("TestAccuracy_onlabel1/_onlabel0:%f/%f" % (test_accuracy_label1,test_accuracy_label0))
                         print("TestEntropy_onlabel1/_onlabel0:%f/%f" % (test_entropy_label1, test_entropy_label0))
-                        print(print_separater)
                         print("CrossEntropyLoss:%f/%f" % (batch_label1_loss_ce,batch_label0_loss_ce))
                         print("CenterLoss:%f/%f" % (batch_label1_loss_ct,batch_label0_loss_ct))
+                        print(print_separater)
+                        print(highest_accuracy_line3_info)
+                        print(highest_accuracy_line1_info)
+                        print(highest_accuracy_line2_info)
+                        print(print_separater)
                         print(print_separater)
 
 
@@ -456,18 +507,7 @@ def train_procedures(args_input):
                         print(print_separater)
 
 
-                # label0_hightest_accuracy, label1_hightest_accuracy = \
-                #     performance_evaluation(sess=sess,
-                #                            data_provider=data_provider,
-                #                            batch_size=batch_size,
-                #                            evalHandle=eval_handle,
-                #                            batch_label0_logits_op=acry_0_lgt,
-                #                            batch_label1_logits_op=acry_1_lgt,
-                #                            ei=epoch_step.eval(session=sess),
-                #                            label0_highest=label0_hightest_accuracy,
-                #                            label1_highest=label1_hightest_accuracy,
-                #                            record=record_print_info,
-                #                            print_info_second=summary_seconds)
+
 
                 checkpoint(sess=sess,
                            saver=saver_full_model,
@@ -771,21 +811,50 @@ def performance_evaluation(sess,
                            batch_size,evalHandle,
                            batch_label0_logits_op,batch_label1_logits_op,
                            ei,
-                           label0_highest,label1_highest,record,
-                           print_info_second):
+                           print_info_second,accuracy_k):
+    def top_k_correct_calculation(logits, true_label, accuracy_k):
+        k = len(accuracy_k)
+        top_k_indices = np.argsort(-logits, axis=1)[:, 0:k]
+        for ii in range(k):
+            estm_label = top_k_indices[:, ii]
+            diff = np.abs(estm_label - true_label)
+            if ii == 0:
+                full_diff = np.reshape(diff, [diff.shape[0], 1])
+            else:
+                full_diff = np.concatenate([full_diff, np.reshape(diff, [diff.shape[0], 1])], axis=1)
+        top_k_correct_list = list()
+        for ii in range(len(accuracy_k)):
+            this_k = accuracy_k[ii]
+            this_k_diff = full_diff[:, 0:this_k]
+            if this_k == 0:
+                this_k_diff = np.reshape(this_k_diff, [this_k_diff.shape[0], 1])
+            min_v = np.min(this_k_diff, axis=1)
+            correct = [i for i, v in enumerate(min_v) if v == 0]
+            top_k_correct_list.append(len(correct))
+        return top_k_correct_list
+
+
+
 
     print_info_start = time.time()
     print(print_separater)
     iter_num = len(data_provider.val.data_list) / (batch_size) + 1
 
-    full_logits_label0 = np.zeros([iter_num * batch_size, len(data_provider.label0_vec)])
-    full_logits_label1 = np.zeros([iter_num * batch_size, len(data_provider.label1_vec)])
-    true_label0 = np.zeros([iter_num * batch_size])
-    true_label1 = np.zeros([iter_num * batch_size])
 
-    counter=0
+    full_counter=0
+    full_label0_correct_counter=0
+    full_label1_correct_counter=0
+    full_label0_top_k_correct_list = list()
+    current_label0_top_k_accuracy_list = list()
+    final_label0_top_k_accuracy_list = list()
+    for ii in range(len(accuracy_k)):
+        full_label0_top_k_correct_list.append(0)
+        current_label0_top_k_accuracy_list.append(-1)
+        final_label0_top_k_accuracy_list.append(-1)
+
+    time_start = time.time()
     for ii in range(iter_num):
-        time_start=time.time()
+
         batch_images, batch_label1, batch_label0 \
             = data_provider.val.get_next_batch(sess=sess, augment=False)
         batch_label1_labels_one_hot = dense_to_one_hot(input_label=batch_label1,
@@ -796,78 +865,79 @@ def performance_evaluation(sess,
                                                        batch_size=batch_size,
                                                        involved_label_list=data_provider.label0_vec)
 
-        batch_label0_logits, batch_label1_logits, = sess.run([batch_label0_logits_op,batch_label1_logits_op],
-                                                             feed_dict=batch_feed(batch_images=batch_images,
-                                                                                  batch_label0=batch_label0_labels_one_hot,
-                                                                                  batch_label1=batch_label1_labels_one_hot,
-                                                                                  handle=evalHandle))
+        batch_label0_logits, batch_label1_logits = sess.run([batch_label0_logits_op, batch_label1_logits_op],
+                                                            feed_dict=batch_feed(batch_images=batch_images,
+                                                                                 batch_label0=batch_label0_labels_one_hot,
+                                                                                 batch_label1=batch_label1_labels_one_hot,
+                                                                                 handle=evalHandle))
 
-        full_logits_label0[ii * batch_size:(ii + 1) * batch_size, :] = batch_label0_logits
-        full_logits_label1[ii * batch_size:(ii + 1) * batch_size, :] = batch_label1_logits
-        true_label0[ii * batch_size:(ii + 1) * batch_size] = batch_label0
-        true_label1[ii * batch_size:(ii + 1) * batch_size] = batch_label1
-        counter=counter+batch_size
+        if ii == iter_num-1:
+            add_num = iter_num * batch_size - len(data_provider.val.data_list)
+            remain_num = batch_size - add_num
+            batch_label1_labels_one_hot = batch_label1_labels_one_hot[0:remain_num,:]
+            batch_label0_labels_one_hot = batch_label0_labels_one_hot[0:remain_num, :]
+            batch_label0_logits = batch_label0_logits[0:remain_num, :]
+            batch_label1_logits = batch_label1_logits[0:remain_num, :]
+            full_counter+=remain_num
+        else:
+            full_counter+=batch_size
+
+        estm_label0 = np.argmax(batch_label0_logits, axis=1)
+        estm_label1 = np.argmax(batch_label1_logits, axis=1)
+        true_label0 = np.argmax(batch_label0_labels_one_hot, axis=1)
+        true_label1 = np.argmax(batch_label1_labels_one_hot, axis=1)
+        label0_diff = estm_label0 - true_label0
+        label1_diff = estm_label1 - true_label1
+        current_correct_label0 = [i for i, v in enumerate(label0_diff) if v == 0]
+        current_correct_label1 = [i for i, v in enumerate(label1_diff) if v == 0]
+        current_correct_label0 = len(current_correct_label0)
+        current_correct_label1 = len(current_correct_label1)
+        full_label0_correct_counter += current_correct_label0
+        full_label1_correct_counter += current_correct_label1
+
+        current_label0_top_k_correct_list = top_k_correct_calculation(logits=batch_label0_logits,
+                                                                      true_label=true_label0,
+                                                                      accuracy_k=accuracy_k)
 
 
-        if time.time()-print_info_start > print_info_second or ii == 0 or ii ==iter_num-1:
-            print_info_start=time.time()
-
-            batch_estm_indices_label0 = np.argmax(full_logits_label0[0:counter,:], axis=1)
-            batch_estm_label0 = data_provider.label0_vec[batch_estm_indices_label0]
-            batch_diff_label0 = true_label0[0:counter] - batch_estm_label0
-            batch_correct_label0 = [i for i, v in enumerate(batch_diff_label0) if v == 0]
-            batch_arcy_label0 = float(len(batch_correct_label0)) / float(counter) * 100
-
-            batch_estm_indices_label1 = np.argmax(full_logits_label1[0:counter,:], axis=1)
-            batch_estm_label1 = data_provider.label1_vec[batch_estm_indices_label1]
-            batch_diff_label1 = true_label1[0:counter] - batch_estm_label1
-            batch_correct_label0 = [i for i, v in enumerate(batch_diff_label1) if v == 0]
-            batch_arcy_label1 = float(len(batch_correct_label0)) / float(counter) * 100
-
-            print("Eval@Epoch:%d,Iter:%d/%d,Acry:%.3f/%.3f,Elps:%.3f" % (ei,ii+1,iter_num,batch_arcy_label0,batch_arcy_label1,
-                                                                     time.time()-time_start))
-
-
-    full_logits_label0 = full_logits_label0[0:len(data_provider.val.data_list), :]
-    full_logits_label1 = full_logits_label1[0:len(data_provider.val.data_list), :]
-    true_label0 = true_label0[0:len(data_provider.val.data_list)]
-    true_label1 = true_label1[0:len(data_provider.val.data_list)]
-
-    label0_estm_indices = np.argmax(full_logits_label0, axis=1)
-    label1_estm_indices = np.argmax(full_logits_label1, axis=1)
-    label0_estm = data_provider.label0_vec[label0_estm_indices]
-    label1_estm = data_provider.label1_vec[label1_estm_indices]
-    diff_label0 = label0_estm - true_label0
-    diff_label1 = label1_estm - true_label1
-    correct_label0 = [i for i, v in enumerate(diff_label0) if v == 0]
-    correct_label1 = [i for i, v in enumerate(diff_label1) if v == 0]
-    acry_label0 = float(len(correct_label0)) / float(len(data_provider.val.data_list)) * 100
-    acry_label1 = float(len(correct_label1)) / float(len(data_provider.val.data_list)) * 100
-
-    print("Eval@Epoch:%d, Acry_Label0/Label1:%.3f/%.3f" % (ei,acry_label0,acry_label1))
-    print(print_separater)
-
-    if acry_label0>label0_highest or acry_label1 > label1_highest:
-        if acry_label0>label0_highest:
-            label0_highest = acry_label0
-
-        if acry_label1>label1_highest:
-            label1_highest = acry_label1
-
-        current_accuracy_info = time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())
-        current_accuracy_info = current_accuracy_info + (", Epoch:%d, Round:%d, CurtHighestAcry_Label0/1:%.3f/%.3f" %
-                                                         (ei,
-                                                          len(record) + 1,
-                                                          acry_label0,
-                                                          acry_label1))
-        print("New record found: %s, and model saved" % current_accuracy_info)
-        print(print_separater)
-        record.append(current_accuracy_info)
+        current_accuracy_label0 = np.float32(full_label0_correct_counter) / np.float32(full_counter) * 100
+        current_accuracy_label1 = np.float32(full_label1_correct_counter) / np.float32(full_counter) * 100
+        for jj in range(len(accuracy_k)):
+            full_label0_top_k_correct_list[jj] += current_label0_top_k_correct_list[jj]
+            current_label0_top_k_accuracy_list[jj] = np.float32(full_label0_top_k_correct_list[jj]) / np.float32(full_counter) * 100
 
 
 
+        if time.time()-time_start > print_info_second or ii == 0 or ii ==iter_num-1:
+            time_start = time.time()
+            print("Validate@Epoch:%d, CurrentAccuracyOnLabel0/Label1:%.3f/%.3f, Counter:%d/%d" %
+                  (ei,
+                   current_accuracy_label0, current_accuracy_label1,
+                   full_counter, len(data_provider.val.data_list)))
 
-    return label0_highest,label1_highest
+            print("Top_K_Accuracies_ForLabel0:")
+            print("@", end='')
+            for jj in accuracy_k:
+                if not jj == accuracy_k[len(accuracy_k) - 1]:
+                    print('%d/' % jj, end='')
+                else:
+                    print('%d:' % jj, end='')
+            tmp_counter = 0
+            for jj in current_label0_top_k_accuracy_list:
+                if not tmp_counter == len(current_label0_top_k_accuracy_list) - 1:
+                    print('%.3f/' % jj, end='')
+                else:
+                    print('%.3f;' % jj)
+                tmp_counter += 1
+            print(print_separater)
+
+    final_accuracy_label0 = np.float32(full_label0_correct_counter) / np.float32(len(data_provider.val.data_list)) * 100
+    final_accuracy_label1 = np.float32(full_label1_correct_counter) / np.float32(len(data_provider.val.data_list)) * 100
+    for ii in range(len(accuracy_k)):
+        final_label0_top_k_accuracy_list[ii] = np.float32(full_label0_top_k_correct_list[ii]) / np.float32(len(data_provider.val.data_list)) * 100
+
+
+    return final_accuracy_label0,final_accuracy_label1, final_label0_top_k_accuracy_list
 
 def center_loss(features,num_classes,labels,alpha,prefix):
     len_features = features.get_shape()[1]
@@ -904,6 +974,7 @@ def build_model(batch_size,learning_rate,
                                   [batch_size, args_input.image_size, args_input.image_size,input_filters],
                                   name='batch_image_train')
 
+
     batch_label1_labels = tf.placeholder(tf.float32,
                                   [batch_size, logits_length_label1],
                                   name='batch_label1_train')
@@ -922,6 +993,7 @@ def build_model(batch_size,learning_rate,
                                                          weight_decay=weight_decay,
                                                          initializer=initializer,
                                                          name_prefix='ExtraNet')
+
 
 
 

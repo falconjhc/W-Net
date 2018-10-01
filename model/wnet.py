@@ -1176,7 +1176,8 @@ class WNet(object):
 
                 # build the generator
                 generated_target_train, encoded_content_prototype_train, encoded_style_reference_train,\
-                content_category_logits_train, style_category_logits_train, network_info = \
+                content_category_logits_train, style_category_logits_train, network_info, \
+                style_shortcut_batch_diff, style_residual_batch_diff = \
                     generator_implementation(content_prototype=content_prototype_train,
                                              style_reference=style_reference_train_list,
                                              is_training=True,
@@ -1294,6 +1295,12 @@ class WNet(object):
         # loss build
         g_loss=0
         g_merged_summary = []
+
+        # batch discrimination on style encoder
+        style_batch_diff_shortcut_summary = tf.summary.scalar("Loss_Generator/StyleDiscrimination_ShortCut", style_shortcut_batch_diff)
+        style_batch_diff_residual_summary = tf.summary.scalar("Loss_Generator/StyleDiscrimination_Residual", style_residual_batch_diff)
+        g_merged_summary = tf.summary.merge([g_merged_summary, style_batch_diff_shortcut_summary, style_batch_diff_residual_summary])
+
 
         # weight_decay_loss
         generator_weight_decay_loss = tf.get_collection('generator_weight_decay')
@@ -1446,7 +1453,6 @@ class WNet(object):
 
         generator_handle = getattr(self,'generator_handle')
         fake_style_train = generator_handle.generated_target_train
-        fake_style_infer = generator_handle.generated_target_infer
 
         name_prefix = 'discriminator'
 
@@ -1454,6 +1460,7 @@ class WNet(object):
 
         critic_logit_length = int(np.floor(math.log(discriminator_category_logit_length) / math.log(2)))
         critic_logit_length = np.power(2,critic_logit_length+1)
+        critic_logit_length = np.max([critic_logit_length,512])
 
         current_critic_logit_penalty = tf.placeholder(tf.float32, [], name='current_critic_logit_penalty')
 
