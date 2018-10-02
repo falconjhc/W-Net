@@ -42,24 +42,26 @@ def minibatch_discrimination(parameter_update_device,
         return output
 
 
-    if build_type=='FC':
-        input_pattern_reshaped = tf.reshape(input_pattern,[batch_size,-1])
-        x=fc(x=input_pattern_reshaped,
-             output_size=int(input_pattern_reshaped.shape[1]),
-             scope=scope,
-             parameter_update_device=parameter_update_device,
-             weight_decay=weight_decay,
-             weight_decay_rate=weight_decay_rate,
-             initializer=initializer)
-        activation = tf.reshape(x, (-1, int(input_pattern.shape[1]), int(input_pattern.shape[2]), int(input_pattern.shape[3])))
-    elif build_type=='ResDual':
-        activation = res_block(x=input_pattern,scope=scope)
+    # if build_type=='FC':
+    #     input_pattern_reshaped = tf.reshape(input_pattern,[batch_size,-1])
+    #     x=fc(x=input_pattern_reshaped,
+    #          output_size=int(input_pattern_reshaped.shape[1]),
+    #          scope=scope,
+    #          parameter_update_device=parameter_update_device,
+    #          weight_decay=weight_decay,
+    #          weight_decay_rate=weight_decay_rate,
+    #          initializer=initializer)
+    #     activation = tf.reshape(x, (-1, int(input_pattern.shape[1]), int(input_pattern.shape[2]), int(input_pattern.shape[3])))
+    # elif build_type=='ResDual':
+    #     activation = res_block(x=input_pattern,scope=scope)
+
+    activation = input_pattern
 
 
     diffs = tf.abs(tf.expand_dims(activation,4)- tf.expand_dims(tf.transpose(activation,[1,2,3,0]), 0))
-    minibatch_features = tf.reduce_sum(tf.exp(-diffs), 4)
-    concatenated = tf.concat([input_pattern, minibatch_features],axis=3)
-    return concatenated, tf.reduce_mean(diffs)
+    # minibatch_features = tf.reduce_sum(tf.exp(-diffs), 4)
+    # concatenated = tf.concat([input_pattern, minibatch_features],axis=3)
+    return -1, tf.reduce_mean(diffs)
 
 
 def encoder_framework(images,
@@ -90,10 +92,8 @@ def encoder_framework(images,
     return_str = "Encoder %d Layers" % int(np.floor(math.log(int(images.shape[1])) / math.log(2)))
     if not residual_at_layer == -1:
         return_str = return_str + " with residual blocks at layer %d" % residual_at_layer
-    if 'style' in scope:
-        generator_dim = 32
-    elif 'content' in scope:
-        generator_dim = 64
+    generator_dim = 64
+
 
 
     residual_input_list = list()
@@ -459,6 +459,13 @@ def generator_framework(content_prototype,style_reference,
                         content_prototype_number,
                         reuse=False):
 
+    def _calculate_batch_diff(input_feature):
+        diff = tf.abs(tf.expand_dims(input_feature, 4) -
+                      tf.expand_dims(tf.transpose(input_feature, [1, 2, 3, 0]), 0))
+        diff = tf.reduce_sum(tf.exp(-diff), 4)
+        return tf.reduce_mean(diff)
+
+
     # content prototype encoder part
     encoded_content_final, content_category, content_short_cut_interface, content_residual_interface, _ = \
         encoder_framework(images=content_prototype,
@@ -535,26 +542,38 @@ def generator_framework(content_prototype,style_reference,
                 encoded_style_final = tf.concat([encoded_style_final_avg, encoded_style_final_max, encoded_style_final_min], axis=3)
 
                 style_shortcut_batch_diff=0
-                mb_counter=0
+                # mb_counter=0
                 for ii in range(len(style_short_cut_interface)):
                     style_short_cut_avg = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
                     style_short_cut_max = tf.reduce_max(style_short_cut_interface[ii], axis=0)
                     style_short_cut_min = tf.reduce_min(style_short_cut_interface[ii], axis=0)
                     style_short_cut_interface[ii]= tf.concat([style_short_cut_avg,style_short_cut_max,style_short_cut_min],axis=3)
-                    if ii == 0 or ii == 1:
-                        style_short_cut_interface[ii],current_shortcut_diff = \
-                            minibatch_discrimination(parameter_update_device=generator_device,
-                                                     input_pattern=style_short_cut_interface[ii],
-                                                     weight_decay=weight_decay,
-                                                     weight_decay_rate=weight_decay_rate,
-                                                     initializer=initializer,
-                                                     batch_size=batch_size,
-                                                     scope=scope + '/MiniBatchDiscrimination_ShortCut%d' % (ii+1),
-                                                     is_training=is_training,
-                                                     build_type='ResDual')
-                        mb_counter+=1
-                        style_shortcut_batch_diff+=current_shortcut_diff
-                style_shortcut_batch_diff = style_shortcut_batch_diff / mb_counter
+                    # if ii == 0 or ii == 1:
+                    #     # _,current_shortcut_diff = \
+                    #     #     minibatch_discrimination(parameter_update_device=generator_device,
+                    #     #                              input_pattern=style_short_cut_interface[ii],
+                    #     #                              weight_decay=weight_decay,
+                    #     #                              weight_decay_rate=weight_decay_rate,
+                    #     #                              initializer=initializer,
+                    #     #                              batch_size=batch_size,
+                    #     #                              scope=scope + '/MiniBatchDiscrimination_ShortCut%d' % (ii+1),
+                    #     #                              is_training=is_training,
+                    #     #                              build_type='ResDual')
+                    #
+                    # elif ii==2:
+                    #     # _, current_shortcut_diff = \
+                    #     #     minibatch_discrimination(parameter_update_device=generator_device,
+                    #     #                              input_pattern=style_short_cut_interface[ii],
+                    #     #                              weight_decay=weight_decay,
+                    #     #                              weight_decay_rate=weight_decay_rate,
+                    #     #                              initializer=initializer,
+                    #     #                              batch_size=batch_size,
+                    #     #                              scope=scope + '/MiniBatchDiscrimination_ShortCut%d' % (ii + 1),
+                    #     #                              is_training=is_training,
+                    #     #                              build_type='FC')
+                    style_shortcut_batch_diff += _calculate_batch_diff(input_feature=style_short_cut_interface[ii])
+
+                style_shortcut_batch_diff = style_shortcut_batch_diff / len(style_short_cut_interface)
 
                 style_residual_batch_diff=0
                 for ii in range(len(style_residual_interface)):
@@ -562,17 +581,17 @@ def generator_framework(content_prototype,style_reference,
                     style_residual_max = tf.reduce_max(style_residual_interface[ii], axis=0)
                     style_residual_min = tf.reduce_min(style_residual_interface[ii], axis=0)
                     style_residual_interface[ii] = tf.concat([style_residual_avg, style_residual_max, style_residual_min], axis=3)
-                    style_residual_interface[ii], current_residual_diff = \
-                        minibatch_discrimination(parameter_update_device=generator_device,
-                                                 input_pattern=style_residual_interface[ii],
-                                                 weight_decay=weight_decay,
-                                                 weight_decay_rate=weight_decay_rate,
-                                                 initializer=initializer,
-                                                 batch_size=batch_size,
-                                                 scope=scope + '/MiniBatchDiscrimination_Residual%d' % (ii+1),
-                                                 is_training=is_training,
-                                                 build_type='ResDual')
-                    style_residual_batch_diff += current_residual_diff
+                    # _, current_residual_diff = \
+                    #     minibatch_discrimination(parameter_update_device=generator_device,
+                    #                              input_pattern=style_residual_interface[ii],
+                    #                              weight_decay=weight_decay,
+                    #                              weight_decay_rate=weight_decay_rate,
+                    #                              initializer=initializer,
+                    #                              batch_size=batch_size,
+                    #                              scope=scope + '/MiniBatchDiscrimination_Residual%d' % (ii+1),
+                    #                              is_training=is_training,
+                    #                              build_type='ResDual')
+                    style_residual_batch_diff += _calculate_batch_diff(input_feature=style_residual_interface[ii])
                 style_residual_batch_diff = style_residual_batch_diff / len(style_residual_interface)
 
 

@@ -68,7 +68,7 @@ input_args = [
               '--generator_residual_blocks','1',
               '--discriminator','DisMdy6conv',
 
-              '--batch_size','4',
+              '--batch_size','5',
               '--img_width','64',
               '--channels','1',
 
@@ -91,6 +91,7 @@ input_args = [
               '--Discriminator_Categorical_Penalty', '1',
               '--Generator_Categorical_Penalty', '0.2',
               '--Discriminator_Gradient_Penalty', '10',
+              '--Batch_StyleFeature_Discrimination_Penalty','10',
 
               # feature extractor parametrers
               '--true_fake_target_extractor_dir',
@@ -156,20 +157,21 @@ parser.add_argument('--img_width',dest='img_width',type=int,required=True)
 
 
 # for losses setting
-parser.add_argument('--Pixel_Reconstruction_Penalty', dest='Pixel_Reconstruction_Penalty', type=int, required=True)
-parser.add_argument('--Lconst_content_Penalty', dest='Lconst_content_Penalty', type=int, required=True)
-parser.add_argument('--Lconst_style_Penalty', dest='Lconst_style_Penalty', type=int, required=True)
-parser.add_argument('--Discriminative_Penalty', dest='Discriminative_Penalty', type=int, required=True)
-parser.add_argument('--Discriminator_Categorical_Penalty', dest='Discriminator_Categorical_Penalty', type=int, required=True)
+parser.add_argument('--Pixel_Reconstruction_Penalty', dest='Pixel_Reconstruction_Penalty', type=float, required=True)
+parser.add_argument('--Lconst_content_Penalty', dest='Lconst_content_Penalty', type=float, required=True)
+parser.add_argument('--Lconst_style_Penalty', dest='Lconst_style_Penalty', type=float, required=True)
+parser.add_argument('--Discriminative_Penalty', dest='Discriminative_Penalty', type=float, required=True)
+parser.add_argument('--Discriminator_Categorical_Penalty', dest='Discriminator_Categorical_Penalty', type=float, required=True)
 parser.add_argument('--Generator_Categorical_Penalty', dest='Generator_Categorical_Penalty', type=float, required=True)
-parser.add_argument('--Discriminator_Gradient_Penalty', dest='Discriminator_Gradient_Penalty', type=int, required=True)
+parser.add_argument('--Discriminator_Gradient_Penalty', dest='Discriminator_Gradient_Penalty', type=float, required=True)
 parser.add_argument('--generator_weight_decay_penalty', dest='generator_weight_decay_penalty', type=float, required=True)
 parser.add_argument('--discriminator_weight_decay_penalty', dest='discriminator_weight_decay_penalty', type=float, required=True)
+parser.add_argument('--Batch_StyleFeature_Discrimination_Penalty', dest='Batch_StyleFeature_Discrimination_Penalty', type=float, required=True)
 
 
-parser.add_argument('--Feature_Penalty_True_Fake_Target', dest='Feature_Penalty_True_Fake_Target', type=int, required=True)
-parser.add_argument('--Feature_Penalty_Style_Reference', dest='Feature_Penalty_Style_Reference', type=int, required=True)
-parser.add_argument('--Feature_Penalty_Content_Prototype', dest='Feature_Penalty_Content_Prototype', type=int, required=True)
+parser.add_argument('--Feature_Penalty_True_Fake_Target', dest='Feature_Penalty_True_Fake_Target', type=float, required=True)
+parser.add_argument('--Feature_Penalty_Style_Reference', dest='Feature_Penalty_Style_Reference', type=float, required=True)
+parser.add_argument('--Feature_Penalty_Content_Prototype', dest='Feature_Penalty_Content_Prototype', type=float, required=True)
 
 
 # training param setting
@@ -301,6 +303,7 @@ def main(_):
                  Discriminator_Gradient_Penalty=args.Discriminator_Gradient_Penalty,
                  generator_weight_decay_penalty=args.generator_weight_decay_penalty,
                  discriminator_weight_decay_penalty=args.discriminator_weight_decay_penalty,
+                 Batch_StyleFeature_Discrimination_Penalty=args.Batch_StyleFeature_Discrimination_Penalty,
 
                  Feature_Penalty_True_Fake_Target=args.Feature_Penalty_True_Fake_Target,
                  Feature_Penalty_Style_Reference=args.Feature_Penalty_Style_Reference,

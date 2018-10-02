@@ -115,6 +115,7 @@ class WNet(object):
                  Feature_Penalty_True_Fake_Target=5,
                  Feature_Penalty_Style_Reference=5,
                  Feature_Penalty_Content_Prototype=5,
+                 Batch_StyleFeature_Discrimination_Penalty=10,
 
                  generator_weight_decay_penalty = 0.001,
                  discriminator_weight_decay_penalty = 0.004,
@@ -194,7 +195,9 @@ class WNet(object):
         self.Feature_Penalty_Content_Prototype = Feature_Penalty_Content_Prototype  + eps
         self.Lconst_content_Penalty = Lconst_content_Penalty + eps
         self.Lconst_style_Penalty = Lconst_style_Penalty + eps
+        self.Batch_StyleFeature_Discrimination_Penalty=Batch_StyleFeature_Discrimination_Penalty+eps
         self.lr = lr
+
 
 
         self.Discriminator_Categorical_Penalty = Discriminator_Categorical_Penalty + eps
@@ -1296,9 +1299,14 @@ class WNet(object):
         g_loss=0
         g_merged_summary = []
 
-        # batch discrimination on style encoder
-        style_batch_diff_shortcut_summary = tf.summary.scalar("Loss_Generator/StyleDiscrimination_ShortCut", style_shortcut_batch_diff)
-        style_batch_diff_residual_summary = tf.summary.scalar("Loss_Generator/StyleDiscrimination_Residual", style_residual_batch_diff)
+        # batch discrimination loss on style encoder
+        style_shortcut_batch_discrimination_penalty = self.Batch_StyleFeature_Discrimination_Penalty * style_shortcut_batch_diff
+        style_residual_batch_discrimination_penalty = self.Batch_StyleFeature_Discrimination_Penalty * style_residual_batch_diff
+        g_loss += (style_shortcut_batch_discrimination_penalty + style_residual_batch_discrimination_penalty)
+        style_batch_diff_shortcut_summary = tf.summary.scalar("Loss_Generator/StyleDiscrimination_ShortCut",
+                                                              style_shortcut_batch_discrimination_penalty / self.Batch_StyleFeature_Discrimination_Penalty)
+        style_batch_diff_residual_summary = tf.summary.scalar("Loss_Generator/StyleDiscrimination_Residual",
+                                                              style_residual_batch_discrimination_penalty / self.Batch_StyleFeature_Discrimination_Penalty)
         g_merged_summary = tf.summary.merge([g_merged_summary, style_batch_diff_shortcut_summary, style_batch_diff_residual_summary])
 
 
@@ -1639,8 +1647,7 @@ class WNet(object):
             d_loss_real = tf.reduce_mean(d_loss_real) * self.Discriminative_Penalty
             d_loss_fake = tf.reduce_mean(d_loss_fake) * self.Discriminative_Penalty
             d_loss_real_fake_summary = tf.summary.scalar("TrainingProgress_DiscriminatorRealFakeLoss",
-                                                         tf.abs(
-                                                             d_loss_real + d_loss_fake) / self.Discriminative_Penalty)
+                                                         tf.reduce_mean(tf.abs(real_Discriminator_logits - fake_Discriminator_logits)) / self.Discriminative_Penalty)
             if self.Discriminator_Gradient_Penalty > 10 * eps:
                 d_gradient_loss = discriminator_slopes
                 d_gradient_loss = tf.reduce_mean(d_gradient_loss) * self.Discriminator_Gradient_Penalty
@@ -2097,11 +2104,13 @@ class WNet(object):
             print("DataAugment:%d, InputStyleNum:%d" % (self.train_data_augment, self.style_input_number))
             print(self.print_separater)
             print("Penalties:")
-            print("Generator: PixelL1:%.3f,ConstCP/SR:%.3f/%.3f,Cat:%.3F,Wgt:%.6f;" % (self.Pixel_Reconstruction_Penalty,
-                                                                                       self.Lconst_content_Penalty,
-                                                                                       self.Lconst_style_Penalty,
-                                                                                       self.Generator_Categorical_Penalty,
-                                                                                       self.generator_weight_decay_penalty))
+            print("Generator: PixelL1:%.3f,ConstCP/SR:%.3f/%.3f,Cat:%.3f,Wgt:%.6f, BatchDist:%.5f;" 
+                  % (self.Pixel_Reconstruction_Penalty,
+                     self.Lconst_content_Penalty,
+                     self.Lconst_style_Penalty,
+                     self.Generator_Categorical_Penalty,
+                     self.generator_weight_decay_penalty,
+                     self.Batch_StyleFeature_Discrimination_Penalty))
             print("Discriminator: Cat:%.3f,Dis:%.3f,WST-Grdt:%.3f,Wgt:%.6f;" % (self.Discriminator_Categorical_Penalty,
                                                                                 self.Discriminative_Penalty,
                                                                                 self.Discriminator_Gradient_Penalty,

@@ -21,11 +21,11 @@ exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
-			# '--training_from_model_dir',
-   #            '/home/harric/Desktop/Exp_WNet/checkpoint/Exp20180914_StylePf50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
+			 # '--training_from_model_dir',
+             #   '/home/harric/Desktop/Exp_WNet/checkpoint/Exp20180914_StylePf50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
               '--debug_mode','0',
               '--style_input_number','16', # how many style inputs
-              '--init_training_epochs','3',
+              '--init_training_epochs','1',
               '--final_training_epochs','500',
 
               '--generator_device','/device:GPU:0',
@@ -34,7 +34,7 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--experiment_id','20181001_StylePf50_ContentPf32+Hw32',# experiment name prefix
+              '--experiment_id','20181002_StylePf50_ContentPf32+Hw32',# experiment name prefix
               '--experiment_dir','../../Exp_WNet', # model saving location
               '--log_dir','tfLogs_WNet/',# log file saving location
               '--print_info_seconds','900',
@@ -67,14 +67,14 @@ input_args = [
               '--generator_residual_blocks','5',
               '--discriminator','DisMdy6conv',
 
-              '--batch_size','32',
+              '--batch_size','16',
               '--img_width','64',
               '--channels','1',
 
               # optimizer parameters
               '--init_lr','0.001',
               '--epoch','5000',
-              '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
+              '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
 
               '--optimization_method','adam',
               '--final_learning_rate_pctg','0.01',
@@ -90,6 +90,7 @@ input_args = [
               '--Discriminator_Categorical_Penalty', '50',
               '--Generator_Categorical_Penalty', '0.2',
               '--Discriminator_Gradient_Penalty', '10',
+              '--Batch_StyleFeature_Discrimination_Penalty','50',
 
 
         # feature extractor parametrers
@@ -112,6 +113,7 @@ parser.add_argument('--resume_training', dest='resume_training', type=int,requir
 parser.add_argument('--train_data_augment', dest='train_data_augment', type=int,required=True)
 parser.add_argument('--print_info_seconds', dest='print_info_seconds',type=int,required=True)
 parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)
+parser.add_argument('--content_input_number_actual', dest='content_input_number_actual',type=int, default=0)
 
 
 # directories setting
@@ -156,20 +158,21 @@ parser.add_argument('--img_width',dest='img_width',type=int,required=True)
 
 
 # for losses setting
-parser.add_argument('--Pixel_Reconstruction_Penalty', dest='Pixel_Reconstruction_Penalty', type=int, required=True)
-parser.add_argument('--Lconst_content_Penalty', dest='Lconst_content_Penalty', type=int, required=True)
-parser.add_argument('--Lconst_style_Penalty', dest='Lconst_style_Penalty', type=int, required=True)
-parser.add_argument('--Discriminative_Penalty', dest='Discriminative_Penalty', type=int, required=True)
-parser.add_argument('--Discriminator_Categorical_Penalty', dest='Discriminator_Categorical_Penalty', type=int, required=True)
+parser.add_argument('--Pixel_Reconstruction_Penalty', dest='Pixel_Reconstruction_Penalty', type=float, required=True)
+parser.add_argument('--Lconst_content_Penalty', dest='Lconst_content_Penalty', type=float, required=True)
+parser.add_argument('--Lconst_style_Penalty', dest='Lconst_style_Penalty', type=float, required=True)
+parser.add_argument('--Discriminative_Penalty', dest='Discriminative_Penalty', type=float, required=True)
+parser.add_argument('--Discriminator_Categorical_Penalty', dest='Discriminator_Categorical_Penalty', type=float, required=True)
 parser.add_argument('--Generator_Categorical_Penalty', dest='Generator_Categorical_Penalty', type=float, required=True)
-parser.add_argument('--Discriminator_Gradient_Penalty', dest='Discriminator_Gradient_Penalty', type=int, required=True)
+parser.add_argument('--Discriminator_Gradient_Penalty', dest='Discriminator_Gradient_Penalty', type=float, required=True)
 parser.add_argument('--generator_weight_decay_penalty', dest='generator_weight_decay_penalty', type=float, required=True)
 parser.add_argument('--discriminator_weight_decay_penalty', dest='discriminator_weight_decay_penalty', type=float, required=True)
+parser.add_argument('--Batch_StyleFeature_Discrimination_Penalty', dest='Batch_StyleFeature_Discrimination_Penalty', type=float, required=True)
 
 
-parser.add_argument('--Feature_Penalty_True_Fake_Target', dest='Feature_Penalty_True_Fake_Target', type=int, required=True)
-parser.add_argument('--Feature_Penalty_Style_Reference', dest='Feature_Penalty_Style_Reference', type=int, required=True)
-parser.add_argument('--Feature_Penalty_Content_Prototype', dest='Feature_Penalty_Content_Prototype', type=int, required=True)
+parser.add_argument('--Feature_Penalty_True_Fake_Target', dest='Feature_Penalty_True_Fake_Target', type=float, required=True)
+parser.add_argument('--Feature_Penalty_Style_Reference', dest='Feature_Penalty_Style_Reference', type=float, required=True)
+parser.add_argument('--Feature_Penalty_Content_Prototype', dest='Feature_Penalty_Content_Prototype', type=float, required=True)
 
 
 # training param setting
@@ -275,6 +278,7 @@ def main(_):
                  training_from_model=args.training_from_model_dir,
                  train_data_augment=args.train_data_augment,
                  style_input_number=args.style_input_number,
+                 content_input_number_actual=args.content_input_number_actual,
 
                  content_data_dir=content_data_dir,
                  style_train_data_dir=style_train_data_dir,
@@ -300,6 +304,7 @@ def main(_):
                  Discriminator_Gradient_Penalty=args.Discriminator_Gradient_Penalty,
                  generator_weight_decay_penalty=args.generator_weight_decay_penalty,
                  discriminator_weight_decay_penalty=args.discriminator_weight_decay_penalty,
+                 Batch_StyleFeature_Discrimination_Penalty=args.Batch_StyleFeature_Discrimination_Penalty,
 
                  Feature_Penalty_True_Fake_Target=args.Feature_Penalty_True_Fake_Target,
                  Feature_Penalty_Style_Reference=args.Feature_Penalty_Style_Reference,
