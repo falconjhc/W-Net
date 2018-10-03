@@ -8,15 +8,15 @@ import tensorflow as tf
 import argparse
 from model.feature_extractor_training import train_procedures
 
-exp_root_path = '/DataA/Harric/MSMC_Exp/'
+exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
 input_args = [
             '--data_dir_train_path',
-            'CASIA_64/HandWritingData/CASIA-HWDB1.1/',
+            'CASIA_64_Dataset/HandWritingData/CASIA-HWDB1.1/',
 
               '--data_dir_validation_path',
-            'CASIA_64/HandWritingData/CASIA-HWDB2.1/',
+            'CASIA_64_Dataset/HandWritingData/CASIA-HWDB2.1/',
 
               '--file_list_txt_train',
             '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt',
@@ -104,11 +104,15 @@ def main(_):
 
 
 
-
-
 args = parser.parse_args(input_args)
-args.data_dir_train_path = os.path.join(exp_root_path,args.data_dir_train_path)
-args.data_dir_validation_path = os.path.join(exp_root_path,args.data_dir_validation_path)
+args.data_dir_train_path=args.data_dir_train_path.split(',')
+args.data_dir_validation_path=args.data_dir_validation_path.split(',')
+args.file_list_txt_train=args.file_list_txt_train.split(',')
+args.file_list_txt_validation=args.file_list_txt_validation.split(',')
+for ii in range(len(args.data_dir_train_path)):
+    args.data_dir_train_path[ii] = os.path.join(exp_root_path,args.data_dir_train_path[ii])
+for ii in range(len(args.data_dir_validation_path)):
+    args.data_dir_validation_path[ii] = os.path.join(exp_root_path,args.data_dir_validation_path[ii])
 args.log_dir = os.path.join(exp_root_path,args.log_dir)
 if __name__ == '__main__':
     tf.app.run()

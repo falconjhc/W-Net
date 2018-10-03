@@ -79,7 +79,7 @@ class Dataset(object):
             w = img.shape[0]
             h = img.shape[0]
 
-            multiplier = random.uniform(1.00, 1.20)
+            multiplier = random.uniform(1.00, 1.50)
             nw = int(multiplier * w) + 1
             nh = int(multiplier * h) + 1
             shift_x = int(np.ceil(np.random.uniform(0.01, nw - w)))

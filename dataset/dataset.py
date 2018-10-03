@@ -263,8 +263,8 @@ class Dataset_Iterator(object):
             img_output = tf.slice(image_resized,
                                   [0, 0, 0],
                                   [self.input_width, self.input_width, self.input_filters])
-            img_output = tf.subtract(tf.divide(tf.cast(img_output, tf.float32), tf.constant(127.5, tf.float32)),
-                                     tf.constant(1, tf.float32))
+            # img_output = tf.subtract(tf.divide(tf.cast(img_output, tf.float32), tf.constant(127.5, tf.float32)),
+            #                          tf.constant(1, tf.float32))
             return img_output, label0_list, label1_list
 
         def _convert_label_to_one_hot(dense_label,voc):
@@ -376,8 +376,31 @@ class Dataset_Iterator(object):
         self.reference_label0_list_input_op_list = reference_label0_list_input_op_list
         self.reference_label1_list_input_op_list = reference_label1_list_input_op_list
 
-        true_style_label0_tensor_onehot =_convert_label_to_one_hot(dense_label=true_style_label0_tensor_dense, voc=self.label0_vec)
-        true_style_label1_tensor_onehot =_convert_label_to_one_hot(dense_label=true_style_label1_tensor_dense, voc=self.label1_vec)
+        true_style_label0_tensor_onehot =_convert_label_to_one_hot(dense_label=true_style_label0_tensor_dense,
+                                                                   voc=self.label0_vec)
+        true_style_label1_tensor_onehot =_convert_label_to_one_hot(dense_label=true_style_label1_tensor_dense,
+                                                                   voc=self.label1_vec)
+
+
+        img_all = tf.concat([true_style_img_tensor, all_prototype_tensor, all_reference_tensor], axis=3)
+        if self.augment:
+
+            crop_size = tf.random_uniform(shape=[],
+                                          minval=int(int(img_all.shape[1])*0.75),
+                                          maxval=int(img_all.shape[1])+1, dtype=tf.int32)
+            img_all_croppedimg_all_cropped = tf.random_crop(value=img_all,
+                                                            size=[int(img_all.shape[0]),
+                                                                  crop_size, crop_size,
+                                                                  int(img_all.shape[3])])
+            img_all = tf.image.resize_images(img_all_croppedimg_all_cropped, [self.input_width, self.input_width])
+
+        img_all = tf.subtract(tf.divide(tf.cast(img_all, tf.float32), tf.constant(GRAYSCALE_AVG, tf.float32)),
+                             tf.constant(1, tf.float32))
+        true_style_img_tensor = tf.expand_dims(img_all[:,:,:,0],axis=3)
+        all_prototype_tensor = img_all[:,:,:,1:int(all_prototype_tensor.shape[3])+1]
+        all_reference_tensor = img_all[:,:,:,int(all_prototype_tensor.shape[3])+1:]
+
+
 
 
         self.output_tensor_list = list()
