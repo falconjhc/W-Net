@@ -2162,11 +2162,11 @@ class WNet(object):
 
             info=""
 
-            # batch_true_style_train,\
-            # batch_train_prototype, batch_train_reference, \
-            # batch_train_label0_onehot, batch_train_label1_onehot,\
-            # batch_train_label0_dense, batch_train_label1_dense = \
-            #     data_provider.train_iterator.get_next_batch(sess=self.sess)
+            batch_true_style_train,\
+            batch_train_prototype, batch_train_reference, \
+            batch_train_label0_onehot, batch_train_label1_onehot,\
+            batch_train_label0_dense, batch_train_label1_dense = \
+                data_provider.train_iterator.get_next_batch(sess=self.sess)
 
             optimization_start = time.time()
 

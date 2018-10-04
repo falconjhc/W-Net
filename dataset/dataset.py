@@ -384,15 +384,32 @@ class Dataset_Iterator(object):
 
         img_all = tf.concat([true_style_img_tensor, all_prototype_tensor, all_reference_tensor], axis=3)
         if self.augment:
+            for ii in range(self.batch_size):
+                current_img = img_all[ii, :, :, :]
+                crop_size = tf.random_uniform(shape=[],
+                                              minval=int(int(img_all.shape[1])*0.75),
+                                              maxval=int(img_all.shape[1])+1, dtype=tf.int32)
+                cropped_img = tf.random_crop(value=current_img,
+                                             size=[crop_size, crop_size,
+                                                   int(img_all.shape[3])])
+                cropped_img = tf.image.resize_images(cropped_img, [self.input_width, self.input_width])
+                cropped_img = tf.reshape(cropped_img, [self.input_width, self.input_width, 1+self.content_input_number_actual+self.style_input_num])
+                cropped_img = tf.expand_dims(cropped_img, axis=0)
+                if ii == 0:
+                    img_all_new = cropped_img
+                else:
+                    img_all_new = tf.concat([img_all_new, cropped_img], axis=0)
+            img_all = img_all_new
 
-            crop_size = tf.random_uniform(shape=[],
-                                          minval=int(int(img_all.shape[1])*0.75),
-                                          maxval=int(img_all.shape[1])+1, dtype=tf.int32)
-            img_all_croppedimg_all_cropped = tf.random_crop(value=img_all,
-                                                            size=[int(img_all.shape[0]),
-                                                                  crop_size, crop_size,
-                                                                  int(img_all.shape[3])])
-            img_all = tf.image.resize_images(img_all_croppedimg_all_cropped, [self.input_width, self.input_width])
+
+            # img_all_croppedimg_all_cropped = tf.random_crop(value=img_all,
+            #                                                 size=[int(img_all.shape[0]),
+            #                                                       crop_size, crop_size,
+            #                                                       int(img_all.shape[3])])
+            # img_all = tf.image.resize_images(img_all_croppedimg_all_cropped, [self.input_width, self.input_width])
+            # img_all = tf.reshape(img_all, [self.batch_size,
+            #                                self.input_width, self.input_width,
+            #                                1+self.content_input_number_actual+self.style_input_num])
 
         img_all = tf.subtract(tf.divide(tf.cast(img_all, tf.float32), tf.constant(GRAYSCALE_AVG, tf.float32)),
                              tf.constant(1, tf.float32))
