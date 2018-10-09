@@ -3,6 +3,10 @@
 import struct
 import os
 import argparse
+import sys
+
+sys.path.append('..')
+
 
 import matplotlib.pyplot as plt
 from PIL import Image as img
@@ -10,33 +14,40 @@ import numpy as np
 import shutil
 import pylab
 
+import copy as cpy
+from utilities._parser_for_style_reference_and_content_prototype import image_show
+
+
+
+
 print_separater="##########################################################################"
 
 input_args = [
-              '--src_gnt_dir','/data/Harric/CASIA_Sources/HandWritingSources/CASIA-HWDB1.1/',
-              '--dst_png_dir_256','/data/Harric/CASIA_256/HandWritingData/SingleChars/CASIA-HWDB1.1/',
-              '--dst_png_dir_128','/data/Harric/CASIA_128/HandWritingData/SingleChars/CASIA-HWDB1.1/',
-              '--dst_png_dir_64','/data/Harric/CASIA_64/HandWritingData/SingleChars/CASIA-HWDB1.1/',
+              '--src_gnt_dir','/DataA/Harric/ChineseCharacterExp/CASIA_64_Dataset/Sources/HandWritingSources/CASIA-HWDB1.1/',
+              '--dst_png_dir','/DataA/Harric/ChineseCharacterExp/CASIA_64_Dataset/HandWritingData_New/CASIA-HWDB1.1/',
               '--num_writer_each_group','5']
 
 
 parser = argparse.ArgumentParser(description='Convert gnt to pngs')
 parser.add_argument('--src_gnt_dir', dest='src_gnt_dir', required=True, help='path of the source gnt')
-parser.add_argument('--dst_png_dir_256', dest='dst_png_dir_256', required=True, help='path of the target png')
-parser.add_argument('--dst_png_dir_128', dest='dst_png_dir_128', required=True, help='path of the target png')
-parser.add_argument('--dst_png_dir_64', dest='dst_png_dir_64', required=True, help='path of the target png')
-
+parser.add_argument('--dst_png_dir', dest='dst_png_dir', required=True, help='path of the target png')
 parser.add_argument('--num_writer_each_group', dest='num_writer_each_group', required=True, help='num_writer_each_group')
 
 
 args = parser.parse_args(input_args)
 
 
+def draw(im_np_matrix, threshold):
+    im_np_matrix = cpy.deepcopy(im_np_matrix)
+    im_np_vector = np.reshape(im_np_matrix, [im_np_matrix.shape[0] * im_np_matrix.shape[1] * im_np_matrix.shape[2], 1])
+    im_np_vector.flags.writeable = True
+    im_np_vector[np.where(im_np_vector < threshold)] = 0
+    im_np_vector[np.where(im_np_vector > threshold)] = 255
+    im_np_matrix = np.reshape(im_np_matrix, [im_np_matrix.shape[0], im_np_matrix.shape[1], im_np_matrix.shape[2]])
+    image_show(im_np_matrix)
 
 def Gnt_2_Png(src_path,
-              saving_path_prefix_256,
-              saving_path_prefix_128,
-              saving_path_prefix_64,):
+              saving_path_prefix,):
 
 
 
@@ -68,10 +79,12 @@ def Gnt_2_Png(src_path,
 
             im = im.resize((150, 150))
             im_np_matrix = np.asarray(im)
-            im_np_vector = np.reshape(im_np_matrix,[im_np_matrix.shape[0]*im_np_matrix.shape[1]*im_np_matrix.shape[2],1])
-            im_np_vector.flags.writeable = True
-            im_np_vector[np.where(im_np_vector < 240)] = 0
-            im_np_vector[np.where(im_np_vector > 240)] = 255
+
+            # im_np_vector = np.reshape(im_np_matrix,[im_np_matrix.shape[0]*im_np_matrix.shape[1]*im_np_matrix.shape[2],1])
+            # im_np_vector.flags.writeable = True
+            # im_np_vector[np.where(im_np_vector < 240)] = 0
+            # im_np_vector[np.where(im_np_vector > 240)] = 255
+
             im_np_matrix = np.reshape(im_np_matrix,[im_np_matrix.shape[0], im_np_matrix.shape[1], im_np_matrix.shape[2]])
             im = img.fromarray(np.uint8(im_np_matrix))
 
@@ -80,19 +93,13 @@ def Gnt_2_Png(src_path,
             filename = ("%09d_%s_%05d.png" % (count,character_id, writer_id))
 
 
-            save_path_with_file_name_256 = os.path.join(saving_path_prefix_256, filename)
-            im_output_256.save(save_path_with_file_name_256)
-
-            im_output_128 = im_output_256.resize((128, 128), img.ANTIALIAS)
-            save_path_with_file_name_128 = os.path.join(saving_path_prefix_128, filename)
-            im_output_128.save(save_path_with_file_name_128)
 
             im_output_64 = im_output_256.resize((64, 64), img.ANTIALIAS)
-            save_path_with_file_name_64 = os.path.join(saving_path_prefix_64, filename)
+            save_path_with_file_name_64 = os.path.join(saving_path_prefix, filename)
             im_output_64.save(save_path_with_file_name_64)
             count += 1
         else:
-            print("Abnormal:%s",save_path_with_file_name_256)
+            print("Abnormal:%s",saving_path_prefix)
 
     f.close()
 
@@ -124,16 +131,11 @@ if __name__ == "__main__":
 
 
 
-    if os.path.exists(args.dst_png_dir_256):
-        shutil.rmtree(args.dst_png_dir_256)
-    if os.path.exists(args.dst_png_dir_128):
-        shutil.rmtree(args.dst_png_dir_128)
-    if os.path.exists(args.dst_png_dir_64):
-        shutil.rmtree(args.dst_png_dir_64)
 
-    os.makedirs(args.dst_png_dir_256)
-    os.makedirs(args.dst_png_dir_128)
-    os.makedirs(args.dst_png_dir_64)
+    if os.path.exists(args.dst_png_dir):
+        shutil.rmtree(args.dst_png_dir)
+
+    os.makedirs(args.dst_png_dir)
 
 
     ii=1
@@ -154,19 +156,14 @@ if __name__ == "__main__":
             current_save_path = ("writer%05d_To_%05d" % (prev_writer_id,next_writer_id))
             print(current_save_path)
 
-            current_save_path_256 = os.path.join(args.dst_png_dir_256,current_save_path)
-            os.makedirs(current_save_path_256)
-            current_save_path_128 = os.path.join(args.dst_png_dir_128, current_save_path)
-            os.makedirs(current_save_path_128)
-            current_save_path_64 = os.path.join(args.dst_png_dir_64, current_save_path)
-            os.makedirs(current_save_path_64)
+
+            current_save_path = os.path.join(args.dst_png_dir, current_save_path)
+            os.makedirs(current_save_path)
 
 
 
         this_writer_counter = Gnt_2_Png(src_path=individual_path,
-                                        saving_path_prefix_256=current_save_path_256,
-                                        saving_path_prefix_128=current_save_path_128,
-                                        saving_path_prefix_64=current_save_path_64)
+                                        saving_path_prefix=current_save_path)
         full_counter+=this_writer_counter
         print("Writer:%d, Counter:%d/%d" % (writer_id,this_writer_counter,full_counter))
         print(print_separater)

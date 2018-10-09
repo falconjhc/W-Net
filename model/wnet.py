@@ -593,7 +593,7 @@ class WNet(object):
                                                                             merged_disp.shape[2]))})
         summary_writer.add_summary(summray_img, global_step.eval(session=self.sess))
 
-        if self.debug_mode==1 or ((self.debug_mode==0) and global_step.eval(session=self.sess)>=2500):
+        if self.debug_mode==1 or ((self.debug_mode==0) and global_step.eval(session=self.sess)>=5000):
             summary_writer.add_summary(summary_real_output, global_step.eval(session=self.sess))
             summary_writer.add_summary(summary_fake_output, global_step.eval(session=self.sess))
             summary_writer.add_summary(generator_summary_output, global_step.eval(session=self.sess))
@@ -1469,6 +1469,7 @@ class WNet(object):
         critic_logit_length = int(np.floor(math.log(discriminator_category_logit_length) / math.log(2)))
         critic_logit_length = np.power(2,critic_logit_length+1)
         critic_logit_length = np.max([critic_logit_length,512])
+        critic_logit_length = np.min([critic_logit_length, 1024])
 
         current_critic_logit_penalty = tf.placeholder(tf.float32, [], name='current_critic_logit_penalty')
 
@@ -1936,7 +1937,6 @@ class WNet(object):
             self.sess = tf.Session(config=config)
 
 
-
             # define the data set
             data_provider = DataProvider(batch_size=self.batch_size,
                                          info_print_interval=self.print_info_seconds / 10,
@@ -2162,11 +2162,19 @@ class WNet(object):
 
             info=""
 
-            batch_true_style_train,\
-            batch_train_prototype, batch_train_reference, \
-            batch_train_label0_onehot, batch_train_label1_onehot,\
-            batch_train_label0_dense, batch_train_label1_dense = \
-                data_provider.train_iterator.get_next_batch(sess=self.sess)
+            # batch_true_style_train,\
+            # batch_train_prototype, batch_train_reference, \
+            # batch_train_label0_onehot, batch_train_label1_onehot,\
+            # batch_train_label0_dense, batch_train_label1_dense, \
+            # true_style_threshold_train, content_threshold_train, style_threshold_train= \
+            #     data_provider.train_iterator.get_next_batch(sess=self.sess)
+            #
+            # batch_true_style_val, \
+            # batch_val_prototype, batch_val_reference, \
+            # batch_val_label0_onehot, batch_val_label1_onehot, \
+            # batch_val_label0_dense, batch_val_label1_dense,\
+            # true_style_threshold_val, content_threshold_val, style_threshold_val = \
+            #     data_provider.validate_iterator.get_next_batch(sess=self.sess)
 
             optimization_start = time.time()
 
@@ -2195,7 +2203,6 @@ class WNet(object):
         sample_start = time.time()
         print_info_start = time.time()
         record_start = time.time()
-        training_start_time = time.time()
         discriminator_handle = getattr(self, "discriminator_handle")
         feature_extractor_handle = getattr(self, "feature_extractor_handle")
         generator_handle = getattr(self, "generator_handle")
@@ -2248,8 +2255,7 @@ class WNet(object):
                 current_lr = update_lr
 
             for bid in range(self.itrs_for_current_epoch):
-
-                if time.time() - training_start_time <= 600:
+                if time.time() - training_start_time <= 1200 or ei < self.init_training_epochs:
                     summary_seconds = 60
                     sample_seconds = 60
                     print_info_seconds = 60
@@ -2287,10 +2293,8 @@ class WNet(object):
                            ei + 1, self.epoch,
                            bid + 1, self.itrs_for_current_epoch))
 
-
                     print("ItrDuration:%.2fses,FullDuration:%.2fhrs(%.2fdays);" %
                           (passed_itr, passed_full / 3600, passed_full / (3600 * 24)))
-
 
                     percentage_completed = float(global_step.eval(session=self.sess)) / float((self.epoch - ei_start) * self.itrs_for_current_epoch) * 100
                     percentage_to_be_fulfilled = 100 - percentage_completed
@@ -2301,8 +2305,6 @@ class WNet(object):
                         hrs_estimated_remaining / 24))
                     print("CriticPenalty:%.5f/%.3f;" % (current_critic_logit_penalty_value,
                                                         self.Discriminative_Penalty))
-
-
 
                     print("TrainingInfo:%s" % info)
                     print(self.print_separater)
@@ -2315,14 +2317,15 @@ class WNet(object):
                         print(self.print_separater)
 
 
-                if ((time.time()-summary_start>summary_seconds) and (self.debug_mode==0) and global_step.eval(session=self.sess)>=2500) \
+                if ((time.time()-summary_start>summary_seconds) and (self.debug_mode==0) and global_step.eval(session=self.sess)>=5000) \
                         or self.debug_mode==1:
                     summary_start = time.time()
 
                     if dis_vars_train:
                         d_summary = self.sess.run(
                             summary_handle.d_merged,
-                            feed_dict={discriminator_handle.current_critic_logit_penalty:current_critic_logit_penalty_value})
+                            feed_dict={discriminator_handle.current_critic_logit_penalty:
+                                           current_critic_logit_penalty_value})
 
 
                         summary_writer.add_summary(d_summary, global_step.eval(session=self.sess))
@@ -2340,7 +2343,6 @@ class WNet(object):
 
                 if time.time()-sample_start>sample_seconds or global_step.eval(session=self.sess)==global_step_start+1 or bid==self.itrs_for_current_epoch-1:
                     sample_start = time.time()
-
 
                     # check for train set
                     self.validate_model(train_mark=True,

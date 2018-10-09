@@ -1,4 +1,4 @@
-function Dgr_Reading(src_path,save_path_prefix_256,save_path_prefix_128,save_path_prefix_64,num_writer_each_group)
+function Dgr_Reading(src_path,save_path_prefix,num_writer_each_group)
 
 
 file_list = dir([src_path,'*.dgr']);
@@ -26,18 +26,14 @@ for ii = 1:length(file_list)
             next_writer_id=last_writer_id;
         end
         
-        save_path_prefix_256_current=sprintf([save_path_prefix_256,'writer%05d_To_%05d/'],prev_writer_id,next_writer_id);
-        mkdir(save_path_prefix_256_current);
-        save_path_prefix_128_current=sprintf([save_path_prefix_128,'writer%05d_To_%05d/'],prev_writer_id,next_writer_id);
-        mkdir(save_path_prefix_128_current);
-        save_path_prefix_64_current=sprintf([save_path_prefix_64,'writer%05d_To_%05d/'],prev_writer_id,next_writer_id);
-        mkdir(save_path_prefix_64_current);
+        save_path_prefix_current=sprintf([save_path_prefix,'writer%05d_To_%05d/'],prev_writer_id,next_writer_id);
+        mkdir(save_path_prefix_current);
         
         
-        disp(save_path_prefix_256)
+        disp(save_path_prefix)
     end
     
-    [thiswriter_valid, thiswriter_full,character_in_one_writer_counter]=Dgr_Reading_Implementation([src_path,file_list(ii).name],save_path_prefix_256_current,save_path_prefix_128_current,save_path_prefix_64_current,character_in_one_writer_counter);
+    [thiswriter_valid, thiswriter_full,character_in_one_writer_counter]=Dgr_Reading_Implementation([src_path,file_list(ii).name],save_path_prefix_current,character_in_one_writer_counter);
     full_counter = full_counter + thiswriter_full;
     full_valid_counter = full_valid_counter +thiswriter_valid;
     disp(sprintf([src_path,file_list(ii).name,': %d/%d, FullValid/ThisWriterValid:%d/%d, Full/ThisWriterFull:%d/%d'],ii,length(file_list),full_valid_counter,thiswriter_valid,full_counter,thiswriter_full))
@@ -54,7 +50,7 @@ end
 
 
 
-function [valid_counter,full_counter,character_in_one_writer_counter]=Dgr_Reading_Implementation(input_path,save_prefix_256,save_prefix_128,save_prefix_64,character_in_one_writer_counter)
+function [valid_counter,full_counter,character_in_one_writer_counter]=Dgr_Reading_Implementation(input_path,save_prefix_64,character_in_one_writer_counter)
 
 fid=fopen(input_path);
 file_name_start_index=strfind(input_path,'/');
@@ -105,10 +101,10 @@ for i=1:line_n
         bitmap_curt=fread(fid,size,'uchar');
         bitmap_curt=(reshape(bitmap_curt,[w h]))';
         bitmap_curt=imresize(bitmap_curt,[150,150]);
-        check1=find(bitmap_curt>240);
-        check2=find(bitmap_curt<=240);
-        bitmap_curt(check1)=255;
-        bitmap_curt(check2)=0;
+%         check1=find(bitmap_curt>240);
+%         check2=find(bitmap_curt<=240);
+%         bitmap_curt(check1)=255;
+%         bitmap_curt(check2)=0;
         
         bitmap_curt=bitmap_curt/255;
         
@@ -124,12 +120,7 @@ for i=1:line_n
             writer_id_formatted =sprintf('%05d',writerId);
             counter_formatted=sprintf('%09d',character_in_one_writer_counter);
             
-            save_file_name_256=[save_prefix_256,counter_formatted,'_',class_label_formatted,'_',writer_id_formatted,'.png'];
-            imwrite(output_pict_256,save_file_name_256)
-            
-            output_pict_128 = imresize(output_pict_256,[128,128]);
-            save_file_name_128=[save_prefix_128,counter_formatted,'_',class_label_formatted,'_',writer_id_formatted,'.png'];
-            imwrite(output_pict_128,save_file_name_128)
+
             
             output_pict_64 = imresize(output_pict_256,[64,64]);
             save_file_name_64=[save_prefix_64,counter_formatted,'_',class_label_formatted,'_',writer_id_formatted,'.png'];
