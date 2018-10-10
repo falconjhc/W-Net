@@ -13,7 +13,7 @@ from tensorflow.python.client import device_lib
 import copy as cpy
 
 STANDARD_GRAYSCALE_THRESHOLD_VALUE = 240
-ALTERNATE_GRAYSCALE_LOW=140
+ALTERNATE_GRAYSCALE_LOW=170
 ALTERNATE_GRAYSCALE_HGH=250
 
 # GRAYSCALE_AVG = 127.5
@@ -267,8 +267,6 @@ class Dataset_Iterator(object):
             img_output = tf.slice(image_resized,
                                   [0, 0, 0],
                                   [self.input_width, self.input_width, self.input_filters])
-
-
             return img_output, label0_list, label1_list
 
 
@@ -283,15 +281,13 @@ class Dataset_Iterator(object):
                 mask_tensor = STANDARD_GRAYSCALE_THRESHOLD_VALUE * \
                               tf.ones(shape=input_tensor.shape,
                                       dtype=input_tensor.dtype)
-                threshold_v = STANDARD_GRAYSCALE_THRESHOLD_VALUE
+                threshold = mask_tensor
             else:
-                threshold_v = tf.random_uniform(shape=[1, 1],
+                threshold_v = tf.random_uniform(shape=[int(input_tensor.shape[0]), 1, 1, 1],
                                                 minval=ALTERNATE_GRAYSCALE_LOW,
                                                 maxval=ALTERNATE_GRAYSCALE_HGH,
                                                 dtype=tf.float32)
-                threshold = tf.expand_dims(tf.tile(threshold_v, [int(input_tensor.shape[0]),
-                                                                 int(input_tensor.shape[1])]),
-                                           axis=2)
+                threshold = tf.tile(threshold_v, [1, int(input_tensor.shape[1]), int(input_tensor.shape[2]), 1])
                 mask_tensor = tf.multiply(threshold,
                                           tf.ones(shape=input_tensor.shape,
                                                   dtype=input_tensor.dtype))
@@ -300,7 +296,7 @@ class Dataset_Iterator(object):
             output_tensor = tf.where(condition,
                                      tf.ones_like(input_tensor),
                                      tf.zeros_like(input_tensor))
-            return output_tensor, tf.reshape(threshold_v,shape=[1])
+            return output_tensor, threshold
 
 
 
@@ -319,6 +315,11 @@ class Dataset_Iterator(object):
         true_style_img_tensor, true_style_label0_tensor_dense, true_style_label1_tensor_dense = \
             true_style_iterator.get_next()
         true_style_img_tensor = tf.cast(true_style_img_tensor,tf.float32)
+        true_style_img_tensor, true_style_threshold = \
+            _random_thickness(input_tensor=true_style_img_tensor,
+                              fixed_mask=True)
+
+
         # output_img_tensor = true_style_img_tensor
 
         self.true_style_iterator = true_style_iterator
@@ -332,6 +333,7 @@ class Dataset_Iterator(object):
         prototype_data_list_input_op_list = list()
         prototype_label0_list_input_op_list = list()
         prototype_label1_list_input_op_list = list()
+        content_prototype_threshold = list()
         for ii in range(self.content_input_num):
             prototype_dataset, \
             prototype_data_list_input_op, \
@@ -342,6 +344,16 @@ class Dataset_Iterator(object):
                                       num_parallel_calls=self.thread_num).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
             prototype_iterator = prototype_dataset.make_initializable_iterator()
             prototype_img_tensor, prototype_label0_tensor, prototype_label1_tensor = prototype_iterator.get_next()
+
+            # data augment for content prototype w.r.t. random thickness
+            prototype_img_tensor = tf.cast(prototype_img_tensor, tf.float32)
+            prototype_img_tensor, current_threshold = \
+                _random_thickness(input_tensor=prototype_img_tensor,
+                                  fixed_mask=(self.augment == False))
+            content_prototype_threshold.append(current_threshold)
+
+
+
             prototype_iterator_list.append(prototype_iterator)
             prototype_data_list_input_op_list.append(prototype_data_list_input_op)
             prototype_label0_list_input_op_list.append(prototype_label0_list_input_op)
@@ -381,6 +393,7 @@ class Dataset_Iterator(object):
         reference_data_list_input_op_list = list()
         reference_label0_list_input_op_list = list()
         reference_label1_list_input_op_list = list()
+        style_reference_threshold = list()
         for ii in range(self.style_input_num):
             reference_dataset, \
             reference_data_list_input_op, \
@@ -391,6 +404,13 @@ class Dataset_Iterator(object):
                                                       num_parallel_calls=self.thread_num).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(3)
             reference_iterator = reference_dataset.make_initializable_iterator()
             reference_img_tensor, reference_label0_tensor, reference_label1_tensor = reference_iterator.get_next()
+
+            # data augment for reference style w.r.t. random thickness
+            reference_img_tensor = tf.cast(reference_img_tensor, tf.float32)
+            reference_img_tensor, current_threshold = \
+                _random_thickness(input_tensor=reference_img_tensor,
+                                  fixed_mask=(self.augment == False))
+            style_reference_threshold.append(current_threshold)
 
             reference_iterator_list.append(reference_iterator)
             reference_data_list_input_op_list.append(reference_data_list_input_op)
@@ -414,75 +434,6 @@ class Dataset_Iterator(object):
         true_style_label1_tensor_onehot =_convert_label_to_one_hot(dense_label=true_style_label1_tensor_dense,
                                                                    voc=self.label1_vec)
 
-        # thickness binarization fixed for training:
-        for ii in range(self.batch_size):
-            current_true_style = true_style_img_tensor[ii, :, :, :]
-            current_true_style_new, current_threshold \
-                = _random_thickness(input_tensor=current_true_style,
-                                    fixed_mask=True)
-            if ii == 0:
-                new_true_style_img_tensor = tf.expand_dims(current_true_style_new, axis=0)
-                true_style_threshold = current_threshold
-            else:
-                new_true_style_img_tensor = tf.concat([new_true_style_img_tensor,
-                                                       tf.expand_dims(current_true_style_new, axis=0)],
-                                                      axis=0)
-                true_style_threshold = tf.concat([true_style_threshold,current_threshold], axis=0)
-
-        true_style_img_tensor = new_true_style_img_tensor
-
-        # thickness binarization random or fixed for content prototype:
-        for ii in range(self.batch_size):
-            for jj in range(int(all_prototype_tensor.shape[3])):
-                current_prototype = tf.expand_dims(all_prototype_tensor[ii, :, :, jj], axis=2)
-                current_true_style_new, current_threshold = \
-                    _random_thickness(input_tensor=current_prototype,
-                                      fixed_mask=(self.augment==False))
-                if jj == 0:
-                    current_content_prototype_line = current_true_style_new
-                    current_threshold_line = current_threshold
-                else:
-                    current_content_prototype_line = tf.concat([current_content_prototype_line,
-                                                                current_true_style_new], axis=2)
-                    current_threshold_line = tf.concat([current_threshold_line, current_threshold], axis=0)
-            if ii == 0:
-                all_prototype_tensor_new = tf.expand_dims(current_content_prototype_line, axis=0)
-                content_prototype_threshold = tf.expand_dims(current_threshold_line, axis=0)
-            else:
-                all_prototype_tensor_new = tf.concat([all_prototype_tensor_new,
-                                                      tf.expand_dims(current_content_prototype_line, axis=0)],
-                                                     axis=0)
-                content_prototype_threshold = tf.concat([content_prototype_threshold,
-                                                         tf.expand_dims(current_threshold_line, axis=0)], axis=0)
-        all_prototype_tensor = all_prototype_tensor_new
-
-        # thickness binarization random or fixed for style reference:
-        for ii in range(self.batch_size):
-            for jj in range(int(all_reference_tensor.shape[3])):
-                current_reference = tf.expand_dims(all_reference_tensor[ii, :, :, jj], axis=2)
-                current_reference_new, current_threshold = \
-                    _random_thickness(input_tensor=current_reference,
-                                      fixed_mask=(self.augment==False))
-                if jj == 0:
-                    current_style_reference_line = current_reference_new
-                    current_threshold_line = current_threshold
-                else:
-                    current_style_reference_line = tf.concat([current_style_reference_line,
-                                                              current_reference_new], axis=2)
-                    current_threshold_line = tf.concat([current_threshold_line, current_threshold], axis=0)
-            if ii == 0:
-                all_reference_tensor_new = tf.expand_dims(current_style_reference_line, axis=0)
-                style_reference_threshold = tf.expand_dims(current_threshold_line, axis=0)
-            else:
-                all_reference_tensor_new = tf.concat([all_reference_tensor_new,
-                                                      tf.expand_dims(current_style_reference_line, axis=0)],
-                                                     axis=0)
-                style_reference_threshold = tf.concat([style_reference_threshold,
-                                                       tf.expand_dims(current_threshold_line, axis=0)],
-                                                        axis=0)
-        all_reference_tensor = all_reference_tensor_new
-
-
         # data augmentation
         if self.augment:
 
@@ -494,8 +445,7 @@ class Dataset_Iterator(object):
                                               minval=int(int(img_all.shape[1])*0.75),
                                               maxval=int(img_all.shape[1])+1, dtype=tf.int32)
                 cropped_img = tf.random_crop(value=current_img,
-                                             size=[crop_size, crop_size,
-                                                   int(img_all.shape[3])])
+                                             size=[crop_size, crop_size, int(img_all.shape[3])])
                 cropped_img = tf.image.resize_images(cropped_img, [self.input_width, self.input_width])
                 cropped_img = tf.reshape(cropped_img, [self.input_width, self.input_width, 1+self.content_input_number_actual+self.style_input_num])
                 cropped_img = tf.expand_dims(cropped_img, axis=0)

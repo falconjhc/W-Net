@@ -303,44 +303,44 @@ def train_procedures(args_input):
             accuracy_k = [1, 3, 5, 10, 20, 50]
             for ei in ei_ranges:
 
-                final_accuracy_label0, final_accuracy_label1, final_label0_top_k_correct_list = \
-                    performance_evaluation(sess=sess,
-                                           data_provider=data_provider,
-                                           batch_size=batch_size,
-                                           evalHandle=eval_handle,
-                                           batch_label0_logits_op=acry_0_lgt,
-                                           batch_label1_logits_op=acry_1_lgt,
-                                           ei=epoch_step.eval(session=sess),
-                                           print_info_second=summary_seconds,
-                                           accuracy_k=accuracy_k)
-                print(print_separater)
-                print(print_separater)
-                print(print_separater)
-                print(print_separater)
-                print(print_separater)
-
-                if final_accuracy_label0 > highest_label0_accuracy:
-                    highest_label0_accuracy = final_accuracy_label0
-                    highest_accuracy_line1_info = "CurrentTestHighestAccuracy@Label0:%.3f @ Epoch:%d;" % (highest_label0_accuracy,ei)
-                    line2 = "Label0_TopK @: "
-                    for ii in accuracy_k:
-                        if not ii == accuracy_k[len(accuracy_k) - 1]:
-                            line2 = line2 + '%d/' % ii
-                        else:
-                            line2 = line2 + '%d:' % ii
-                    tmp_counter = 0
-                    for ii in final_label0_top_k_correct_list:
-                        if not tmp_counter == len(final_label0_top_k_correct_list) - 1:
-                            line2 = line2 + '%.3f/' % ii
-                        else:
-                            line2 = line2 + '%.3f;' % ii
-                        tmp_counter += 1
-                    highest_accuracy_line2_info = line2
-
-                if final_accuracy_label1 > highest_label1_accuracy:
-                    highest_label1_accuracy = final_accuracy_label1
-                    highest_accuracy_line3_info = "CurrentTestHighestAccuracy@Label1:%.3f @ Epoch:%d;" % (highest_label1_accuracy, ei)
-
+                # final_accuracy_label0, final_accuracy_label1, final_label0_top_k_correct_list = \
+                #     performance_evaluation(sess=sess,
+                #                            data_provider=data_provider,
+                #                            batch_size=batch_size,
+                #                            evalHandle=eval_handle,
+                #                            batch_label0_logits_op=acry_0_lgt,
+                #                            batch_label1_logits_op=acry_1_lgt,
+                #                            ei=epoch_step.eval(session=sess),
+                #                            print_info_second=summary_seconds,
+                #                            accuracy_k=accuracy_k)
+                # print(print_separater)
+                # print(print_separater)
+                # print(print_separater)
+                # print(print_separater)
+                # print(print_separater)
+                #
+                # if final_accuracy_label0 > highest_label0_accuracy:
+                #     highest_label0_accuracy = final_accuracy_label0
+                #     highest_accuracy_line1_info = "CurrentTestHighestAccuracy@Label0:%.3f @ Epoch:%d;" % (highest_label0_accuracy,ei)
+                #     line2 = "Label0_TopK @: "
+                #     for ii in accuracy_k:
+                #         if not ii == accuracy_k[len(accuracy_k) - 1]:
+                #             line2 = line2 + '%d/' % ii
+                #         else:
+                #             line2 = line2 + '%d:' % ii
+                #     tmp_counter = 0
+                #     for ii in final_label0_top_k_correct_list:
+                #         if not tmp_counter == len(final_label0_top_k_correct_list) - 1:
+                #             line2 = line2 + '%.3f/' % ii
+                #         else:
+                #             line2 = line2 + '%.3f;' % ii
+                #         tmp_counter += 1
+                #     highest_accuracy_line2_info = line2
+                #
+                # if final_accuracy_label1 > highest_label1_accuracy:
+                #     highest_label1_accuracy = final_accuracy_label1
+                #     highest_accuracy_line3_info = "CurrentTestHighestAccuracy@Label1:%.3f @ Epoch:%d;" % (highest_label1_accuracy, ei)
+                #
 
 
 
@@ -475,11 +475,11 @@ def train_procedures(args_input):
                         print("CrossEntropyLoss:%f/%f" % (batch_label1_loss_ce,batch_label0_loss_ce))
                         print("CenterLoss:%f/%f" % (batch_label1_loss_ct,batch_label0_loss_ct))
                         print(print_separater)
-                        print(highest_accuracy_line3_info)
-                        print(highest_accuracy_line1_info)
-                        print(highest_accuracy_line2_info)
-                        print(print_separater)
-                        print(print_separater)
+                        # print(highest_accuracy_line3_info)
+                        # print(highest_accuracy_line1_info)
+                        # print(highest_accuracy_line2_info)
+                        # print(print_separater)
+                        # print(print_separater)
 
 
 

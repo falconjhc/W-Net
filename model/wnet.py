@@ -1647,8 +1647,12 @@ class WNet(object):
 
             d_loss_real = tf.reduce_mean(d_loss_real) * self.Discriminative_Penalty
             d_loss_fake = tf.reduce_mean(d_loss_fake) * self.Discriminative_Penalty
-            d_loss_real_fake_summary = tf.summary.scalar("TrainingProgress_DiscriminatorRealFakeLoss",
+            #d_loss_real_fake_summary = tf.summary.scalar("TrainingProgress_DiscriminatorRealFakeLoss",
+            #                                             tf.reduce_mean(tf.abs(real_Discriminator_logits - fake_Discriminator_logits)) / self.Discriminative_Penalty)
+            d_loss_real_fake_summary1 = tf.summary.scalar("TrainingProgress/LogitDifferenceMean",
                                                          tf.reduce_mean(tf.abs(real_Discriminator_logits - fake_Discriminator_logits)) / self.Discriminative_Penalty)
+            d_loss_real_fake_summary2 = tf.summary.scalar("TrainingProgress/AdversarialDifference",
+                                                         tf.abs(d_loss_real + d_loss_fake) / self.Discriminative_Penalty)
             if self.Discriminator_Gradient_Penalty > 10 * eps:
                 d_gradient_loss = discriminator_slopes
                 d_gradient_loss = tf.reduce_mean(d_gradient_loss) * self.Discriminator_Gradient_Penalty
@@ -1658,7 +1662,8 @@ class WNet(object):
                 d_loss += d_gradient_loss
                 d_merged_summary = tf.summary.merge([d_merged_summary,
                                                      d_gradient_loss_summary,
-                                                     d_loss_real_fake_summary])
+                                                     d_loss_real_fake_summary1,
+						     d_loss_real_fake_summary2])
 
             cheat_loss = fake_Discriminator_logits
 
@@ -2162,19 +2167,19 @@ class WNet(object):
 
             info=""
 
-            # batch_true_style_train,\
-            # batch_train_prototype, batch_train_reference, \
-            # batch_train_label0_onehot, batch_train_label1_onehot,\
-            # batch_train_label0_dense, batch_train_label1_dense, \
-            # true_style_threshold_train, content_threshold_train, style_threshold_train= \
-            #     data_provider.train_iterator.get_next_batch(sess=self.sess)
-            #
-            # batch_true_style_val, \
-            # batch_val_prototype, batch_val_reference, \
-            # batch_val_label0_onehot, batch_val_label1_onehot, \
-            # batch_val_label0_dense, batch_val_label1_dense,\
-            # true_style_threshold_val, content_threshold_val, style_threshold_val = \
-            #     data_provider.validate_iterator.get_next_batch(sess=self.sess)
+            batch_true_style_train,\
+            batch_train_prototype, batch_train_reference, \
+            batch_train_label0_onehot, batch_train_label1_onehot,\
+            batch_train_label0_dense, batch_train_label1_dense, \
+            true_style_threshold_train, content_threshold_train, style_threshold_train= \
+                data_provider.train_iterator.get_next_batch(sess=self.sess)
+
+            batch_true_style_val, \
+            batch_val_prototype, batch_val_reference, \
+            batch_val_label0_onehot, batch_val_label1_onehot, \
+            batch_val_label0_dense, batch_val_label1_dense,\
+            true_style_threshold_val, content_threshold_val, style_threshold_val = \
+                data_provider.validate_iterator.get_next_batch(sess=self.sess)
 
             optimization_start = time.time()
 
