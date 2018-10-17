@@ -401,7 +401,7 @@ class Dataset_Iterator(object):
                 _get_tensor_slice()
 
             reference_dataset = reference_dataset.map(map_func=_parser_func,
-                                                      num_parallel_calls=self.thread_num).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(3)
+                                                      num_parallel_calls=self.thread_num).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
             reference_iterator = reference_dataset.make_initializable_iterator()
             reference_img_tensor, reference_label0_tensor, reference_label1_tensor = reference_iterator.get_next()
 

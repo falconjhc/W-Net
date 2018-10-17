@@ -25,9 +25,9 @@ from dataset.dataset import DataProvider
 
 from utilities.utils import scale_back_for_img, scale_back_for_dif, merge, correct_ckpt_path
 from utilities.utils import image_show
-from model.gan_networks import discriminator_mdy_5_convs
-from model.gan_networks import discriminator_mdy_6_convs
-from model.gan_networks import discriminator_mdy_6_convs_tower_version1
+from model.gan_networks_MinMaxAvg import discriminator_mdy_5_convs
+from model.gan_networks_MinMaxAvg import discriminator_mdy_6_convs
+from model.gan_networks_MinMaxAvg import discriminator_mdy_6_convs_tower_version1
 
 
 from model.gan_networks import vgg_16_net as feature_extractor_network
@@ -593,7 +593,7 @@ class WNet(object):
                                                                             merged_disp.shape[2]))})
         summary_writer.add_summary(summray_img, global_step.eval(session=self.sess))
 
-        if self.debug_mode==1 or ((self.debug_mode==0) and global_step.eval(session=self.sess)>=5000):
+        if self.debug_mode==1 or ((self.debug_mode==0) and global_step.eval(session=self.sess)>=2500):
             summary_writer.add_summary(summary_real_output, global_step.eval(session=self.sess))
             summary_writer.add_summary(summary_fake_output, global_step.eval(session=self.sess))
             summary_writer.add_summary(generator_summary_output, global_step.eval(session=self.sess))
@@ -988,7 +988,7 @@ class WNet(object):
                 build_feature_extractor(input_target_infer=input_target_infer,
                                         input_true_img=data_provider.train_iterator.output_tensor_list[0],
                                         label0_length=len(self.involved_label0_list),
-                                        label1_length=len(self.involved_label1_list),
+                                        label1_length=-1,
                                         extractor_usage='TrueFake_FeatureExtractor',
                                         output_high_level_features=[1,2,3,4,5])
             g_loss += true_fake_feature_loss_mse * self.Feature_Penalty_True_Fake_Target
@@ -1018,18 +1018,22 @@ class WNet(object):
                                                        infer_logits=true_fake_infer_list[0],
                                                        summary_name="Extractor_TrueFake/Lb0")
 
-            summary_train_real_merged_label1, \
-            summary_train_fake_merged_label1, \
-            summary_val_real_merged_label1, \
-            summary_val_fake_merged_label1 = \
-                define_entropy_accuracy_calculation_op(true_labels=true_label1,
-                                                       infer_logits=true_fake_infer_list[1],
-                                                       summary_name="Extractor_TrueFake/Lb1")
+            # summary_train_real_merged_label1, \
+            # summary_train_fake_merged_label1, \
+            # summary_val_real_merged_label1, \
+            # summary_val_fake_merged_label1 = \
+            #     define_entropy_accuracy_calculation_op(true_labels=true_label1,
+            #                                            infer_logits=true_fake_infer_list[1],
+            #                                            summary_name="Extractor_TrueFake/Lb1")
 
-            extr_trn_real_merged = tf.summary.merge([extr_trn_real_merged, summary_train_real_merged_label0, summary_train_real_merged_label1])
-            extr_trn_fake_merged = tf.summary.merge([extr_trn_fake_merged, summary_train_fake_merged_label0, summary_train_fake_merged_label1])
-            extr_val_real_merged = tf.summary.merge([extr_val_real_merged, summary_val_real_merged_label0, summary_val_real_merged_label1])
-            extr_val_fake_merged = tf.summary.merge([extr_val_fake_merged, summary_val_fake_merged_label0, summary_val_fake_merged_label1])
+            # extr_trn_real_merged = tf.summary.merge([extr_trn_real_merged, summary_train_real_merged_label0, summary_train_real_merged_label1])
+            # extr_trn_fake_merged = tf.summary.merge([extr_trn_fake_merged, summary_train_fake_merged_label0, summary_train_fake_merged_label1])
+            # extr_val_real_merged = tf.summary.merge([extr_val_real_merged, summary_val_real_merged_label0, summary_val_real_merged_label1])
+            # extr_val_fake_merged = tf.summary.merge([extr_val_fake_merged, summary_val_fake_merged_label0, summary_val_fake_merged_label1])
+            extr_trn_real_merged = tf.summary.merge([extr_trn_real_merged, summary_train_real_merged_label0])
+            extr_trn_fake_merged = tf.summary.merge([extr_trn_fake_merged, summary_train_fake_merged_label0])
+            extr_val_real_merged = tf.summary.merge([extr_val_real_merged, summary_val_real_merged_label0])
+            extr_val_fake_merged = tf.summary.merge([extr_val_fake_merged, summary_val_fake_merged_label0])
 
             print("TrueFakeExtractor @ %s with %s;" % (self.feature_extractor_device, network_info))
 
@@ -1100,7 +1104,7 @@ class WNet(object):
                 build_feature_extractor(input_target_infer=input_target_infer,
                                         input_true_img = selected_style_reference,
                                         label0_length=-1,
-                                        label1_length=len(self.involved_label1_list),
+                                        label1_length=-1,
                                         extractor_usage='StyleReference_FeatureExtractor',
                                         output_high_level_features=[3,4,5])
             g_loss += style_reference_feature_mse_loss * self.Feature_Penalty_Style_Reference
@@ -1119,18 +1123,18 @@ class WNet(object):
             extr_vars_style_reference = self.variable_dict(var_input=extr_vars_style_reference, delete_name_from_character='/')
             saver_extractor_style_reference = tf.train.Saver(max_to_keep=1, var_list=extr_vars_style_reference)
 
-            summary_train_real_merged_label1, \
-            summary_train_fake_merged_label1, \
-            summary_val_real_merged_label1, \
-            summary_val_fake_merged_label1 = \
-                define_entropy_accuracy_calculation_op(true_labels=true_label1,
-                                                       infer_logits=style_reference_infer_list[0],
-                                                       summary_name="Extractor_StyleReference/Lb1")
+            # summary_train_real_merged_label1, \
+            # summary_train_fake_merged_label1, \
+            # summary_val_real_merged_label1, \
+            # summary_val_fake_merged_label1 = \
+            #     define_entropy_accuracy_calculation_op(true_labels=true_label1,
+            #                                            infer_logits=style_reference_infer_list[0],
+            #                                            summary_name="Extractor_StyleReference/Lb1")
 
-            extr_trn_real_merged = tf.summary.merge([extr_trn_real_merged, summary_train_real_merged_label1])
-            extr_trn_fake_merged = tf.summary.merge([extr_trn_fake_merged, summary_train_fake_merged_label1])
-            extr_val_real_merged = tf.summary.merge([extr_val_real_merged, summary_val_real_merged_label1])
-            extr_val_fake_merged = tf.summary.merge([extr_val_fake_merged, summary_val_fake_merged_label1])
+            # extr_trn_real_merged = tf.summary.merge([extr_trn_real_merged, summary_train_real_merged_label1])
+            # extr_trn_fake_merged = tf.summary.merge([extr_trn_fake_merged, summary_train_fake_merged_label1])
+            # extr_val_real_merged = tf.summary.merge([extr_val_real_merged, summary_val_real_merged_label1])
+            # extr_val_fake_merged = tf.summary.merge([extr_val_fake_merged, summary_val_fake_merged_label1])
             print("StyleReferenceExtractor @ %s with %s;" % (self.feature_extractor_device, network_info))
 
         else:
@@ -2276,7 +2280,7 @@ class WNet(object):
 
                 if epoch_step.eval(session=self.sess) < self.init_training_epochs:
                     current_critic_logit_penalty_value = (float(global_step.eval(session=self.sess))/float(self.init_training_epochs*self.itrs_for_current_epoch))*self.Discriminative_Penalty + eps
-                    current_lr_real = current_lr * 0.1
+                    current_lr_real = current_lr
                 else:
                     current_critic_logit_penalty_value = self.Discriminative_Penalty
                     current_lr_real = current_lr
@@ -2322,7 +2326,7 @@ class WNet(object):
                         print(self.print_separater)
 
 
-                if ((time.time()-summary_start>summary_seconds) and (self.debug_mode==0) and global_step.eval(session=self.sess)>=5000) \
+                if ((time.time()-summary_start>summary_seconds) and (self.debug_mode==0) and global_step.eval(session=self.sess)>=2500) \
                         or self.debug_mode==1:
                     summary_start = time.time()
 

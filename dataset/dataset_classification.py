@@ -6,17 +6,12 @@ import gc
 from tensorflow.python.framework import ops
 from tensorflow.python.framework import dtypes
 from utilities.utils import image_show
-import scipy.misc as misc
 
 import matplotlib.pyplot as plt
 from utilities.utils import shift_and_resize_image
 
 GRAYSCALE_AVG = 127.5
 STANDARD_IMAGE_WIDTH = 256
-
-STANDARD_GRAYSCALE_THRESHOLD_VALUE = 240
-ALTERNATE_GRAYSCALE_LOW=170
-ALTERNATE_GRAYSCALE_HGH=250
 
 
 class Dataset(object):
@@ -80,6 +75,19 @@ class Dataset(object):
 
     def get_next_batch(self,sess,augment):
 
+        def augment_batch_images(img):
+            w = img.shape[0]
+            h = img.shape[0]
+
+            multiplier = random.uniform(1.00, 1.50)
+            nw = int(multiplier * w) + 1
+            nh = int(multiplier * h) + 1
+            shift_x = int(np.ceil(np.random.uniform(0.01, nw - w)))
+            shift_y = int(np.ceil(np.random.uniform(0.01, nh - h)))
+            img = shift_and_resize_image(img, shift_x, shift_y, nw, nh)
+            return img
+
+
 
 
         batch_images, \
@@ -92,29 +100,9 @@ class Dataset(object):
         if augment:
             for ii in range(self.batch_size):
                 curt_img = np.squeeze(batch_images[ii,:,:,:])
-
-                crop_size = np.random.randint(low=curt_img.shape[0]*0.75,
-                                              high=curt_img.shape[1]+1)
-                start_p_h = np.random.randint(low=0, high=curt_img.shape[1]-crop_size+1)
-                start_p_v = np.random.randint(low=0, high=curt_img.shape[0]-crop_size+1)
-
-                cropped_img = curt_img[start_p_v:start_p_v+crop_size,
-                              start_p_h:start_p_h+crop_size]
-
-                curt_img = misc.imresize(cropped_img, [curt_img.shape[0], curt_img.shape[1]])
-
-                threshold = np.int32(np.random.uniform(low=ALTERNATE_GRAYSCALE_LOW,high=ALTERNATE_GRAYSCALE_HGH))
-                curt_img[np.where(curt_img < threshold)] = 0
-                curt_img[np.where(curt_img >= threshold)] = 255
-
+                curt_img = augment_batch_images(curt_img)
                 batch_images[ii,:,:,:] = np.reshape(curt_img,[curt_img.shape[0],curt_img.shape[1],1])
-        else:
-            for ii in range(self.batch_size):
-                curt_img = np.squeeze(batch_images[ii, :, :, :])
-                threshold = STANDARD_GRAYSCALE_THRESHOLD_VALUE
-                curt_img[np.where(curt_img < threshold)] = 0
-                curt_img[np.where(curt_img >= threshold)] = 255
-                batch_images[ii, :, :, :] = np.reshape(curt_img, [curt_img.shape[0], curt_img.shape[1], 1])
+
 
 
         batch_images = batch_images.astype(np.float32) / GRAYSCALE_AVG - 1
@@ -153,8 +141,8 @@ class DataProvider(object):
         train_data_list, \
         train_label0_list, \
         train_label1_list, \
-        _, \
-        _=\
+        self.label1_vec, \
+        self.label0_vec=\
             self.read_file_list(data_dir=self.data_dir_train_path,
                                 txt_path=file_list_txt_path_train)
 
@@ -173,9 +161,6 @@ class DataProvider(object):
             train_data_list.extend(validation_data_list)
             train_label0_list.extend(validation_label0_list)
             train_label1_list.extend(validation_label1_list)
-            
-        self.label1_vec = np.unique(train_label1_list)
-        self.label0_vec = np.unique(train_label0_list)
 
 
         self.train = Dataset(data_list=train_data_list,

@@ -18,7 +18,7 @@ input_args = [
 	  'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
               '--file_list_txt_train',
-      '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt',
+    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt',
 
               '--file_list_txt_validation',
 	  '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt',

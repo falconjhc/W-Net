@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import print_function
 from __future__ import absolute_import
 import sys
@@ -13,37 +12,41 @@ exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
 
 input_args = [
             '--data_dir_train_path',
-            'CASIA_64_Dataset/HandWritingData/CASIA-HWDB1.1/',
+    'CASIA_Dataset/PrintedData/,'
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/',
 
               '--data_dir_validation_path',
-            'CASIA_64_Dataset/HandWritingData/CASIA-HWDB2.1/',
+	  'CASIA_Dataset/PrintedData/,'
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
               '--file_list_txt_train',
-            '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt',
+    '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt,'
+    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt',
 
               '--file_list_txt_validation',
-            '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Cursive.txt',
+	  '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt,'
+    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt',
 
               '--experiment_dir',
-            '../../ExpExtraNet/',
+            '../../Exp_FeatureExtractor/',
 
               '--log_dir',
-              'tfLogs_ExtraNet/',
+              'tfLogs_FeatureExtractor/',
 
               '--image_filters','1',
-              '--experiment_id','DEBUG',
+              '--experiment_id','20181010_FeatureExtractor_Content_PF32HW32',
               '--train_resume_mode','0',
 
               '--batch_size','64',
               '--image_size','64',
-              '--epoch_num', '1000',
+              '--epoch_num', '2500',
               '--network', 'vgg16net',
               '--init_lr','0.0001',
               '--label0_loss','1',
-              '--label1_loss','1',
+              '--label1_loss','0',
               '--center_loss_penalty_rate','0',
 
-              '--debug_mode','1',
+              '--debug_mode','0',
               '--cheat_mode','1']
 
 
@@ -104,6 +107,8 @@ def main(_):
 
 
 
+
+
 args = parser.parse_args(input_args)
 args.data_dir_train_path=args.data_dir_train_path.split(',')
 args.data_dir_validation_path=args.data_dir_validation_path.split(',')
@@ -115,4 +120,4 @@ for ii in range(len(args.data_dir_validation_path)):
     args.data_dir_validation_path[ii] = os.path.join(exp_root_path,args.data_dir_validation_path[ii])
 args.log_dir = os.path.join(exp_root_path,args.log_dir)
 if __name__ == '__main__':
-    tf.app.run()
+	tf.app.run()

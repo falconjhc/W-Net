@@ -32,7 +32,7 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--experiment_id','20181010_StylePf50_ContentPf32',# experiment name prefix
+              '--experiment_id','20181017_StylePf50_ContentPf32',# experiment name prefix
               '--experiment_dir','../../Exp_WNet/', # model saving location
               '--log_dir','tfLogs_WNet/',# log file saving location
               '--print_info_seconds','750',
@@ -47,7 +47,7 @@ input_args = [
     'CASIA_Dataset/PrintedData/GB2312_L1/',
 
               '--file_list_txt_content', # file list of the standard data
-    '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1L2.txt',
+    '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
     
               '--file_list_txt_style_train', # file list of the training data
     '../FileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1.txt',
@@ -68,7 +68,7 @@ input_args = [
               # optimizer parameters
               '--init_lr','0.001',
               '--epoch','5000',
-              '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
+              '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
 
               '--optimization_method','adam',
               '--final_learning_rate_pctg','0.01',
@@ -89,11 +89,11 @@ input_args = [
 
         # feature extractor parametrers
               '--true_fake_target_extractor_dir',
-    'TrainedModel_CNN/ContentStyleBoth/Exp20180802_FeatureExtractor_StyleContent_PF50_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181010_FeatureExtractor_ContentStyle_PF50_vgg16net/variables/',
               '--content_prototype_extractor_dir',
-    'TrainedModel_CNN/ContentOnly/Exp20180802_FeatureExtractor_Content_PF32_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32_vgg16net/variables/',
               '--style_reference_extractor_dir',
-    'TrainedModel_CNN/StyleOnly/Exp20180802_FeatureExtractor_Style_PF50_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_PF50_vgg16net/variables/',
               '--Feature_Penalty_True_Fake_Target', '100',
               '--Feature_Penalty_Style_Reference','1500',
               '--Feature_Penalty_Content_Prototype','1500']

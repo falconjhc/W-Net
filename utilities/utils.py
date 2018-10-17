@@ -66,6 +66,9 @@ def shift_and_resize_image(img, shift_x, shift_y, nw, nh):
     return enlarged[shift_x:shift_x + w, shift_y:shift_y + h]
 
 
+# def scale_back(images):
+#     return (images + 1.) / 2.
+
 def scale_with_probability(images,channels,probability):
 
 
