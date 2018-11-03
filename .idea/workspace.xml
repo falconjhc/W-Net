@@ -2,16 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/W-Net.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/W-Net.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataPreProcessing/Handwriting_Chinese_Character/Dgr_Reading.m" beforeDir="false" afterPath="$PROJECT_DIR$/DataPreProcessing/Handwriting_Chinese_Character/Dgr_Reading.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataPreProcessing/Handwriting_Chinese_Character/gnt_to_png.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataPreProcessing/Handwriting_Chinese_Character/gnt_to_png.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DebugScripts/wnet_debug.py" beforeDir="false" afterPath="$PROJECT_DIR$/DebugScripts/wnet_debug.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw50_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw50_ContentPf32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf50_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf50_ContentPf32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/dataset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/gan_networks.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/gan_networks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_October/StyleHw50_ContentPf32+Hw32.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_October/StyleHw50_ContentPf32+Hw32.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_October/StylePf50_ContentPf32.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_October/StylePf50_ContentPf32.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/wnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,9 +17,9 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/W_Net$wnet_debug.coverage" NAME="wnet_debug Coverage Results" MODIFIED="1539090239928" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$extranet_scripots_debug.coverage" NAME="extranet_scripots_debug Coverage Results" MODIFIED="1538554041623" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
     <SUITE FILE_PATH="coverage/W_Net$wnet.coverage" NAME="wnet Coverage Results" MODIFIED="1538555232986" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/W_Net$wnet_debug.coverage" NAME="wnet_debug Coverage Results" MODIFIED="1540994183599" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$extranet_scripots_debug.coverage" NAME="extranet_scripots_debug Coverage Results" MODIFIED="1538554041623" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
     <SUITE FILE_PATH="coverage/W_Net$gnt_to_png.coverage" NAME="gnt_to_png Coverage Results" MODIFIED="1539063667636" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing/Handwriting_Chinese_Character" />
   </component>
   <component name="FUSProjectUsageTrigger">
@@ -32,7 +28,7 @@
         <counts>
           <entry key="project.closed" value="11" />
           <entry key="project.open.time.0" value="1" />
-          <entry key="project.open.time.1" value="2" />
+          <entry key="project.open.time.1" value="3" />
           <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.3" value="1" />
           <entry key="project.open.time.5" value="1" />
@@ -40,40 +36,58 @@
           <entry key="project.open.time.7" value="4" />
           <entry key="project.open.time.8" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="16" />
+          <entry key="project.opened" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="79" />
+          <entry key="py" value="80" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="79" />
+          <entry key="Python" value="80" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="1096" />
-          <entry key="py" value="3734" />
+          <entry key="py" value="3741" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="4830" />
+          <entry key="Python" value="4837" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
       <usages-collector id="statistics.js.language.service.starts" />
     </session>
+    <session id="24027722">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.8" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+    </session>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/DebugScripts/wnet_debug.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3690">
+              <caret line="253" column="25" lean-forward="true" selection-start-line="253" selection-start-column="25" selection-end-line="253" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>print(</find>
       <find>gene</find>
       <find>generator_build</find>
       <find>discriminator_builkd</find>
@@ -103,6 +117,7 @@
       <find>512</find>
       <find>discriminator_mdy_6</find>
       <find>max</find>
+      <find>MSMC</find>
     </findStrings>
     <replaceStrings>
       <replace>Batch_StyleFeature_Discrimination_Penalty</replace>
@@ -125,8 +140,8 @@
         <option value="$PROJECT_DIR$/DataPreProcessing/Handwriting_Chinese_Character/gnt_to_png.py" />
         <option value="$PROJECT_DIR$/dataset/dataset.py" />
         <option value="$PROJECT_DIR$/model/wnet.py" />
-        <option value="$PROJECT_DIR$/DebugScripts/wnet_debug.py" />
         <option value="$PROJECT_DIR$/model/gan_networks.py" />
+        <option value="$PROJECT_DIR$/DebugScripts/wnet_debug.py" />
       </list>
     </option>
   </component>
@@ -136,11 +151,10 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="51" />
-    <option name="y" value="25" />
-    <option name="width" value="615" />
-    <option name="height" value="999" />
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1636" />
+    <option name="height" value="1027" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -360,14 +374,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="51" y="25" width="1229" height="999" extended-state="6" />
+    <frame x="0" y="23" width="1636" height="1027" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24598478" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25345045" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.21800947" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.29976302" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.52251184" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -381,9 +396,9 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="SciView" order="3" sideWeight="0.8163507" visible="true" weight="0.0693153" />
+      <window_info anchor="right" id="SciView" order="3" sideWeight="0.8138748" visible="true" weight="0.06900878" />
       <window_info anchor="right" id="Database" order="4" />
-      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.18364929" side_tool="true" visible="true" weight="0.0693153" />
+      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.18612522" side_tool="true" visible="true" weight="0.0693153" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -468,32 +483,13 @@
           <caret line="17" column="64" selection-start-line="17" selection-start-column="64" selection-end-line="17" selection-end-column="64" />
           <folding>
             <element signature="e#19#32#0" expanded="true" />
-            <marker date="1539078468217" expanded="true" signature="306:309" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/framework/function.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="474" selection-start-line="474" selection-end-line="474" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/ops/gen_math_ops.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="3037" column="4" selection-start-line="3037" selection-start-column="4" selection-end-line="3037" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/data/ops/dataset_ops.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="676">
-          <caret line="1850" selection-start-line="1850" selection-end-line="1850" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/framework/function.py" />
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/ops/gen_math_ops.py" />
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/data/ops/dataset_ops.py" />
     <entry file="file://$PROJECT_DIR$/model/wnet.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="18">
@@ -508,16 +504,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="916">
           <caret line="474" column="66" selection-start-line="474" selection-start-column="66" selection-end-line="474" selection-end-column="66" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DebugScripts/wnet_debug.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="86">
-          <caret line="68" column="40" selection-start-line="68" selection-start-column="40" selection-end-line="68" selection-end-column="40" />
         </state>
       </provider>
     </entry>
@@ -525,6 +511,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="109">
           <caret line="558" column="44" selection-start-line="558" selection-start-column="20" selection-end-line="558" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DebugScripts/wnet_debug.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3690">
+          <caret line="253" column="25" lean-forward="true" selection-start-line="253" selection-start-column="25" selection-end-line="253" selection-end-column="25" />
         </state>
       </provider>
     </entry>

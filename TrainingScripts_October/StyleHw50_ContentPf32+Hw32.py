@@ -13,7 +13,8 @@ from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
+data_path_root = '/Data_SSD/Harric/ChineseCharacterExp/'
+model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
 
@@ -33,7 +34,7 @@ input_args = [
 
               '--train_data_augment','1', # translation? rotation?
               '--experiment_id','20181017_StyleHw50_ContentPf32+Hw32',# experiment name prefix
-              '--experiment_dir','../../Exp_WNet/', # model saving location
+              '--experiment_dir','tfModels_WNet/', # model saving location
               '--log_dir','tfLogs_WNet/',# log file saving location
               '--print_info_seconds','750',
 
@@ -83,10 +84,11 @@ input_args = [
               # penalties
               '--generator_weight_decay_penalty','0.0001',
               '--discriminator_weight_decay_penalty','0.0003',
-              '--Pixel_Reconstruction_Penalty','75',
+              '--Pixel_Reconstruction_Penalty','850',
               '--Lconst_content_Penalty','3',
               '--Lconst_style_Penalty','5',
               '--Discriminative_Penalty', '50',
+
               '--Discriminator_Categorical_Penalty', '100',
               '--Generator_Categorical_Penalty', '0.2',
               '--Discriminator_Gradient_Penalty', '10',
@@ -100,9 +102,9 @@ input_args = [
     'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
               '--style_reference_extractor_dir',
     'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_HW50_vgg16net/variables/',
-              '--Feature_Penalty_True_Fake_Target', '550',
-              '--Feature_Penalty_Style_Reference','1350',
-              '--Feature_Penalty_Content_Prototype','1500']
+              '--Feature_Penalty_True_Fake_Target', '950',
+              '--Feature_Penalty_Style_Reference','750',
+              '--Feature_Penalty_Content_Prototype','50']
 
 
 
@@ -263,18 +265,19 @@ def main(_):
 
     content_data_dir = args.content_data_dir.split(',')
     for ii in range(len(content_data_dir)):
-        content_data_dir[ii] = os.path.join(exp_root_path, content_data_dir[ii])
+        content_data_dir[ii] = os.path.join(data_path_root, content_data_dir[ii])
     style_train_data_dir = args.style_train_data_dir.split(',')
     for ii in range(len(style_train_data_dir)):
-        style_train_data_dir[ii] = os.path.join(exp_root_path, style_train_data_dir[ii])
+        style_train_data_dir[ii] = os.path.join(data_path_root, style_train_data_dir[ii])
     style_validation_data_dir = args.style_validation_data_dir.split(',')
     for ii in range(len(style_validation_data_dir)):
-        style_validation_data_dir[ii] = os.path.join(exp_root_path, style_validation_data_dir[ii])
+        style_validation_data_dir[ii] = os.path.join(data_path_root, style_validation_data_dir[ii])
 
     model = WNET(debug_mode=args.debug_mode,
                  print_info_seconds=args.print_info_seconds,
-                 experiment_dir=args.experiment_dir, experiment_id=args.experiment_id,
-                 log_dir=os.path.join(exp_root_path, args.log_dir),
+                 experiment_dir=os.path.join(model_log_path_root, args.experiment_dir),
+                 experiment_id=args.experiment_id,
+                 log_dir=os.path.join(model_log_path_root, args.log_dir),
                  training_from_model=args.training_from_model_dir,
                  train_data_augment=args.train_data_augment,
                  style_input_number=args.style_input_number,
@@ -319,9 +322,9 @@ def main(_):
                  generator_residual_at_layer=args.generator_residual_at_layer,
                  generator_residual_blocks=args.generator_residual_blocks,
                  discriminator=args.discriminator,
-                 true_fake_target_extractor_dir=os.path.join(exp_root_path, args.true_fake_target_extractor_dir),
-                 content_prototype_extractor_dir=os.path.join(exp_root_path, args.content_prototype_extractor_dir),
-                 style_reference_extractor_dir = os.path.join(exp_root_path, args.style_reference_extractor_dir)
+                 true_fake_target_extractor_dir=os.path.join(model_log_path_root, args.true_fake_target_extractor_dir),
+                 content_prototype_extractor_dir=os.path.join(model_log_path_root, args.content_prototype_extractor_dir),
+                 style_reference_extractor_dir = os.path.join(model_log_path_root, args.style_reference_extractor_dir)
                  )
 
 

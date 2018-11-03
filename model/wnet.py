@@ -2391,9 +2391,3 @@ class WNet(object):
 
         print("Training Completed.")
 
-
-
-
-
-
-
