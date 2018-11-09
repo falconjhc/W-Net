@@ -16,6 +16,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/W_Net$StylePf50_ContentPfStd1.coverage" NAME="StylePf50_ContentPfStd1 Coverage Results" MODIFIED="1541767213453" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_October" />
     <SUITE FILE_PATH="coverage/W_Net$wnet.coverage" NAME="wnet Coverage Results" MODIFIED="1538555232986" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
     <SUITE FILE_PATH="coverage/W_Net$debug_infer.coverage" NAME="debug_infer Coverage Results" MODIFIED="1541760090040" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
     <SUITE FILE_PATH="coverage/W_Net$wnet_debug.coverage" NAME="wnet_debug Coverage Results" MODIFIED="1540994183599" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
@@ -264,7 +265,29 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.debug_infer">
+  <component name="RunManager" selected="Python.StylePf50_ContentPfStd1">
+    <configuration name="StylePf50_ContentPfStd1" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="W-Net" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/TrainingScripts_October" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TrainingScripts_October/StylePf50_ContentPfStd1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -301,28 +324,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DebugScripts/debug_infer.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="extranet_scripots_debug" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="W-Net" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/DebugScripts" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DebugScripts/extranet_scripots_debug.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -399,18 +400,18 @@
     </configuration>
     <list>
       <item itemvalue="Python.wnet_debug" />
-      <item itemvalue="Python.extranet_scripots_debug" />
       <item itemvalue="Python.wnet" />
       <item itemvalue="Python.gnt_to_png" />
       <item itemvalue="Python.debug_infer" />
+      <item itemvalue="Python.StylePf50_ContentPfStd1" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.StylePf50_ContentPfStd1" />
         <item itemvalue="Python.debug_infer" />
         <item itemvalue="Python.wnet_debug" />
         <item itemvalue="Python.gnt_to_png" />
         <item itemvalue="Python.wnet" />
-        <item itemvalue="Python.extranet_scripots_debug" />
       </list>
     </recent_temporary>
   </component>
