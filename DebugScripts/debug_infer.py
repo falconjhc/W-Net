@@ -11,8 +11,8 @@ import os
 
 from model.wnet import WNet as WNET
 
-#exp_root_path = '/Users/harric/Data/'
-exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
+exp_root_path = '/Users/harric/ChineseCharacterExp/'
+#exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
 
 print_separater = "#################################################################"
 
@@ -22,11 +22,11 @@ print_separater = "#############################################################
 input_args = ['--debug_mode','0',
               '--style_input_number','4',
               '--targeted_content_input_txt',
-    '../FontAndChars/滚滚长江东逝水_简体.txt',
+    '../FontAndChars/港.txt',
 
               '--save_path',
-    #'/Users/harric/Desktop/ContentAndGenerated_JN_Random4Content/',
-    '/home/harric/Desktop/ContentAndGenerated_Random4Content_PF/',
+    '/Users/harric/Desktop/ContentAndGenerated_JN_Random4Content/',
+    #'/home/harric/Desktop/ContentAndGenerated_Random4Content_PF/',
 
 
               '--known_style_img_path',
@@ -37,14 +37,14 @@ input_args = ['--debug_mode','0',
               '--save_mode','8:8',
 
               '--content_data_dir', # standard data location
-    #'CASIA_64_Dataset/HandWritingData/CASIA-HWDB1.1/,'
-    #'CASIA_64_Dataset/HandWritingData/CASIA-HWDB2.1/,'
-    'CASIA_64_Dataset/PrintedData/',
+    #'CASIA_Dataset/HandWritingData/CASIA-HWDB1.1/,'
+    #'CASIA_Dataset/HandWritingData/CASIA-HWDB2.1/,'
+    'CASIA_Dataset/PrintedData/',
 
               '--file_list_txt_content',  # file list of the standard data
     #'../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt,'
     #'../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt,'
-    '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1L2.txt',
+    '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
               
 
               '--channels','1',
@@ -56,8 +56,8 @@ input_args = ['--debug_mode','0',
               '--generator_device','/device:GPU:0',
 
               '--model_dir',
-    #'/Users/harric/Data/Exp20180808_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
-    '/DataA/Harric/ChineseCharacterExp/Aug_2018_Trained/models/Exp20180808_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
+    '/Users/harric/ChineseCharacterExp/Aug_2018_Trained/Exp20180808_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
+    #'/DataA/Harric/ChineseCharacterExp/Aug_2018_Trained/Exp20180808_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
 
               ]
 
@@ -135,9 +135,6 @@ def main(_):
                  known_style_img_path=args.known_style_img_path)
 
     model.character_generation()
-
-
-
 
 
 #input_args = []

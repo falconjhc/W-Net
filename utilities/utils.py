@@ -131,11 +131,15 @@ def image_show(img):
             img_out[:,:,ii] = curt_channel_img*255
     else:
         print("Channel Number is INCORRECT:%d" % img_shapes[2])
-
-
-
     plt.imshow(np.float32(img_out)/255)
     pylab.show()
+
+def image_revalue(img,tah_mark):
+    img_out = cp.deepcopy(img)
+    img_out = np.squeeze(img_out)
+    if tah_mark:
+        img_out = np.tanh(img_out)
+    return img_out
 
 
 def merge(images, size):

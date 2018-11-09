@@ -24,6 +24,9 @@ import os
 import random as rnd
 import scipy.misc as misc
 
+import copy as cp
+
+
 def get_chars(path):
     chars = list()
     with open(path) as f:
@@ -712,7 +715,15 @@ def matrix_paper_generation(images, rows, columns):
 
     return output_paper
 
-
+def numpy_img_save(img,path):
+    imgout=cp.deepcopy(img)
+    imgout = imgout * 255
+    imgout = np.tile(np.reshape(imgout,
+                                [imgout.shape[0],
+                                 imgout.shape[1], 1]),
+                       [1, 1, 3])
+    imgout_misc = Image.fromarray(np.uint8(imgout))
+    misc.imsave(path,imgout_misc)
 
 def one_row_or_column_generation(images,option):
     img_num = images.shape[0]

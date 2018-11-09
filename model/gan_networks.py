@@ -97,6 +97,8 @@ def encoder_framework(images,
 
 
     residual_input_list = list()
+    full_feature_list = list()
+    shortcut_list = list()
     batch_size = int(images.shape[0])
 
 
@@ -106,7 +108,7 @@ def encoder_framework(images,
                 if reuse:
                     tf.get_variable_scope().reuse_variables()
 
-                encoder_layer_list=list()
+
                 feature_size = int(images.shape[1])
                 ii=0
                 while not feature_size==1:
@@ -125,6 +127,7 @@ def encoder_framework(images,
                         encoder_layer = encoder(x=encoder_layer,
                                                 output_filters=output_filter_num,
                                                 layer=ii+1)
+                    full_feature_list.append(encoder_layer)
 
 
                     feature_size = int(encoder_layer.shape[1])
@@ -140,7 +143,7 @@ def encoder_framework(images,
 
                     # output for shortcut
                     if ii+1 > residual_at_layer:
-                        encoder_layer_list.append(encoder_layer)
+                        shortcut_list.append(encoder_layer)
                     ii+=1
 
                 if not final_layer_logit_length == -1:
@@ -156,7 +159,9 @@ def encoder_framework(images,
                 else:
                     final_category_layer = -1
 
-        return output_final_encoded, final_category_layer, encoder_layer_list, residual_input_list, return_str
+        return output_final_encoded, final_category_layer, \
+               shortcut_list, residual_input_list, full_feature_list, \
+               return_str
 
 
 
@@ -283,6 +288,7 @@ def decoder_framework(encoded_layer_list,
     decoder_input = encoded_layer_list[0]
     return_str = "Decoder %d Layers" % int(np.floor(math.log(output_width) / math.log(2)))
     generator_dim=64
+    full_decoded_feature_list = list()
 
     full_encoder_layer_num = int(np.floor(math.log(output_width) / math.log(2)))
     with tf.variable_scope(tf.get_variable_scope()):
@@ -316,6 +322,7 @@ def decoder_framework(encoded_layer_list,
                                              enc_layer=encoded_respective,
                                              do_bn=do_bn,
                                              dropout=do_drop)
+                    full_decoded_feature_list.append(decoder_output)
 
                     if ii == full_encoder_layer_num-1:
                         output = tf.nn.tanh(decoder_output)
@@ -323,7 +330,7 @@ def decoder_framework(encoded_layer_list,
                     decoder_input = decoder_output
                     feature_size = int(decoder_input.shape[1])
 
-    return output, return_str
+    return output, full_decoded_feature_list, return_str
 
 
 
@@ -343,8 +350,9 @@ def generator_inferring(content,
     label0_length = -1
     is_training = False
 
-    # source encoder part
-    encoded_content_final, content_category, content_short_cut_interface, content_residual_interface, _ = \
+    # content encoder part
+    encoded_content_final, content_category, \
+    content_short_cut_interface, content_residual_interface, content_full_faeture_list, _ = \
         encoder_framework(images=content,
                           is_training=is_training,
                           encoder_device=generator_device,
@@ -428,7 +436,7 @@ def generator_inferring(content,
 
     # decoder part
     img_width = int(content.shape[1])
-    generated_img, _ = \
+    generated_img, decoded_feature_list,_ = \
         decoder_framework(encoded_layer_list=encoded_layer_list,
                           is_training=is_training,
                           output_width=img_width,
@@ -441,7 +449,7 @@ def generator_inferring(content,
                           initializer=initializer,
                           weight_decay_rate=weight_decay_rate)
 
-    return generated_img
+    return generated_img, content_full_faeture_list, decoded_feature_list
 
 
 
@@ -467,7 +475,8 @@ def generator_framework(content_prototype,style_reference,
 
 
     # content prototype encoder part
-    encoded_content_final, content_category, content_short_cut_interface, content_residual_interface, _ = \
+    encoded_content_final, content_category, \
+    content_short_cut_interface, content_residual_interface, content_full_feature_list, _ = \
         encoder_framework(images=content_prototype,
                           is_training=is_training,
                           encoder_device=generator_device,
@@ -493,7 +502,8 @@ def generator_framework(content_prototype,style_reference,
             curt_reuse=True
             current_weight_decay = False
 
-        encoded_style_final, style_category, current_style_short_cut_interface, current_style_residual_interface, _ = \
+        encoded_style_final, style_category, \
+        current_style_short_cut_interface, current_style_residual_interface, style_full_feature_list, _ = \
             encoder_framework(images=style_reference[ii],
                               is_training=is_training,
                               encoder_device=generator_device,
@@ -614,7 +624,7 @@ def generator_framework(content_prototype,style_reference,
     # decoder part
     img_width = int(content_prototype.shape[1])
     img_filters = int(int(content_prototype.shape[3]) / content_prototype_number)
-    generated_img, _ = \
+    generated_img, full_decoded_output, _ = \
         decoder_framework(encoded_layer_list=encoded_layer_list,
                           is_training=is_training,
                           output_width=img_width,

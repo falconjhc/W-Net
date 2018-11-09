@@ -24,7 +24,7 @@ from collections import namedtuple
 from dataset.dataset import DataProvider
 
 from utilities.utils import scale_back_for_img, scale_back_for_dif, merge, correct_ckpt_path
-from utilities.utils import image_show
+from utilities.utils import image_show, image_revalue
 from model.gan_networks_MinMaxAvg import discriminator_mdy_5_convs
 from model.gan_networks_MinMaxAvg import discriminator_mdy_6_convs
 from model.gan_networks_MinMaxAvg import discriminator_mdy_6_convs_tower_version1
@@ -701,13 +701,15 @@ class WNet(object):
                                              name='placeholder_style_reference')
                 style_short_cut_interface_list = list()
                 style_residual_interface_list = list()
+                style_full_feature_list = list()
                 for ii in range(style_reference.shape[3]):
                     if ii == 0:
                         reuse=False
                     else:
                         reuse=True
-                    _, _, current_style_short_cut_interface, current_style_residual_interface, _ = \
-                        encoder_implementation(images=tf.expand_dims(style_reference_placeholder[:,:,:,ii],axis=3),
+                    _, _, \
+                    current_style_short_cut_interface, current_style_residual_interface, current_style_full_feature_list, \
+                    _ = encoder_implementation(images=tf.expand_dims(style_reference_placeholder[:,:,:,ii],axis=3),
                                                is_training=False,
                                                encoder_device=self.generator_devices,
                                                residual_at_layer=self.generator_residual_at_layer,
@@ -720,6 +722,7 @@ class WNet(object):
                                                final_layer_logit_length=-1)
                     style_short_cut_interface_list.append(current_style_short_cut_interface)
                     style_residual_interface_list.append(current_style_residual_interface)
+                    style_full_feature_list.append(current_style_full_feature_list)
 
                 for ii in range(style_reference.shape[3]):
                     if ii == 0:
@@ -746,13 +749,14 @@ class WNet(object):
                                          content_prototype.shape[3]],
                                         name='placeholder_content_prototype')
 
-                generated_infer = generator_inferring(content=content_prototype_placeholder,
-                                                      generator_device=self.generator_devices,
-                                                      residual_at_layer=self.generator_residual_at_layer,
-                                                      residual_block_num=self.generator_residual_blocks,
-                                                      style_short_cut_interface=style_short_cut_interface,
-                                                      style_residual_interface=style_residual_interface,
-                                                      img_filters=self.input_output_img_filter_num)
+                generated_infer,content_full_faeture_list,decoded_feature_list  = \
+                    generator_inferring(content=content_prototype_placeholder,
+                                        generator_device=self.generator_devices,
+                                        residual_at_layer=self.generator_residual_at_layer,
+                                        residual_block_num=self.generator_residual_blocks,
+                                        style_short_cut_interface=style_short_cut_interface,
+                                        style_residual_interface=style_residual_interface,
+                                        img_filters=self.input_output_img_filter_num)
 
                 gen_vars_save = self.find_bn_avg_var([var for var in tf.trainable_variables() if 'generator' in var.name])
 
@@ -780,14 +784,97 @@ class WNet(object):
         current_counter=0
         for current_generating_content_counter in range(content_prototype.shape[0]):
             current_content_char = np.expand_dims(np.squeeze(content_prototype[current_generating_content_counter,:,:,:]),axis=0)
-            current_generated_char=self.sess.run(generated_infer, feed_dict={content_prototype_placeholder: current_content_char,
-                                                                             style_reference_placeholder: style_reference})
+            current_generated_char,\
+                style_full_features,content_full_features,decoded_full_features = \
+                self.sess.run([generated_infer,
+                              style_full_feature_list,content_full_faeture_list,decoded_feature_list],
+                              feed_dict={content_prototype_placeholder: current_content_char,
+                                         style_reference_placeholder: style_reference})
+
+
+            feature_saving_path = '/Users/harric/Desktop/Features'
+
+            # style_path = os.path.join(feature_saving_path,'Style')
+            # for ii in range(len(style_full_features)):
+            #     current_style_path = 'StyleNo%d' % ii
+            #     current_style_path = os.path.join(style_path, current_style_path)
+            #     if os.path.exists(current_style_path):
+            #         shutil.rmtree(current_style_path)
+            #     os.makedirs(current_style_path)
+            #     for jj in range(len(style_full_features[ii])):
+            #         if style_full_features[ii][jj].shape[1] > 1:
+            #             current_style_current_feature_level_path = 'LevelNo%d' % jj
+            #             current_style_current_feature_level_path = os.path.join(current_style_path, current_style_current_feature_level_path)
+            #             if os.path.exists(current_style_current_feature_level_path):
+            #                 shutil.rmtree(current_style_current_feature_level_path)
+            #             os.makedirs(current_style_current_feature_level_path)
+            #
+            #             for kk in range(style_full_features[ii][jj].shape[3]):
+            #
+            #                 inf_tools.numpy_img_save(img=image_revalue(style_full_features[ii][jj][:, :, :, kk],
+            #                                                            tah_mark=True),
+            #                                          path=os.path.join(current_style_current_feature_level_path,
+            #                                                            'Style%dFeatureLevel%dChannel%d.png'
+            #                                                            % (ii,jj,kk)))
+            #     inf_tools.numpy_img_save(img=image_revalue(style_reference[:,:,:,ii], tah_mark=False),
+            #                              path=os.path.join(current_style_path,
+            #                                                'StyleRef%d.png' % ii))
+            #
+            # content_path = os.path.join(feature_saving_path,'Content')
+            # for ii in range(len(content_full_features)):
+            #     if content_full_features[ii].shape[1] > 1:
+            #         current_content_path = 'ContentFeatureLevel%d' % ii
+            #         current_content_path = os.path.join(content_path,current_content_path)
+            #         if os.path.exists(current_content_path):
+            #             shutil.rmtree(current_content_path)
+            #         os.makedirs(current_content_path)
+            #         for jj in range(content_full_features[ii].shape[3]):
+            #             inf_tools.numpy_img_save(img=image_revalue(content_full_features[ii][:, :, :, jj],tah_mark=True),
+            #                                      path=os.path.join(current_content_path,
+            #                                                        'ContentFeatureLevel%dChannel%d.png'
+            #                                                        % (ii, jj)))
+            #
+            # content_path = os.path.join(content_path,'ContentPrototype')
+            # if os.path.exists(content_path):
+            #     shutil.rmtree(content_path)
+            # os.makedirs(content_path)
+            # for ii in range(current_content_char.shape[3]):
+            #     inf_tools.numpy_img_save(img=image_revalue(current_content_char[:, :, :, ii],tah_mark=False),
+            #                              path=os.path.join(content_path,
+            #                                                'ContentPro%d.png.png'
+            #                                                % ii))
+
+
+            decoded_path = os.path.join(feature_saving_path,'Decoder')
+            for ii in range(len(decoded_full_features)):
+                if decoded_full_features[ii].shape[1] > 1:
+                    current_decoded_path = 'DecodedFeatureLevel%d' % ii
+                    current_decoded_path = os.path.join(decoded_path,current_decoded_path)
+                    if os.path.exists(current_decoded_path):
+                        shutil.rmtree(current_decoded_path)
+                    os.makedirs(current_decoded_path)
+                    for jj in range(decoded_full_features[ii].shape[3]):
+                        inf_tools.numpy_img_save(img=image_revalue(decoded_full_features[ii][:, :, :, jj],tah_mark=True),
+                                                 path=os.path.join(current_decoded_path,
+                                                                   'DecodedFeatureLevel%dChannel%d.png'
+                                                                   % (ii, jj)))
+
+
+
+
+
+
+
+
+
+
+
             full_generated[current_counter,:,:,:]=current_generated_char
             for ii in range(content_prototype.shape[3]):
                 full_content[current_counter,:,:,ii]=current_content_char[:,:,:,ii]
             
             if current_counter % 5 == 0:
-            	print("Generated %d/%d samples already" % (current_counter+1,content_prototype.shape[0]))
+                print("Generated %d/%d samples already" % (current_counter+1,content_prototype.shape[0]))
             current_counter+=1
         print("In total %d chars have been generated" % full_generated.shape[0])
         print(self.print_separater)
