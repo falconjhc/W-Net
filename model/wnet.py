@@ -2265,19 +2265,19 @@ class WNet(object):
 
             info=""
 
-            batch_true_style_train,\
-            batch_train_prototype, batch_train_reference, \
-            batch_train_label0_onehot, batch_train_label1_onehot,\
-            batch_train_label0_dense, batch_train_label1_dense, \
-            true_style_threshold_train, content_threshold_train, style_threshold_train= \
-                data_provider.train_iterator.get_next_batch(sess=self.sess)
-
-            batch_true_style_val, \
-            batch_val_prototype, batch_val_reference, \
-            batch_val_label0_onehot, batch_val_label1_onehot, \
-            batch_val_label0_dense, batch_val_label1_dense,\
-            true_style_threshold_val, content_threshold_val, style_threshold_val = \
-                data_provider.validate_iterator.get_next_batch(sess=self.sess)
+            # batch_true_style_train,\
+            # batch_train_prototype, batch_train_reference, \
+            # batch_train_label0_onehot, batch_train_label1_onehot,\
+            # batch_train_label0_dense, batch_train_label1_dense, \
+            # true_style_threshold_train, content_threshold_train, style_threshold_train= \
+            #     data_provider.train_iterator.get_next_batch(sess=self.sess)
+            #
+            # batch_true_style_val, \
+            # batch_val_prototype, batch_val_reference, \
+            # batch_val_label0_onehot, batch_val_label1_onehot, \
+            # batch_val_label0_dense, batch_val_label1_dense,\
+            # true_style_threshold_val, content_threshold_val, style_threshold_val = \
+            #     data_provider.validate_iterator.get_next_batch(sess=self.sess)
 
             optimization_start = time.time()
 

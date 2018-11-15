@@ -2,46 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/W-Net.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/W-Net.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DebugScripts/debug_infer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts_October/StyleHw50_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts_October/StylePf50_ContentPf32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts_October/StylePf50_ContentPfStd1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts_Sept/StyleHw50_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts_Sept/StyleHw50_ContentPf32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts_Sept/StylePf50_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts_Sept/StylePf50_ContentPf32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer01/TrainingScripts_Res1/StyleHw100_ContentPf15+1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer01/TrainingScripts_Res1/StyleHw300_ContentPf15+1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer01/TrainingScripts_Res1/StyleHw50_ContentPf15+1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer01/TrainingScripts_Res1/StyleHw50_ContentStandard1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer01/TrainingScripts_Res5/StyleHw100_ContentPf15+1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer01/TrainingScripts_Res5/StyleHw300_ContentPf15+1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer01/TrainingScripts_Res5/StyleHw50_ContentPf15+1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer01/TrainingScripts_Res5/StyleHw50_ContentStandard1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer02/TrainingScripts_Res1/StyleHw100_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer02/TrainingScripts_Res1/StyleHw300_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer02/TrainingScripts_Res5/StyleHw100_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer02/TrainingScripts_Res5/StyleHw300_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer02/TrainingScripts_Res9/StyleHw300_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer05/TrainingScripts_Res1/StyleHw50_ContentHw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer05/TrainingScripts_Res1/StyleHw50_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer05/TrainingScripts_Res1/StyleHw50_ContentPf32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer05/TrainingScripts_Res1/StylePf50_ContentPf32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentHw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentPf32+Hw32_ContentRandom16.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StyleHw50_ContentPf32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StylePf50_ContentPf32+Hw32_ContentRandom16.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer05/TrainingScripts_Res5/StylePf50_ContentPf32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer06/TrainingScripts_Res1/StylePf50_ContentHw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer06/TrainingScripts_Res1/StylePf50_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer06/TrainingScripts_Res5/StylePf50_ContentHw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/W-Net-Training-2018AugScripts/WNet-ScriptsOn_EEServer06/TrainingScripts_Res5/StylePf50_ContentPf32+Hw32.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/gan_networks.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/gan_networks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/gan_networks_MinMaxAvg.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/model/wnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -69,8 +29,8 @@
             <file pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/model/wnet.py">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="426">
-                    <caret line="2392" column="87" lean-forward="true" selection-start-line="2392" selection-start-column="20" selection-end-line="2392" selection-end-column="87" />
+                  <state relative-caret-position="306">
+                    <caret line="434" column="65" lean-forward="true" selection-start-line="434" selection-start-column="65" selection-end-line="434" selection-end-column="65" />
                     <folding>
                       <element signature="e#24#61#0" expanded="true" />
                     </folding>
@@ -166,7 +126,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentStd1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
+            <state relative-caret-position="183">
               <caret line="26" column="25" selection-start-line="26" selection-start-column="25" selection-end-line="26" selection-end-column="25" />
             </state>
           </provider>
@@ -176,8 +136,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>data_provider.validate_iterator.ge</find>
-      <find>W_GAN</find>
       <find>_random_thickness</find>
       <find>get_next_batch</find>
       <find>display_content_reference_num</find>
@@ -206,6 +164,8 @@
       <find>/Users</find>
       <find>Users</find>
       <find>time</find>
+      <find>train_iterator.get_next_batch</find>
+      <find>iterator.get_next_batch</find>
     </findStrings>
     <replaceStrings>
       <replace>Batch_StyleFeature_Discrimination_Penalty</replace>
@@ -233,9 +193,9 @@
         <option value="$PROJECT_DIR$/TrainingScripts/StylePf50_ContentPf32.py" />
         <option value="$PROJECT_DIR$/TrainingScripts/StyleHw50_ContentPf32+Hw32.py" />
         <option value="$PROJECT_DIR$/TrainingScripts/StylePf50_ContentPfStd1.py" />
-        <option value="$PROJECT_DIR$/model/wnet.py" />
         <option value="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentPf32.py" />
         <option value="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentStd1.py" />
+        <option value="$PROJECT_DIR$/model/wnet.py" />
       </list>
     </option>
   </component>
@@ -437,13 +397,13 @@
     <frame x="51" y="25" width="1229" height="999" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.295858" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.295858" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.29976302" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.25947866" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.70734596" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -451,8 +411,8 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="11" />
-      <window_info anchor="bottom" id="Python Console" order="12" weight="0.66943127" />
+      <window_info anchor="bottom" id="Python Console" order="11" weight="0.66943127" />
+      <window_info anchor="bottom" id="Terminal" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -651,16 +611,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/wnet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="426">
-          <caret line="2392" column="87" lean-forward="true" selection-start-line="2392" selection-start-column="20" selection-end-line="2392" selection-end-column="87" />
-          <folding>
-            <element signature="e#24#61#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TrainingScripts/StyleHw50_ContentPf32+Hw32.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="940">
@@ -682,8 +632,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentStd1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
+        <state relative-caret-position="183">
           <caret line="26" column="25" selection-start-line="26" selection-start-column="25" selection-end-line="26" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/wnet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="434" column="65" lean-forward="true" selection-start-line="434" selection-start-column="65" selection-end-line="434" selection-end-column="65" />
+          <folding>
+            <element signature="e#24#61#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
