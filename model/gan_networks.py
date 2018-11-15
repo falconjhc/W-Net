@@ -330,7 +330,7 @@ def decoder_framework(encoded_layer_list,
                     decoder_input = decoder_output
                     feature_size = int(decoder_input.shape[1])
 
-    return output, full_decoded_feature_list, return_str
+        return output, full_decoded_feature_list, return_str
 
 
 
@@ -350,9 +350,8 @@ def generator_inferring(content,
     label0_length = -1
     is_training = False
 
-    # content encoder part
-    encoded_content_final, content_category, \
-    content_short_cut_interface, content_residual_interface, content_full_faeture_list, _ = \
+    # source encoder part
+    encoded_content_final, content_category, content_short_cut_interface, content_residual_interface, content_full_faeture_list, _ = \
         encoder_framework(images=content,
                           is_training=is_training,
                           encoder_device=generator_device,
@@ -386,30 +385,30 @@ def generator_inferring(content,
         fused_shortcut_interfaces.append(output_current_shortcut)
 
 
-
-
-
-
-    # residual interfaces && short cut interfaces are fused together
-    fused_residual_interfaces = list()
-    fused_shortcut_interfaces = list()
-    for ii in range(len(content_residual_interface)):
-        current_content_residual_size = int(content_residual_interface[ii].shape[1])
-        output_current_residual = content_residual_interface[ii]
-        for jj in range(len(style_residual_interface)):
-            current_style_residual_size = int(style_residual_interface[jj].shape[1])
-            if current_style_residual_size == current_content_residual_size:
-                output_current_residual = tf.concat([output_current_residual, style_residual_interface[jj]], axis=3)
-        fused_residual_interfaces.append(output_current_residual)
-
-    for ii in range(len(content_short_cut_interface)):
-        current_content_shortcut_size = int(content_short_cut_interface[ii].shape[1])
-        output_current_shortcut = content_short_cut_interface[ii]
-        for jj in range(len(style_short_cut_interface)):
-            current_style_short_cut_size = int(style_short_cut_interface[jj].shape[1])
-            if current_style_short_cut_size == current_content_shortcut_size:
-                output_current_shortcut = tf.concat([output_current_shortcut, style_short_cut_interface[jj]], axis=3)
-        fused_shortcut_interfaces.append(output_current_shortcut)
+    #
+    #
+    #
+    #
+    # # residual interfaces && short cut interfaces are fused together
+    # fused_residual_interfaces = list()
+    # fused_shortcut_interfaces = list()
+    # for ii in range(len(content_residual_interface)):
+    #     current_content_residual_size = int(content_residual_interface[ii].shape[1])
+    #     output_current_residual = content_residual_interface[ii]
+    #     for jj in range(len(style_residual_interface)):
+    #         current_style_residual_size = int(style_residual_interface[jj].shape[1])
+    #         if current_style_residual_size == current_content_residual_size:
+    #             output_current_residual = tf.concat([output_current_residual, style_residual_interface[jj]], axis=3)
+    #     fused_residual_interfaces.append(output_current_residual)
+    #
+    # for ii in range(len(content_short_cut_interface)):
+    #     current_content_shortcut_size = int(content_short_cut_interface[ii].shape[1])
+    #     output_current_shortcut = content_short_cut_interface[ii]
+    #     for jj in range(len(style_short_cut_interface)):
+    #         current_style_short_cut_size = int(style_short_cut_interface[jj].shape[1])
+    #         if current_style_short_cut_size == current_content_shortcut_size:
+    #             output_current_shortcut = tf.concat([output_current_shortcut, style_short_cut_interface[jj]], axis=3)
+    #     fused_shortcut_interfaces.append(output_current_shortcut)
 
     # fused resudual interfaces are put into the residual blocks
     if not residual_block_num == 0 or not residual_at_layer == -1:
@@ -436,7 +435,7 @@ def generator_inferring(content,
 
     # decoder part
     img_width = int(content.shape[1])
-    generated_img, decoded_feature_list,_ = \
+    generated_img, decoder_full_feature_list, _ = \
         decoder_framework(encoded_layer_list=encoded_layer_list,
                           is_training=is_training,
                           output_width=img_width,
@@ -449,7 +448,8 @@ def generator_inferring(content,
                           initializer=initializer,
                           weight_decay_rate=weight_decay_rate)
 
-    return generated_img, content_full_faeture_list, decoded_feature_list
+    return generated_img, content_full_faeture_list, decoder_full_feature_list
+
 
 
 
@@ -475,8 +475,7 @@ def generator_framework(content_prototype,style_reference,
 
 
     # content prototype encoder part
-    encoded_content_final, content_category, \
-    content_short_cut_interface, content_residual_interface, content_full_feature_list, _ = \
+    encoded_content_final, content_category, content_short_cut_interface, content_residual_interface, _, _ = \
         encoder_framework(images=content_prototype,
                           is_training=is_training,
                           encoder_device=generator_device,
@@ -502,8 +501,7 @@ def generator_framework(content_prototype,style_reference,
             curt_reuse=True
             current_weight_decay = False
 
-        encoded_style_final, style_category, \
-        current_style_short_cut_interface, current_style_residual_interface, style_full_feature_list, _ = \
+        encoded_style_final, style_category, current_style_short_cut_interface, current_style_residual_interface, _, _ = \
             encoder_framework(images=style_reference[ii],
                               is_training=is_training,
                               encoder_device=generator_device,
@@ -546,31 +544,27 @@ def generator_framework(content_prototype,style_reference,
                             style_residual_interface[jj] = tf.concat([style_residual_interface[jj], tf.expand_dims(style_residual_interface_list[ii][jj], axis=0)], axis=0)
 
                 style_category = tf.reduce_mean(style_category,axis=0)
-                encoded_style_final = tf.reduce_mean(encoded_style_final, axis=0)
-                # encoded_style_final_avg = tf.reduce_mean(encoded_style_final,axis=0)
-                # encoded_style_final_max = tf.reduce_max(encoded_style_final,axis=0)
-                # encoded_style_final_min = tf.reduce_min(encoded_style_final,axis=0)
-                # encoded_style_final = tf.concat([encoded_style_final_avg, encoded_style_final_max, encoded_style_final_min], axis=3)
+                encoded_style_final_avg = tf.reduce_mean(encoded_style_final,axis=0)
+                encoded_style_final_max = tf.reduce_max(encoded_style_final,axis=0)
+                encoded_style_final_min = tf.reduce_min(encoded_style_final,axis=0)
+                encoded_style_final = tf.concat([encoded_style_final_avg, encoded_style_final_max, encoded_style_final_min], axis=3)
 
                 style_shortcut_batch_diff=0
-                # mb_counter=0
                 for ii in range(len(style_short_cut_interface)):
-                    style_short_cut_interface[ii] = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
-                    # style_short_cut_avg = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
-                    # style_short_cut_max = tf.reduce_max(style_short_cut_interface[ii], axis=0)
-                    # style_short_cut_min = tf.reduce_min(style_short_cut_interface[ii], axis=0)
-                    # style_short_cut_interface[ii]= tf.concat([style_short_cut_avg,style_short_cut_max,style_short_cut_min],axis=3)
+                    style_short_cut_avg = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
+                    style_short_cut_max = tf.reduce_max(style_short_cut_interface[ii], axis=0)
+                    style_short_cut_min = tf.reduce_min(style_short_cut_interface[ii], axis=0)
+                    style_short_cut_interface[ii]= tf.concat([style_short_cut_avg,style_short_cut_max,style_short_cut_min],axis=3)
                     style_shortcut_batch_diff += _calculate_batch_diff(input_feature=style_short_cut_interface[ii])
 
                 style_shortcut_batch_diff = style_shortcut_batch_diff / len(style_short_cut_interface)
 
                 style_residual_batch_diff=0
                 for ii in range(len(style_residual_interface)):
-                    style_residual_interface[ii] = tf.reduce_mean(style_residual_interface[ii], axis=0)
-                    # style_residual_avg = tf.reduce_mean(style_residual_interface[ii], axis=0)
-                    # style_residual_max = tf.reduce_max(style_residual_interface[ii], axis=0)
-                    # style_residual_min = tf.reduce_min(style_residual_interface[ii], axis=0)
-                    # style_residual_interface[ii] = tf.concat([style_residual_avg, style_residual_max, style_residual_min], axis=3)
+                    style_residual_avg = tf.reduce_mean(style_residual_interface[ii], axis=0)
+                    style_residual_max = tf.reduce_max(style_residual_interface[ii], axis=0)
+                    style_residual_min = tf.reduce_min(style_residual_interface[ii], axis=0)
+                    style_residual_interface[ii] = tf.concat([style_residual_avg, style_residual_max, style_residual_min], axis=3)
                     style_residual_batch_diff += _calculate_batch_diff(input_feature=style_residual_interface[ii])
                 style_residual_batch_diff = style_residual_batch_diff / len(style_residual_interface)
 
@@ -624,7 +618,7 @@ def generator_framework(content_prototype,style_reference,
     # decoder part
     img_width = int(content_prototype.shape[1])
     img_filters = int(int(content_prototype.shape[3]) / content_prototype_number)
-    generated_img, full_decoded_output, _ = \
+    generated_img,_, _ = \
         decoder_framework(encoded_layer_list=encoded_layer_list,
                           is_training=is_training,
                           output_width=img_width,

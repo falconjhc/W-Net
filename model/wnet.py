@@ -2,7 +2,6 @@
 from __future__ import print_function
 from __future__ import absolute_import
 GRAYSCALE_AVG = 127.5
-
 import matplotlib.pyplot as plt
 
 
@@ -25,9 +24,9 @@ from dataset.dataset import DataProvider
 
 from utilities.utils import scale_back_for_img, scale_back_for_dif, merge, correct_ckpt_path
 from utilities.utils import image_show, image_revalue
-from model.gan_networks_MinMaxAvg import discriminator_mdy_5_convs
-from model.gan_networks_MinMaxAvg import discriminator_mdy_6_convs
-from model.gan_networks_MinMaxAvg import discriminator_mdy_6_convs_tower_version1
+from model.gan_networks import discriminator_mdy_5_convs
+from model.gan_networks import discriminator_mdy_6_convs
+from model.gan_networks import discriminator_mdy_6_convs_tower_version1
 
 
 from model.gan_networks import vgg_16_net as feature_extractor_network
@@ -724,22 +723,39 @@ class WNet(object):
                     style_residual_interface_list.append(current_style_residual_interface)
                     style_full_feature_list.append(current_style_full_feature_list)
 
+
+
+
                 for ii in range(style_reference.shape[3]):
                     if ii == 0:
-                        style_short_cut_interface = style_short_cut_interface_list[ii]
-                        style_residual_interface = style_residual_interface_list[ii]
+                        style_short_cut_interface = list()
+                        for jj in range(len(style_short_cut_interface_list[ii])):
+                            style_short_cut_interface.append(tf.expand_dims(style_short_cut_interface_list[ii][jj], axis=0))
+                        style_residual_interface = list()
+                        for jj in range(len(style_residual_interface_list[ii])):
+                            style_residual_interface.append(tf.expand_dims(style_residual_interface_list[ii][jj], axis=0))
+
                     else:
                         for jj in range(len(style_short_cut_interface_list[ii])):
-                            style_short_cut_interface[jj] += style_short_cut_interface_list[ii][jj]
+                            style_short_cut_interface[jj] = tf.concat([style_short_cut_interface[jj], tf.expand_dims(style_short_cut_interface_list[ii][jj],axis=0)], axis=0)
+
                         for jj in range(len(style_residual_interface_list[ii])):
-                            style_residual_interface[jj] += style_residual_interface_list[ii][jj]
+                            style_residual_interface[jj] = tf.concat([style_residual_interface[jj], tf.expand_dims(style_residual_interface_list[ii][jj], axis=0)], axis=0)
+
                 for ii in range(len(style_short_cut_interface)):
-                    style_short_cut_interface[ii] = style_short_cut_interface[ii] / style_reference.shape[3]
+                    # style_short_cut_avg = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
+                    # style_short_cut_max = tf.reduce_max(style_short_cut_interface[ii], axis=0)
+                    # style_short_cut_min = tf.reduce_min(style_short_cut_interface[ii], axis=0)
+                    # style_short_cut_interface[ii] = tf.concat([style_short_cut_avg, style_short_cut_max, style_short_cut_min], axis=3)
+                    style_short_cut_interface[ii] = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
+
+
                 for ii in range(len(style_residual_interface)):
-                    style_residual_interface[ii] = style_residual_interface[ii] / style_reference.shape[3]
-
-
-
+                    # style_residual_avg = tf.reduce_mean(style_residual_interface[ii], axis=0)
+                    # style_residual_max = tf.reduce_max(style_residual_interface[ii], axis=0)
+                    # style_residual_min = tf.reduce_min(style_residual_interface[ii], axis=0)
+                    # style_residual_interface[ii] = tf.concat([style_residual_avg, style_residual_max, style_residual_min], axis=3)
+                    style_residual_interface[ii] = tf.reduce_mean(style_residual_interface[ii], axis=0)
 
             with tf.device(self.generator_devices):
                 content_prototype_placeholder = tf.placeholder(tf.float32,
@@ -784,6 +800,8 @@ class WNet(object):
         current_counter=0
         for current_generating_content_counter in range(content_prototype.shape[0]):
             current_content_char = np.expand_dims(np.squeeze(content_prototype[current_generating_content_counter,:,:,:]),axis=0)
+            if current_content_char.ndim==3:
+                current_content_char = np.expand_dims(current_content_char,axis=3)
             current_generated_char,\
                 style_full_features,content_full_features,decoded_full_features = \
                 self.sess.run([generated_infer,
@@ -792,8 +810,8 @@ class WNet(object):
                                          style_reference_placeholder: style_reference})
 
 
-            feature_saving_path = '/Users/harric/Desktop/Features'
-
+            # feature_saving_path = '/Users/harric/Desktop/Features'
+            #
             # style_path = os.path.join(feature_saving_path,'Style')
             # for ii in range(len(style_full_features)):
             #     current_style_path = 'StyleNo%d' % ii
@@ -843,31 +861,20 @@ class WNet(object):
             #                              path=os.path.join(content_path,
             #                                                'ContentPro%d.png.png'
             #                                                % ii))
-
-
-            decoded_path = os.path.join(feature_saving_path,'Decoder')
-            for ii in range(len(decoded_full_features)):
-                if decoded_full_features[ii].shape[1] > 1:
-                    current_decoded_path = 'DecodedFeatureLevel%d' % ii
-                    current_decoded_path = os.path.join(decoded_path,current_decoded_path)
-                    if os.path.exists(current_decoded_path):
-                        shutil.rmtree(current_decoded_path)
-                    os.makedirs(current_decoded_path)
-                    for jj in range(decoded_full_features[ii].shape[3]):
-                        inf_tools.numpy_img_save(img=image_revalue(decoded_full_features[ii][:, :, :, jj],tah_mark=True),
-                                                 path=os.path.join(current_decoded_path,
-                                                                   'DecodedFeatureLevel%dChannel%d.png'
-                                                                   % (ii, jj)))
-
-
-
-
-
-
-
-
-
-
+            #
+            # decoded_path = os.path.join(feature_saving_path,'Decoder')
+            # for ii in range(len(decoded_full_features)):
+            #     if decoded_full_features[ii].shape[1] > 1:
+            #         current_decoded_path = 'DecodedFeatureLevel%d' % ii
+            #         current_decoded_path = os.path.join(decoded_path,current_decoded_path)
+            #         if os.path.exists(current_decoded_path):
+            #             shutil.rmtree(current_decoded_path)
+            #         os.makedirs(current_decoded_path)
+            #         for jj in range(decoded_full_features[ii].shape[3]):
+            #             inf_tools.numpy_img_save(img=image_revalue(decoded_full_features[ii][:, :, :, jj],tah_mark=True),
+            #                                      path=os.path.join(current_decoded_path,
+            #                                                        'DecodedFeatureLevel%dChannel%d.png'
+            #                                                        % (ii, jj)))
 
             full_generated[current_counter,:,:,:]=current_generated_char
             for ii in range(content_prototype.shape[3]):
