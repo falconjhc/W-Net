@@ -13,7 +13,7 @@ from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/DataA/Harric/ChineseCharacterExp/'
+data_path_root = '/Data_SSD/Harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
@@ -75,7 +75,7 @@ input_args = [
               # optimizer parameters
               '--init_lr','0.001',
               '--epoch','5000',
-              '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
+              '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
 
               '--optimization_method','adam',
               '--final_learning_rate_pctg','0.01',

@@ -23,18 +23,18 @@ print_separater = "#############################################################
 input_args = ['--debug_mode','0',
               '--style_input_number','4',
               '--targeted_content_input_txt',
-    '../FontAndChars/滚滚长江东逝水_简体.txt',
+    '../FontAndChars/xygn.txt',
 
               '--save_path',
-    '../../GeneratedChars'+ time.strftime('@@%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
+    '../../GeneratedChars/'+ time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
 
 
               '--known_style_img_path',
-    '../StyleExampleChars/jn.jpeg',         # input a image with multiple written chars
+    '../StyleExampleChars/CY.jpg',         # input a image with multiple written chars
     #'../StyleExampleChars/TTTGB-Medium.ttf', # input a ttf / otf file to generate printed chars
     # '../StyleExampleChars/PrintedSamples', # input a image directory with multiple single chars
 
-              '--save_mode','8:8',
+              '--save_mode','2:4',
 
               '--content_data_dir', # standard data location
     'CASIA_Dataset/PrintedData/',
@@ -52,7 +52,7 @@ input_args = ['--debug_mode','0',
               '--generator_device','/device:GPU:0',
 
               '--model_dir',
-    '/home/harric/Desktop/Exp20181017_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
+    '/home/harric/Desktop/TrainedModels/Exp20181017_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
 
               ]
 
