@@ -13,8 +13,8 @@ import time
 
 from model.wnet import WNet as WNET
 
-#exp_root_path = '/Users/harric/ChineseCharacterExp/'
-exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
+exp_root_path = '/Users/harric/ChineseCharacterExp/'
+#exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
 
 print_separater = "#################################################################"
 
@@ -27,7 +27,8 @@ input_args = ['--debug_mode','0',
     '../FontAndChars/滚滚长江东逝水_简体.txt',
 
               '--save_path',
-    '../../GeneratedChars/'+ time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
+    #'../../GeneratedChars/'+ time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
+    '/Users/harric/Desktop/GeneratedChars/'+ time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
 
 
               '--known_style_img_path',
@@ -57,7 +58,7 @@ input_args = ['--debug_mode','0',
               '--generator_device','/device:GPU:0',
 
               '--model_dir',
-    '/home/harric/Desktop/TrainedModels/Exp20181017_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
+    'TrainedModels/Exp20181017_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
 
               ]
 
@@ -131,7 +132,7 @@ def main(_):
                  generator_residual_blocks=args.generator_residual_blocks,
                  generator_devices=args.generator_device,
 
-                 model_dir=args.model_dir,
+                 model_dir=os.path.join(exp_root_path,args.model_dir),
                  known_style_img_path=args.known_style_img_path)
 
     model.character_generation()

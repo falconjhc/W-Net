@@ -13,8 +13,8 @@ import time
 
 from model.wnet import WNet as WNET
 
-#exp_root_path = '/Users/harric/ChineseCharacterExp/'
-exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
+exp_root_path = '/Users/harric/ChineseCharacterExp/'
+#exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
 
 print_separater = "#################################################################"
 
@@ -27,13 +27,14 @@ input_args = ['--debug_mode','0',
     '../FontAndChars/滚滚长江东逝水_简体.txt',
 
               '--save_path',
-    '../../GeneratedChars/'+ time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
+    #'../../GeneratedChars/'+ time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
+    '/Users/harric/Desktop/GeneratedChars/'+ time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
 
 
               '--known_style_img_path',
-    '../StyleExampleChars/CY.jpg',         # input a image with multiple written chars
+    '../StyleExampleChars/jn.jpeg'            # input a image with multiple written chars
     #'../StyleExampleChars/TTTGB-Medium.ttf', # input a ttf / otf file to generate printed chars
-    # '../StyleExampleChars/PrintedSamples', # input a image directory with multiple single chars
+    # '../StyleExampleChars/PrintedSamples',  # input a image directory with multiple single chars
 
               '--save_mode','8:8',
 
@@ -53,7 +54,7 @@ input_args = ['--debug_mode','0',
               '--generator_device','/device:GPU:0',
 
               '--model_dir',
-    '/home/harric/Desktop/TrainedModels/Exp20181109_StylePf50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
+    'TrainedModels/Exp20181109_StylePf50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
 
               ]
 
@@ -127,7 +128,7 @@ def main(_):
                  generator_residual_blocks=args.generator_residual_blocks,
                  generator_devices=args.generator_device,
 
-                 model_dir=args.model_dir,
+                 model_dir=os.path.join(exp_root_path,args.model_dir),
                  known_style_img_path=args.known_style_img_path)
 
     model.character_generation()
