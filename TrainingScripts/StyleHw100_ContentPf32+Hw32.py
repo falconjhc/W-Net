@@ -69,7 +69,7 @@ input_args = [
 
               # generator && discriminator
               '--generator_residual_at_layer','3',
-              '--generator_residual_blocks','5',
+              '--generator_residual_blocks','7',
               '--discriminator','DisMdy6conv',
 
               '--batch_size','16',
