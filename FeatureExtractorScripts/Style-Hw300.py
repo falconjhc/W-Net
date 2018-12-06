@@ -43,6 +43,9 @@ input_args = [
               '--label1_loss','1',
               '--center_loss_penalty_rate','0',
 
+              '--augment','1',
+              '--augnemt_for_flip','0',
+
               '--debug_mode','0',
               '--cheat_mode','1']
 
@@ -56,6 +59,7 @@ parser.add_argument('--data_dir_validation_path', dest='data_dir_validation_path
 parser.add_argument('--experiment_dir', dest='experiment_dir',type=str,required=True)
 parser.add_argument('--log_dir', dest='log_dir',type=str,required=True)
 parser.add_argument('--experiment_id', dest='experiment_id',type=str,required=True)
+parser.add_argument('--training_from_model_dir', dest='training_from_model_dir', default=None)
 
 
 
@@ -82,6 +86,9 @@ parser.add_argument('--center_loss_penalty_rate', dest='center_loss_penalty_rate
 
 parser.add_argument('--debug_mode', dest='debug_mode',type=int,required=True)
 parser.add_argument('--cheat_mode', dest='cheat_mode',type=int,required=True)
+parser.add_argument('--augment', dest='augment',type=int,required=True)
+parser.add_argument('--augnemt_for_flip', dest='augnemt_for_flip',type=int,required=True)
+
 
 
 parser.add_argument('--image_filters', dest='image_filters',type=int,required=True)

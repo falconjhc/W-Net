@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import print_function
 from __future__ import absolute_import
 import sys
@@ -7,46 +8,48 @@ import tensorflow as tf
 import argparse
 from model.feature_extractor_training import train_procedures
 
-exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
-# exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
+# exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
+exp_root_path = '/Users/harric/ChineseCharacterExp/'
 
 input_args = [
+            '--training_from_model_dir',
+            '/Users/harric/ChineseCharacterExp/TrainedModel_CNN/ContentStyleBoth/Exp20180802_FeatureExtractor_StyleContent_HW300_vgg16net/variables/',
+
             '--data_dir_train_path',
-    'CASIA_Dataset/PrintedData/,'
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/',
+            'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/',
 
               '--data_dir_validation_path',
-	  'CASIA_Dataset/PrintedData/,'
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
+            'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
               '--file_list_txt_train',
-    '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt,'
-    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt',
+            '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt',
 
               '--file_list_txt_validation',
-	  '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt,'
-    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt',
+            '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Cursive.txt',
 
               '--experiment_dir',
-            '../../Exp_FeatureExtractor/',
+            '../../ExpExtraNet/',
 
               '--log_dir',
-              'tfLogs_FeatureExtractor/',
+              'tfLogs_ExtraNet/',
 
               '--image_filters','1',
-              '--experiment_id','20181010_FeatureExtractor_Content_PF32HW32',
+              '--experiment_id','DEBUG',
               '--train_resume_mode','0',
 
               '--batch_size','64',
               '--image_size','64',
-              '--epoch_num', '2500',
+              '--epoch_num', '1000',
               '--network', 'vgg16net',
               '--init_lr','0.0001',
               '--label0_loss','1',
-              '--label1_loss','0',
+              '--label1_loss','1',
               '--center_loss_penalty_rate','0',
 
-              '--debug_mode','0',
+              '--augment','1',
+              '--augnemt_for_flip','1',
+
+              '--debug_mode','1',
               '--cheat_mode','1']
 
 
@@ -59,6 +62,7 @@ parser.add_argument('--data_dir_validation_path', dest='data_dir_validation_path
 parser.add_argument('--experiment_dir', dest='experiment_dir',type=str,required=True)
 parser.add_argument('--log_dir', dest='log_dir',type=str,required=True)
 parser.add_argument('--experiment_id', dest='experiment_id',type=str,required=True)
+parser.add_argument('--training_from_model_dir', dest='training_from_model_dir', default=None)
 
 
 
@@ -85,6 +89,8 @@ parser.add_argument('--center_loss_penalty_rate', dest='center_loss_penalty_rate
 
 parser.add_argument('--debug_mode', dest='debug_mode',type=int,required=True)
 parser.add_argument('--cheat_mode', dest='cheat_mode',type=int,required=True)
+parser.add_argument('--augment', dest='augment',type=int,required=True)
+parser.add_argument('--augnemt_for_flip', dest='augnemt_for_flip',type=int,required=True)
 
 
 parser.add_argument('--image_filters', dest='image_filters',type=int,required=True)
@@ -107,8 +113,6 @@ def main(_):
 
 
 
-
-
 args = parser.parse_args(input_args)
 args.data_dir_train_path=args.data_dir_train_path.split(',')
 args.data_dir_validation_path=args.data_dir_validation_path.split(',')
@@ -120,4 +124,4 @@ for ii in range(len(args.data_dir_validation_path)):
     args.data_dir_validation_path[ii] = os.path.join(exp_root_path,args.data_dir_validation_path[ii])
 args.log_dir = os.path.join(exp_root_path,args.log_dir)
 if __name__ == '__main__':
-	tf.app.run()
+    tf.app.run()

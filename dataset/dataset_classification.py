@@ -3,6 +3,8 @@ import random
 import tensorflow as tf
 import os
 import gc
+import scipy.misc as misc
+
 from tensorflow.python.framework import ops
 from tensorflow.python.framework import dtypes
 from utilities.utils import image_show
@@ -12,6 +14,10 @@ from utilities.utils import shift_and_resize_image
 
 GRAYSCALE_AVG = 127.5
 STANDARD_IMAGE_WIDTH = 256
+
+STANDARD_GRAYSCALE_THRESHOLD_VALUE = 240
+ALTERNATE_GRAYSCALE_LOW=170
+ALTERNATE_GRAYSCALE_HGH=250
 
 
 class Dataset(object):
@@ -73,26 +79,7 @@ class Dataset(object):
 
 
 
-    def get_next_batch(self,sess,augment):
-
-        def augment_batch_images(img):
-            w = img.shape[0]
-            h = img.shape[0]
-
-            multiplier = random.uniform(1.00, 1.50)
-            nw = int(multiplier * w) + 1
-            nh = int(multiplier * h) + 1
-            shift_x = int(np.ceil(np.random.uniform(0.01, nw - w)))
-            shift_y = int(np.ceil(np.random.uniform(0.01, nh - h)))
-            img = shift_and_resize_image(img, shift_x, shift_y, nw, nh)
-
-            flipier = random.uniform(0.00,1.00)
-            if flipier>0.5:
-                img = np.flip(img,axis=1)
-
-            return img
-
-
+    def get_next_batch(self,sess,augment,augment_for_flip):
 
 
         batch_images, \
@@ -105,16 +92,35 @@ class Dataset(object):
         if augment:
             for ii in range(self.batch_size):
                 curt_img = np.squeeze(batch_images[ii,:,:,:])
-                curt_img = augment_batch_images(curt_img)
+
+                crop_size = np.random.randint(low=curt_img.shape[0]*0.75,
+                                              high=curt_img.shape[1]+1)
+                start_p_h = np.random.randint(low=0, high=curt_img.shape[1]-crop_size+1)
+                start_p_v = np.random.randint(low=0, high=curt_img.shape[0]-crop_size+1)
+
+                cropped_img = curt_img[start_p_v:start_p_v+crop_size,
+                              start_p_h:start_p_h+crop_size]
+
+                curt_img = misc.imresize(cropped_img, [curt_img.shape[0], curt_img.shape[1]])
+
+                threshold = np.int32(np.random.uniform(low=ALTERNATE_GRAYSCALE_LOW,high=ALTERNATE_GRAYSCALE_HGH))
+                curt_img[np.where(curt_img < threshold)] = 0
+                curt_img[np.where(curt_img >= threshold)] = 255
+
+                flipier = random.uniform(0.00,1.00)
+                if flipier>0.5 and augment_for_flip:
+                    curt_img = np.flip(curt_img,axis=1)
+
                 batch_images[ii,:,:,:] = np.reshape(curt_img,[curt_img.shape[0],curt_img.shape[1],1])
-
-
+        else:
+            for ii in range(self.batch_size):
+                curt_img = np.squeeze(batch_images[ii, :, :, :])
+                threshold = STANDARD_GRAYSCALE_THRESHOLD_VALUE
+                curt_img[np.where(curt_img < threshold)] = 0
+                curt_img[np.where(curt_img >= threshold)] = 255
+                batch_images[ii, :, :, :] = np.reshape(curt_img, [curt_img.shape[0], curt_img.shape[1], 1])
 
         batch_images = batch_images.astype(np.float32) / GRAYSCALE_AVG - 1
-
-
-
-
 
         return batch_images,batch_label1_labels,batch_label0_labels
 

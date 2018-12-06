@@ -49,6 +49,80 @@ SummaryHandle = namedtuple("SummaryHandle",["CrossEntropy_Loss","TrainingAccurac
 eps= 1e-3
 print_separater="####################################################################################"
 
+
+def restore_from_previous_model(saver_full_model, input_args, sess):
+    def list_diff(first, second):
+        second = set(second)
+        return [item for item in first if item not in second]
+
+    def checking_var_consistency(checking_var, stored_var_name, stored_var_shape):
+        check_name = (stored_var_name == str(checking_var.name[:len(checking_var.name) - 2]))
+        check_dimension = len(checking_var.shape.dims) == len(stored_var_shape)
+        checking_shape_consistent = True
+        if check_dimension:
+            checking_shape = checking_var.shape
+
+            for ii in range(len(checking_shape.dims)):
+                current_checking_shape = int(checking_shape[ii])
+                current_stored_shape = stored_var_shape[ii]
+                if not current_checking_shape == current_stored_shape:
+                    checking_shape_consistent = False
+                    break
+        return check_name and check_dimension and checking_shape_consistent
+
+    def variable_comparison_and_restore(current_saver, restore_model_dir, sess, model_name):
+        ckpt = tf.train.get_checkpoint_state(restore_model_dir)
+        output_var_tensor_list = list()
+        saved_var_name_list = list()
+        current_var_name_list = list()
+        for var_name, var_shape in tf.contrib.framework.list_variables(ckpt.model_checkpoint_path):
+            for checking_var in current_saver._var_list:
+                found_var = checking_var_consistency(checking_var=checking_var,
+                                                     stored_var_name=var_name,
+                                                     stored_var_shape=var_shape)
+                if found_var:
+                    output_var_tensor_list.append(checking_var)
+                current_var_name_list.append(str(checking_var.name[:len(checking_var.name) - 2]))
+            saved_var_name_list.append(var_name)
+
+        ignore_var_tensor_list = list_diff(first=current_saver._var_list,
+                                           second=output_var_tensor_list)
+        if ignore_var_tensor_list:
+            print("IgnoreVars_ForVar in current model but not in the stored model:")
+            counter = 0
+            for ii in ignore_var_tensor_list:
+                print("No.%d, %s" % (counter, ii))
+                counter += 1
+            if not input_args.debug_mode == 1:
+                raw_input("Press enter to continue")
+
+        current_var_name_list = np.unique(current_var_name_list)
+        ignore_var_name_list = list_diff(first=saved_var_name_list,
+                                         second=current_var_name_list)
+        if ignore_var_name_list:
+            print("IgnoreVars_ForVar in stored model but not in the current model:")
+            counter = 0
+            for ii in ignore_var_name_list:
+                print("No.%d, %s" % (counter, ii))
+                counter += 1
+            if not input_args.debug_mode == 1:
+                raw_input("Press enter to continue")
+
+        saver = tf.train.Saver(max_to_keep=1, var_list=output_var_tensor_list)
+        saver.restore(sess=sess, save_path=ckpt.model_checkpoint_path)
+        print(model_name)
+
+
+
+    if not input_args.training_from_model_dir == None:
+        print(print_separater)
+        variable_comparison_and_restore(current_saver=saver_full_model,
+                                        restore_model_dir=input_args.training_from_model_dir,
+                                        sess=sess,
+                                        model_name='Restoring_ForPreviousTrainedBaseModel')
+        print(print_separater)
+
+
 def get_model_id_and_create_dirs(experiment_id,experiment_dir,
                                  log_dir,
                                  extra_net,
@@ -230,7 +304,9 @@ def train_procedures(args_input):
                 framework_saver.restore(sess=sess, save_path=corrected_ckpt_path)
                 print("Framework restored from:%s" % corrected_ckpt_path)
 
-
+            restore_from_previous_model(saver_full_model=saver_full_model,
+                                        input_args=args_input,
+                                        sess=sess)
 
 
 
@@ -349,7 +425,9 @@ def train_procedures(args_input):
 
                     read_data_start = time.time()
                     batch_images_train, batch_label1_labels_train,batch_label0_labels_train\
-                        = data_provider.train.get_next_batch(sess=sess,augment=True)
+                        = data_provider.train.get_next_batch(sess=sess,
+                                                             augment=args_input.augment,
+                                                             augment_for_flip=args_input.augnemt_for_flip)
 
 
 
@@ -444,7 +522,7 @@ def train_procedures(args_input):
 
                         ## test on validation
                         batch_images_val, batch_label1_labels_val, batch_label0_labels_val = \
-                            data_provider.val.get_next_batch(sess=sess,augment=False)
+                            data_provider.val.get_next_batch(sess=sess,augment=False,augment_for_flip=False)
                         batch_label1_labels_val = dense_to_one_hot(input_label=batch_label1_labels_val,
                                                                    batch_size=batch_size,
                                                                    involved_label_list=data_provider.label1_vec)
@@ -760,7 +838,7 @@ def check_class_centralization(sess,
     for ii in range(iter_num):
         time_start=time.time()
         batch_images, batch_label1, batch_label0 \
-            = data_provider.eval.get_next_batch(sess=sess, augment=False)
+            = data_provider.eval.get_next_batch(sess=sess, augment=False,augment_for_flip=False)
 
         batch_logits = sess.run(batch_logits_op,
                                 feed_dict={evalHandle.batch_images:batch_images})
