@@ -85,6 +85,11 @@ class Dataset(object):
             shift_x = int(np.ceil(np.random.uniform(0.01, nw - w)))
             shift_y = int(np.ceil(np.random.uniform(0.01, nh - h)))
             img = shift_and_resize_image(img, shift_x, shift_y, nw, nh)
+
+            flipier = random.uniform(0.00,1.00)
+            if flipier>0.5:
+                img = np.flip(img,axis=1)
+
             return img
 
 

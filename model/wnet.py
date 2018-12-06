@@ -2,6 +2,8 @@
 from __future__ import print_function
 from __future__ import absolute_import
 GRAYSCALE_AVG = 127.5
+TINIEST_LR = 0.00009
+
 import matplotlib.pyplot as plt
 
 
@@ -653,10 +655,10 @@ class WNet(object):
     def character_generation(self):
 
         charset_level1, character_label_level1 = \
-            inf_tools.get_chars_set_from_level1_2(path='../FontAndChars/GB2312_Level_1.txt',
+            inf_tools.get_chars_set_from_level1_2(path='../ContentTxt/GB2312_Level_1.txt',
                                                   level=1)
         charset_level2, character_label_level2 = \
-            inf_tools.get_chars_set_from_level1_2(path='../FontAndChars/GB2312_Level_2.txt',
+            inf_tools.get_chars_set_from_level1_2(path='../ContentTxt/GB2312_Level_2.txt',
                                                   level=2)
 
         # get data available
@@ -675,7 +677,7 @@ class WNet(object):
             print("Generation Terminated.")
 
         style_reference = inf_tools.get_style_references(img_path=self.known_style_img_path,
-        												 resave_path=self.save_path,
+                                                         resave_path=self.save_path,
                                                          style_input_number=self.style_input_number)
 
         output_paper_shape = self.save_mode.split(':')
@@ -730,32 +732,40 @@ class WNet(object):
                     if ii == 0:
                         style_short_cut_interface = list()
                         for jj in range(len(style_short_cut_interface_list[ii])):
-                            style_short_cut_interface.append(tf.expand_dims(style_short_cut_interface_list[ii][jj], axis=0))
+                            style_short_cut_interface.append(tf.expand_dims(style_short_cut_interface_list[ii][jj],
+                                                                            axis=0))
                         style_residual_interface = list()
                         for jj in range(len(style_residual_interface_list[ii])):
-                            style_residual_interface.append(tf.expand_dims(style_residual_interface_list[ii][jj], axis=0))
+                            style_residual_interface.append(tf.expand_dims(style_residual_interface_list[ii][jj],
+                                                                           axis=0))
 
                     else:
                         for jj in range(len(style_short_cut_interface_list[ii])):
-                            style_short_cut_interface[jj] = tf.concat([style_short_cut_interface[jj], tf.expand_dims(style_short_cut_interface_list[ii][jj],axis=0)], axis=0)
+                            style_short_cut_interface[jj] = tf.concat([style_short_cut_interface[jj],
+                                                                       tf.expand_dims(style_short_cut_interface_list[ii][jj],
+                                                                                      axis=0)],
+                                                                      axis=0)
 
                         for jj in range(len(style_residual_interface_list[ii])):
-                            style_residual_interface[jj] = tf.concat([style_residual_interface[jj], tf.expand_dims(style_residual_interface_list[ii][jj], axis=0)], axis=0)
+                            style_residual_interface[jj] = tf.concat([style_residual_interface[jj],
+                                                                      tf.expand_dims(style_residual_interface_list[ii][jj],
+                                                                                     axis=0)],
+                                                                     axis=0)
 
                 for ii in range(len(style_short_cut_interface)):
-                    # style_short_cut_avg = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
-                    # style_short_cut_max = tf.reduce_max(style_short_cut_interface[ii], axis=0)
-                    # style_short_cut_min = tf.reduce_min(style_short_cut_interface[ii], axis=0)
-                    # style_short_cut_interface[ii] = tf.concat([style_short_cut_avg, style_short_cut_max, style_short_cut_min], axis=3)
-                    style_short_cut_interface[ii] = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
+                    style_short_cut_avg = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
+                    style_short_cut_max = tf.reduce_max(style_short_cut_interface[ii], axis=0)
+                    style_short_cut_min = tf.reduce_min(style_short_cut_interface[ii], axis=0)
+                    style_short_cut_interface[ii] = tf.concat([style_short_cut_avg, style_short_cut_max, style_short_cut_min], axis=3)
+                    # style_short_cut_interface[ii] = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
 
 
                 for ii in range(len(style_residual_interface)):
-                    # style_residual_avg = tf.reduce_mean(style_residual_interface[ii], axis=0)
-                    # style_residual_max = tf.reduce_max(style_residual_interface[ii], axis=0)
-                    # style_residual_min = tf.reduce_min(style_residual_interface[ii], axis=0)
-                    # style_residual_interface[ii] = tf.concat([style_residual_avg, style_residual_max, style_residual_min], axis=3)
-                    style_residual_interface[ii] = tf.reduce_mean(style_residual_interface[ii], axis=0)
+                    style_residual_avg = tf.reduce_mean(style_residual_interface[ii], axis=0)
+                    style_residual_max = tf.reduce_max(style_residual_interface[ii], axis=0)
+                    style_residual_min = tf.reduce_min(style_residual_interface[ii], axis=0)
+                    style_residual_interface[ii] = tf.concat([style_residual_avg, style_residual_max, style_residual_min], axis=3)
+                    # style_residual_interface[ii] = tf.reduce_mean(style_residual_interface[ii], axis=0)
 
             with tf.device(self.generator_devices):
                 content_prototype_placeholder = tf.placeholder(tf.float32,
@@ -905,7 +915,7 @@ class WNet(object):
                                                             columns=output_paper_cols)
             if not os.path.exists(os.path.join(self.save_path,'Content')):
                 os.makedirs(os.path.join(self.save_path,'Content'))
-            misc.imsave(os.path.join(os.path.join(self.save_path,'Content'), 'Content%s.png' % content_label1_vec[ii]), content_paper)
+            misc.imsave(os.path.join(os.path.join(self.save_path,'Content'), 'Content_%s.png' % content_label1_vec[ii]), content_paper)
         print("Content Papers Saved @ %s" % os.path.join(os.path.join(self.save_path,'Content')))
         
         print(self.print_separater)
@@ -2315,10 +2325,11 @@ class WNet(object):
         if self.resume_training==1:
             ei_start = epoch_step.eval(self.sess)
             current_lr = self.lr * np.power(learning_rate_decay_rate, ei_start)
-            #current_lr = max(current_lr, 0.00009)
+
         else:
             ei_start = 0
             current_lr = self.lr
+        current_lr = max(current_lr, TINIEST_LR)
         global_step_start = global_step.eval(session=self.sess)
         print("InitTrainingEpochs:%d, FinalTrainingEpochStartAt:%d" % (self.init_training_epochs,self.final_training_epochs))
         print("TrainingStart:Epoch:%d, GlobalStep:%d, LearnRate:%.5f" % (ei_start+1,global_step_start+1,current_lr))

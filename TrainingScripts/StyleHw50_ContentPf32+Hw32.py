@@ -13,7 +13,7 @@ from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/Data_SSD/Harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
@@ -84,12 +84,12 @@ input_args = [
               # penalties
               '--generator_weight_decay_penalty','0.0001',
               '--discriminator_weight_decay_penalty','0.0003',
-              '--Pixel_Reconstruction_Penalty','950',
+              '--Pixel_Reconstruction_Penalty','750',
               '--Lconst_content_Penalty','3',
               '--Lconst_style_Penalty','5',
-              '--Discriminative_Penalty', '50',
+              '--Discriminative_Penalty', '75',
 
-              '--Discriminator_Categorical_Penalty', '100',
+              '--Discriminator_Categorical_Penalty', '75',
               '--Generator_Categorical_Penalty', '0.2',
               '--Discriminator_Gradient_Penalty', '10',
               '--Batch_StyleFeature_Discrimination_Penalty','0',
@@ -102,9 +102,9 @@ input_args = [
     'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
               '--style_reference_extractor_dir',
     'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_HW50_vgg16net/variables/',
-              '--Feature_Penalty_True_Fake_Target', '950',
-              '--Feature_Penalty_Style_Reference','25',
-              '--Feature_Penalty_Content_Prototype','25']
+              '--Feature_Penalty_True_Fake_Target', '750',
+              '--Feature_Penalty_Style_Reference','10',
+              '--Feature_Penalty_Content_Prototype','10']
 
 
 

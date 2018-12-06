@@ -13,10 +13,10 @@ exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
 
 input_args = [
             '--data_dir_train_path',
-            'CASIA_64_Dataset/HandWritingData/CASIA-HWDB1.1/',
+            'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/',
 
               '--data_dir_validation_path',
-            'CASIA_64_Dataset/HandWritingData/CASIA-HWDB2.1/',
+            'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
               '--file_list_txt_train',
             '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt',

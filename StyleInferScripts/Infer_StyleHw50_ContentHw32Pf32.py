@@ -13,34 +13,41 @@ import time
 
 from model.wnet import WNet as WNET
 
-exp_root_path = '/Users/harric/ChineseCharacterExp/'
-#exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
+#exp_root_path = '/Users/harric/ChineseCharacterExp/'
+exp_root_path = '/data/Harric/ChineseCharacterExp/'
 
 print_separater = "#################################################################"
 
 
 
 
-input_args = ['--debug_mode','0',
-              '--style_input_number','4',
+input_args = [
               '--targeted_content_input_txt',
-    '../FontAndChars/滚滚长江东逝水_简体.txt',
-
-              '--save_path',
-    #'../../GeneratedChars/'+ time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
-    '/Users/harric/Desktop/GeneratedChars/'+ time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
-
-
-              '--known_style_img_path',
-    '../StyleExampleChars/CY.jpg',         # input a image with multiple written chars
-    #'../StyleExampleChars/TTTGB-Medium.ttf', # input a ttf / otf file to generate printed chars
-    #'../StyleExampleChars/PrintedSamples', # input a image directory with multiple single chars
-
+    '../ContentTxt/滚滚长江东逝水_简体_有替代.txt',
               '--save_mode','8:8',
 
+              '--known_style_img_path',
+    '../StyleExamples/JHC2.jpeg',            # input a image with multiple written chars
+    #'../FontFiles/TTTGB-Medium.ttf', # input a ttf / otf file to generate printed chars
+    #'../StyleExamples/HandWritingSamples', # input a image directory with multiple single chars
+
+
+
+  ####################################################################
+  ####################################################################
+  #################### DO NOT TOUCH BELOW ############################
+  ####################################################################
+  ####################################################################
+
+              '--save_path',
+    '../../GeneratedChars/'+ time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
+
+              '--debug_mode','0',
+              '--style_input_number','4',
+
               '--content_data_dir', # standard data location
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/,'
+    'CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/,'
+    'CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/,'
     'CASIA_Dataset/PrintedData/',
 
               '--file_list_txt_content',  # file list of the standard data
@@ -58,7 +65,7 @@ input_args = ['--debug_mode','0',
               '--generator_device','/device:GPU:0',
 
               '--model_dir',
-    'TrainedModels/Exp20181017_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
+    'TrainedModels_WNet/Exp20181115_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
 
               ]
 
@@ -113,7 +120,10 @@ def main(_):
 
     content_data_dir = args.content_data_dir.split(',')
     for ii in range(len(content_data_dir)):
-        content_data_dir[ii] = os.path.join(exp_root_path, content_data_dir[ii])
+        if not (os.path.splitext(content_data_dir[ii])[-1] == '.ttc' \
+                or os.path.splitext(content_data_dir[ii])[-1] == '.ttf' \
+                or os.path.splitext(content_data_dir[ii])[-1] == '.otf'):
+            content_data_dir[ii] = os.path.join(exp_root_path, content_data_dir[ii])
 
     model = WNET(debug_mode=args.debug_mode,
                  style_input_number=args.style_input_number,
