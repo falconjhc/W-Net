@@ -13,8 +13,8 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
 input_args = [
 
-            '--training_from_model_dir',
-            '/Data_HDD/Harric/ChineseCharacterExp/tfModels_FeatureExtractor/checkpoint/Exp20181017_FeatureExtractor_Style_HW300_vgg16net/variables',
+            #'--training_from_model_dir',
+            #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_FeatureExtractor/checkpoint/Exp20181017_FeatureExtractor_Style_HW300_vgg16net/variables',
 
             '--data_dir_train_path',
       'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
