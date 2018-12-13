@@ -10,7 +10,6 @@ sys.path.append('..')
 import os
 import time
 
-
 from model.wnet import WNet as WNET
 
 exp_root_path = '/Users/harric/ChineseCharacterExp/'
@@ -23,19 +22,13 @@ print_separater = "#############################################################
 
 input_args = [
               '--targeted_content_input_txt',
-    '../ContentTxt/过秦论_繁体_220.txt',
-    		  '--save_mode','10:22',
+    '../ContentTxt/滚滚长江东逝水_简体_有替代.txt',
+              '--save_mode','8:8',
 
-    		  '--known_style_img_path',
-    '../StyleExamples/Brush4.jpeg',            # input a image with multiple written chars
-    #'../FontFiles/TTTGB-Medium.ttf', # input a ttf / otf file to generate printed chars
-    # '../StyleExamples/PrintedSamples',  # input a image directory with multiple single chars
-
-              '--content_data_dir', # standard data location
-    '../FontFiles/HeiTi_Chinese.ttf',
-    #'../FontFiles/HeiTi_Korean.ttf',
-    #'../FontFiles/HeiTi_Jap1.otf',
-
+              '--known_style_img_path',
+    '../StyleExamples/Brush4.jpeg',         # input a image with multiple written chars
+    # '../FontFiles/DroidSansFallback.ttf', # input a ttf / otf file to generate printed chars
+    #'../StyleExamples/BrushCharacters', # input a image directory with multiple single chars
 
   ####################################################################
   ####################################################################
@@ -43,14 +36,21 @@ input_args = [
   ####################################################################
   ####################################################################
 
+
+
               '--save_path',
     '../../GeneratedChars/'+ time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
-              
-    		      '--debug_mode','0',
+
+              '--debug_mode','0',
               '--style_input_number','4',
 
-              '--file_list_txt_content',  'N/A',
+              '--content_data_dir', # standard data location
+    'CASIA_Dataset/PrintedData/',
+
+              '--file_list_txt_content',  # file list of the standard data
+    '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
               
+
               '--channels','1',
               '--img_width', '64',
 
@@ -60,7 +60,7 @@ input_args = [
               '--generator_device','/device:GPU:0',
 
               '--model_dir',
-    'TrainedModels_WNet/Exp20181115_StylePf50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
+    'TrainedModels_WNet/Exp20181207_StylePf80_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
 
               ]
 
@@ -117,7 +117,7 @@ def main(_):
     for ii in range(len(content_data_dir)):
         if not (os.path.splitext(content_data_dir[ii])[-1] == '.ttc' \
                 or os.path.splitext(content_data_dir[ii])[-1] == '.ttf' \
-                or os.path.splitext(content_data_dir[ii])[-1] == '.otf' ):
+                or os.path.splitext(content_data_dir[ii])[-1] == '.otf'):
             content_data_dir[ii] = os.path.join(exp_root_path, content_data_dir[ii])
 
     model = WNET(debug_mode=args.debug_mode,

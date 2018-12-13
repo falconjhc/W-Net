@@ -12,8 +12,8 @@ import time
 
 from model.wnet import WNet as WNET
 
-#exp_root_path = '/Users/harric/ChineseCharacterExp/'
-exp_root_path = '/data/Harric/ChineseCharacterExp/'
+exp_root_path = '/Users/harric/ChineseCharacterExp/'
+#exp_root_path = '/data/Harric/ChineseCharacterExp/'
 
 print_separater = "#################################################################"
 
@@ -26,8 +26,8 @@ input_args = [
               '--save_mode','8:8',
 
               '--known_style_img_path',
-    '../StyleExamples/jn.jpeg',         # input a image with multiple written chars
-    #'../FontFiles/TTTGB-Medium.ttf', # input a ttf / otf file to generate printed chars
+    '../StyleExamples/Brush31.png',         # input a image with multiple written chars
+    # '../FontFiles/DroidSansFallback.ttf', # input a ttf / otf file to generate printed chars
     # '../StyleExamples/PrintedSamples', # input a image directory with multiple single chars
 
   ####################################################################
