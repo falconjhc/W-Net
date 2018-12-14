@@ -26,7 +26,7 @@ input_args = [
               '--save_mode','8:8',
 
               '--known_style_img_path',
-    '../StyleExamples/Brush4.jpeg',         # input a image with multiple written chars
+    '../StyleExamples/Brush1.png',         # input a image with multiple written chars
     # '../FontFiles/DroidSansFallback.ttf', # input a ttf / otf file to generate printed chars
     #'../StyleExamples/BrushCharacters', # input a image directory with multiple single chars
 

@@ -2,7 +2,7 @@
 from __future__ import print_function
 from __future__ import absolute_import
 import cv2
-
+import utilities.charcut as cc
 
 import sys
 reload(sys)
@@ -552,161 +552,30 @@ def generated_from_ttf_otf_files(img_path, resave_path):
 
 def crop_from_full_handwriting_essay_paper(img_path, resave_path):
 
-    def _cut(im, ax):
-        im = cv2.medianBlur(im, 5)
-
-        ret, im_bw = cv2.threshold(im, 200, 1, cv2.THRESH_BINARY)
-        im_bw[im_bw == 1] = 2
-        im_bw[im_bw == 0] = 1
-        im_bw[im_bw == 2] = 0
-
-        im_h = np.sum(im_bw, axis=ax)
-
-        seg = list()
-        blank = True
-        start = 0
-        for i, p in enumerate(im_h):
-            if blank is True:
-                if p != 0:
-                    start = i
-                    blank = False
-            else:
-                if p == 0 and start != -1:
-                    seg.append([start, i - 1, i - 1 - start])
-                    start = -1
-                    blank = True
-        if len(seg) < 2:
-            seg_new = seg
-        else:
-            seg_new = list()
-            gap = 0
-            for i in range(len(seg) - 1):
-                gap = gap + (seg[i + 1][0] - seg[i][1])
-            mean_gap = gap / (len(seg) - 1)
-            last_n = 1
-            while len(seg) > 0:
-                if len(seg) == last_n:
-                    seg_new.append([seg[0][0], seg[last_n - 1][1]])
-                    for j in range(last_n):
-                        seg.pop(0)
-                for i in range(len(seg) - 1):
-                    if i == len(seg) - 1:
-                        seg_new.append([seg[0][0], seg[last_n - 1][1]])
-                        for j in range(i + last_n):
-                            seg.pop(0)
-                        last_n = 1
-                        break
-                    else:
-                        gap = seg[i + 1][0] - seg[i][1]
-                        if gap > mean_gap / 2:
-                            seg_new.append([seg[0][0], seg[i][1]])
-                            for j in range(i + 1):
-                                seg.pop(0)
-                            last_n = 1
-                            break
-                        else:
-                            last_n = last_n + 1
-        im_list = list()
-        for s in seg_new:
-            if ax == 0:
-                im_split = im[:, s[0]:s[1]]
-            else:
-                im_split = im[s[0]:s[1], :]
-            im_list.append(im_split)
-        return im_list
-
-
-
-    def _padding(im):
-        ret, im_bw = cv2.threshold(im, 200, 1, cv2.THRESH_BINARY)
-        im_bw[im_bw == 1] = 2
-        im_bw[im_bw == 0] = 1
-        im_bw[im_bw == 2] = 0
-        im_h = np.sum(im_bw, axis=0)
-        im_w = np.sum(im_bw, axis=1)
-        w_start = 0
-        w_end = 0
-        h_start = 0
-        h_end = 0
-        for i, p in enumerate(im_h):
-            if p != 0:
-                w_start = i
-                break
-
-        for i in range(len(im_h) - 1, -1, -1):
-            p = im_h[i]
-            if p != 0:
-                w_end = i
-                break
-
-        for i, p in enumerate(im_w):
-            if p != 0:
-                h_start = i
-                break
-
-        for i in range(len(im_w) - 1, -1, -1):
-            p = im_w[i]
-            if p != 0:
-                h_end = i
-                break
-
-        im = im[h_start:h_end, w_start:w_end]
-
-        h, w = im.shape[:2]
-        if h > w:
-            w = int((150.0 / h) * w)
-            h = 150
-        else:
-            h = int((150.0 / w) * h)
-            w = 150
-        w = int(w / 2) * 2
-        h = int(h / 2) * 2
-        im = cv2.resize(im, (w, h))
-        imo = np.zeros((256, 256), dtype=np.uint8) + 255
-        imo[128 - int(h / 2):128 + int(h / 2), 128 - int(w / 2):128 + int(w / 2)] = im
-        imo = cv2.resize(imo, (64, 64))
-        return imo
-
-    
-
     img = cv2.imread(img_path)
     img_misc = misc.imread(img_path)
-    misc.imsave(os.path.join(resave_path,'InputStyleImg.png'), img_misc)
+    misc.imsave(os.path.join(resave_path, 'InputStyleImg.png'), img_misc)
 
     img_new = img
-    img_new[np.where(img<150)]=0
-    img_new[np.where(img>=150)]=255
+    img_new[np.where(img < 150)] = 0
+    img_new[np.where(img >= 150)] = 255
     img = img_new
 
-    im = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-    row_list = _cut(im, ax=1)
-    counter=0
-    for row in row_list:
-        col_list = _cut(row, ax=0)
-        for col in col_list:
-            img = np.expand_dims(_padding(col),axis=2)
-            img = img / GRAYSCALE_AVG - 1
-            if counter==0:
-                style_reference=img
-            else:
-                style_reference = np.concatenate([style_reference,img],axis=2)
-            counter+=1
-    return style_reference
-
-
-
-    
-
-
-
-
-
-
+    image_list = cc.char_cut(img, 37, 64)
+    counter = 0
+    style_reference = None
+    for im_split in image_list:
+        img = np.expand_dims(im_split, axis=2)
+        img = img / GRAYSCALE_AVG - 1
+        if counter == 0:
+            style_reference = img
+        else:
+            style_reference = np.concatenate([style_reference, img], axis=2)
+        counter += 1
 
     print("In total %d style references are extracted from %s" % (style_reference.shape[2],img_path))
 
     return style_reference
-
 
 
 
