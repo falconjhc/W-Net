@@ -15,7 +15,6 @@ eps = 1e-9
 
 data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
-
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
 
@@ -23,7 +22,10 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
-              '--debug_mode','0',
+              #'--training_from_model_dir',
+              #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20181115_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv',
+
+			        '--debug_mode','0',
               '--style_input_number','4', # how many style inputs
               '--init_training_epochs','1',
               '--final_training_epochs','500',
@@ -35,7 +37,7 @@ input_args = [
 
               '--train_data_augment','1', # translation? rotation?
               '--train_data_augment_flip','0',
-              '--experiment_id','20181115_StylePf50_ContentPfStd1',# experiment name prefix
+              '--experiment_id','20181206_StyleHw50_ContentPfStd1',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
               '--log_dir','tfLogs_WNet/',# log file saving location
               '--print_info_seconds','750',
@@ -44,19 +46,21 @@ input_args = [
     'CASIA_Dataset/StandardChars/GB2312_L1/',
 
               '--style_train_data_dir', # training data location
-    'CASIA_Dataset/PrintedData/GB2312_L1/',
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
               '--style_validation_data_dir',# validation data location
-    'CASIA_Dataset/PrintedData/GB2312_L1/',
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
               '--file_list_txt_content', # file list of the standard data
     '../FileList/StandardChars/Char_0_3754_GB2312L1.txt',
     
               '--file_list_txt_style_train', # file list of the training data
-    '../FileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1.txt',
+    '../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated.txt,'
+    '../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive.txt',
 
               '--file_list_txt_style_validation', # file list of the validation data
-    '../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt',
+    '../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
 
 
               # generator && discriminator
@@ -80,11 +84,12 @@ input_args = [
               # penalties
               '--generator_weight_decay_penalty','0.0001',
               '--discriminator_weight_decay_penalty','0.0003',
-              '--Pixel_Reconstruction_Penalty','650',
+              '--Pixel_Reconstruction_Penalty','750',
               '--Lconst_content_Penalty','3',
               '--Lconst_style_Penalty','5',
-              '--Discriminative_Penalty', '50',
-              '--Discriminator_Categorical_Penalty', '50',
+              '--Discriminative_Penalty', '75',
+
+              '--Discriminator_Categorical_Penalty', '75',
               '--Generator_Categorical_Penalty', '0.2',
               '--Discriminator_Gradient_Penalty', '10',
               '--Batch_StyleFeature_Discrimination_Penalty','0',
@@ -92,14 +97,14 @@ input_args = [
 
         # feature extractor parametrers
               '--true_fake_target_extractor_dir',
-    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181010_FeatureExtractor_ContentStyle_PF50_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181010_FeatureExtractor_ContentStyle_HW50_vgg16net/variables/',
               '--content_prototype_extractor_dir',
-    'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
               '--style_reference_extractor_dir',
-    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_PF50_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_HW50_vgg16net/variables/',
               '--Feature_Penalty_True_Fake_Target', '750',
-              '--Feature_Penalty_Style_Reference','15',
-              '--Feature_Penalty_Content_Prototype','15']
+              '--Feature_Penalty_Style_Reference','10',
+              '--Feature_Penalty_Content_Prototype','10']
 
 
 

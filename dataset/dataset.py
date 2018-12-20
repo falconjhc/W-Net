@@ -71,7 +71,7 @@ class Dataset_Iterator(object):
                  true_style,
                  style_reference_list,content_prototype_list,
                  info_print_interval,print_marks,content_input_number_actual,
-                 augment=False,train_iterator_mark=False,
+                 augment=False,augment_flip=False,train_iterator_mark=False,
                  label0_vec=-1,label1_vec=-1,debug_mode=False,
                  ):
         self.batch_size = batch_size
@@ -82,6 +82,7 @@ class Dataset_Iterator(object):
 
         self.thread_num = thread_num
         self.augment = augment
+        self.augment_flip=augment_flip
         self.style_input_num = style_input_num
         self.content_input_num = len(content_prototype_list)
         self.content_input_number_actual=content_input_number_actual
@@ -454,6 +455,16 @@ class Dataset_Iterator(object):
                 else:
                     img_all_new = tf.concat([img_all_new, cropped_img], axis=0)
             img_all = img_all_new
+
+            if self.augment_flip:
+                for ii in range(self.batch_size):
+                    if ii == 0:
+                        img_all_new = tf.expand_dims(tf.image.random_flip_left_right(img_all[ii,:,:,:]),axis=0)
+                    else:
+                        img_all_new = tf.concat([img_all_new,tf.expand_dims(tf.image.random_flip_left_right(img_all[ii,:,:,:]),axis=0)],axis=0)
+
+                img_all = img_all_new
+
             true_style_img_tensor = tf.expand_dims(img_all[:,:,:,0],axis=3)
             all_prototype_tensor = img_all[:,:,:,1:int(all_prototype_tensor.shape[3])+1]
             all_reference_tensor = img_all[:,:,:,int(all_prototype_tensor.shape[3])+1:]
@@ -461,6 +472,10 @@ class Dataset_Iterator(object):
         true_style_img_tensor = (true_style_img_tensor - 0.5) * 2
         all_prototype_tensor = (all_prototype_tensor - 0.5) * 2
         all_reference_tensor = (all_reference_tensor - 0.5) * 2
+
+
+
+
 
         self.output_tensor_list = list()
         self.output_tensor_list.append(true_style_img_tensor) # 0
@@ -505,6 +520,7 @@ class DataProvider(object):
                  file_list_txt_content, file_list_txt_style_train, file_list_txt_style_validation,
                  content_data_dir, style_train_data_dir,style_validation_data_dir,content_input_number_actual,
                  augment_train_data=True,
+                 augment_train_data_flip=True,
                  debug_mode=False):
 
         local_device_protos = device_lib.list_local_devices()
@@ -516,6 +532,7 @@ class DataProvider(object):
 
         self.batch_size = batch_size
         self.augment_train_data=augment_train_data
+        self.augment_train_data_flip=augment_train_data_flip
         self.input_width = input_width
         self.input_filters = input_filters
         self.style_input_num=style_input_num
@@ -640,6 +657,7 @@ class DataProvider(object):
                                                style_reference_list=cpy.deepcopy(train_style_reference_list),
                                                content_prototype_list=cpy.deepcopy(content_prototype_list),
                                                augment=self.augment_train_data,
+                                               augment_flip=self.augment_train_data_flip,
                                                style_input_num=self.style_input_num,
                                                info_print_interval=info_print_interval,
                                                print_marks='ForTrainIterator:',
@@ -686,6 +704,7 @@ class DataProvider(object):
                                                   style_reference_list=cpy.deepcopy(validation_style_reference_list),
                                                   content_prototype_list=cpy.deepcopy(content_prototype_list),
                                                   augment=False,
+                                                  augment_flip=False,
                                                   style_input_num=self.style_input_num,
                                                   info_print_interval=info_print_interval,
                                                   print_marks='ForValidationIterator:',

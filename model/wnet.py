@@ -82,6 +82,7 @@ class WNet(object):
                  debug_mode=-1,
                  print_info_seconds=-1,
                  train_data_augment=-1,
+                 train_data_augment_flip=-1,
                  init_training_epochs=-1,
                  final_training_epochs=-1,
                  style_input_number=-1,
@@ -186,6 +187,7 @@ class WNet(object):
         self.resume_training = resume_training
 
         self.train_data_augment = (train_data_augment==1)
+        self.train_data_augment_flip = (train_data_augment_flip==1)
 
 
         self.Discriminative_Penalty = Discriminative_Penalty + eps
@@ -2056,6 +2058,7 @@ class WNet(object):
                                          input_width=self.source_img_width,
                                          input_filters=self.input_output_img_filter_num,
                                          augment_train_data=self.train_data_augment,
+                                         augment_train_data_flip=self.train_data_augment_flip,
                                          style_input_num=self.style_input_number,
                                          content_data_dir=self.content_data_dir,
                                          style_train_data_dir=self.style_train_data_dir,
@@ -2214,7 +2217,7 @@ class WNet(object):
                                                                              self.record_seconds))
             print("ForInitTraining: InvolvedLabel0:%d, InvolvedLabel1:%d" % (len(self.involved_label0_list),
                                                                              len(self.involved_label1_list)))
-            print("DataAugment:%d, InputStyleNum:%d" % (self.train_data_augment, self.style_input_number))
+            print("DataAugment/Flip:%d/%d, InputStyleNum:%d" % (self.train_data_augment, self.train_data_augment_flip, self.style_input_number))
             print(self.print_separater)
             print("Penalties:")
             print("Generator: PixelL1:%.3f,ConstCP/SR:%.3f/%.3f,Cat:%.3f,Wgt:%.6f, BatchDist:%.5f;" 

@@ -8,12 +8,12 @@ import tensorflow as tf
 import argparse
 from model.feature_extractor_training import train_procedures
 
-# exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
-exp_root_path = '/Users/harric/ChineseCharacterExp/'
+exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
+# exp_root_path = '/Users/harric/ChineseCharacterExp/'
 
 input_args = [
-            '--training_from_model_dir',
-            '/Users/harric/ChineseCharacterExp/TrainedModel_CNN/ContentStyleBoth/Exp20180802_FeatureExtractor_StyleContent_HW300_vgg16net/variables/',
+            # '--training_from_model_dir',
+            # '/Users/harric/ChineseCharacterExp/TrainedModel_CNN/ContentStyleBoth/Exp20180802_FeatureExtractor_StyleContent_HW300_vgg16net/variables/',
 
             '--data_dir_train_path',
             'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/',

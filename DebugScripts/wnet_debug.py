@@ -35,21 +35,22 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
+              '--train_data_augment_flip','1',
               '--experiment_id','DEBUG',# experiment name prefix
               '--experiment_dir','../../DEBUG', # model saving location
               '--log_dir','DEBUG/',# log file saving location
               '--print_info_seconds','3',
 
               '--content_data_dir', # standard data location
-    'CASIA_64_Dataset/StandardChars/GB2312_L1/,'
-    'CASIA_64_Dataset/StandardChars/GB2312_L2/,'
-    'CASIA_64_Dataset/PrintedData/',
+    'CASIA_Dataset/StandardChars/GB2312_L1/,'
+    'CASIA_Dataset/StandardChars/GB2312_L2/,'
+    'CASIA_Dataset/PrintedData/',
 
               '--style_train_data_dir', # training data location
-    'CASIA_64_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/',
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/',
 
               '--style_validation_data_dir',# validation data location
-    'CASIA_64_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
               '--file_list_txt_content', # file list of the standard data
     '../FileList/StandardChars/Char_0_3754_GB2312L1.txt,'
@@ -111,6 +112,7 @@ parser = argparse.ArgumentParser(description='Train')
 parser.add_argument('--debug_mode', dest='debug_mode',type=int,required=True)
 parser.add_argument('--resume_training', dest='resume_training', type=int,required=True)
 parser.add_argument('--train_data_augment', dest='train_data_augment', type=int,required=True)
+parser.add_argument('--train_data_augment_flip', dest='train_data_augment_flip', type=int,required=True)
 parser.add_argument('--print_info_seconds', dest='print_info_seconds',type=int,required=True)
 parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)
 parser.add_argument('--content_input_number_actual', dest='content_input_number_actual',type=int, default=0)
@@ -277,6 +279,7 @@ def main(_):
                  log_dir=os.path.join(model_log_path_root, args.log_dir),
                  training_from_model=args.training_from_model_dir,
                  train_data_augment=args.train_data_augment,
+                 train_data_augment_flip=args.train_data_augment_flip,
                  style_input_number=args.style_input_number,
                  content_input_number_actual=args.content_input_number_actual,
 
