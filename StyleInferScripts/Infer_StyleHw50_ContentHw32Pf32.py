@@ -13,8 +13,8 @@ import time
 
 from model.wnet import WNet as WNET
 
-#exp_root_path = '/Users/harric/ChineseCharacterExp/'
-exp_root_path = '/data/Harric/ChineseCharacterExp/'
+exp_root_path = '/Users/harric/ChineseCharacterExp/'
+#exp_root_path = '/data/Harric/ChineseCharacterExp/'
 
 print_separater = "#################################################################"
 
@@ -23,11 +23,11 @@ print_separater = "#############################################################
 
 input_args = [
               '--targeted_content_input_txt',
-    '../ContentTxt/滚滚长江东逝水_简体_有替代.txt',
-              '--save_mode','8:8',
+    '../ContentTxt/YW.txt',
+              '--save_mode','1:2',
 
               '--known_style_img_path',
-    '../StyleExamples/JHC2.jpeg',            # input a image with multiple written chars
+    '../StyleExamples/YW2.jpeg',            # input a image with multiple written chars
     #'../FontFiles/TTTGB-Medium.ttf', # input a ttf / otf file to generate printed chars
     #'../StyleExamples/HandWritingSamples', # input a image directory with multiple single chars
 

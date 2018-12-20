@@ -22,11 +22,11 @@ print_separater = "#############################################################
 
 input_args = [
               '--targeted_content_input_txt',
-    '../ContentTxt/滚滚长江东逝水_简体_有替代.txt',
-              '--save_mode','8:8',
+    '../ContentTxt/YW.txt',
+              '--save_mode','2:1',
 
               '--known_style_img_path',
-    '../StyleExamples/Brush31.png',         # input a image with multiple written chars
+    '../StyleExamples/YW2.jpeg',         # input a image with multiple written chars
     # '../FontFiles/DroidSansFallback.ttf', # input a ttf / otf file to generate printed chars
     # '../StyleExamples/PrintedSamples', # input a image directory with multiple single chars
 
