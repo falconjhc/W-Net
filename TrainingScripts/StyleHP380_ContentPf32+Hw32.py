@@ -13,7 +13,7 @@ from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/home/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
@@ -284,7 +284,8 @@ def main(_):
 
     model = WNET(debug_mode=args.debug_mode,
                  print_info_seconds=args.print_info_seconds,
-                 experiment_dir=args.experiment_dir, experiment_id=args.experiment_id,
+                 experiment_dir=os.path.join(model_log_path_root, args.experiment_dir),
+                 experiment_id=args.experiment_id,
                  log_dir=os.path.join(model_log_path_root, args.log_dir),
                  training_from_model=args.training_from_model_dir,
                  train_data_augment=args.train_data_augment,
