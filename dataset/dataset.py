@@ -457,8 +457,8 @@ class Dataset_Iterator(object):
             img_all = img_all_new
 
             if self.augment_flip:
-                flip_img = tf.expand_dims(tf.image.random_flip_up_down(tf.image.random_flip_left_right(img_all[ii,:,:,:])),axis=0)
                 for ii in range(self.batch_size):
+                    flip_img = tf.expand_dims(tf.image.random_flip_up_down(tf.image.random_flip_left_right(img_all[ii,:,:,:])),axis=0)
                     if ii == 0:
                         img_all_new = flip_img
                     else:

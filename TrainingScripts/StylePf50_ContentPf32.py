@@ -34,7 +34,7 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--train_data_augment_flip','0',
+              '--train_data_augment_flip','1',
               '--experiment_id','20181115_StylePf50_ContentPf32',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
               '--log_dir','tfLogs_WNet/',# log file saving location
