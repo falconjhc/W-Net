@@ -457,13 +457,36 @@ class Dataset_Iterator(object):
             img_all = img_all_new
 
             if self.augment_flip:
+                flip_img = tf.expand_dims(tf.image.random_flip_up_down(tf.image.random_flip_left_right(img_all[ii,:,:,:])),axis=0)
                 for ii in range(self.batch_size):
                     if ii == 0:
-                        img_all_new = tf.expand_dims(tf.image.random_flip_left_right(img_all[ii,:,:,:]),axis=0)
+                        img_all_new = flip_img
                     else:
-                        img_all_new = tf.concat([img_all_new,tf.expand_dims(tf.image.random_flip_left_right(img_all[ii,:,:,:]),axis=0)],axis=0)
-
+                        img_all_new = tf.concat([img_all_new, flip_img],axis=0)
                 img_all = img_all_new
+
+                all_reference_tensor = img_all[:,:,:,int(all_prototype_tensor.shape[3])+1:]
+                for jj in range(int(all_reference_tensor.shape[3])):
+                    this_reference = tf.squeeze(all_reference_tensor[:,:,:,jj])
+                    for ii in range(self.batch_size):
+                        this_this_referenece = this_reference[ii,:,:]
+                        this_this_reference_flip = tf.image.random_flip_up_down(tf.image.random_flip_left_right(tf.expand_dims(this_this_referenece,axis=2)))
+                        this_this_reference_flip = tf.expand_dims(tf.squeeze(this_this_reference_flip),axis=0)
+                        if ii == 0:
+                            this_this_reference_all = this_this_reference_flip
+                        else:
+                            this_this_reference_all = tf.concat([this_this_reference_all, this_this_reference_flip], axis=0)
+                    this_this_reference_flip = tf.expand_dims(this_this_reference_all,axis=3)
+                    if jj == 0:
+                        this_reference_all = this_this_reference_flip
+                    else:
+                        this_reference_all = tf.concat([this_reference_all, this_this_reference_flip], axis=3)
+
+                img_all = tf.concat([img_all[:,:,:,0:int(all_prototype_tensor.shape[3])+1], this_reference_all], axis=3)
+
+                
+
+
 
             true_style_img_tensor = tf.expand_dims(img_all[:,:,:,0],axis=3)
             all_prototype_tensor = img_all[:,:,:,1:int(all_prototype_tensor.shape[3])+1]
