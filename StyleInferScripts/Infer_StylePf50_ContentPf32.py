@@ -12,8 +12,8 @@ import time
 
 from model.wnet import WNet as WNET
 
-exp_root_path = '/Users/harric/ChineseCharacterExp/'
-#exp_root_path = '/data/Harric/ChineseCharacterExp/'
+#exp_root_path = '/Users/harric/ChineseCharacterExp/'
+exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
 
 print_separater = "#################################################################"
 
@@ -24,6 +24,7 @@ input_args = [
               '--targeted_content_input_txt',
     '../ContentTxt/YW.txt',
               '--save_mode','2:1',
+              '--adain_use','0',
 
               '--known_style_img_path',
     '../StyleExamples/YW2.jpeg',         # input a image with multiple written chars
@@ -67,6 +68,8 @@ input_args = [
 parser = argparse.ArgumentParser(description='Train')
 parser.add_argument('--debug_mode', dest='debug_mode',type=int,required=True)
 parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)
+parser.add_argument('--adain_use', dest='adain_use',type=int, default=0)
+
 
 # directories setting
 parser.add_argument('--targeted_content_input_txt', dest='targeted_content_input_txt', type=str,required=True)
@@ -122,6 +125,7 @@ def main(_):
 
     model = WNET(debug_mode=args.debug_mode,
                  style_input_number=args.style_input_number,
+                 adain_use=args.adain_use,
 
                  targeted_content_input_txt=args.targeted_content_input_txt,
                  save_path=args.save_path,

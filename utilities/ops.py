@@ -18,6 +18,22 @@ def layer_norm(x, scope="layer_norm",
 
     return var
 
+def instance_norm(x, scope="instance_norm",
+                  parameter_update_device='-1'):
+    with tf.device(parameter_update_device):
+        var = tf.contrib.layers.instance_norm(x,scope=scope)
+
+    return var
+
+def adaptive_instance_norm(content,style,epsilon=1e-5):
+    axes_style = [0,2,3]
+    axes_content = [1,2]
+    c_mean, c_var = tf.nn.moments(content,axes=axes_content,keep_dims=True)
+    s_mean, s_var = tf.nn.moments(style,axes=axes_style,keep_dims=True)
+    c_std, s_std = tf.sqrt(c_var+epsilon), tf.sqrt(s_var+epsilon)
+    normed = tf.squeeze(s_std*(content-c_mean) / c_std + s_mean, axis=0)
+    return normed
+
 
 def conv2d(x,
            output_filters,

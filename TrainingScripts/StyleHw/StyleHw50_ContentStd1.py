@@ -7,7 +7,7 @@ from tensorflow.python.client import device_lib
 import argparse
 import sys
 import os
-sys.path.append('../')
+sys.path.append('../../')
 
 from model.wnet import WNet as WNET
 eps = 1e-9
@@ -22,14 +22,14 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
-              '--training_from_model_dir',
-              '/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20181206_StyleHw300_ContentPf32+Hw32_GenEncDec6-Res9@Lyr3_DisMdy6conv/',
+              #'--training_from_model_dir',
+              #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20181115_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv',
 
-
-			  '--debug_mode','0',
+			        '--debug_mode','0',
               '--style_input_number','4', # how many style inputs
               '--init_training_epochs','1',
               '--final_training_epochs','500',
+              '--adain_use','0',
 
               '--generator_device','/device:GPU:0',
               '--discriminator_device', '/device:GPU:0',
@@ -38,42 +38,35 @@ input_args = [
 
               '--train_data_augment','1', # translation? rotation?
               '--train_data_augment_flip','1',
-              '--experiment_id','20181220_StyleHP380_ContentPf32+Hw32',# experiment name prefix
+              '--experiment_id','20181206_StyleHw50_ContentPfStd1',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
               '--log_dir','tfLogs_WNet/',# log file saving location
               '--print_info_seconds','750',
 
               '--content_data_dir', # standard data location
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/,'
-    'CASIA_Dataset/PrintedData/',
+    'CASIA_Dataset/StandardChars/GB2312_L1/',
 
               '--style_train_data_dir', # training data location
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/,'
-    'CASIA_Dataset/PrintedData/GB2312_L1/',
-    
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
               '--style_validation_data_dir',# validation data location
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
               '--file_list_txt_content', # file list of the standard data
-    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt,'
-    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt,'
-    '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
+    '../../FileList/StandardChars/Char_0_3754_GB2312L1.txt',
     
               '--file_list_txt_style_train', # file list of the training data
-    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1300_Isolated.txt,'
-    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1300_Cursive.txt,'
-    '../FileList/PrintedData/Char_0_3754_Font_0_79_GB2312L1.txt',
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated.txt,'
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive.txt',
 
               '--file_list_txt_style_validation', # file list of the validation data
-    '../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
 
 
               # generator && discriminator
               '--generator_residual_at_layer','3',
-              '--generator_residual_blocks','9',
+              '--generator_residual_blocks','5',
               '--discriminator','DisMdy6conv',
 
               '--batch_size','16',
@@ -82,8 +75,8 @@ input_args = [
 
               # optimizer parameters
               '--init_lr','0.001',
-              '--epoch','1500',
-              '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
+              '--epoch','5000',
+              '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
 
               '--optimization_method','adam',
               '--final_learning_rate_pctg','0.01',
@@ -105,11 +98,11 @@ input_args = [
 
         # feature extractor parametrers
               '--true_fake_target_extractor_dir',
-    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181206_FeatureExtractor_ContentStyle_HW300Pf80_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181010_FeatureExtractor_ContentStyle_HW50_vgg16net/variables/',
               '--content_prototype_extractor_dir',
     'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
               '--style_reference_extractor_dir',
-    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181206_FeatureExtractor_Style_HW300Pf80_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_HW50_vgg16net/variables/',
               '--Feature_Penalty_True_Fake_Target', '750',
               '--Feature_Penalty_Style_Reference','10',
               '--Feature_Penalty_Content_Prototype','10']
@@ -125,6 +118,7 @@ parser.add_argument('--train_data_augment_flip', dest='train_data_augment_flip',
 parser.add_argument('--print_info_seconds', dest='print_info_seconds',type=int,required=True)
 parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)
 parser.add_argument('--content_input_number_actual', dest='content_input_number_actual',type=int, default=0)
+parser.add_argument('--adain_use', dest='adain_use',type=int, default=0)
 
 
 # directories setting
@@ -292,6 +286,7 @@ def main(_):
                  train_data_augment_flip=args.train_data_augment_flip,
                  style_input_number=args.style_input_number,
                  content_input_number_actual=args.content_input_number_actual,
+                 adain_use=args.adain_use,
 
                  content_data_dir=content_data_dir,
                  style_train_data_dir=style_train_data_dir,

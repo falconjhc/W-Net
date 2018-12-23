@@ -6,7 +6,7 @@ sys.path.append('..')
 
 
 import numpy as np
-from utilities.ops import lrelu, relu,  batch_norm,layer_norm
+from utilities.ops import lrelu, relu, batch_norm, layer_norm, instance_norm, adaptive_instance_norm
 
 
 from utilities.ops import conv2d, deconv2d, fc
@@ -41,26 +41,9 @@ def minibatch_discrimination(parameter_update_device,
 
         return output
 
-
-    # if build_type=='FC':
-    #     input_pattern_reshaped = tf.reshape(input_pattern,[batch_size,-1])
-    #     x=fc(x=input_pattern_reshaped,
-    #          output_size=int(input_pattern_reshaped.shape[1]),
-    #          scope=scope,
-    #          parameter_update_device=parameter_update_device,
-    #          weight_decay=weight_decay,
-    #          weight_decay_rate=weight_decay_rate,
-    #          initializer=initializer)
-    #     activation = tf.reshape(x, (-1, int(input_pattern.shape[1]), int(input_pattern.shape[2]), int(input_pattern.shape[3])))
-    # elif build_type=='ResDual':
-    #     activation = res_block(x=input_pattern,scope=scope)
-
     activation = input_pattern
 
-
     diffs = tf.abs(tf.expand_dims(activation,4)- tf.expand_dims(tf.transpose(activation,[1,2,3,0]), 0))
-    # minibatch_features = tf.reduce_sum(tf.exp(-diffs), 4)
-    # concatenated = tf.concat([input_pattern, minibatch_features],axis=3)
     return -1, tf.reduce_mean(diffs)
 
 
@@ -72,7 +55,7 @@ def encoder_framework(images,
                       scope,initializer,weight_decay,
                       weight_decay_rate,
                       final_layer_logit_length,
-                      reuse = False):
+                      reuse = False,adain_use=False):
     def encoder(x, output_filters, layer):
 
         act = lrelu(x)
@@ -84,8 +67,14 @@ def encoder_framework(images,
                       weight_decay=weight_decay,
                       name_prefix=scope,
                       weight_decay_rate=weight_decay_rate)
-        enc = batch_norm(conv, is_training, scope="layer%d_bn" % layer,
-                         parameter_update_device=encoder_device)
+        if not adain_use:
+            enc = batch_norm(conv, is_training, scope="layer%d_bn" % layer,
+                             parameter_update_device=encoder_device)
+        elif adain_use==True and 'content' in scope:
+            enc = instance_norm(x=conv, scope="layer%d_in" % layer,
+                                parameter_update_device=encoder_device)
+        else:
+            enc = conv
         return enc
 
 
@@ -173,14 +162,22 @@ def residual_block(input_list,
                    reuse,scope,
                    initializer,
                    weight_decay,
-                   weight_decay_rate):
-    def res_block(x,layer):
+                   weight_decay_rate,
+                   style_features,
+                   adain_use=False):
+    def res_block(x,layer,style):
+
         filters = int(x.shape[3])
-        bn1 = batch_norm(x=x,
-                         is_training=is_training,
-                         scope="layer%d_bn1" % layer,
-                         parameter_update_device=residual_device)
-        act1 = relu(bn1)
+        if not adain_use:
+            norm1 = batch_norm(x=x,
+                               is_training=is_training,
+                               scope="layer%d_bn1" % layer,
+                               parameter_update_device=residual_device)
+        else:
+            norm1 = adaptive_instance_norm(content=x,
+                                           style=style)
+
+        act1 = relu(norm1)
         conv1 = conv2d(x=act1,
                        output_filters=filters,
                        scope="layer%d_conv1" % layer,
@@ -190,11 +187,15 @@ def residual_block(input_list,
                        weight_decay=weight_decay,
                        name_prefix=scope,
                        weight_decay_rate=weight_decay_rate)
-        bn2 = batch_norm(x=conv1,
-                         is_training=is_training,
-                         scope="layer%d_bn2" % layer,
-                         parameter_update_device=residual_device)
-        act2 = relu(bn2)
+        if not adain_use:
+            norm2 = batch_norm(x=conv1,
+                               is_training=is_training,
+                               scope="layer%d_bn2" % layer,
+                               parameter_update_device=residual_device)
+        else:
+            norm2 = adaptive_instance_norm(content=conv1,
+                                           style=style)
+        act2 = relu(norm2)
         conv2 = conv2d(x=act2,
                        output_filters=filters,
                        scope="layer%d_conv2" % layer,
@@ -212,12 +213,48 @@ def residual_block(input_list,
     input_list.reverse()
     with tf.variable_scope(tf.get_variable_scope()):
         with tf.device(residual_device):
-
             residual_output_list = list()
             for ii in range(len(input_list)):
                 current_residual_num = residual_num + 2 * ii
                 current_residual_input = input_list[ii]
                 current_scope = scope + '_onEncDecLyr%d' % (residual_at_layer - ii)
+
+
+                if adain_use:
+                    with tf.variable_scope(current_scope):
+                        for jj in range(len(style_features)):
+                            if int(style_features[jj].shape[2]) == int(current_residual_input.shape[1]):
+                                break
+
+                        for jj in range(int(style_features[ii].shape[0])):
+                            if reuse or jj > 0:
+                                tf.get_variable_scope().reuse_variables()
+
+                            batch_size = int(style_features[ii][jj, :, :, :, :].shape[0])
+                            if batch_size == 1:
+                                current_init_residual_input = style_features[ii][jj, :, :, :, :]
+                            else:
+                                current_init_residual_input = tf.squeeze(style_features[ii][jj, :, :, :, :])
+
+
+                            style_conv = conv2d(x=current_init_residual_input,
+                                                output_filters=int(current_residual_input.shape[3]),
+                                                scope="conv0_style",
+                                                parameter_update_device=residual_device,
+                                                kh=3, kw=3, sh=1, sw=1,
+                                                initializer=initializer,
+                                                weight_decay=weight_decay,
+                                                name_prefix=scope,
+                                                weight_decay_rate=weight_decay_rate)
+                            style_conv = relu(style_conv)
+                            if jj == 0:
+                                style_features_new = tf.expand_dims(style_conv, axis=0)
+                            else:
+                                style_features_new = tf.concat([style_features_new, tf.expand_dims(style_conv, axis=0)],
+                                                               axis=0)
+                else:
+                    style_features_new=None
+
 
                 with tf.variable_scope(current_scope):
                     if reuse:
@@ -229,7 +266,8 @@ def residual_block(input_list,
                         else:
                             residual_input = residual_block_output
                         residual_block_output = res_block(x=residual_input,
-                                                          layer=jj+1)
+                                                          layer=jj+1,
+                                                          style=style_features_new)
                         if jj == current_residual_num-1:
                             residual_output = residual_block_output
 
@@ -257,13 +295,14 @@ def decoder_framework(encoded_layer_list,
                       batch_size,
                       decoder_device,
                       scope,initializer, weight_decay,weight_decay_rate,
+                      adain_use,
                       reuse=False):
     def decoder(x,
                 output_width,
                 output_filters,
                 layer,
                 enc_layer,
-                do_bn=False,
+                do_norm=False,
                 dropout=False):
         dec = deconv2d(x=tf.nn.relu(x),
                        output_shape=[batch_size, output_width, output_width, output_filters],
@@ -272,11 +311,15 @@ def decoder_framework(encoded_layer_list,
                        weight_decay=weight_decay,initializer=initializer,
                        name_prefix=scope,
                        weight_decay_rate=weight_decay_rate)
-        if do_bn:
+        if do_norm:
             # IMPORTANT: normalization for last layer
             # Very important, otherwise GAN is unstable
-            dec = batch_norm(dec, is_training, scope="layer%d_bn" % layer,
-                             parameter_update_device=decoder_device)
+            if not adain_use:
+                dec = batch_norm(dec, is_training, scope="layer%d_bn" % layer,
+                                 parameter_update_device=decoder_device)
+            else:
+                dec = layer_norm(x=dec, scope="layer%d_ln" % layer,
+                                 parameter_update_device=decoder_device)
 
         if dropout:
             dec = tf.nn.dropout(dec, 0.5)
@@ -305,13 +348,13 @@ def decoder_framework(encoded_layer_list,
                     if ii < full_encoder_layer_num-1:
                         output_filter_num_expansion = np.min([np.power(2,power_times), 8])
                         output_filter_num = generator_dim * output_filter_num_expansion
-                        do_bn = True
+                        do_norm = True
                         do_drop= True and is_training
                         encoded_respective = encoded_layer_list[ii + 1]
 
                     else:
                         output_filter_num = output_filters
-                        do_bn = False
+                        do_norm = False
                         do_drop = False
                         encoded_respective = None
 
@@ -320,7 +363,7 @@ def decoder_framework(encoded_layer_list,
                                              output_filters=output_filter_num,
                                              layer=ii + 1,
                                              enc_layer=encoded_respective,
-                                             do_bn=do_bn,
+                                             do_norm=do_norm,
                                              dropout=do_drop)
                     full_decoded_feature_list.append(decoder_output)
 
@@ -340,7 +383,7 @@ def generator_inferring(content,style,
                         style_reference_num,
                         residual_at_layer,
                         residual_block_num,
-                        img_filters):
+                        img_filters, adain_use):
     weight_decay_rate = 0
     weight_decay = False
     initializer = 'XavierInit'
@@ -369,7 +412,8 @@ def generator_inferring(content,style,
                               initializer='XavierInit',
                               weight_decay=False,
                               weight_decay_rate=0,
-                              final_layer_logit_length=-1)
+                              final_layer_logit_length=-1,
+                              adain_use=adain_use)
         style_short_cut_interface_list.append(current_style_short_cut_interface)
         style_residual_interface_list.append(current_style_residual_interface)
         style_full_feature_list.append(current_style_full_feature_list)
@@ -425,7 +469,23 @@ def generator_inferring(content,style,
                           initializer=initializer,
                           weight_decay=weight_decay,
                           weight_decay_rate=weight_decay_rate,
-                          final_layer_logit_length=label0_length)
+                          final_layer_logit_length=label0_length,
+                          adain_use=adain_use)
+
+    # full style feature reformat
+    if adain_use:
+        full_style_feature_list_reformat = list()
+        for ii in range(len(style_full_feature_list)):
+            for jj in range(len(style_full_feature_list[ii])):
+
+                current_feature = tf.expand_dims(style_full_feature_list[ii][jj], axis=0)
+                if ii == 0:
+                    full_style_feature_list_reformat.append(current_feature)
+                else:
+                    full_style_feature_list_reformat[jj] = tf.concat(
+                        [full_style_feature_list_reformat[jj], current_feature], axis=0)
+    else:
+        full_style_feature_list_reformat = None
 
     # residual interfaces && short cut interfaces are fused together
     fused_residual_interfaces = list()
@@ -433,6 +493,15 @@ def generator_inferring(content,style,
     for ii in range(len(content_residual_interface)):
         current_content_residual_size = int(content_residual_interface[ii].shape[1])
         output_current_residual = content_residual_interface[ii]
+
+        if adain_use:  # for adaptive instance normalization
+            for jj in range(len(full_style_feature_list_reformat)):
+                if int(full_style_feature_list_reformat[jj].shape[2]) == int(output_current_residual.shape[1]):
+                    break
+            output_current_residual = adaptive_instance_norm(content=output_current_residual,
+                                                             style=full_style_feature_list_reformat[jj])
+
+
         for jj in range(len(style_residual_interface)):
             current_style_residual_size = int(style_residual_interface[jj].shape[1])
             if current_style_residual_size == current_content_residual_size:
@@ -441,6 +510,12 @@ def generator_inferring(content,style,
     for ii in range(len(content_short_cut_interface)):
         current_content_shortcut_size = int(content_short_cut_interface[ii].shape[1])
         output_current_shortcut = content_short_cut_interface[ii]
+        if adain_use:  # for adaptive instance normalization
+            for jj in range(len(full_style_feature_list_reformat)):
+                if int(full_style_feature_list_reformat[jj].shape[2]) == int(output_current_shortcut.shape[1]):
+                    break
+            output_current_shortcut = adaptive_instance_norm(content=output_current_shortcut,
+                                                             style=full_style_feature_list_reformat[jj])
         for jj in range(len(style_short_cut_interface)):
             current_style_short_cut_size = int(style_short_cut_interface[jj].shape[1])
             if current_style_short_cut_size == current_content_shortcut_size:
@@ -459,7 +534,9 @@ def generator_inferring(content,style,
                                                  reuse=False,
                                                  initializer=initializer,
                                                  weight_decay=weight_decay,
-                                                 weight_decay_rate=weight_decay_rate)
+                                                 weight_decay_rate=weight_decay_rate,
+                                                 style_features=full_style_feature_list_reformat,
+                                                 adain_use=adain_use)
 
     # combination of all the encoder outputs
     fused_shortcut_interfaces.reverse()
@@ -484,7 +561,8 @@ def generator_inferring(content,style,
                           reuse=False,
                           weight_decay=weight_decay,
                           initializer=initializer,
-                          weight_decay_rate=weight_decay_rate)
+                          weight_decay_rate=weight_decay_rate,
+                          adain_use=adain_use)
 
     return generated_img, content_full_faeture_list, decoder_full_feature_list, style_full_feature_list
 
@@ -503,7 +581,8 @@ def generator_framework(content_prototype,style_reference,
                         weight_decay_rate,
                         style_input_number,
                         content_prototype_number,
-                        reuse=False):
+                        reuse=False,
+                        adain_use=False):
 
     def _calculate_batch_diff(input_feature):
         diff = tf.abs(tf.expand_dims(input_feature, 4) -
@@ -513,7 +592,7 @@ def generator_framework(content_prototype,style_reference,
 
 
     # content prototype encoder part
-    encoded_content_final, content_category, content_short_cut_interface, content_residual_interface, _, _ = \
+    encoded_content_final, content_category, content_short_cut_interface, content_residual_interface, content_full_feature_list, _ = \
         encoder_framework(images=content_prototype,
                           is_training=is_training,
                           encoder_device=generator_device,
@@ -524,13 +603,15 @@ def generator_framework(content_prototype,style_reference,
                           initializer=initializer,
                           weight_decay=weight_decay,
                           weight_decay_rate=weight_decay_rate,
-                          final_layer_logit_length=label0_length)
+                          final_layer_logit_length=label0_length,
+                          adain_use=adain_use)
 
     # style reference encoder part
     encoded_style_final_list = list()
     style_category_list = list()
     style_short_cut_interface_list = list()
     style_residual_interface_list = list()
+    full_style_feature_list = list()
     for ii in range(style_input_number):
         if ii==0:
             curt_reuse=reuse
@@ -539,7 +620,7 @@ def generator_framework(content_prototype,style_reference,
             curt_reuse=True
             current_weight_decay = False
 
-        encoded_style_final, style_category, current_style_short_cut_interface, current_style_residual_interface, _, _ = \
+        encoded_style_final, style_category, current_style_short_cut_interface, current_style_residual_interface, current_full_feature_list, _ = \
             encoder_framework(images=style_reference[ii],
                               is_training=is_training,
                               encoder_device=generator_device,
@@ -550,11 +631,13 @@ def generator_framework(content_prototype,style_reference,
                               initializer=initializer,
                               weight_decay=current_weight_decay,
                               weight_decay_rate=weight_decay_rate,
-                              final_layer_logit_length=label1_length)
+                              final_layer_logit_length=label1_length,
+                              adain_use=adain_use)
         encoded_style_final_list.append(encoded_style_final)
         style_category_list.append(style_category)
         style_short_cut_interface_list.append(current_style_short_cut_interface)
         style_residual_interface_list.append(current_style_residual_interface)
+        full_style_feature_list.append(current_full_feature_list)
 
     # multiple encoded information average calculation for style reference encoder
     with tf.variable_scope(tf.get_variable_scope()):
@@ -606,6 +689,20 @@ def generator_framework(content_prototype,style_reference,
                     style_residual_batch_diff += _calculate_batch_diff(input_feature=style_residual_interface[ii])
                 style_residual_batch_diff = style_residual_batch_diff / len(style_residual_interface)
 
+    # full style feature reformat
+    if adain_use:
+        full_style_feature_list_reformat = list()
+        for ii in range(len(full_style_feature_list)):
+            for jj in range(len(full_style_feature_list[ii])):
+
+                current_feature = tf.expand_dims(full_style_feature_list[ii][jj], axis=0)
+                if ii == 0:
+                    full_style_feature_list_reformat.append(current_feature)
+                else:
+                    full_style_feature_list_reformat[jj] = tf.concat(
+                        [full_style_feature_list_reformat[jj], current_feature], axis=0)
+    else:
+        full_style_feature_list_reformat=None
 
 
     # residual interfaces && short cut interfaces are fused together
@@ -614,6 +711,14 @@ def generator_framework(content_prototype,style_reference,
     for ii in range(len(content_residual_interface)):
         current_content_residual_size = int(content_residual_interface[ii].shape[1])
         output_current_residual = content_residual_interface[ii]
+        if adain_use: # for adaptive instance normalization
+            for jj in range(len(full_style_feature_list_reformat)):
+                if int(full_style_feature_list_reformat[jj].shape[2]) == int(output_current_residual.shape[1]):
+                    break
+            output_current_residual = adaptive_instance_norm(content=output_current_residual,
+                                                             style=full_style_feature_list_reformat[jj])
+
+
         for jj in range(len(style_residual_interface)):
             current_style_residual_size = int(style_residual_interface[jj].shape[1])
             if current_style_residual_size == current_content_residual_size:
@@ -622,6 +727,14 @@ def generator_framework(content_prototype,style_reference,
     for ii in range(len(content_short_cut_interface)):
         current_content_shortcut_size = int(content_short_cut_interface[ii].shape[1])
         output_current_shortcut = content_short_cut_interface[ii]
+
+        if adain_use: # for adaptive instance normalization
+            for jj in range(len(full_style_feature_list_reformat)):
+                if int(full_style_feature_list_reformat[jj].shape[2]) == int(output_current_shortcut.shape[1]):
+                    break
+            output_current_shortcut = adaptive_instance_norm(content=output_current_shortcut,
+                                                             style=full_style_feature_list_reformat[jj])
+
         for jj in range(len(style_short_cut_interface)):
             current_style_short_cut_size = int(style_short_cut_interface[jj].shape[1])
             if current_style_short_cut_size == current_content_shortcut_size:
@@ -639,7 +752,9 @@ def generator_framework(content_prototype,style_reference,
                                                  reuse=reuse,
                                                  initializer=initializer,
                                                  weight_decay=weight_decay,
-                                                 weight_decay_rate=weight_decay_rate)
+                                                 weight_decay_rate=weight_decay_rate,
+                                                 style_features=full_style_feature_list_reformat,
+                                                 adain_use=adain_use)
 
 
     # combination of all the encoder outputs
@@ -667,7 +782,8 @@ def generator_framework(content_prototype,style_reference,
                           reuse=reuse,
                           weight_decay=weight_decay,
                           initializer=initializer,
-                          weight_decay_rate=weight_decay_rate)
+                          weight_decay_rate=weight_decay_rate,
+                          adain_use=adain_use)
 
     return generated_img, encoded_content_final, encoded_style_final, \
            content_category, style_category, return_str, \

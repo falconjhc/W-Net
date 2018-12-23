@@ -86,6 +86,7 @@ class WNet(object):
                  init_training_epochs=-1,
                  final_training_epochs=-1,
                  style_input_number=-1,
+                 adain_use=-1,
 
                  experiment_dir='/tmp/',
                  log_dir='/tmp/',
@@ -188,6 +189,7 @@ class WNet(object):
 
         self.train_data_augment = (train_data_augment==1)
         self.train_data_augment_flip = (train_data_augment_flip==1)
+        self.adain_use = (adain_use==1)
 
 
         self.Discriminative_Penalty = Discriminative_Penalty + eps
@@ -658,8 +660,6 @@ class WNet(object):
         setattr(self, "summary_handle", summary_handle)
 
 
-
-
     def character_generation(self):
 
         charset_level1, character_label_level1 = \
@@ -724,7 +724,8 @@ class WNet(object):
                                         generator_device=self.generator_devices,
                                         residual_at_layer=self.generator_residual_at_layer,
                                         residual_block_num=self.generator_residual_blocks,
-                                        img_filters=self.input_output_img_filter_num)
+                                        img_filters=self.input_output_img_filter_num,
+                                        adain_use=self.adain_use)
 
                 gen_vars_save = self.find_norm_avg_var([var for var in tf.trainable_variables() if 'generator' in var.name])
 
@@ -1246,7 +1247,8 @@ class WNet(object):
                                              weight_decay=self.weight_decay_generator,
                                              style_input_number=self.style_input_number,
                                              content_prototype_number=self.content_input_number_actual,
-                                             weight_decay_rate=self.generator_weight_decay_penalty)
+                                             weight_decay_rate=self.generator_weight_decay_penalty,
+                                             adain_use=self.adain_use)
 
                 # encoded of the generated target on the content prototype encoder
                 encoded_content_prototype_generated_target = \
@@ -1261,7 +1263,8 @@ class WNet(object):
                                            initializer=self.initializer,
                                            weight_decay=False,
                                            weight_decay_rate=self.generator_weight_decay_penalty,
-                                           final_layer_logit_length=len(self.involved_label0_list))[0]
+                                           final_layer_logit_length=len(self.involved_label0_list),
+                                           adain_use=self.adain_use)[0]
 
                 # encoded of the generated target on the style reference encoder
                 encoded_style_reference_generated_target = \
@@ -1275,7 +1278,8 @@ class WNet(object):
                                                initializer=self.initializer,
                                                weight_decay=False,
                                                weight_decay_rate=self.generator_weight_decay_penalty,
-                                               final_layer_logit_length=len(self.involved_label1_list))[0]
+                                               final_layer_logit_length=len(self.involved_label1_list),
+                                               adain_use=self.adain_use)[0]
 
 
                 # for inferring
@@ -1304,7 +1308,8 @@ class WNet(object):
                                              weight_decay=False,
                                              style_input_number=self.style_input_number,
                                              content_prototype_number=self.content_input_number_actual,
-                                             weight_decay_rate=eps)[0]
+                                             weight_decay_rate=eps,
+                                             adain_use=self.adain_use)[0]
 
                 content_prototype_category_infer = \
                         encoder_implementation(images=content_prototype_infer,
@@ -1317,7 +1322,8 @@ class WNet(object):
                                                initializer=self.initializer,
                                                weight_decay=False,
                                                weight_decay_rate=self.generator_weight_decay_penalty,
-                                               final_layer_logit_length=len(self.involved_label0_list))[1]
+                                               final_layer_logit_length=len(self.involved_label0_list),
+                                               adain_use=self.adain_use)[1]
 
                 style_reference_category_list_infer = list()
                 for ii in range(self.style_input_number):
@@ -1332,10 +1338,9 @@ class WNet(object):
                                                    initializer=self.initializer,
                                                    weight_decay=False,
                                                    weight_decay_rate=self.generator_weight_decay_penalty,
-                                                   final_layer_logit_length=len(self.involved_label1_list))[1]
+                                                   final_layer_logit_length=len(self.involved_label1_list),
+                                                   adain_use = self.adain_use)[1]
                     style_reference_category_list_infer.append(encoded_style_category_logit)
-
-
 
 
 

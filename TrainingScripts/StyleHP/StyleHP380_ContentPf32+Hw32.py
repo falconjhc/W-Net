@@ -7,13 +7,13 @@ from tensorflow.python.client import device_lib
 import argparse
 import sys
 import os
-sys.path.append('../')
+sys.path.append('../../')
 
 from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/home/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
@@ -23,7 +23,7 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 #                   1: training from a based model
 input_args = [
               #'--training_from_model_dir',
-              #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20181115_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv',
+              #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20181206_StyleHw300_ContentPf32+Hw32_GenEncDec6-Res9@Lyr3_DisMdy6conv/',
 
 
 			  '--debug_mode','0',
@@ -37,8 +37,8 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--train_data_augment_flip','0',
-              '--experiment_id','20181206_StyleHw300_ContentPf32+Hw32',# experiment name prefix
+              '--train_data_augment_flip','1',
+              '--experiment_id','20181220_StyleHP380_ContentPf32+Hw32',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
               '--log_dir','tfLogs_WNet/',# log file saving location
               '--print_info_seconds','750',
@@ -50,22 +50,25 @@ input_args = [
 
               '--style_train_data_dir', # training data location
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/,'
+    'CASIA_Dataset/PrintedData/GB2312_L1/',
+    
 
               '--style_validation_data_dir',# validation data location
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
               '--file_list_txt_content', # file list of the standard data
-    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt,'
-    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt,'
-    '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt,'
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt,'
+    '../../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
     
               '--file_list_txt_style_train', # file list of the training data
-    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1300_Isolated.txt,'
-    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1300_Cursive.txt',
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1001_1300_Isolated.txt,'
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1001_1300_Cursive.txt,'
+    '../../FileList/PrintedData/Char_0_3754_Font_0_79_GB2312L1.txt',
 
               '--file_list_txt_style_validation', # file list of the validation data
-    '../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
 
 
               # generator && discriminator
@@ -102,11 +105,11 @@ input_args = [
 
         # feature extractor parametrers
               '--true_fake_target_extractor_dir',
-    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181017_FeatureExtractor_ContentStyle_HW300_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181206_FeatureExtractor_ContentStyle_HW300Pf80_vgg16net/variables/',
               '--content_prototype_extractor_dir',
     'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
               '--style_reference_extractor_dir',
-    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181017_FeatureExtractor_Style_HW300_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181206_FeatureExtractor_Style_HW300Pf80_vgg16net/variables/',
               '--Feature_Penalty_True_Fake_Target', '750',
               '--Feature_Penalty_Style_Reference','10',
               '--Feature_Penalty_Content_Prototype','10']

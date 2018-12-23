@@ -7,15 +7,14 @@ from tensorflow.python.client import device_lib
 import argparse
 import sys
 import os
-sys.path.append('..')
+sys.path.append('../../')
 
 from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-
-data_path_root = '/Data_SSD/Harric/ChineseCharacterExp/'
-model_log_path_root = '/DataA/Harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
+model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
 
@@ -23,11 +22,10 @@ model_log_path_root = '/DataA/Harric/ChineseCharacterExp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
-              '--debug_mode','1',
+			  '--debug_mode','0',
               '--style_input_number','4', # how many style inputs
-              '--content_input_number_actual','3', # how many actual content inputs
-              '--init_training_epochs','5',
-              '--final_training_epochs','25',
+              '--init_training_epochs','1',
+              '--final_training_epochs','500',
               '--adain_use','1',
 
               '--generator_device','/device:GPU:0',
@@ -36,48 +34,49 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--train_data_augment_flip','1',
-              '--experiment_id','DEBUG',# experiment name prefix
-              '--experiment_dir','../../DEBUG', # model saving location
-              '--log_dir','DEBUG/',# log file saving location
-              '--print_info_seconds','3',
+              '--train_data_augment_flip','0',
+              '--experiment_id','20181223-AdaIN_StyleHw50_ContentPf32+Hw32',# experiment name prefix
+              '--experiment_dir','tfModels_WNet/', # model saving location
+              '--log_dir','tfLogs_WNet/',# log file saving location
+              '--print_info_seconds','750',
 
               '--content_data_dir', # standard data location
-    'CASIA_Dataset/StandardChars/GB2312_L1/,'
-    'CASIA_Dataset/StandardChars/GB2312_L2/,'
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/,'
     'CASIA_Dataset/PrintedData/',
 
               '--style_train_data_dir', # training data location
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/',
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
               '--style_validation_data_dir',# validation data location
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
               '--file_list_txt_content', # file list of the standard data
-    '../FileList/StandardChars/Char_0_3754_GB2312L1.txt,'
-    '../FileList/StandardChars/Char_3755_6762_GB2312L2.txt,'
-    '../FileList/PrintedData/Char_0_3754_Font_Selected15_Printed_Fonts_GB2312L1.txt',
-
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt,'
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt,'
+    '../../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
+    
               '--file_list_txt_style_train', # file list of the training data
-    '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt',
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated.txt,'
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive.txt',
 
               '--file_list_txt_style_validation', # file list of the validation data
-    '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Cursive.txt',
-
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
 
 
               # generator && discriminator
               '--generator_residual_at_layer','3',
-              '--generator_residual_blocks','1',
+              '--generator_residual_blocks','5',
               '--discriminator','DisMdy6conv',
 
-              '--batch_size','8',
+              '--batch_size','16',
               '--img_width','64',
               '--channels','1',
 
               # optimizer parameters
-              '--init_lr','0.0001',
-              '--epoch','50',
+              '--init_lr','0.001',
+              '--epoch','5000',
               '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
 
               '--optimization_method','adam',
@@ -87,25 +86,28 @@ input_args = [
               # penalties
               '--generator_weight_decay_penalty','0.0001',
               '--discriminator_weight_decay_penalty','0.0003',
-              '--Pixel_Reconstruction_Penalty','5',
-              '--Lconst_content_Penalty','5',
-              '--Lconst_style_Penalty','3',
-              '--Discriminative_Penalty', '3',
-              '--Discriminator_Categorical_Penalty', '1',
+              '--Pixel_Reconstruction_Penalty','750',
+              '--Lconst_content_Penalty','3',
+              '--Lconst_style_Penalty','5',
+              '--Discriminative_Penalty', '75',
+
+              '--Discriminator_Categorical_Penalty', '75',
               '--Generator_Categorical_Penalty', '0.2',
               '--Discriminator_Gradient_Penalty', '10',
-              '--Batch_StyleFeature_Discrimination_Penalty','10',
+              '--Batch_StyleFeature_Discrimination_Penalty','0',
 
-              # feature extractor parametrers
+
+        # feature extractor parametrers
               '--true_fake_target_extractor_dir',
-    'TrainedModel_CNN/ContentStyleBoth/Exp20180802_FeatureExtractor_StyleContent_HW50_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181010_FeatureExtractor_ContentStyle_HW50_vgg16net/variables/',
               '--content_prototype_extractor_dir',
-    'TrainedModel_CNN/ContentOnly/Exp20180802_FeatureExtractor_Content_PF15+Standard1_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
               '--style_reference_extractor_dir',
-    'TrainedModel_CNN/StyleOnly/Exp20180802_FeatureExtractor_Style_HW50_vgg16net/variables/',
-    		  '--Feature_Penalty_True_Fake_Target', '1',
-              '--Feature_Penalty_Style_Reference','1',
-              '--Feature_Penalty_Content_Prototype','1']
+    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_HW50_vgg16net/variables/',
+              '--Feature_Penalty_True_Fake_Target', '750',
+              '--Feature_Penalty_Style_Reference','10',
+              '--Feature_Penalty_Content_Prototype','10']
+
 
 
 
@@ -118,7 +120,6 @@ parser.add_argument('--print_info_seconds', dest='print_info_seconds',type=int,r
 parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)
 parser.add_argument('--content_input_number_actual', dest='content_input_number_actual',type=int, default=0)
 parser.add_argument('--adain_use', dest='adain_use',type=int, default=0)
-
 
 
 # directories setting
@@ -278,7 +279,7 @@ def main(_):
 
     model = WNET(debug_mode=args.debug_mode,
                  print_info_seconds=args.print_info_seconds,
-                 experiment_dir=args.experiment_dir, 
+                 experiment_dir=os.path.join(model_log_path_root, args.experiment_dir),
                  experiment_id=args.experiment_id,
                  log_dir=os.path.join(model_log_path_root, args.log_dir),
                  training_from_model=args.training_from_model_dir,
