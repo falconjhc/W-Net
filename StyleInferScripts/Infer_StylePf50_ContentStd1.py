@@ -13,8 +13,8 @@ import time
 
 from model.wnet import WNet as WNET
 
-exp_root_path = '/Users/harric/ChineseCharacterExp/'
-#exp_root_path = '/data/Harric/ChineseCharacterExp/'
+#exp_root_path = '/Users/harric/ChineseCharacterExp/'
+exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
 
 print_separater = "#################################################################"
 

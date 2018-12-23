@@ -275,20 +275,26 @@ class WNet(object):
         self.sess = None
         self.print_separater = "#################################################################"
 
-    def find_bn_avg_var(self,var_list):
+    def find_norm_avg_var(self,var_list):
         var_list_new = list()
         for ii in var_list:
             var_list_new.append(ii)
 
         all_vars = tf.global_variables()
-        bn_var_list = [var for var in var_list if 'bn' in var.name]
+        bn_var_list = [var for var in var_list if 'bn' in var.name] # for batch norms
+        #ln_var_list = [var for var in var_list if 'ln' in var.name] # for layer norms
+
+        norm_var_list = list()
+        norm_var_list.extend(bn_var_list)
+        #norm_var_list.extend(ln_var_list)
+
         output_avg_var = list()
-        for bn_var in bn_var_list:
-            if 'gamma' in bn_var.name:
+        for n_var in norm_var_list:
+            if 'gamma' in n_var.name:
                 continue
-            bn_var_name = bn_var.name
-            variance_name = bn_var_name.replace('beta', 'moving_variance')
-            average_name = bn_var_name.replace('beta', 'moving_mean')
+            n_var_name = n_var.name
+            variance_name = n_var_name.replace('beta', 'moving_variance')
+            average_name = n_var_name.replace('beta', 'moving_mean')
             variance_var = [var for var in all_vars if variance_name in var.name][0]
             average_var = [var for var in all_vars if average_name in var.name][0]
             output_avg_var.append(variance_var)
@@ -702,74 +708,8 @@ class WNet(object):
                                                                           self.source_img_width,
                                                                           style_reference.shape[3]],
                                              name='placeholder_style_reference')
-                style_short_cut_interface_list = list()
-                style_residual_interface_list = list()
-                style_full_feature_list = list()
-                for ii in range(style_reference.shape[3]):
-                    if ii == 0:
-                        reuse=False
-                    else:
-                        reuse=True
-                    _, _, \
-                    current_style_short_cut_interface, current_style_residual_interface, current_style_full_feature_list, \
-                    _ = encoder_implementation(images=tf.expand_dims(style_reference_placeholder[:,:,:,ii],axis=3),
-                                               is_training=False,
-                                               encoder_device=self.generator_devices,
-                                               residual_at_layer=self.generator_residual_at_layer,
-                                               residual_connection_mode='Single',
-                                               scope='generator/style_encoder',
-                                               reuse=reuse,
-                                               initializer='XavierInit',
-                                               weight_decay=False,
-                                               weight_decay_rate=0,
-                                               final_layer_logit_length=-1)
-                    style_short_cut_interface_list.append(current_style_short_cut_interface)
-                    style_residual_interface_list.append(current_style_residual_interface)
-                    style_full_feature_list.append(current_style_full_feature_list)
 
 
-
-
-                for ii in range(style_reference.shape[3]):
-                    if ii == 0:
-                        style_short_cut_interface = list()
-                        for jj in range(len(style_short_cut_interface_list[ii])):
-                            style_short_cut_interface.append(tf.expand_dims(style_short_cut_interface_list[ii][jj],
-                                                                            axis=0))
-                        style_residual_interface = list()
-                        for jj in range(len(style_residual_interface_list[ii])):
-                            style_residual_interface.append(tf.expand_dims(style_residual_interface_list[ii][jj],
-                                                                           axis=0))
-
-                    else:
-                        for jj in range(len(style_short_cut_interface_list[ii])):
-                            style_short_cut_interface[jj] = tf.concat([style_short_cut_interface[jj],
-                                                                       tf.expand_dims(style_short_cut_interface_list[ii][jj],
-                                                                                      axis=0)],
-                                                                      axis=0)
-
-                        for jj in range(len(style_residual_interface_list[ii])):
-                            style_residual_interface[jj] = tf.concat([style_residual_interface[jj],
-                                                                      tf.expand_dims(style_residual_interface_list[ii][jj],
-                                                                                     axis=0)],
-                                                                     axis=0)
-
-                for ii in range(len(style_short_cut_interface)):
-                    style_short_cut_avg = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
-                    style_short_cut_max = tf.reduce_max(style_short_cut_interface[ii], axis=0)
-                    style_short_cut_min = tf.reduce_min(style_short_cut_interface[ii], axis=0)
-                    style_short_cut_interface[ii] = tf.concat([style_short_cut_avg, style_short_cut_max, style_short_cut_min], axis=3)
-                    # style_short_cut_interface[ii] = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
-
-
-                for ii in range(len(style_residual_interface)):
-                    style_residual_avg = tf.reduce_mean(style_residual_interface[ii], axis=0)
-                    style_residual_max = tf.reduce_max(style_residual_interface[ii], axis=0)
-                    style_residual_min = tf.reduce_min(style_residual_interface[ii], axis=0)
-                    style_residual_interface[ii] = tf.concat([style_residual_avg, style_residual_max, style_residual_min], axis=3)
-                    # style_residual_interface[ii] = tf.reduce_mean(style_residual_interface[ii], axis=0)
-
-            with tf.device(self.generator_devices):
                 content_prototype_placeholder = tf.placeholder(tf.float32,
                                         [1,
                                          self.source_img_width,
@@ -777,16 +717,16 @@ class WNet(object):
                                          content_prototype.shape[3]],
                                         name='placeholder_content_prototype')
 
-                generated_infer,content_full_faeture_list,decoded_feature_list  = \
+                generated_infer,content_full_faeture_list,decoded_feature_list, style_full_feature_list  = \
                     generator_inferring(content=content_prototype_placeholder,
+                                        style=style_reference_placeholder,
+                                        style_reference_num=style_reference.shape[3],
                                         generator_device=self.generator_devices,
                                         residual_at_layer=self.generator_residual_at_layer,
                                         residual_block_num=self.generator_residual_blocks,
-                                        style_short_cut_interface=style_short_cut_interface,
-                                        style_residual_interface=style_residual_interface,
                                         img_filters=self.input_output_img_filter_num)
 
-                gen_vars_save = self.find_bn_avg_var([var for var in tf.trainable_variables() if 'generator' in var.name])
+                gen_vars_save = self.find_norm_avg_var([var for var in tf.trainable_variables() if 'generator' in var.name])
 
 
 
@@ -1109,7 +1049,7 @@ class WNet(object):
 
 
             extr_vars_true_fake = [var for var in tf.trainable_variables() if 'TrueFake_FeatureExtractor' in var.name]
-            extr_vars_true_fake = self.find_bn_avg_var(extr_vars_true_fake)
+            extr_vars_true_fake = self.find_norm_avg_var(extr_vars_true_fake)
             extr_vars_true_fake = self.variable_dict(var_input=extr_vars_true_fake, delete_name_from_character='/')
             saver_extractor_true_fake = tf.train.Saver(max_to_keep=1, var_list=extr_vars_true_fake)
 
@@ -1176,7 +1116,7 @@ class WNet(object):
 
 
             extr_vars_content_prototype = [var for var in tf.trainable_variables() if 'ContentPrototype_FeatureExtractor' in var.name]
-            extr_vars_content_prototype = self.find_bn_avg_var(extr_vars_content_prototype)
+            extr_vars_content_prototype = self.find_norm_avg_var(extr_vars_content_prototype)
             extr_vars_content_prototype = self.variable_dict(var_input=extr_vars_content_prototype, delete_name_from_character='/')
             saver_extractor_content_prototype = tf.train.Saver(max_to_keep=1, var_list=extr_vars_content_prototype)
 
@@ -1225,7 +1165,7 @@ class WNet(object):
 
 
             extr_vars_style_reference = [var for var in tf.trainable_variables() if 'StyleReference_FeatureExtractor' in var.name]
-            extr_vars_style_reference = self.find_bn_avg_var(extr_vars_style_reference)
+            extr_vars_style_reference = self.find_norm_avg_var(extr_vars_style_reference)
             extr_vars_style_reference = self.variable_dict(var_input=extr_vars_style_reference, delete_name_from_character='/')
             saver_extractor_style_reference = tf.train.Saver(max_to_keep=1, var_list=extr_vars_style_reference)
 
@@ -1537,7 +1477,7 @@ class WNet(object):
         test_summary = tf.summary.merge([test_content_accuracy, test_style_accuracy, test_content_entropy, test_style_entropy])
 
         gen_vars_train = [var for var in tf.trainable_variables() if 'generator' in var.name]
-        gen_vars_save = self.find_bn_avg_var(gen_vars_train)
+        gen_vars_save = self.find_norm_avg_var(gen_vars_train)
 
         saver_generator = tf.train.Saver(max_to_keep=self.model_save_epochs, var_list=gen_vars_save)
 
@@ -1827,7 +1767,7 @@ class WNet(object):
         tst_fake_summary = tf.summary.merge([val_fake_acry, val_fake_enty])
 
         dis_vars_train = [var for var in tf.trainable_variables() if 'discriminator' in var.name]
-        dis_vars_save = self.find_bn_avg_var(dis_vars_train)
+        dis_vars_save = self.find_norm_avg_var(dis_vars_train)
 
 
 
