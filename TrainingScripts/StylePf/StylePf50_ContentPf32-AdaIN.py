@@ -35,7 +35,7 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--train_data_augment_flip','1',
+              '--train_data_augment_flip','0',
               '--experiment_id','20181223-AdaIN_StylePf50_ContentPf32',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
               '--log_dir','tfLogs_WNet/',# log file saving location
@@ -65,7 +65,7 @@ input_args = [
               '--generator_residual_blocks','5',
               '--discriminator','DisMdy6conv',
 
-              '--batch_size','16',
+              '--batch_size','8',
               '--img_width','64',
               '--channels','1',
 

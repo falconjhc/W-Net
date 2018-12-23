@@ -70,7 +70,7 @@ input_args = [
               '--generator_residual_blocks','5',
               '--discriminator','DisMdy6conv',
 
-              '--batch_size','16',
+              '--batch_size','8',
               '--img_width','64',
               '--channels','1',
 
