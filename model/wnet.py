@@ -2338,7 +2338,7 @@ class WNet(object):
                     current_critic_logit_penalty_value = self.Discriminative_Penalty
                     current_lr_real = current_lr
                 current_critic_logit_penalty_value = current_critic_logit_penalty_value * 0.001
-                current_lr_real = max(current_lr_real, TINIEST_LR)
+                # current_lr_real = max(current_lr_real, TINIEST_LR)
 
 
                 optimization_consumed, \
@@ -2400,8 +2400,6 @@ class WNet(object):
                                                           feed_dict={learning_rate: current_lr_real})
                     summary_writer.add_summary(learning_rate_summary, global_step.eval(session=self.sess))
                     summary_writer.flush()
-
-
 
 
                 if time.time()-sample_start>sample_seconds or global_step.eval(session=self.sess)==global_step_start+1 or bid==self.itrs_for_current_epoch-1:

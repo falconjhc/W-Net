@@ -26,7 +26,7 @@ input_args = [
               '--debug_mode','1',
               '--style_input_number','4', # how many style inputs
               '--content_input_number_actual','3', # how many actual content inputs
-              '--init_training_epochs','5',
+              '--init_training_epochs','1',
               '--final_training_epochs','25',
               '--adain_use','1',
 
