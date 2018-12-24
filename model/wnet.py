@@ -2,7 +2,7 @@
 from __future__ import print_function
 from __future__ import absolute_import
 GRAYSCALE_AVG = 127.5
-TINIEST_LR = 0.00009
+TINIEST_LR = 0.00005
 
 import matplotlib.pyplot as plt
 
@@ -2277,7 +2277,7 @@ class WNet(object):
         else:
             ei_start = 0
             current_lr = self.lr
-        current_lr = max(current_lr, TINIEST_LR)
+        
         global_step_start = global_step.eval(session=self.sess)
         print("InitTrainingEpochs:%d, FinalTrainingEpochStartAt:%d" % (self.init_training_epochs,self.final_training_epochs))
         print("TrainingStart:Epoch:%d, GlobalStep:%d, LearnRate:%.5f" % (ei_start+1,global_step_start+1,current_lr))
@@ -2317,7 +2317,7 @@ class WNet(object):
                 current_lr = update_lr
 
             for bid in range(self.itrs_for_current_epoch):
-                if time.time() - training_start_time <= 1200 or ei < self.init_training_epochs:
+                if time.time() - training_start_time <= 4800 or ei < self.init_training_epochs:
                     summary_seconds = 60
                     sample_seconds = 60
                     print_info_seconds = 60
@@ -2338,6 +2338,7 @@ class WNet(object):
                     current_critic_logit_penalty_value = self.Discriminative_Penalty
                     current_lr_real = current_lr
                 current_critic_logit_penalty_value = current_critic_logit_penalty_value * 0.001
+                current_lr_real = max(current_lr_real, TINIEST_LR)
 
 
                 optimization_consumed, \
