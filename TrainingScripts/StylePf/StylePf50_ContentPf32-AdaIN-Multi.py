@@ -13,8 +13,8 @@ from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/data0/Harric/ChineseCharacterExp/'
-model_log_path_root = '/data1/Harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
+model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
@@ -35,10 +35,10 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--train_data_augment_flip','0',
+              '--train_data_augment_flip','1',
               '--experiment_id','20181225-AdaIN-Multi_StylePf50_ContentPf32',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
-              '--log_dir','tfLogs_WNet/',# log file saving location
+              '--log_dir','tfLogsNew_WNet/',# log file saving location
               '--print_info_seconds','750',
 
               '--content_data_dir', # standard data location
@@ -65,7 +65,7 @@ input_args = [
               '--generator_residual_blocks','5',
               '--discriminator','DisMdy6conv',
 
-              '--batch_size','4',
+              '--batch_size','8',
               '--img_width','64',
               '--channels','1',
 

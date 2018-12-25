@@ -13,7 +13,7 @@ from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/home/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
@@ -24,9 +24,7 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 input_args = [
               #'--training_from_model_dir',
               #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20181115_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv',
-
-
-			  '--debug_mode','0',
+			        '--debug_mode','0',
               '--style_input_number','4', # how many style inputs
               '--init_training_epochs','1',
               '--final_training_epochs','500',
@@ -38,10 +36,10 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--train_data_augment_flip','0',
-              '--experiment_id','20181206_StyleHw300_ContentPf32+Hw32',# experiment name prefix
+              '--train_data_augment_flip','1',
+              '--experiment_id','20181226-NonAdaIN_ContentPf32+Hw32',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
-              '--log_dir','tfLogs_WNet/',# log file saving location
+              '--log_dir','tfLogsNew_WNet/',# log file saving location
               '--print_info_seconds','750',
 
               '--content_data_dir', # standard data location
@@ -74,14 +72,14 @@ input_args = [
               '--generator_residual_blocks','9',
               '--discriminator','DisMdy6conv',
 
-              '--batch_size','16',
+              '--batch_size','8',
               '--img_width','64',
               '--channels','1',
 
               # optimizer parameters
-              '--init_lr','0.001',
+              '--init_lr','0.0002',
               '--epoch','1500',
-              '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
+              '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
 
               '--optimization_method','adam',
               '--final_learning_rate_pctg','0.01',

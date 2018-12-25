@@ -4,19 +4,6 @@
     <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DebugScripts/wnet_debug.py" beforeDir="false" afterPath="$PROJECT_DIR$/DebugScripts/wnet_debug.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentStd1.py" beforeDir="false" afterPath="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentStd1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHP/StyleHP380_ContentPf32+Hw32.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StyleHP/StyleHP380_ContentPf32+Hw32.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw100_ContentPf32+Hw32.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw100_ContentPf32+Hw32.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw300_ContentPf32+Hw32.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw300_ContentPf32+Hw32.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32-AdaIN.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPfStd1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPfStd1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentStd1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentStd1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32-AdaIN.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPfStd1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPfStd1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf80_ContentPf32.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf80_ContentPf32.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/gan_networks.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/gan_networks.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/wnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,7 +16,7 @@
     <SUITE FILE_PATH="coverage/W_Net$debug_infer.coverage" NAME="debug_infer Coverage Results" MODIFIED="1541760090040" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
     <SUITE FILE_PATH="coverage/W_Net$extranet_scripts_debug.coverage" NAME="extranet_scripts_debug Coverage Results" MODIFIED="1545317140627" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
     <SUITE FILE_PATH="coverage/W_Net$Infer_StylePf50_ContentStd1.coverage" NAME="Infer_StylePf50_ContentStd1 Coverage Results" MODIFIED="1545713322110" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/StyleInferScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$wnet_debug.coverage" NAME="wnet_debug Coverage Results" MODIFIED="1545721539134" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$wnet_debug.coverage" NAME="wnet_debug Coverage Results" MODIFIED="1545723691265" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
     <SUITE FILE_PATH="coverage/W_Net$Infer_StyleHw50_ContentHw32Pf32.coverage" NAME="Infer_StyleHw50_ContentHw32Pf32 Coverage Results" MODIFIED="1545228372312" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/StyleInferScripts" />
     <SUITE FILE_PATH="coverage/W_Net$extranet_scripots_debug.coverage" NAME="extranet_scripots_debug Coverage Results" MODIFIED="1538554041623" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
     <SUITE FILE_PATH="coverage/W_Net$StylePf50_ContentPfStd1.coverage" NAME="StylePf50_ContentPfStd1 Coverage Results" MODIFIED="1541767213453" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_October" />
@@ -42,14 +29,26 @@
     <window id="1">
       <content type="file-editors">
         <state>
-          <splitter split-orientation="horizontal" split-proportion="0.584375">
+          <splitter split-orientation="horizontal" split-proportion="0.33802083">
             <split-first>
               <leaf>
                 <file pinned="false" current-in-tab="true">
+                  <entry file="file://$PROJECT_DIR$/model/wnet.py">
+                    <provider selected="true" editor-type-id="text-editor">
+                      <state relative-caret-position="316">
+                        <caret line="1497" selection-start-line="1497" selection-end-line="1497" />
+                        <folding>
+                          <element signature="e#24#61#0" expanded="true" />
+                        </folding>
+                      </state>
+                    </provider>
+                  </entry>
+                </file>
+                <file pinned="false" current-in-tab="false">
                   <entry file="file://$PROJECT_DIR$/model/gan_networks.py">
                     <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="288">
-                        <caret line="362" lean-forward="true" selection-start-line="362" selection-end-line="362" />
+                      <state relative-caret-position="163">
+                        <caret line="370" lean-forward="true" selection-start-line="370" selection-end-line="370" />
                         <folding>
                           <element signature="e#1#24#0" expanded="true" />
                         </folding>
@@ -62,12 +61,12 @@
             <split-second>
               <leaf>
                 <file pinned="false" current-in-tab="true">
-                  <entry file="file://$PROJECT_DIR$/model/wnet.py">
+                  <entry file="file://$PROJECT_DIR$/model/gan_networks.py">
                     <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="354">
-                        <caret line="2347" column="49" selection-start-line="2347" selection-start-column="49" selection-end-line="2347" selection-end-column="49" />
+                      <state relative-caret-position="-170">
+                        <caret line="158" column="4" selection-start-line="158" selection-start-column="4" selection-end-line="158" selection-end-column="4" />
                         <folding>
-                          <element signature="e#24#61#0" expanded="true" />
+                          <element signature="e#1#24#0" expanded="true" />
                         </folding>
                       </state>
                     </provider>
@@ -84,7 +83,7 @@
     <session id="-207592693">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="21" />
+          <entry key="project.closed" value="23" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.1" value="3" />
           <entry key="project.open.time.2" value="1" />
@@ -92,31 +91,31 @@
           <entry key="project.open.time.4" value="2" />
           <entry key="project.open.time.5" value="7" />
           <entry key="project.open.time.6" value="9" />
-          <entry key="project.open.time.7" value="4" />
+          <entry key="project.open.time.7" value="5" />
           <entry key="project.open.time.8" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="31" />
+          <entry key="project.opened" value="32" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="256" />
+          <entry key="py" value="263" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="256" />
+          <entry key="Python" value="263" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="2086" />
-          <entry key="py" value="9201" />
+          <entry key="py" value="9207" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="11287" />
+          <entry key="Python" value="11293" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
@@ -163,22 +162,10 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32-AdaIN-Single.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1332">
-              <caret line="81" column="45" lean-forward="true" selection-start-line="81" selection-start-column="45" selection-end-line="81" selection-end-column="45" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>tf.nn.dropout</find>
-      <find>fused_residual_interfaces</find>
       <find>full_style_feature_list_reformat</find>
       <find>residual interfaces</find>
       <find>layer_norm</find>
@@ -200,13 +187,15 @@
       <find>generator_imple</find>
       <find>parser.add_argument('--adain_use', dest='adain_use',type=int, default=0)</find>
       <find>parser.add_argument('--adain_use', dest='adain_use',type=str, default=0)</find>
-      <find>residual_block</find>
       <find>generator_frame</find>
       <find>generator_imp</find>
       <find>rawin</find>
       <find>keep</find>
       <find>model_save_epochs</find>
       <find>0.1</find>
+      <find>raw</find>
+      <find>gen_vars_train</find>
+      <find>residual_block</find>
     </findStrings>
     <replaceStrings>
       <replace>Batch_StyleFeature_Discrimination_Penalty</replace>
@@ -249,16 +238,16 @@
         <option value="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentStd1.py" />
         <option value="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw100_ContentPf32+Hw32.py" />
         <option value="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw300_ContentPf32+Hw32.py" />
-        <option value="$PROJECT_DIR$/TrainingScripts/StyleHP/StyleHP380_ContentPf32+Hw32.py" />
         <option value="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32-AdaIN.py" />
         <option value="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32-AdaIN.py" />
-        <option value="$PROJECT_DIR$/DebugScripts/wnet_debug.py" />
         <option value="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32-AdaIN-Single.py" />
         <option value="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32-AdaIN-Multi.py" />
         <option value="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32-AdaIN-Single-Multi.py" />
         <option value="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32-AdaIN-Single.py" />
         <option value="$PROJECT_DIR$/model/gan_networks.py" />
         <option value="$PROJECT_DIR$/model/wnet.py" />
+        <option value="$PROJECT_DIR$/DebugScripts/wnet_debug.py" />
+        <option value="$PROJECT_DIR$/TrainingScripts/StyleHP/StyleHP380_ContentPf32+Hw32.py" />
       </list>
     </option>
   </component>
@@ -315,13 +304,18 @@
             <path>
               <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
               <item name="W-Net" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net" type="462c0819:PsiDirectoryNode" />
               <item name="TrainingScripts" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
               <item name="W-Net" type="462c0819:PsiDirectoryNode" />
               <item name="TrainingScripts" type="462c0819:PsiDirectoryNode" />
-              <item name="StyleHw" type="462c0819:PsiDirectoryNode" />
+              <item name="StyleHP" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -513,15 +507,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="51" y="25" width="1229" height="999" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3457312" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.35164836" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.29976302" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.15047394" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.12559241" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -592,6 +585,11 @@
           <url>file://$PROJECT_DIR$/model/wnet.py</url>
           <line>741</line>
           <option name="timeStamp" value="236" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/wnet.py</url>
+          <line>1497</line>
+          <option name="timeStamp" value="237" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -773,34 +771,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TrainingScripts/StyleHP/StyleHP380_ContentPf32+Hw32.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="32" column="30" selection-start-line="32" selection-start-column="30" selection-end-line="32" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32-AdaIN.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="558">
-          <caret line="38" column="41" selection-start-line="38" selection-start-column="41" selection-end-line="38" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32-AdaIN.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="37" column="41" selection-start-line="37" selection-start-column="41" selection-end-line="37" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DebugScripts/wnet_debug.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="52" column="5" selection-start-line="52" selection-start-column="5" selection-end-line="52" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32-AdaIN.py" />
+    <entry file="file://$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32-AdaIN.py" />
     <entry file="file://$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32-AdaIN-Single.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
@@ -824,28 +796,42 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32-AdaIN-Single.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1332">
-          <caret line="81" column="45" lean-forward="true" selection-start-line="81" selection-start-column="45" selection-end-line="81" selection-end-column="45" />
+        <state relative-caret-position="540">
+          <caret line="37" column="51" selection-start-line="37" selection-start-column="51" selection-end-line="37" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/wnet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="1497" selection-start-line="1497" selection-end-line="1497" />
+          <folding>
+            <element signature="e#24#61#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model/gan_networks.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="362" lean-forward="true" selection-start-line="362" selection-end-line="362" />
+        <state relative-caret-position="163">
+          <caret line="370" lean-forward="true" selection-start-line="370" selection-end-line="370" />
           <folding>
             <element signature="e#1#24#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/wnet.py">
+    <entry file="file://$PROJECT_DIR$/TrainingScripts/StyleHP/StyleHP380_ContentPf32+Hw32.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="354">
-          <caret line="2347" column="49" selection-start-line="2347" selection-start-column="49" selection-end-line="2347" selection-end-column="49" />
-          <folding>
-            <element signature="e#24#61#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="18">
+          <caret line="49" column="18" selection-start-line="49" selection-start-column="18" selection-end-line="49" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DebugScripts/wnet_debug.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="117">
+          <caret line="29" column="36" selection-start-line="29" selection-start-column="36" selection-end-line="29" selection-end-column="36" />
         </state>
       </provider>
     </entry>

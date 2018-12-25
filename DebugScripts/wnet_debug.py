@@ -27,7 +27,7 @@ input_args = [
               '--content_input_number_actual','3', # how many actual content inputs
               '--init_training_epochs','1',
               '--final_training_epochs','25',
-              '--adain_use','1-Single',
+              '--adain_use','1-Multi',
 
               '--generator_device','/device:GPU:0',
               '--discriminator_device', '/device:GPU:0',
