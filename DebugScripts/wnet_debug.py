@@ -14,9 +14,8 @@ eps = 1e-9
 
 
 
-data_path_root = '/Data_SSD/Harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_log_path_root = '/DataA/Harric/ChineseCharacterExp/'
-# exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
 
 # OPTIONS SPECIFICATION
@@ -28,7 +27,7 @@ input_args = [
               '--content_input_number_actual','3', # how many actual content inputs
               '--init_training_epochs','1',
               '--final_training_epochs','25',
-              '--adain_use','1',
+              '--adain_use','1-Single',
 
               '--generator_device','/device:GPU:0',
               '--discriminator_device', '/device:GPU:0',
@@ -98,11 +97,11 @@ input_args = [
 
               # feature extractor parametrers
               '--true_fake_target_extractor_dir',
-    'TrainedModel_CNN/ContentStyleBoth/Exp20180802_FeatureExtractor_StyleContent_HW50_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181010_FeatureExtractor_ContentStyle_HW50_vgg16net/variables/',
               '--content_prototype_extractor_dir',
-    'TrainedModel_CNN/ContentOnly/Exp20180802_FeatureExtractor_Content_PF15+Standard1_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
               '--style_reference_extractor_dir',
-    'TrainedModel_CNN/StyleOnly/Exp20180802_FeatureExtractor_Style_HW50_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_HW50_vgg16net/variables/',
     		  '--Feature_Penalty_True_Fake_Target', '1',
               '--Feature_Penalty_Style_Reference','1',
               '--Feature_Penalty_Content_Prototype','1']
@@ -117,7 +116,7 @@ parser.add_argument('--train_data_augment_flip', dest='train_data_augment_flip',
 parser.add_argument('--print_info_seconds', dest='print_info_seconds',type=int,required=True)
 parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)
 parser.add_argument('--content_input_number_actual', dest='content_input_number_actual',type=int, default=0)
-parser.add_argument('--adain_use', dest='adain_use',type=int, default=0)
+parser.add_argument('--adain_use', dest='adain_use',type=str, default=None)
 
 
 

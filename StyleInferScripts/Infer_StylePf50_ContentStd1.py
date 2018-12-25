@@ -23,7 +23,7 @@ print_separater = "#############################################################
 
 input_args = [
               '--targeted_content_input_txt',
-    #'../ContentTxt/过秦论_繁体_220.txt',
+    '../ContentTxt/过秦论_繁体_220.txt',
     # '../ContentTxt/大韩民国爱国歌_140.txt',
     # '../ContentTxt/终战诏书_230.txt',
     

@@ -157,7 +157,7 @@ class WNet(object):
         self.init_training_epochs=init_training_epochs
         self.final_training_epochs=final_training_epochs
         self.final_training_epochs=final_training_epochs
-        self.model_save_epochs=3
+        self.model_save_epochs=10
         self.debug_mode = debug_mode
         self.experiment_dir = experiment_dir
         self.log_dir=log_dir
@@ -189,7 +189,14 @@ class WNet(object):
 
         self.train_data_augment = (train_data_augment==1)
         self.train_data_augment_flip = (train_data_augment_flip==1)
-        self.adain_use = (adain_use==1)
+        self.adain_use = ('1' in adain_use)
+        if adain_use and 'Multi' in adain_use:
+            self.adain_preparation_model = 'Multi'
+        elif adain_use and 'Single' in adain_use:
+            self.adain_preparation_model = 'Single'
+        else:
+            self.adain_preparation_model = None
+
 
 
         self.Discriminative_Penalty = Discriminative_Penalty + eps
@@ -1248,7 +1255,9 @@ class WNet(object):
                                              style_input_number=self.style_input_number,
                                              content_prototype_number=self.content_input_number_actual,
                                              weight_decay_rate=self.generator_weight_decay_penalty,
-                                             adain_use=self.adain_use)
+                                             adain_use=self.adain_use,
+                                             adain_preparation_model=self.adain_preparation_model,
+                                             debug_mode=self.debug_mode)
 
                 # encoded of the generated target on the content prototype encoder
                 encoded_content_prototype_generated_target = \
@@ -1309,7 +1318,9 @@ class WNet(object):
                                              style_input_number=self.style_input_number,
                                              content_prototype_number=self.content_input_number_actual,
                                              weight_decay_rate=eps,
-                                             adain_use=self.adain_use)[0]
+                                             adain_use=self.adain_use,
+                                             adain_preparation_model=self.adain_preparation_model,
+                                             debug_mode=True)[0]
 
                 content_prototype_category_infer = \
                         encoder_implementation(images=content_prototype_infer,
@@ -2333,7 +2344,8 @@ class WNet(object):
 
                 if epoch_step.eval(session=self.sess) < self.init_training_epochs:
                     current_critic_logit_penalty_value = (float(global_step.eval(session=self.sess))/float(self.init_training_epochs*self.itrs_for_current_epoch))*self.Discriminative_Penalty + eps
-                    current_lr_real = current_lr * 0.1
+                    # current_lr_real = current_lr * 0.1
+                    current_lr_real = current_lr 
                 else:
                     current_critic_logit_penalty_value = self.Discriminative_Penalty
                     current_lr_real = current_lr

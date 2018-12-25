@@ -123,7 +123,7 @@ parser.add_argument('--train_data_augment_flip', dest='train_data_augment_flip',
 parser.add_argument('--print_info_seconds', dest='print_info_seconds',type=int,required=True)
 parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)
 parser.add_argument('--content_input_number_actual', dest='content_input_number_actual',type=int, default=0)
-parser.add_argument('--adain_use', dest='adain_use',type=int, default=0)
+parser.add_argument('--adain_use', dest='adain_use',type=str, default=None)
 
 
 # directories setting

@@ -12,6 +12,8 @@ from utilities.ops import lrelu, relu, batch_norm, layer_norm, instance_norm, ad
 from utilities.ops import conv2d, deconv2d, fc
 
 
+import math
+
 print_separater="#########################################################"
 
 eps = 1e-9
@@ -164,7 +166,9 @@ def residual_block(input_list,
                    weight_decay,
                    weight_decay_rate,
                    style_features,
-                   adain_use=False):
+                   adain_use=False,
+                   adain_preparation_model=None,
+                   debug_mode=False):
     def res_block(x,layer,style):
 
         filters = int(x.shape[3])
@@ -214,6 +218,12 @@ def residual_block(input_list,
     with tf.variable_scope(tf.get_variable_scope()):
         with tf.device(residual_device):
             residual_output_list = list()
+
+            if not reuse:
+                print (print_separater)
+                print ('Adaptive Instance Normalization for Residual Preparations: %s' % adain_preparation_model)
+                print (print_separater)
+
             for ii in range(len(input_list)):
                 current_residual_num = residual_num + 2 * ii
                 current_residual_input = input_list[ii]
@@ -236,22 +246,100 @@ def residual_block(input_list,
                             else:
                                 current_init_residual_input = tf.squeeze(style_features[ii][jj, :, :, :, :])
 
+                            if adain_preparation_model == 'Multi':
+                                # multiple cnn layer built to make the style_conv be incorporated with the dimension of the residual blocks
+                                log_input = math.log(int(current_init_residual_input.shape[3])) / math.log(2)
+                                if math.log(int(current_init_residual_input.shape[3])) < math.log(int(current_residual_input.shape[3])):
+                                    if np.floor(log_input) < math.log(int(current_residual_input.shape[3])) / math.log(2):
+                                        filter_num_start = int(np.floor(log_input)) + 2
+                                    else:
+                                        filter_num_start = int(np.floor(log_input))
+                                    filter_num_start = int(math.pow(2,filter_num_start))
+                                elif math.log(int(current_init_residual_input.shape[3])) > math.log(int(current_residual_input.shape[3])):
+                                    if np.ceil(log_input) > math.log(int(current_residual_input.shape[3])) / math.log(2):
+                                        filter_num_start = int(np.ceil(log_input)) - 2
+                                    else:
+                                        filter_num_start = int(np.ceil(log_input))
+                                    filter_num_start = int(math.pow(2, filter_num_start))
+                                else:
+                                    filter_num_start = int(current_residual_input.shape[3])
+                                filter_num_end = int(current_residual_input.shape[3])
 
-                            style_conv = conv2d(x=current_init_residual_input,
-                                                output_filters=int(current_residual_input.shape[3]),
-                                                scope="conv0_style",
-                                                parameter_update_device=residual_device,
-                                                kh=3, kw=3, sh=1, sw=1,
-                                                initializer=initializer,
-                                                weight_decay=weight_decay,
-                                                name_prefix=scope,
-                                                weight_decay_rate=weight_decay_rate)
-                            style_conv = relu(style_conv)
+                                if int(current_init_residual_input.shape[3]) == filter_num_end:
+                                    continue_build = False
+                                    style_conv = current_init_residual_input
+                                else:
+                                    continue_build = True
+
+
+                                current_style_conv_input = current_init_residual_input
+                                current_output_filter_num = filter_num_start
+                                style_cnn_layer_num = 0
+                                while continue_build:
+                                    style_conv = conv2d(x=current_style_conv_input,
+                                                        output_filters=current_output_filter_num,
+                                                        scope="conv0_style_layer%d" % (style_cnn_layer_num+1),
+                                                        parameter_update_device=residual_device,
+                                                        kh=3, kw=3, sh=1, sw=1,
+                                                        initializer=initializer,
+                                                        weight_decay=weight_decay,
+                                                        name_prefix=scope,
+                                                        weight_decay_rate=weight_decay_rate)
+                                    if not (reuse or jj > 0):
+                                        print (style_conv)
+                                    style_conv = relu(style_conv)
+
+
+                                    current_style_conv_input = style_conv
+
+                                    if filter_num_start < filter_num_end:
+                                        current_output_filter_num = current_output_filter_num * 4
+                                    else:
+                                        current_output_filter_num = current_output_filter_num / 4
+                                    style_cnn_layer_num += 1
+
+                                    if current_output_filter_num > filter_num_end and \
+                                            math.log(int(current_init_residual_input.shape[3])) < math.log(int(current_residual_input.shape[3])):
+                                        current_output_filter_num = filter_num_end
+                                    if current_output_filter_num < filter_num_end and \
+                                            math.log(int(current_init_residual_input.shape[3])) > math.log(int(current_residual_input.shape[3])):
+                                        current_output_filter_num = filter_num_end
+
+                                    if int(style_conv.shape[3]) == filter_num_end:
+                                        continue_build = False
+
+
+
+                            elif adain_preparation_model == 'Single':
+                                if int(current_init_residual_input.shape[3]) == int(current_residual_input.shape[3]):
+                                    style_conv = current_init_residual_input
+                                else:
+                                    style_conv = conv2d(x=current_init_residual_input,
+                                                        output_filters=int(current_residual_input.shape[3]),
+                                                        scope="conv0_style_layer0",
+                                                        parameter_update_device=residual_device,
+                                                        kh=3, kw=3, sh=1, sw=1,
+                                                        initializer=initializer,
+                                                        weight_decay=weight_decay,
+                                                        name_prefix=scope,
+                                                        weight_decay_rate=weight_decay_rate)
+                                    if not (reuse or jj > 0):
+                                        print (style_conv)
+                                    style_conv = relu(style_conv)
+
+
+
                             if jj == 0:
                                 style_features_new = tf.expand_dims(style_conv, axis=0)
                             else:
-                                style_features_new = tf.concat([style_features_new, tf.expand_dims(style_conv, axis=0)],
+                                style_features_new = tf.concat([style_features_new,
+                                                                tf.expand_dims(style_conv, axis=0)],
                                                                axis=0)
+
+                    if (not reuse) and (not math.log(int(current_init_residual_input.shape[3])) == math.log(int(current_residual_input.shape[3]))):
+                        print (print_separater)
+
+
                 else:
                     style_features_new=None
 
@@ -272,6 +360,12 @@ def residual_block(input_list,
                             residual_output = residual_block_output
 
                     residual_output_list.append(residual_output)
+
+
+    if (not reuse) and adain_use and (not debug_mode):
+        print(print_separater)
+        raw_input("Press enter to continue")
+    print(print_separater)
 
     return residual_output_list, return_str
 
@@ -582,7 +676,9 @@ def generator_framework(content_prototype,style_reference,
                         style_input_number,
                         content_prototype_number,
                         reuse=False,
-                        adain_use=False):
+                        adain_use=False,
+                        adain_preparation_model=None,
+                        debug_mode=True):
 
     def _calculate_batch_diff(input_feature):
         diff = tf.abs(tf.expand_dims(input_feature, 4) -
@@ -754,7 +850,9 @@ def generator_framework(content_prototype,style_reference,
                                                  weight_decay=weight_decay,
                                                  weight_decay_rate=weight_decay_rate,
                                                  style_features=full_style_feature_list_reformat,
-                                                 adain_use=adain_use)
+                                                 adain_use=adain_use,
+                                                 adain_preparation_model=adain_preparation_model,
+                                                 debug_mode=debug_mode)
 
 
     # combination of all the encoder outputs

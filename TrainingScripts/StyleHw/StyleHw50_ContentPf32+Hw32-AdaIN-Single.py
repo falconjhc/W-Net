@@ -13,8 +13,8 @@ from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/DataA/Harric/ChineseCharacterExp/'
-model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
+data_path_root = '/data0/Harric/ChineseCharacterExp/'
+model_log_path_root = '/data1/Harric/ChineseCharacterExp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
 
@@ -26,7 +26,7 @@ input_args = [
               '--style_input_number','4', # how many style inputs
               '--init_training_epochs','1',
               '--final_training_epochs','1500',
-              '--adain_use','1',
+              '--adain_use','1-Single',
 
               '--generator_device','/device:GPU:0',
               '--discriminator_device', '/device:GPU:0',
@@ -35,7 +35,7 @@ input_args = [
 
               '--train_data_augment','1', # translation? rotation?
               '--train_data_augment_flip','0',
-              '--experiment_id','20181223-AdaIN_StyleHw50_ContentPf32+Hw32',# experiment name prefix
+              '--experiment_id','20181225-AdaIN-Single_StyleHw50_ContentPf32+Hw32',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
               '--log_dir','tfLogs_WNet/',# log file saving location
               '--print_info_seconds','750',
@@ -70,14 +70,14 @@ input_args = [
               '--generator_residual_blocks','5',
               '--discriminator','DisMdy6conv',
 
-              '--batch_size','8',
+              '--batch_size','4',
               '--img_width','64',
               '--channels','1',
 
               # optimizer parameters
-              '--init_lr','0.0005',
+              '--init_lr','0.0002',
               '--epoch','5000',
-              '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
+              '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
 
               '--optimization_method','adam',
               '--final_learning_rate_pctg','0.01',
@@ -119,7 +119,7 @@ parser.add_argument('--train_data_augment_flip', dest='train_data_augment_flip',
 parser.add_argument('--print_info_seconds', dest='print_info_seconds',type=int,required=True)
 parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)
 parser.add_argument('--content_input_number_actual', dest='content_input_number_actual',type=int, default=0)
-parser.add_argument('--adain_use', dest='adain_use',type=int, default=0)
+parser.add_argument('--adain_use', dest='adain_use',type=str, default=None)
 
 
 # directories setting
