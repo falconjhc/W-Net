@@ -251,13 +251,13 @@ def residual_block(input_list,
                                 log_input = math.log(int(current_init_residual_input.shape[3])) / math.log(2)
                                 if math.log(int(current_init_residual_input.shape[3])) < math.log(int(current_residual_input.shape[3])):
                                     if np.floor(log_input) < math.log(int(current_residual_input.shape[3])) / math.log(2):
-                                        filter_num_start = int(np.floor(log_input)) + 2
+                                        filter_num_start = int(np.floor(log_input)) + 1
                                     else:
                                         filter_num_start = int(np.floor(log_input))
                                     filter_num_start = int(math.pow(2,filter_num_start))
                                 elif math.log(int(current_init_residual_input.shape[3])) > math.log(int(current_residual_input.shape[3])):
                                     if np.ceil(log_input) > math.log(int(current_residual_input.shape[3])) / math.log(2):
-                                        filter_num_start = int(np.ceil(log_input)) - 2
+                                        filter_num_start = int(np.ceil(log_input)) - 1
                                     else:
                                         filter_num_start = int(np.ceil(log_input))
                                     filter_num_start = int(math.pow(2, filter_num_start))
@@ -293,9 +293,9 @@ def residual_block(input_list,
                                     current_style_conv_input = style_conv
 
                                     if filter_num_start < filter_num_end:
-                                        current_output_filter_num = current_output_filter_num * 4
+                                        current_output_filter_num = current_output_filter_num * 2
                                     else:
-                                        current_output_filter_num = current_output_filter_num / 4
+                                        current_output_filter_num = current_output_filter_num / 2
                                     style_cnn_layer_num += 1
 
                                     if current_output_filter_num > filter_num_end and \
