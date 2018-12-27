@@ -23,12 +23,12 @@ print_separater = "#############################################################
 
 input_args = [
               '--targeted_content_input_txt',
-    '../ContentTxt/过秦论_繁体_220.txt',
-    # '../ContentTxt/大韩民国爱国歌_140.txt',
-    # '../ContentTxt/终战诏书_230.txt',
+    # '../ContentTxt/过秦论_繁体_220.txt',
+    '../ContentTxt/大韩民国爱国歌_140.txt',
+    #'../ContentTxt/终战诏书_230.txt',
     
 
-    		  '--save_mode','10:23',
+    		  '--save_mode','13:11',
               '--adain_use','0',
 
     		  '--known_style_img_path',
@@ -37,9 +37,9 @@ input_args = [
     # '../StyleExamples/PrintedSamples',  # input a image directory with multiple single chars
 
               '--content_data_dir', # standard data location
-    # '../FontFiles/HeiTi_Chinese.ttf',
-    # '../FontFiles/HeiTi_Korean.ttf',
-    '../FontFiles/HeiTi_Jap1.otf',
+    #'../FontFiles/HeiTi_Chinese.ttf',
+    '../FontFiles/HeiTi_Korean.ttf',
+    #'../FontFiles/HeiTi_Jap1.otf',
 
 
   ####################################################################
@@ -72,7 +72,7 @@ input_args = [
 parser = argparse.ArgumentParser(description='Train')
 parser.add_argument('--debug_mode', dest='debug_mode',type=int,required=True)
 parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)
-parser.add_argument('--adain_use', dest='adain_use',type=int, default=0)
+parser.add_argument('--adain_use', dest='adain_use',type=str, default=0)
 
 
 # directories setting

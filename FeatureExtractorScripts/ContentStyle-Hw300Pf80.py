@@ -41,7 +41,7 @@ input_args = [
 
               '--image_filters','1',
               '--experiment_id','20181226_FeatureExtractor_ContentStyle_HW300Pf80',
-              '--train_resume_mode','0',
+              '--train_resume_mode','1',
 
               '--batch_size','16',
               '--image_size','64',

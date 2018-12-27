@@ -68,7 +68,7 @@ input_args = [
 parser = argparse.ArgumentParser(description='Train')
 parser.add_argument('--debug_mode', dest='debug_mode',type=int,required=True)
 parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)
-parser.add_argument('--adain_use', dest='adain_use',type=int, default=0)
+parser.add_argument('--adain_use', dest='adain_use',type=str, default=0)
 
 
 # directories setting

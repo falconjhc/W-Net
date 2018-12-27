@@ -79,7 +79,7 @@ input_args = [
               # optimizer parameters
               '--init_lr','0.0002',
               '--epoch','2500',
-              '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
+              '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
 
               '--optimization_method','adam',
               '--final_learning_rate_pctg','0.01',
@@ -88,10 +88,10 @@ input_args = [
               # penalties
               '--generator_weight_decay_penalty','0.0001',
               '--discriminator_weight_decay_penalty','0.0003',
-              '--Pixel_Reconstruction_Penalty','750',
+              '--Pixel_Reconstruction_Penalty','800',
               '--Lconst_content_Penalty','3',
               '--Lconst_style_Penalty','5',
-              '--Discriminative_Penalty', '75',
+              '--Discriminative_Penalty', '150',
 
               '--Discriminator_Categorical_Penalty', '75',
               '--Generator_Categorical_Penalty', '0.2',
@@ -106,7 +106,7 @@ input_args = [
     'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
               '--style_reference_extractor_dir',
     'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181017_FeatureExtractor_Style_HW100_vgg16net/variables/',
-              '--Feature_Penalty_True_Fake_Target', '750',
+              '--Feature_Penalty_True_Fake_Target', '550',
               '--Feature_Penalty_Style_Reference','10',
               '--Feature_Penalty_Content_Prototype','10']
 
