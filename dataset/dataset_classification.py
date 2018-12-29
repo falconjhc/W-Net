@@ -109,10 +109,13 @@ class Dataset(object):
 
                 flipier1 = random.uniform(0.00, 1.00)
                 flipier2 = random.uniform(0.00, 1.00)
+                flipier3 = random.uniform(0.00, 1.00)
                 if flipier1>0.5 and augment_for_flip:
                     curt_img = np.flip(curt_img,axis=1)
                 if flipier2>0.5 and augment_for_flip:
                     curt_img = np.flip(curt_img,axis=0)
+                if flipier3 > 0.5 and augment_for_flip:
+                    curt_img = np.transpose(curt_img)
 
                 batch_images[ii,:,:,:] = np.reshape(curt_img,[curt_img.shape[0],curt_img.shape[1],1])
         else:

@@ -36,7 +36,7 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--train_data_augment_flip','1',
+              '--train_data_augment_flip','0',
               '--experiment_id','20181225-NonAdaIN_StyleHw50_ContentPfStd1',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
               '--log_dir','tfLogsNew_WNet/',# log file saving location
@@ -103,8 +103,8 @@ input_args = [
               '--style_reference_extractor_dir',
     'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_HW50_vgg16net/variables/',
               '--Feature_Penalty_True_Fake_Target', '650',
-              '--Feature_Penalty_Style_Reference','10',
-              '--Feature_Penalty_Content_Prototype','10']
+              '--Feature_Penalty_Style_Reference','5',
+              '--Feature_Penalty_Content_Prototype','2']
 
 
 

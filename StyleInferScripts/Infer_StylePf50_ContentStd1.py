@@ -24,11 +24,12 @@ print_separater = "#############################################################
 input_args = [
               '--targeted_content_input_txt',
     # '../ContentTxt/过秦论_繁体_220.txt',
-    '../ContentTxt/大韩民国爱国歌_140.txt',
+    #'../ContentTxt/大韩民国爱国歌_140.txt',
+    '../ContentTxt/韩_64.txt',
     #'../ContentTxt/终战诏书_230.txt',
     
 
-    		  '--save_mode','13:11',
+    		  '--save_mode','7:8',
               '--adain_use','0',
 
     		  '--known_style_img_path',

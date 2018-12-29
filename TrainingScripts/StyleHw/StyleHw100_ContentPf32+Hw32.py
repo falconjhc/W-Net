@@ -107,8 +107,8 @@ input_args = [
               '--style_reference_extractor_dir',
     'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181017_FeatureExtractor_Style_HW100_vgg16net/variables/',
               '--Feature_Penalty_True_Fake_Target', '550',
-              '--Feature_Penalty_Style_Reference','10',
-              '--Feature_Penalty_Content_Prototype','10']
+              '--Feature_Penalty_Style_Reference','5',
+              '--Feature_Penalty_Content_Prototype','5']
 
 
 

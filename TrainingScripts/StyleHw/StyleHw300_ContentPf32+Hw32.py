@@ -13,7 +13,7 @@ from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/home/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
@@ -107,8 +107,8 @@ input_args = [
               '--style_reference_extractor_dir',
     'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181017_FeatureExtractor_Style_HW300_vgg16net/variables/',
               '--Feature_Penalty_True_Fake_Target', '550',
-              '--Feature_Penalty_Style_Reference','10',
-              '--Feature_Penalty_Content_Prototype','10']
+              '--Feature_Penalty_Style_Reference','5',
+              '--Feature_Penalty_Content_Prototype','5']
 
 
 
