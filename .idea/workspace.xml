@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentStd1.py" beforeDir="false" afterPath="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentStd1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw100_ContentPf32+Hw32.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw100_ContentPf32+Hw32.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw300_ContentPf32+Hw32.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw300_ContentPf32+Hw32.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32-AdaIN-Multi.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32-AdaIN-Multi.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32-AdaIN-Single.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32-AdaIN-Single.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPfStd1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPfStd1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32-AdaIN-Multi.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32-AdaIN-Multi.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32-AdaIN-Single.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32-AdaIN-Single.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPfStd1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPfStd1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf80_ContentPf32.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf80_ContentPf32.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/dataset_classification.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/dataset_classification.py" afterDir="false" />
-    </list>
+    <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +26,7 @@
       <content type="file-editors">
         <state>
           <leaf>
-            <file pinned="false" current-in-tab="true">
+            <file pinned="false" current-in-tab="false">
               <entry file="file://$PROJECT_DIR$/dataset/dataset_classification.py">
                 <provider selected="true" editor-type-id="text-editor">
                   <state relative-caret-position="480">
@@ -48,6 +34,15 @@
                     <folding>
                       <element signature="e#0#18#0" expanded="true" />
                     </folding>
+                  </state>
+                </provider>
+              </entry>
+            </file>
+            <file pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state relative-caret-position="306">
+                    <caret line="444" column="45" selection-start-line="444" selection-start-column="31" selection-end-line="444" selection-end-column="45" />
                   </state>
                 </provider>
               </entry>
@@ -77,23 +72,23 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="267" />
+          <entry key="py" value="269" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="267" />
+          <entry key="Python" value="269" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="2102" />
-          <entry key="py" value="9223" />
+          <entry key="py" value="9224" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="11325" />
+          <entry key="Python" value="11326" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
@@ -154,9 +149,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>full_style_feature_list_reformat</find>
-      <find>residual interfaces</find>
-      <find>layer_norm</find>
       <find>= residual_block</find>
       <find>character_generation</find>
       <find>final_learning</find>
@@ -184,6 +176,9 @@
       <find>raw</find>
       <find>gen_vars_train</find>
       <find>residual_block</find>
+      <find>flip</find>
+      <find>uniform</find>
+      <find>random_uniform</find>
     </findStrings>
     <replaceStrings>
       <replace>Batch_StyleFeature_Discrimination_Penalty</replace>
@@ -211,7 +206,6 @@
         <option value="$PROJECT_DIR$/TrainingScripts/StyleHw50_ContentPf32+Hw32.py" />
         <option value="$PROJECT_DIR$/utilities/infer_implementations.py" />
         <option value="$PROJECT_DIR$/DebugScripts/extranet_scripts_debug.py" />
-        <option value="$PROJECT_DIR$/dataset/dataset.py" />
         <option value="$PROJECT_DIR$/utilities/ops.py" />
         <option value="$PROJECT_DIR$/StyleInferScripts/Infer_StyleHw50_ContentHw32Pf32.py" />
         <option value="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentPf32.py" />
@@ -236,6 +230,7 @@
         <option value="$PROJECT_DIR$/DebugScripts/wnet_debug.py" />
         <option value="$PROJECT_DIR$/TrainingScripts/StyleHP/StyleHP380_ContentPf32+Hw32.py" />
         <option value="$PROJECT_DIR$/dataset/dataset_classification.py" />
+        <option value="$PROJECT_DIR$/dataset/dataset.py" />
       </list>
     </option>
   </component>
@@ -245,7 +240,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-307" />
     <option name="y" value="27" />
     <option name="width" value="1910" />
@@ -499,7 +494,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="51" y="25" width="1229" height="999" extended-state="7" />
+    <frame x="51" y="25" width="1229" height="999" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.3584108" />
@@ -508,7 +503,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.29976302" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.66824645" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.66824645" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -521,7 +516,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" x="463" y="27" width="817" height="513" id="SciView" order="3" sideWeight="0.8138748" type="FLOATING" visible="true" weight="0.2766625" />
+      <window_info anchor="right" x="463" y="27" width="817" height="513" id="SciView" order="3" show_stripe_button="false" sideWeight="0.8138748" type="FLOATING" weight="0.2766625" />
       <window_info anchor="right" id="Database" order="4" />
       <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.18612522" side_tool="true" visible="true" weight="0.068469994" />
     </layout>
@@ -638,13 +633,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="267">
           <caret line="429" selection-start-line="429" selection-end-line="429" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1101">
-          <caret line="484" selection-start-line="484" selection-end-line="484" />
         </state>
       </provider>
     </entry>
@@ -817,13 +805,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DebugScripts/extranet_scripts_debug.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="15" column="152" lean-forward="true" selection-start-line="14" selection-start-column="14" selection-end-line="15" selection-end-column="152" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dataset/dataset_classification.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="480">
@@ -831,6 +812,20 @@
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DebugScripts/extranet_scripts_debug.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="15" column="152" lean-forward="true" selection-start-line="14" selection-start-column="14" selection-end-line="15" selection-end-column="152" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="444" column="45" selection-start-line="444" selection-start-column="31" selection-end-line="444" selection-end-column="45" />
         </state>
       </provider>
     </entry>
