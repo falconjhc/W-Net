@@ -459,6 +459,11 @@ class Dataset_Iterator(object):
             if self.augment_flip:
                 for ii in range(self.batch_size):
                     flip_img = tf.expand_dims(tf.image.random_flip_up_down(tf.image.random_flip_left_right(img_all[ii,:,:,:])),axis=0)
+                    threshold = tf.random_uniform(shape=[], minval=0, maxval=1,dtype=tf.float32)
+                    transpose_flip = lambda: tf.transpose(flip_img,[0,2,1,3])
+                    non_transpose_flip = lambda : flip_img
+                    flip_img = tf.case([(tf.less(threshold, 0.5), transpose_flip)], default=non_transpose_flip)
+
                     if ii == 0:
                         img_all_new = flip_img
                     else:
@@ -472,6 +477,12 @@ class Dataset_Iterator(object):
                         this_this_referenece = this_reference[ii,:,:]
                         this_this_reference_flip = tf.image.random_flip_up_down(tf.image.random_flip_left_right(tf.expand_dims(this_this_referenece,axis=2)))
                         this_this_reference_flip = tf.expand_dims(tf.squeeze(this_this_reference_flip),axis=0)
+                        this_this_threshold = tf.random_uniform(shape=[], minval=0, maxval=1, dtype=tf.float32)
+                        this_this_transpose_flip = lambda: tf.transpose(this_this_reference_flip, [0, 2, 1])
+                        non_this_this_transpose_flip = lambda: this_this_reference_flip
+                        this_this_reference_flip = tf.case([(tf.less(this_this_threshold, 0.5), this_this_transpose_flip)], default=non_this_this_transpose_flip)
+
+
                         if ii == 0:
                             this_this_reference_all = this_this_reference_flip
                         else:
