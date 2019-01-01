@@ -22,7 +22,7 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
-			  '--debug_mode','0',
+			        '--debug_mode','0',
               '--style_input_number','4', # how many style inputs
               '--init_training_epochs','1',
               '--final_training_epochs','1500',
@@ -75,7 +75,7 @@ input_args = [
               '--channels','1',
 
               # optimizer parameters
-              '--init_lr','0.0002',
+              '--init_lr','0.00025',
               '--epoch','5000',
               '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
 

@@ -22,7 +22,7 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
-			  '--debug_mode','0',
+			        '--debug_mode','0',
               '--style_input_number','4', # how many style inputs
               '--init_training_epochs','1',
               '--final_training_epochs','1500',
@@ -38,7 +38,7 @@ input_args = [
               '--experiment_id','20181225-AdaIN-Single_StyleHw50_ContentPf32+Hw32',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
               '--log_dir','tfLogsNew_WNet/',# log file saving location
-              '--print_info_seconds','750',
+              '--print_info_seconds','50',
 
               '--content_data_dir', # standard data location
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
@@ -75,7 +75,7 @@ input_args = [
               '--channels','1',
 
               # optimizer parameters
-              '--init_lr','0.0002',
+              '--init_lr','0.00025',
               '--epoch','5000',
               '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
 

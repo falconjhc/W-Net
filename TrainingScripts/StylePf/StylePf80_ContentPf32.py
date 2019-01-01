@@ -38,7 +38,7 @@ input_args = [
 
 
               '--train_data_augment','1', # translation? rotation?
-              '--train_data_augment_flip','0',
+              '--train_data_augment_flip','1',
               '--experiment_id','20181225-NonAdaIN_StylePf80_ContentPf32',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
               '--log_dir','tfLogsNew_WNet/',# log file saving location
@@ -73,7 +73,7 @@ input_args = [
               '--channels','1',
 
               # optimizer parameters
-              '--init_lr','0.0002',
+              '--init_lr','0.001',
               '--epoch','2500',
               '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
 

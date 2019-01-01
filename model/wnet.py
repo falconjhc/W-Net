@@ -157,7 +157,7 @@ class WNet(object):
         self.init_training_epochs=init_training_epochs
         self.final_training_epochs=final_training_epochs
         self.final_training_epochs=final_training_epochs
-        self.model_save_epochs=10
+        self.model_save_epochs=3
         self.debug_mode = debug_mode
         self.experiment_dir = experiment_dir
         self.log_dir=log_dir

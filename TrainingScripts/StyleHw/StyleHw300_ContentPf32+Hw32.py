@@ -23,7 +23,7 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 #                   1: training from a based model
 input_args = [
               #'--training_from_model_dir',
-              #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20181115_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv',
+              #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20181206_StyleHw300_ContentPf32+Hw32_GenEncDec6-Res9@Lyr3_DisMdy6conv',
 			        '--debug_mode','0',
               '--style_input_number','4', # how many style inputs
               '--init_training_epochs','1',
@@ -77,7 +77,7 @@ input_args = [
               '--channels','1',
 
               # optimizer parameters
-              '--init_lr','0.0002',
+              '--init_lr','0.001',
               '--epoch','1500',
               '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
 
