@@ -38,7 +38,7 @@ input_args = [
               '--experiment_id','20181225-AdaIN-Multi_StyleHw50_ContentPf32+Hw32',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
               '--log_dir','tfLogsNew_WNet/',# log file saving location
-              '--print_info_seconds','50',
+              '--print_info_seconds','750',
 
               '--content_data_dir', # standard data location
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'

@@ -94,7 +94,7 @@ input_args = [
               '--Pixel_Reconstruction_Penalty','750',
               '--Lconst_content_Penalty','3',
               '--Lconst_style_Penalty','5',
-              '--Discriminative_Penalty', '75',
+              '--Discriminative_Penalty', '125',
 
               '--Discriminator_Categorical_Penalty', '75',
               '--Generator_Categorical_Penalty', '0.2',
@@ -104,14 +104,14 @@ input_args = [
 
         # feature extractor parametrers
               '--true_fake_target_extractor_dir',
-    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181206_FeatureExtractor_ContentStyle_HW300Pf80_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181017_FeatureExtractor_ContentStyle_HW100_vgg16net/variables/',
               '--content_prototype_extractor_dir',
     'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
               '--style_reference_extractor_dir',
-    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181206_FeatureExtractor_Style_HW300Pf80_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181017_FeatureExtractor_Style_HW100_vgg16net/variables/',
               '--Feature_Penalty_True_Fake_Target', '750',
-              '--Feature_Penalty_Style_Reference','10',
-              '--Feature_Penalty_Content_Prototype','10']
+              '--Feature_Penalty_Style_Reference','5',
+              '--Feature_Penalty_Content_Prototype','5']
 
 
 
