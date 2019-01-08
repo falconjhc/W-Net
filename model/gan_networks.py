@@ -7,8 +7,6 @@ sys.path.append('..')
 
 import numpy as np
 from utilities.ops import lrelu, relu, batch_norm, layer_norm, instance_norm, adaptive_instance_norm
-
-
 from utilities.ops import conv2d, deconv2d, fc
 
 
@@ -56,7 +54,6 @@ def encoder_framework(images,
                       residual_connection_mode,
                       scope,initializer,weight_decay,
                       weight_decay_rate,
-                      final_layer_logit_length,
                       reuse = False,adain_use=False):
     def encoder(x, output_filters, layer):
 
@@ -137,20 +134,7 @@ def encoder_framework(images,
                         shortcut_list.append(encoder_layer)
                     ii+=1
 
-                if not final_layer_logit_length == -1:
-                    output_final_encoded_reshaped = tf.reshape(output_final_encoded, [batch_size, -1])
-                    final_category_layer = fc(x=output_final_encoded_reshaped,
-                                              output_size=final_layer_logit_length,
-                                              scope='final_category_layer',
-                                              parameter_update_device=encoder_device,
-                                              initializer=initializer,
-                                              weight_decay=weight_decay,
-                                              name_prefix=scope,
-                                              weight_decay_rate=weight_decay_rate)
-                else:
-                    final_category_layer = -1
-
-        return output_final_encoded, final_category_layer, \
+        return output_final_encoded, \
                shortcut_list, residual_input_list, full_feature_list, \
                return_str
 
@@ -469,271 +453,20 @@ def decoder_framework(encoded_layer_list,
 
         return output, full_decoded_feature_list, return_str
 
-
-
-
-def generator_inferring(content,style,
-                        generator_device,
-                        style_reference_num,
-                        residual_at_layer,
-                        residual_block_num,
-                        img_filters, adain_use):
-    weight_decay_rate = 0
-    weight_decay = False
-    initializer = 'XavierInit'
-    scope = 'generator'
-    label0_length = -1
-    is_training = False
-
-    # style encoder part
-    style_short_cut_interface_list = list()
-    style_residual_interface_list = list()
-    style_full_feature_list = list()
-    for ii in range(style_reference_num):
-        if ii == 0:
-            reuse = False
-        else:
-            reuse = True
-        _, _, \
-        current_style_short_cut_interface, current_style_residual_interface, current_style_full_feature_list, \
-        _ = encoder_framework(images=tf.expand_dims(style[:, :, :, ii], axis=3),
-                              is_training=False,
-                              encoder_device=generator_device,
-                              residual_at_layer=residual_at_layer,
-                              residual_connection_mode='Single',
-                              scope=scope+'/style_encoder',
-                              reuse=reuse,
-                              initializer='XavierInit',
-                              weight_decay=False,
-                              weight_decay_rate=0,
-                              final_layer_logit_length=-1,
-                              adain_use=adain_use)
-        style_short_cut_interface_list.append(current_style_short_cut_interface)
-        style_residual_interface_list.append(current_style_residual_interface)
-        style_full_feature_list.append(current_style_full_feature_list)
-
-    for ii in range(style_reference_num):
-        if ii == 0:
-            style_short_cut_interface = list()
-            for jj in range(len(style_short_cut_interface_list[ii])):
-                style_short_cut_interface.append(tf.expand_dims(style_short_cut_interface_list[ii][jj],
-                                                                axis=0))
-            style_residual_interface = list()
-            for jj in range(len(style_residual_interface_list[ii])):
-                style_residual_interface.append(tf.expand_dims(style_residual_interface_list[ii][jj],
-                                                               axis=0))
-
-        else:
-            for jj in range(len(style_short_cut_interface_list[ii])):
-                style_short_cut_interface[jj] = tf.concat([style_short_cut_interface[jj],
-                                                           tf.expand_dims(style_short_cut_interface_list[ii][jj],
-                                                                          axis=0)],
-                                                          axis=0)
-
-            for jj in range(len(style_residual_interface_list[ii])):
-                style_residual_interface[jj] = tf.concat([style_residual_interface[jj],
-                                                          tf.expand_dims(style_residual_interface_list[ii][jj],
-                                                                         axis=0)],
-                                                         axis=0)
-
-    for ii in range(len(style_short_cut_interface)):
-        style_short_cut_avg = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
-        style_short_cut_max = tf.reduce_max(style_short_cut_interface[ii], axis=0)
-        style_short_cut_min = tf.reduce_min(style_short_cut_interface[ii], axis=0)
-        style_short_cut_interface[ii] = tf.concat([style_short_cut_avg, style_short_cut_max, style_short_cut_min],
-                                                  axis=3)
-        # style_short_cut_interface[ii] = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
-
-    for ii in range(len(style_residual_interface)):
-        style_residual_avg = tf.reduce_mean(style_residual_interface[ii], axis=0)
-        style_residual_max = tf.reduce_max(style_residual_interface[ii], axis=0)
-        style_residual_min = tf.reduce_min(style_residual_interface[ii], axis=0)
-        style_residual_interface[ii] = tf.concat([style_residual_avg, style_residual_max, style_residual_min], axis=3)
-        # style_residual_interface[ii] = tf.reduce_mean(style_residual_interface[ii], axis=0)
-
-    # source encoder part
-    encoded_content_final, content_category, content_short_cut_interface, content_residual_interface, content_full_faeture_list, _ = \
-        encoder_framework(images=content,
-                          is_training=is_training,
-                          encoder_device=generator_device,
-                          residual_at_layer=residual_at_layer,
-                          residual_connection_mode='Multi',
-                          scope=scope + '/content_encoder',
-                          reuse=False,
-                          initializer=initializer,
-                          weight_decay=weight_decay,
-                          weight_decay_rate=weight_decay_rate,
-                          final_layer_logit_length=label0_length,
-                          adain_use=adain_use)
-
-    # full style feature reformat
-    if adain_use:
-        full_style_feature_list_reformat = list()
-        for ii in range(len(style_full_feature_list)):
-            for jj in range(len(style_full_feature_list[ii])):
-
-                current_feature = tf.expand_dims(style_full_feature_list[ii][jj], axis=0)
-                if ii == 0:
-                    full_style_feature_list_reformat.append(current_feature)
-                else:
-                    full_style_feature_list_reformat[jj] = tf.concat(
-                        [full_style_feature_list_reformat[jj], current_feature], axis=0)
-    else:
-        full_style_feature_list_reformat = None
-
-    # residual interfaces && short cut interfaces are fused together
-    fused_residual_interfaces = list()
-    fused_shortcut_interfaces = list()
-    for ii in range(len(content_residual_interface)):
-        current_content_residual_size = int(content_residual_interface[ii].shape[1])
-        output_current_residual = content_residual_interface[ii]
-
-        if adain_use:  # for adaptive instance normalization
-            for jj in range(len(full_style_feature_list_reformat)):
-                if int(full_style_feature_list_reformat[jj].shape[2]) == int(output_current_residual.shape[1]):
-                    break
-            output_current_residual = adaptive_instance_norm(content=output_current_residual,
-                                                             style=full_style_feature_list_reformat[jj])
-
-
-        for jj in range(len(style_residual_interface)):
-            current_style_residual_size = int(style_residual_interface[jj].shape[1])
-            if current_style_residual_size == current_content_residual_size:
-                output_current_residual = tf.concat([output_current_residual, style_residual_interface[jj]], axis=3)
-        fused_residual_interfaces.append(output_current_residual)
-    for ii in range(len(content_short_cut_interface)):
-        current_content_shortcut_size = int(content_short_cut_interface[ii].shape[1])
-        output_current_shortcut = content_short_cut_interface[ii]
-        if adain_use:  # for adaptive instance normalization
-            for jj in range(len(full_style_feature_list_reformat)):
-                if int(full_style_feature_list_reformat[jj].shape[2]) == int(output_current_shortcut.shape[1]):
-                    break
-            output_current_shortcut = adaptive_instance_norm(content=output_current_shortcut,
-                                                             style=full_style_feature_list_reformat[jj])
-        for jj in range(len(style_short_cut_interface)):
-            current_style_short_cut_size = int(style_short_cut_interface[jj].shape[1])
-            if current_style_short_cut_size == current_content_shortcut_size:
-                output_current_shortcut = tf.concat([output_current_shortcut, style_short_cut_interface[jj]], axis=3)
-        fused_shortcut_interfaces.append(output_current_shortcut)
-
-
-    # fused resudual interfaces are put into the residual blocks
-    if not residual_block_num == 0 or not residual_at_layer == -1:
-        residual_output_list, _ = residual_block(input_list=fused_residual_interfaces,
-                                                 residual_num=residual_block_num,
-                                                 residual_at_layer=residual_at_layer,
-                                                 is_training=is_training,
-                                                 residual_device=generator_device,
-                                                 scope=scope + '/resblock',
-                                                 reuse=False,
-                                                 initializer=initializer,
-                                                 weight_decay=weight_decay,
-                                                 weight_decay_rate=weight_decay_rate,
-                                                 style_features=full_style_feature_list_reformat,
-                                                 adain_use=adain_use)
-
-    # combination of all the encoder outputs
-    fused_shortcut_interfaces.reverse()
-    encoded_layer_list = fused_shortcut_interfaces
-    encoded_layer_list.extend(residual_output_list)
-
-    return_str = ("GeneratorEncoderDecoder %d Layers with %d ResidualBlocks connecting %d-th layer"
-                  % (int(np.floor(math.log(int(content.shape[1])) / math.log(2))),
-                     residual_block_num,
-                     residual_at_layer))
-
-    # decoder part
-    img_width = int(content.shape[1])
-    generated_img, decoder_full_feature_list, _ = \
-        decoder_framework(encoded_layer_list=encoded_layer_list,
-                          is_training=is_training,
-                          output_width=img_width,
-                          output_filters=img_filters,
-                          batch_size=1,
-                          decoder_device=generator_device,
-                          scope=scope + '/decoder',
-                          reuse=False,
-                          weight_decay=weight_decay,
-                          initializer=initializer,
-                          weight_decay_rate=weight_decay_rate,
-                          adain_use=adain_use)
-
-    return generated_img, content_full_faeture_list, decoder_full_feature_list, style_full_feature_list
-
-
-
-
-def generator_framework(content_prototype,style_reference,
-                        is_training,
-                        batch_size,
-                        generator_device,
-                        residual_at_layer,
-                        residual_block_num,
-                        label0_length,label1_length,
-                        scope,
-                        initializer,weight_decay,
-                        weight_decay_rate,
-                        style_input_number,
-                        content_prototype_number,
-                        reuse=False,
-                        adain_use=False,
-                        adain_preparation_model=None,
-                        debug_mode=True):
+def wnet_feature_mixer_framework(generator_device,scope,is_training,reuse,initializer,debug_mode,
+                                 weight_decay,weight_decay_rate,style_input_number,
+                                 residual_block_num, residual_at_layer,
+                                 encoded_style_final_list,
+                                 style_short_cut_interface_list,style_residual_interface_list,
+                                 content_short_cut_interface, content_residual_interface,
+                                 full_style_feature_list,
+                                 adain_use,adain_preparation_model):
 
     def _calculate_batch_diff(input_feature):
         diff = tf.abs(tf.expand_dims(input_feature, 4) -
                       tf.expand_dims(tf.transpose(input_feature, [1, 2, 3, 0]), 0))
         diff = tf.reduce_sum(tf.exp(-diff), 4)
         return tf.reduce_mean(diff)
-
-
-    # content prototype encoder part
-    encoded_content_final, content_category, content_short_cut_interface, content_residual_interface, content_full_feature_list, _ = \
-        encoder_framework(images=content_prototype,
-                          is_training=is_training,
-                          encoder_device=generator_device,
-                          residual_at_layer=residual_at_layer,
-                          residual_connection_mode='Multi',
-                          scope=scope + '/content_encoder',
-                          reuse=reuse,
-                          initializer=initializer,
-                          weight_decay=weight_decay,
-                          weight_decay_rate=weight_decay_rate,
-                          final_layer_logit_length=label0_length,
-                          adain_use=adain_use)
-
-    # style reference encoder part
-    encoded_style_final_list = list()
-    style_category_list = list()
-    style_short_cut_interface_list = list()
-    style_residual_interface_list = list()
-    full_style_feature_list = list()
-    for ii in range(style_input_number):
-        if ii==0:
-            curt_reuse=reuse
-            current_weight_decay = weight_decay
-        else:
-            curt_reuse=True
-            current_weight_decay = False
-
-        encoded_style_final, style_category, current_style_short_cut_interface, current_style_residual_interface, current_full_feature_list, _ = \
-            encoder_framework(images=style_reference[ii],
-                              is_training=is_training,
-                              encoder_device=generator_device,
-                              residual_at_layer=residual_at_layer,
-                              residual_connection_mode='Single',
-                              scope=scope + '/style_encoder',
-                              reuse=curt_reuse,
-                              initializer=initializer,
-                              weight_decay=current_weight_decay,
-                              weight_decay_rate=weight_decay_rate,
-                              final_layer_logit_length=label1_length,
-                              adain_use=adain_use)
-        encoded_style_final_list.append(encoded_style_final)
-        style_category_list.append(style_category)
-        style_short_cut_interface_list.append(current_style_short_cut_interface)
-        style_residual_interface_list.append(current_style_residual_interface)
-        full_style_feature_list.append(current_full_feature_list)
 
     # multiple encoded information average calculation for style reference encoder
     with tf.variable_scope(tf.get_variable_scope()):
@@ -742,46 +475,51 @@ def generator_framework(content_prototype,style_reference,
                 if reuse:
                     tf.get_variable_scope().reuse_variables()
                 for ii in range(style_input_number):
-                    if ii==0:
-                        encoded_style_final = tf.expand_dims(encoded_style_final_list[ii],axis=0)
-                        style_category = tf.expand_dims(style_category_list[ii],axis=0)
-                        style_short_cut_interface=list()
+                    if ii == 0:
+                        encoded_style_final = tf.expand_dims(encoded_style_final_list[ii], axis=0)
+                        style_short_cut_interface = list()
                         for jj in range(len(style_short_cut_interface_list[ii])):
-                            style_short_cut_interface.append(tf.expand_dims(style_short_cut_interface_list[ii][jj],axis=0))
-                        style_residual_interface=list()
+                            style_short_cut_interface.append(
+                                tf.expand_dims(style_short_cut_interface_list[ii][jj], axis=0))
+                        style_residual_interface = list()
                         for jj in range(len(style_residual_interface_list[ii])):
-                            style_residual_interface.append(tf.expand_dims(style_residual_interface_list[ii][jj],axis=0))
+                            style_residual_interface.append(
+                                tf.expand_dims(style_residual_interface_list[ii][jj], axis=0))
                     else:
-                        encoded_style_final = tf.concat([encoded_style_final, tf.expand_dims(encoded_style_final_list[ii],axis=0)], axis=0)
-                        style_category = tf.concat([style_category, tf.expand_dims(style_category_list[ii],axis=0)], axis=0)
+                        encoded_style_final = tf.concat(
+                            [encoded_style_final, tf.expand_dims(encoded_style_final_list[ii], axis=0)], axis=0)
                         for jj in range(len(style_short_cut_interface_list[ii])):
-                            style_short_cut_interface[jj] = tf.concat([style_short_cut_interface[jj], tf.expand_dims(style_short_cut_interface_list[ii][jj],axis=0)], axis=0)
+                            style_short_cut_interface[jj] = tf.concat([style_short_cut_interface[jj],
+                                                                       tf.expand_dims(
+                                                                           style_short_cut_interface_list[ii][jj],
+                                                                           axis=0)], axis=0)
 
                         for jj in range(len(style_residual_interface_list[ii])):
-                            style_residual_interface[jj] = tf.concat([style_residual_interface[jj], tf.expand_dims(style_residual_interface_list[ii][jj], axis=0)], axis=0)
+                            style_residual_interface[jj] = tf.concat([style_residual_interface[jj], tf.expand_dims(
+                                style_residual_interface_list[ii][jj], axis=0)], axis=0)
 
-                style_category = tf.reduce_mean(style_category,axis=0)
-                encoded_style_final_avg = tf.reduce_mean(encoded_style_final,axis=0)
-                encoded_style_final_max = tf.reduce_max(encoded_style_final,axis=0)
-                encoded_style_final_min = tf.reduce_min(encoded_style_final,axis=0)
+                encoded_style_final_avg = tf.reduce_mean(encoded_style_final, axis=0)
+                encoded_style_final_max = tf.reduce_max(encoded_style_final, axis=0)
+                encoded_style_final_min = tf.reduce_min(encoded_style_final, axis=0)
                 encoded_style_final = tf.concat([encoded_style_final_avg, encoded_style_final_max, encoded_style_final_min], axis=3)
 
-                style_shortcut_batch_diff=0
+                style_shortcut_batch_diff = 0
                 for ii in range(len(style_short_cut_interface)):
                     style_short_cut_avg = tf.reduce_mean(style_short_cut_interface[ii], axis=0)
                     style_short_cut_max = tf.reduce_max(style_short_cut_interface[ii], axis=0)
                     style_short_cut_min = tf.reduce_min(style_short_cut_interface[ii], axis=0)
-                    style_short_cut_interface[ii]= tf.concat([style_short_cut_avg,style_short_cut_max,style_short_cut_min],axis=3)
+                    style_short_cut_interface[ii] = tf.concat(
+                        [style_short_cut_avg, style_short_cut_max, style_short_cut_min], axis=3)
                     style_shortcut_batch_diff += _calculate_batch_diff(input_feature=style_short_cut_interface[ii])
-
                 style_shortcut_batch_diff = style_shortcut_batch_diff / len(style_short_cut_interface)
 
-                style_residual_batch_diff=0
+                style_residual_batch_diff = 0
                 for ii in range(len(style_residual_interface)):
                     style_residual_avg = tf.reduce_mean(style_residual_interface[ii], axis=0)
                     style_residual_max = tf.reduce_max(style_residual_interface[ii], axis=0)
                     style_residual_min = tf.reduce_min(style_residual_interface[ii], axis=0)
-                    style_residual_interface[ii] = tf.concat([style_residual_avg, style_residual_max, style_residual_min], axis=3)
+                    style_residual_interface[ii] = tf.concat(
+                        [style_residual_avg, style_residual_max, style_residual_min], axis=3)
                     style_residual_batch_diff += _calculate_batch_diff(input_feature=style_residual_interface[ii])
                 style_residual_batch_diff = style_residual_batch_diff / len(style_residual_interface)
 
@@ -798,8 +536,7 @@ def generator_framework(content_prototype,style_reference,
                     full_style_feature_list_reformat[jj] = tf.concat(
                         [full_style_feature_list_reformat[jj], current_feature], axis=0)
     else:
-        full_style_feature_list_reformat=None
-
+        full_style_feature_list_reformat = None
 
     # residual interfaces && short cut interfaces are fused together
     fused_residual_interfaces = list()
@@ -807,24 +544,23 @@ def generator_framework(content_prototype,style_reference,
     for ii in range(len(content_residual_interface)):
         current_content_residual_size = int(content_residual_interface[ii].shape[1])
         output_current_residual = content_residual_interface[ii]
-        if adain_use: # for adaptive instance normalization
+        if adain_use:  # for adaptive instance normalization
             for jj in range(len(full_style_feature_list_reformat)):
                 if int(full_style_feature_list_reformat[jj].shape[2]) == int(output_current_residual.shape[1]):
                     break
             output_current_residual = adaptive_instance_norm(content=output_current_residual,
                                                              style=full_style_feature_list_reformat[jj])
 
-
         for jj in range(len(style_residual_interface)):
             current_style_residual_size = int(style_residual_interface[jj].shape[1])
             if current_style_residual_size == current_content_residual_size:
-                output_current_residual=tf.concat([output_current_residual,style_residual_interface[jj]],axis=3)
+                output_current_residual = tf.concat([output_current_residual, style_residual_interface[jj]], axis=3)
         fused_residual_interfaces.append(output_current_residual)
     for ii in range(len(content_short_cut_interface)):
         current_content_shortcut_size = int(content_short_cut_interface[ii].shape[1])
         output_current_shortcut = content_short_cut_interface[ii]
 
-        if adain_use: # for adaptive instance normalization
+        if adain_use:  # for adaptive instance normalization
             for jj in range(len(full_style_feature_list_reformat)):
                 if int(full_style_feature_list_reformat[jj].shape[2]) == int(output_current_shortcut.shape[1]):
                     break
@@ -834,7 +570,8 @@ def generator_framework(content_prototype,style_reference,
         for jj in range(len(style_short_cut_interface)):
             current_style_short_cut_size = int(style_short_cut_interface[jj].shape[1])
             if current_style_short_cut_size == current_content_shortcut_size:
-                output_current_shortcut = tf.concat([output_current_shortcut, style_short_cut_interface[jj]], axis=3)
+                output_current_shortcut = tf.concat([output_current_shortcut, style_short_cut_interface[jj]],
+                                                    axis=3)
         fused_shortcut_interfaces.append(output_current_shortcut)
 
     # fused resudual interfaces are put into the residual blocks
@@ -854,11 +591,95 @@ def generator_framework(content_prototype,style_reference,
                                                  adain_preparation_model=adain_preparation_model,
                                                  debug_mode=debug_mode)
 
-
     # combination of all the encoder outputs
     fused_shortcut_interfaces.reverse()
     encoded_layer_list = fused_shortcut_interfaces
     encoded_layer_list.extend(residual_output_list)
+
+    return encoded_layer_list, style_shortcut_batch_diff, style_residual_batch_diff,\
+           encoded_style_final
+
+def WNet_Generator(content_prototype,
+                   style_reference,
+                   is_training,
+                   batch_size,
+                   generator_device,
+                   residual_at_layer,
+                   residual_block_num,
+                   scope,
+                   initializer,
+                   weight_decay, weight_decay_rate,
+                   style_input_number,
+                   content_prototype_number,
+                   reuse=False,
+                   adain_use=False,
+                   adain_preparation_model=None,
+                   debug_mode=True):
+
+    # content prototype encoder part
+    encoded_content_final, content_short_cut_interface, content_residual_interface, content_full_feature_list, _ = \
+        encoder_framework(images=content_prototype,
+                          is_training=is_training,
+                          encoder_device=generator_device,
+                          residual_at_layer=residual_at_layer,
+                          residual_connection_mode='Multi',
+                          scope=scope + '/content_encoder',
+                          reuse=reuse,
+                          initializer=initializer,
+                          weight_decay=weight_decay,
+                          weight_decay_rate=weight_decay_rate,
+                          adain_use=adain_use)
+
+    # style reference encoder part
+    encoded_style_final_list = list()
+    style_short_cut_interface_list = list()
+    style_residual_interface_list = list()
+    full_style_feature_list = list()
+    for ii in range(style_input_number):
+        if ii==0:
+            curt_reuse=reuse
+            current_weight_decay = weight_decay
+        else:
+            curt_reuse=True
+            current_weight_decay = False
+
+        encoded_style_final, current_style_short_cut_interface, current_style_residual_interface, current_full_feature_list, _ = \
+            encoder_framework(images=style_reference[ii],
+                              is_training=is_training,
+                              encoder_device=generator_device,
+                              residual_at_layer=residual_at_layer,
+                              residual_connection_mode='Single',
+                              scope=scope + '/style_encoder',
+                              reuse=curt_reuse,
+                              initializer=initializer,
+                              weight_decay=current_weight_decay,
+                              weight_decay_rate=weight_decay_rate,
+                              adain_use=adain_use)
+        encoded_style_final_list.append(encoded_style_final)
+        style_short_cut_interface_list.append(current_style_short_cut_interface)
+        style_residual_interface_list.append(current_style_residual_interface)
+        full_style_feature_list.append(current_full_feature_list)
+
+    encoded_layer_list, style_shortcut_batch_diff, style_residual_batch_diff,encoded_style_final = \
+        wnet_feature_mixer_framework(generator_device=generator_device,
+                                     scope=scope,
+                                     is_training=is_training,
+                                     reuse=reuse,
+                                     initializer=initializer,
+                                     debug_mode=debug_mode,
+                                     weight_decay=weight_decay,
+                                     weight_decay_rate=weight_decay_rate,
+                                     style_input_number=style_input_number,
+                                     residual_block_num=residual_block_num,
+                                     residual_at_layer=residual_at_layer,
+                                     encoded_style_final_list=encoded_style_final_list,
+                                     style_short_cut_interface_list=style_short_cut_interface_list,
+                                     style_residual_interface_list=style_residual_interface_list,
+                                     content_short_cut_interface=content_short_cut_interface,
+                                     content_residual_interface=content_residual_interface,
+                                     full_style_feature_list=full_style_feature_list,
+                                     adain_use=adain_use,
+                                     adain_preparation_model=adain_preparation_model)
 
 
     return_str = ("GeneratorEncoderDecoder %d Layers with %d ResidualBlocks connecting %d-th layer"
@@ -869,7 +690,7 @@ def generator_framework(content_prototype,style_reference,
     # decoder part
     img_width = int(content_prototype.shape[1])
     img_filters = int(int(content_prototype.shape[3]) / content_prototype_number)
-    generated_img,_, _ = \
+    generated_img,decoder_full_feature_list, _ = \
         decoder_framework(encoded_layer_list=encoded_layer_list,
                           is_training=is_training,
                           output_width=img_width,
@@ -883,104 +704,15 @@ def generator_framework(content_prototype,style_reference,
                           weight_decay_rate=weight_decay_rate,
                           adain_use=adain_use)
 
-    return generated_img, encoded_content_final, encoded_style_final, \
-           content_category, style_category, return_str, \
-           style_shortcut_batch_diff, style_residual_batch_diff
+    return generated_img, encoded_content_final, encoded_style_final, return_str, \
+           style_shortcut_batch_diff, style_residual_batch_diff, \
+           content_full_feature_list, full_style_feature_list, decoder_full_feature_list
 
 
 
-def discriminator_mdy_5_convs(image,
-                              is_training,
-                              parameter_update_device,
-                              category_logit_num,
-                              batch_size,
-                              critic_length,
-                              initializer,weight_decay,scope,weight_decay_rate,
-                              reuse=False):
-    return_str = ("Discriminator-5Convs")
-    return_str = "WST-" + return_str + "-Crc:%d" % critic_length
-    discriminator_dim=64
-
-
-
-    with tf.variable_scope("discriminator"):
-        if reuse:
-            tf.get_variable_scope().reuse_variables()
-        h0 = lrelu(conv2d(x=image, output_filters=discriminator_dim,
-                          scope="dis_h0_conv",
-                          parameter_update_device=parameter_update_device,
-                                     initializer=initializer,
-                                     weight_decay=weight_decay,
-                                     name_prefix=scope,
-                          weight_decay_rate=weight_decay_rate))
-        h1 = lrelu(layer_norm(conv2d(x=h0,
-                                     output_filters=discriminator_dim * 2,
-                                     scope="dis_h1_conv",
-                                     parameter_update_device=parameter_update_device,
-                                     initializer=initializer,
-                                     weight_decay=weight_decay,
-                                     name_prefix=scope,
-                          weight_decay_rate=weight_decay_rate),
-                              scope='dis_ln1',
-                              parameter_update_device=parameter_update_device))
-        h2 = lrelu(layer_norm(conv2d(x=h1,
-                                     output_filters=discriminator_dim * 4,
-                                     scope="dis_h2_conv",
-                                     parameter_update_device=parameter_update_device,
-                                     initializer=initializer,
-                                     weight_decay=weight_decay,
-                                     name_prefix=scope,
-                          weight_decay_rate=weight_decay_rate),
-                              scope='dis_ln2',
-                              parameter_update_device=parameter_update_device))
-        h3 = lrelu(layer_norm(conv2d(x=h2,
-                                     output_filters=discriminator_dim * 8,
-                                     scope="dis_h3_conv",
-                                     parameter_update_device=parameter_update_device,
-                                     initializer=initializer,
-                                     weight_decay=weight_decay,
-                                     name_prefix=scope,
-                          weight_decay_rate=weight_decay_rate),
-                              scope='dis_ln3',
-                              parameter_update_device=parameter_update_device))
-
-        h4 = lrelu(layer_norm(conv2d(x=h3,
-                                     output_filters=discriminator_dim * 16,
-                                     scope="dis_h4_conv",
-                                     parameter_update_device=parameter_update_device,
-                                     initializer=initializer,
-                                     weight_decay=weight_decay,
-                                     name_prefix=scope,
-                          weight_decay_rate=weight_decay_rate),
-                              scope='dis_ln4',
-                              parameter_update_device=parameter_update_device))
-
-
-        h4_reshaped = tf.reshape(h4, [batch_size, -1])
-        fc_input = h4_reshaped
-
-
-
-        fc2 = fc(x=fc_input,
-                 output_size=category_logit_num,
-                 scope="dis_final_fc_category",
-                 parameter_update_device=parameter_update_device,
-                          weight_decay_rate=weight_decay_rate)
-
-        fc1 = fc(x=fc_input,
-                 output_size=critic_length,
-                 scope="dis_final_fc_critic",
-                 parameter_update_device=parameter_update_device,
-                 initializer=initializer,
-                 weight_decay=weight_decay,
-                 name_prefix=scope,
-                 weight_decay_rate=weight_decay_rate)
-
-        return fc2, fc1, return_str
 
 
 def discriminator_mdy_6_convs(image,
-                              is_training,
                               parameter_update_device,
                               category_logit_num,
                               batch_size,
@@ -1075,117 +807,6 @@ def discriminator_mdy_6_convs(image,
         return fc2, fc1, return_str
 
 
-def discriminator_mdy_6_convs_tower_version1(image,
-                                             is_training,
-                                             parameter_update_device,
-                                             category_logit_num,
-                                             batch_size,
-                                             critic_length,
-                                             initializer,weight_decay,scope,weight_decay_rate,
-                                             reuse=False):
-
-    tower_num = int(image.shape[3])
-    return_str = ("Discriminator-6Convs-Tower-Version1")
-    return_str = "WST-" + return_str + "-Crc:%d" % critic_length
-    discriminator_dim = 32
-
-    with tf.variable_scope(scope):
-        if reuse:
-            tf.get_variable_scope().reuse_variables()
-
-        for ii in range(tower_num):
-            curt_input = image[:,:,:,ii]
-            curt_input = tf.reshape(curt_input,
-                                    [int(curt_input.shape[0]),
-                                     int(curt_input.shape[1]),
-                                     int(curt_input.shape[2]),
-                                     1])
-
-
-            h0 = lrelu(conv2d(x=curt_input,
-                              output_filters=discriminator_dim,
-                              scope="dis_twr%d_h0_conv" % ii,
-                              parameter_update_device=parameter_update_device,
-                              initializer=initializer,
-                              weight_decay=weight_decay,
-                              name_prefix=scope,
-                              weight_decay_rate=weight_decay_rate))
-            h1 = lrelu(layer_norm(conv2d(x=h0,
-                                         output_filters=discriminator_dim * 2,
-                                         scope="dis_twr%d_h1_conv" % ii,
-                                         parameter_update_device=parameter_update_device,
-                                         initializer=initializer,
-                                         weight_decay=weight_decay,
-                                         name_prefix=scope, weight_decay_rate=weight_decay_rate),
-                                  scope="dis_twr%d_ln1" % ii,
-                                  parameter_update_device=parameter_update_device))
-            h2 = lrelu(layer_norm(conv2d(x=h1,
-                                         output_filters=discriminator_dim * 4,
-                                         scope="dis_twr%d_h2_conv" % ii,
-                                         parameter_update_device=parameter_update_device,
-                                         initializer=initializer,
-                                         weight_decay=weight_decay,
-                                         name_prefix=scope, weight_decay_rate=weight_decay_rate),
-                                  scope="dis_twr%d_ln2" % ii,
-                                  parameter_update_device=parameter_update_device))
-            h3 = lrelu(layer_norm(conv2d(x=h2,
-                                         output_filters=discriminator_dim * 8,
-                                         scope="dis_twr%d_h3_conv" % ii,
-                                         parameter_update_device=parameter_update_device,
-                                         initializer=initializer,
-                                         weight_decay=weight_decay,
-                                         name_prefix=scope, weight_decay_rate=weight_decay_rate),
-                                  scope="dis_twr%d_ln3" % ii,
-                                  parameter_update_device=parameter_update_device))
-
-            h4 = lrelu(layer_norm(conv2d(x=h3,
-                                         output_filters=discriminator_dim * 16,
-                                         scope="dis_twr%d_h4_conv" % ii,
-                                         parameter_update_device=parameter_update_device,
-                                         initializer=initializer,
-                                         weight_decay=weight_decay,
-                                         name_prefix=scope, weight_decay_rate=weight_decay_rate),
-                                  scope="dis_twr%d_ln4" % ii,
-                                  parameter_update_device=parameter_update_device))
-
-            h5 = lrelu(layer_norm(conv2d(x=h4,
-                                         output_filters=discriminator_dim * 32,
-                                         scope="dis_twr%d_h5_conv" % ii,
-                                         parameter_update_device=parameter_update_device,
-                                         initializer=initializer,
-                                         weight_decay=weight_decay,
-                                         name_prefix=scope, weight_decay_rate=weight_decay_rate),
-                                  scope="dis_twr%d_ln5" % ii,
-                                  parameter_update_device=parameter_update_device))
-
-            h5_reshaped = tf.reshape(h5, [batch_size, -1])
-
-            if ii == 0:
-                h5_reshaped_total = h5_reshaped
-            else:
-                h5_reshaped_total = tf.concat([h5_reshaped_total, h5_reshaped],axis=1)
-
-
-        # category loss
-        fc2 = fc(x=h5_reshaped_total,
-                 output_size=category_logit_num,
-                 scope="dis_final_fc_category",
-                 parameter_update_device=parameter_update_device,
-                 initializer=initializer,
-                 weight_decay=weight_decay,
-                 name_prefix=scope, weight_decay_rate=weight_decay_rate)
-
-        fc1 = fc(x=h5_reshaped_total,
-                 output_size=critic_length,
-                 scope="dis_final_fc_critic",
-                 parameter_update_device=parameter_update_device,
-                 initializer=initializer,
-                 weight_decay=weight_decay,
-                 name_prefix=scope, weight_decay_rate=weight_decay_rate)
-
-        return fc2, fc1, return_str
-
-
 
 
 
@@ -1193,7 +814,6 @@ def discriminator_mdy_6_convs_tower_version1(image,
 def vgg_16_net(image,
                batch_size,
                device,
-               label0_length,label1_length,
                keep_prob,
                initializer,
                reuse=False,
@@ -1232,7 +852,7 @@ def vgg_16_net(image,
                                            weight_decay=weight_decay,
                                            initializer=initializer,
                                            scope='conv1_2',
-                                         weight_decay_rate=weight_decay_rate),
+                                           weight_decay_rate=weight_decay_rate),
                                   is_training=is_training,
                                   scope='bn1_2',
                                   parameter_update_device=device))
@@ -1251,7 +871,7 @@ def vgg_16_net(image,
                                            weight_decay=weight_decay,
                                            initializer=initializer,
                                            scope='conv2_1',
-                                         weight_decay_rate=weight_decay_rate),
+                                           weight_decay_rate=weight_decay_rate),
                                   is_training=is_training,
                                   scope='bn2_1',
                                   parameter_update_device=device))
@@ -1264,7 +884,7 @@ def vgg_16_net(image,
                                            weight_decay=weight_decay,
                                            initializer=initializer,
                                            scope='conv2_2',
-                                         weight_decay_rate=weight_decay_rate),
+                                           weight_decay_rate=weight_decay_rate),
                                   is_training=is_training,
                                   scope='bn2_2',
                                   parameter_update_device=device))
@@ -1283,7 +903,7 @@ def vgg_16_net(image,
                                            weight_decay=weight_decay,
                                            initializer=initializer,
                                            scope='conv3_1',
-                                         weight_decay_rate=weight_decay_rate),
+                                           weight_decay_rate=weight_decay_rate),
                                   is_training=is_training,
                                   scope='bn3_1',
                                   parameter_update_device=device))
@@ -1296,7 +916,7 @@ def vgg_16_net(image,
                                            weight_decay=weight_decay,
                                            initializer=initializer,
                                            scope='conv3_2',
-                                         weight_decay_rate=weight_decay_rate),
+                                           weight_decay_rate=weight_decay_rate),
                                   is_training=is_training,
                                   scope='bn3_2',
                                   parameter_update_device=device))
@@ -1309,7 +929,7 @@ def vgg_16_net(image,
                                            weight_decay=weight_decay,
                                            initializer=initializer,
                                            scope='conv3_3',
-                                         weight_decay_rate=weight_decay_rate),
+                                           weight_decay_rate=weight_decay_rate),
                                   is_training=is_training,
                                   scope='bn3_3',
                                   parameter_update_device=device))
@@ -1327,7 +947,7 @@ def vgg_16_net(image,
                                            weight_decay=weight_decay,
                                            initializer=initializer,
                                            scope='conv4_1',
-                                         weight_decay_rate=weight_decay_rate),
+                                           weight_decay_rate=weight_decay_rate),
                                   is_training=is_training,
                                   scope='bn4_1',
                                   parameter_update_device=device))
@@ -1340,7 +960,7 @@ def vgg_16_net(image,
                                            weight_decay=weight_decay,
                                            initializer=initializer,
                                            scope='conv4_2',
-                                         weight_decay_rate=weight_decay_rate),
+                                           weight_decay_rate=weight_decay_rate),
                                   is_training=is_training,
                                   scope='bn4_2',
                                   parameter_update_device=device))
@@ -1353,7 +973,7 @@ def vgg_16_net(image,
                                            weight_decay=weight_decay,
                                            initializer=initializer,
                                            scope='conv4_3',
-                                         weight_decay_rate=weight_decay_rate),
+                                           weight_decay_rate=weight_decay_rate),
                                   is_training=is_training,
                                   scope='bn4_3',
                                   parameter_update_device=device))
@@ -1372,7 +992,7 @@ def vgg_16_net(image,
                                            weight_decay=weight_decay,
                                            initializer=initializer,
                                            scope='conv5_1',
-                                         weight_decay_rate=weight_decay_rate),
+                                           weight_decay_rate=weight_decay_rate),
                                   is_training=is_training,
                                   scope='bn5_1',
                                   parameter_update_device=device))
@@ -1385,7 +1005,7 @@ def vgg_16_net(image,
                                            weight_decay=weight_decay,
                                            initializer=initializer,
                                            scope='conv5_2',
-                                         weight_decay_rate=weight_decay_rate),
+                                           weight_decay_rate=weight_decay_rate),
                                   is_training=is_training,
                                   scope='bn5_2',
                                   parameter_update_device=device))
@@ -1398,7 +1018,7 @@ def vgg_16_net(image,
                                            weight_decay=weight_decay,
                                            initializer=initializer,
                                            scope='conv5_3',
-                                         weight_decay_rate=weight_decay_rate),
+                                           weight_decay_rate=weight_decay_rate),
                                   is_training=is_training,
                                   scope='bn5_3',
                                   parameter_update_device=device))
@@ -1419,7 +1039,7 @@ def vgg_16_net(image,
                                       weight_decay=weight_decay,
                                       initializer=initializer,
                                       parameter_update_device=device,
-                                         weight_decay_rate=weight_decay_rate)),
+                                      weight_decay_rate=weight_decay_rate)),
                             keep_prob=keep_prob)
 
         # block 7
@@ -1432,29 +1052,7 @@ def vgg_16_net(image,
                                       weight_decay_rate=weight_decay_rate)),
                             keep_prob=keep_prob)
 
-        # block 8
-        if not label1_length == -1:
-            output_label1 = fc(x=fc7,
-                               output_size=label1_length,
-                               scope="output_label1",
-                               weight_decay=weight_decay,
-                               initializer=initializer,
-                               parameter_update_device=device,
-                               weight_decay_rate=weight_decay_rate)
-        else:
-            output_label1=-1
 
-
-        if not label0_length ==  -1:
-            output_label0 = fc(x=fc7,
-                               output_size=label0_length,
-                               scope="output_label0",
-                               weight_decay=weight_decay,
-                               initializer=initializer,
-                               parameter_update_device=device,
-                               weight_decay_rate=weight_decay_rate)
-        else:
-            output_label0 = -1
 
         features = list()
         if 1 in output_high_level_features:
@@ -1469,4 +1067,4 @@ def vgg_16_net(image,
             features.append(conv5_3)
 
 
-        return output_label1, output_label0, features, return_str
+        return  features, return_str

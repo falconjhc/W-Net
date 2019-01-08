@@ -34,7 +34,7 @@ class Dataset(object):
 
 
 
-        
+
     def sorted_data_by_label0(self,print_marks,info_print_interval):
         print(print_separator)
         label0_vec = np.unique(self.label0_list)
@@ -104,7 +104,7 @@ class Dataset_Iterator(object):
                                                               print_marks=print_marks,
                                                               info_print_interval=info_print_interval)
 
-        
+
 
 
     def content_data_list_alignment_with_true_style_data(self, content_prototype_list, print_marks,info_print_interval):
@@ -228,7 +228,7 @@ class Dataset_Iterator(object):
                     label1_vec) or label1_counter == 1:
                 time_start = time.time()
                 print('%s:DatasetReInitialization@CurrentLabel1:%d(%s)/%d' % (
-                info, label1_counter, label1, len(label1_vec)))
+                    info, label1_counter, label1, len(label1_vec)))
 
     def iterator_reset(self,sess):
         sess.run(self.true_style_iterator.initializer,
@@ -523,7 +523,7 @@ class Dataset_Iterator(object):
     def get_next_batch(self, sess):
         true_style,prototype,reference, \
         onehot_label0, onehot_label1, \
-        dense_label0, dense_label1,\
+        dense_label0, dense_label1, \
         true_style_threshold, content_threshold, style_threshold = \
             sess.run([self.output_tensor_list[0],
                       self.output_tensor_list[1],
@@ -641,10 +641,10 @@ class DataProvider(object):
         content_prototype_list = list()
         for content_label1 in self.content_label1_vec:
             current_data_list, current_label0_list, current_label1_list = \
-            _filter_current_label1_data(current_label1=content_label1,
-                                        full_data_list=content_data_path_list,
-                                        full_label0_list=content_label0_list,
-                                        full_label1_list=content_label1_list)
+                _filter_current_label1_data(current_label1=content_label1,
+                                            full_data_list=content_data_path_list,
+                                            full_label0_list=content_label0_list,
+                                            full_label1_list=content_label1_list)
             train_content_dataset = Dataset(data_list=cpy.deepcopy(current_data_list),
                                             label0_list=cpy.deepcopy(current_label0_list),
                                             label1_list=cpy.deepcopy(current_label1_list),
@@ -699,7 +699,7 @@ class DataProvider(object):
 
 
 
-        
+
 
         # building for style data set for validation
         validation_style_label1_list, validation_style_label0_list, validation_style_data_path_list = \

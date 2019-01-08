@@ -91,8 +91,7 @@ input_args = [
               '--Lconst_style_Penalty','5',
               '--Discriminative_Penalty', '150',
 
-              '--Discriminator_Categorical_Penalty', '75',
-              '--Generator_Categorical_Penalty', '0.2',
+              '--Discriminator_Categorical_Penalty', '50',
               '--Discriminator_Gradient_Penalty', '10',
               '--Batch_StyleFeature_Discrimination_Penalty','0',
 
@@ -104,9 +103,9 @@ input_args = [
     'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
               '--style_reference_extractor_dir',
     'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_HW50_vgg16net/variables/',
-              '--Feature_Penalty_True_Fake_Target', '550',
+              '--Feature_Penalty_True_Fake_Target', '650',
               '--Feature_Penalty_Style_Reference','5',
-              '--Feature_Penalty_Content_Prototype','2']
+              '--Feature_Penalty_Content_Prototype','1']
 
 
 
@@ -169,7 +168,6 @@ parser.add_argument('--Lconst_content_Penalty', dest='Lconst_content_Penalty', t
 parser.add_argument('--Lconst_style_Penalty', dest='Lconst_style_Penalty', type=float, required=True)
 parser.add_argument('--Discriminative_Penalty', dest='Discriminative_Penalty', type=float, required=True)
 parser.add_argument('--Discriminator_Categorical_Penalty', dest='Discriminator_Categorical_Penalty', type=float, required=True)
-parser.add_argument('--Generator_Categorical_Penalty', dest='Generator_Categorical_Penalty', type=float, required=True)
 parser.add_argument('--Discriminator_Gradient_Penalty', dest='Discriminator_Gradient_Penalty', type=float, required=True)
 parser.add_argument('--generator_weight_decay_penalty', dest='generator_weight_decay_penalty', type=float, required=True)
 parser.add_argument('--discriminator_weight_decay_penalty', dest='discriminator_weight_decay_penalty', type=float, required=True)
@@ -309,7 +307,6 @@ def main(_):
                  Lconst_style_Penalty=args.Lconst_style_Penalty,
                  Discriminative_Penalty=args.Discriminative_Penalty,
                  Discriminator_Categorical_Penalty=args.Discriminator_Categorical_Penalty,
-                 Generator_Categorical_Penalty=args.Generator_Categorical_Penalty,
                  Discriminator_Gradient_Penalty=args.Discriminator_Gradient_Penalty,
                  generator_weight_decay_penalty=args.generator_weight_decay_penalty,
                  discriminator_weight_decay_penalty=args.discriminator_weight_decay_penalty,

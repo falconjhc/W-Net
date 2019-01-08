@@ -94,7 +94,6 @@ input_args = [
               '--Discriminative_Penalty', '125',
 
               '--Discriminator_Categorical_Penalty', '75',
-              '--Generator_Categorical_Penalty', '0.2',
               '--Discriminator_Gradient_Penalty', '10',
               '--Batch_StyleFeature_Discrimination_Penalty','0',
 
@@ -171,7 +170,6 @@ parser.add_argument('--Lconst_content_Penalty', dest='Lconst_content_Penalty', t
 parser.add_argument('--Lconst_style_Penalty', dest='Lconst_style_Penalty', type=float, required=True)
 parser.add_argument('--Discriminative_Penalty', dest='Discriminative_Penalty', type=float, required=True)
 parser.add_argument('--Discriminator_Categorical_Penalty', dest='Discriminator_Categorical_Penalty', type=float, required=True)
-parser.add_argument('--Generator_Categorical_Penalty', dest='Generator_Categorical_Penalty', type=float, required=True)
 parser.add_argument('--Discriminator_Gradient_Penalty', dest='Discriminator_Gradient_Penalty', type=float, required=True)
 parser.add_argument('--generator_weight_decay_penalty', dest='generator_weight_decay_penalty', type=float, required=True)
 parser.add_argument('--discriminator_weight_decay_penalty', dest='discriminator_weight_decay_penalty', type=float, required=True)
@@ -311,7 +309,6 @@ def main(_):
                  Lconst_style_Penalty=args.Lconst_style_Penalty,
                  Discriminative_Penalty=args.Discriminative_Penalty,
                  Discriminator_Categorical_Penalty=args.Discriminator_Categorical_Penalty,
-                 Generator_Categorical_Penalty=args.Generator_Categorical_Penalty,
                  Discriminator_Gradient_Penalty=args.Discriminator_Gradient_Penalty,
                  generator_weight_decay_penalty=args.generator_weight_decay_penalty,
                  discriminator_weight_decay_penalty=args.discriminator_weight_decay_penalty,
