@@ -38,7 +38,7 @@ input_args = [
               '--train_data_augment_flip','0',
               '--experiment_id','20181225-AdaIN-Multi_StylePf50_ContentPf32',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
-              '--log_dir','tfLogsNew_WNet/',# log file saving location
+              '--log_dir','tfLogsNew_WNet_Pf50/',# log file saving location
               '--print_info_seconds','750',
 
               '--content_data_dir', # standard data location

@@ -39,7 +39,7 @@ input_args = [
               '--train_data_augment_flip','1',
               '--experiment_id','20181226-NonAdaIN_StyleHP380_ContentPf32+Hw32',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
-              '--log_dir','tfLogsNew_WNet/',# log file saving location
+              '--log_dir','tfLogsNew_WNet_More/',# log file saving location 
               '--print_info_seconds','750',
 
               '--content_data_dir', # standard data location
@@ -103,11 +103,11 @@ input_args = [
 
         # feature extractor parametrers
               '--true_fake_target_extractor_dir',
-    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181017_FeatureExtractor_ContentStyle_HW100_vgg16net/variables/',
+    'tfModels_FeatureExtractor/checkpoint/Exp20181226_FeatureExtractor_ContentStyle_HW300Pf80_vgg16net/variables/',
               '--content_prototype_extractor_dir',
-    'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
+    'tfModels_FeatureExtractor/checkpoint/Exp20181231_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
               '--style_reference_extractor_dir',
-    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181017_FeatureExtractor_Style_HW100_vgg16net/variables/',
+    'tfModels_FeatureExtractor/checkpoint/Exp20181226_FeatureExtractor_Style_HW300Pf80_vgg16net/variables/',
               '--Feature_Penalty_True_Fake_Target', '750',
               '--Feature_Penalty_Style_Reference','5',
               '--Feature_Penalty_Content_Prototype','5']

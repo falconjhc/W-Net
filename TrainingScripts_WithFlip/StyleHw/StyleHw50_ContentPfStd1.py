@@ -13,9 +13,8 @@ from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/DataA/Harric/ChineseCharacterExp/'
+data_path_root = '/home/harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
-
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
 
@@ -23,13 +22,12 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
-
-              #'--training_from_model_dir',
-              #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20181207_StylePf80_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
-              '--debug_mode','0',
+              '--training_from_model_dir',
+              '/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20181225-NonAdaIN_StyleHw50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv',
+			        '--debug_mode','0',
               '--style_input_number','4', # how many style inputs
               '--init_training_epochs','1',
-              '--final_training_epochs','1000',
+              '--final_training_epochs','500',
               '--adain_use','0',
 
               '--generator_device','/device:GPU:0',
@@ -39,33 +37,35 @@ input_args = [
 
               '--train_data_augment','1', # translation? rotation?
               '--train_data_augment_flip','1',
-              '--experiment_id','20181225-NonAdaIN_StylePf80_ContentPf32',# experiment name prefix
+              '--experiment_id','20190108-NonAdaIN_StyleHw50_ContentPfStd1-Flip',# experiment name prefix
               '--experiment_dir','tfModels_WNet/', # model saving location
-              '--log_dir','tfLogsNew_WNet_More/',# log file saving location
+              '--log_dir','tfLogsNew_WNet_Hw50/',# log file saving location
               '--print_info_seconds','750',
 
               '--content_data_dir', # standard data location
-    'CASIA_Dataset/PrintedData/',
+    'CASIA_Dataset/StandardChars/GB2312_L1/',
 
               '--style_train_data_dir', # training data location
-    'CASIA_Dataset/PrintedData/GB2312_L1/',
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
               '--style_validation_data_dir',# validation data location
-    'CASIA_Dataset/PrintedData/GB2312_L1/',
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
               '--file_list_txt_content', # file list of the standard data
-    '../../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
+    '../../FileList/StandardChars/Char_0_3754_GB2312L1.txt',
     
               '--file_list_txt_style_train', # file list of the training data
-    '../../FileList/PrintedData/Char_0_3754_Font_0_79_GB2312L1.txt',
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated.txt,'
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive.txt',
 
               '--file_list_txt_style_validation', # file list of the validation data
-    '../../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt',
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
 
 
               # generator && discriminator
               '--generator_residual_at_layer','3',
-              '--generator_residual_blocks','6',
+              '--generator_residual_blocks','5',
               '--discriminator','DisMdy6conv',
 
               '--batch_size','8',
@@ -73,9 +73,9 @@ input_args = [
               '--channels','1',
 
               # optimizer parameters
-              '--init_lr','0.001',
-              '--epoch','2500',
-              '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
+              '--init_lr','0.00025',
+              '--epoch','5000',
+              '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
 
               '--optimization_method','adam',
               '--final_learning_rate_pctg','0.01',
@@ -87,8 +87,9 @@ input_args = [
               '--Pixel_Reconstruction_Penalty','750',
               '--Lconst_content_Penalty','3',
               '--Lconst_style_Penalty','5',
-              '--Discriminative_Penalty', '50',
-              '--Discriminator_Categorical_Penalty', '50',
+              '--Discriminative_Penalty', '150',
+
+              '--Discriminator_Categorical_Penalty', '75',
               '--Discriminator_Gradient_Penalty', '10',
               '--Batch_StyleFeature_Discrimination_Penalty','0',
 
@@ -100,9 +101,10 @@ input_args = [
     'tfModels_FeatureExtractor/checkpoint/Exp20181231_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
               '--style_reference_extractor_dir',
     'tfModels_FeatureExtractor/checkpoint/Exp20181226_FeatureExtractor_Style_HW300Pf80_vgg16net/variables/',
-              '--Feature_Penalty_True_Fake_Target', '800',
-              '--Feature_Penalty_Style_Reference','15',
-              '--Feature_Penalty_Content_Prototype','15']
+              
+              '--Feature_Penalty_True_Fake_Target', '650',
+              '--Feature_Penalty_Style_Reference','5',
+              '--Feature_Penalty_Content_Prototype','2']
 
 
 
