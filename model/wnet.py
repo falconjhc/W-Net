@@ -33,6 +33,7 @@ from model.gan_networks import vgg_16_net as feature_extractor_network
 
 
 from model.gan_networks import WNet_Generator as wnet_generator
+from model.gan_networks import EmdNet_Generator as emdnet_generator
 from model.gan_networks import encoder_framework as encoder_implementation
 
 
@@ -66,6 +67,8 @@ FeatureExtractorHandle = namedtuple("FeatureExtractor",
 
 
 discriminator_dict = {"DisMdy6conv": discriminator_mdy_6_convs}
+generator_dict = {"WNet": wnet_generator,
+                  "EmdNet": emdnet_generator}
 
 eps = 1e-9
 
@@ -145,6 +148,28 @@ class WNet(object):
         self.initializer = 'XavierInit'
         self.style_input_number=style_input_number
 
+        self.experiment_id = experiment_id
+        self.generator_residual_at_layer = generator_residual_at_layer
+        self.generator_residual_blocks = generator_residual_blocks
+        self.adain_mark = adain_use
+        self.adain_use = ('1' in adain_use)
+        if adain_use and 'Multi' in adain_use:
+            self.adain_preparation_model = 'Multi'
+        elif adain_use and 'Single' in adain_use:
+            self.adain_preparation_model = 'Single'
+        else:
+            self.adain_preparation_model = None
+
+        if 'Emd' in experiment_id:
+            self.generator_implementation = generator_dict['EmdNet']
+            self.generator_residual_at_layer = -1
+            self.generator_residual_blocks = -1
+            # self.adain_mark = '0'
+            # self.adain_use = False
+            # self.adain_preparation_model = None
+        else:
+            self.generator_implementation = generator_dict['WNet']
+
         self.print_info_seconds=print_info_seconds
         self.discriminator_initialization_iters=25
         self.init_training_epochs=init_training_epochs
@@ -154,7 +179,7 @@ class WNet(object):
         self.debug_mode = debug_mode
         self.experiment_dir = experiment_dir
         self.log_dir=log_dir
-        self.experiment_id = experiment_id
+
         self.checkpoint_dir = os.path.join(self.experiment_dir, "checkpoint")
         self.training_from_model = training_from_model
         self.epoch=epoch
@@ -182,14 +207,7 @@ class WNet(object):
 
         self.train_data_augment = (train_data_augment==1)
         self.train_data_augment_flip = (train_data_augment_flip==1)
-        self.adain_mark = adain_use
-        self.adain_use = ('1' in adain_use)
-        if adain_use and 'Multi' in adain_use:
-            self.adain_preparation_model = 'Multi'
-        elif adain_use and 'Single' in adain_use:
-            self.adain_preparation_model = 'Single'
-        else:
-            self.adain_preparation_model = None
+
 
 
 
@@ -223,8 +241,7 @@ class WNet(object):
         self.discriminator_devices = discriminator_devices
         self.feature_extractor_device=feature_extractor_devices
 
-        self.generator_residual_at_layer = generator_residual_at_layer
-        self.generator_residual_blocks = generator_residual_blocks
+
         self.discriminator = discriminator
 
 
@@ -718,22 +735,20 @@ class WNet(object):
                                                                name='placeholder_content_prototype')
 
                 generated_infer,_,_,_,_,_,content_full_faeture_list,style_full_feature_list,decoded_feature_list = \
-                    wnet_generator(content_prototype=content_prototype_placeholder,
-                                   style_reference=style_reference_placeholder_list,
-                                   is_training=False,
-                                   batch_size=1,
-                                   generator_device=self.generator_devices,
-                                   residual_at_layer=self.generator_residual_at_layer,
-                                   residual_block_num=self.generator_residual_blocks,
-                                   scope='generator',
-                                   initializer=self.initializer,
-                                   weight_decay=False, weight_decay_rate=0,
-                                   style_input_number=style_reference.shape[3],
-                                   content_prototype_number=content_prototype.shape[3],
-                                   reuse=False,
-                                   adain_use=self.adain_use,
-                                   adain_preparation_model=self.adain_preparation_model,
-                                   debug_mode=False)
+                    self.generator_implementation(content_prototype=content_prototype_placeholder,
+                                                  style_reference=style_reference_placeholder_list,
+                                                  is_training=False,
+                                                  batch_size=1,
+                                                  generator_device=self.generator_devices,
+                                                  residual_at_layer=self.generator_residual_at_layer,
+                                                  residual_block_num=self.generator_residual_blocks,
+                                                  scope='generator',
+                                                  initializer=self.initializer,
+                                                  weight_decay=False, weight_decay_rate=0,
+                                                  reuse=False,
+                                                  adain_use=self.adain_use,
+                                                  adain_preparation_model=self.adain_preparation_model,
+                                                  debug_mode=False)
 
                 gen_vars_save = self.find_norm_avg_var([var for var in tf.trainable_variables() if 'generator' in var.name])
 
@@ -1128,23 +1143,21 @@ class WNet(object):
                 # build the generator
                 generated_target_train, encoded_content_prototype_train, encoded_style_reference_train, network_info, \
                 style_shortcut_batch_diff, style_residual_batch_diff,_,_,_ = \
-                    wnet_generator(content_prototype=content_prototype_train,
-                                   style_reference=style_reference_train_list,
-                                   is_training=True,
-                                   batch_size=self.batch_size,
-                                   generator_device=self.generator_devices,
-                                   residual_at_layer=self.generator_residual_at_layer,
-                                   residual_block_num=self.generator_residual_blocks,
-                                   scope=name_prefix,
-                                   reuse=False,
-                                   initializer=self.initializer,
-                                   weight_decay=self.weight_decay_generator,
-                                   style_input_number=self.style_input_number,
-                                   content_prototype_number=self.content_input_number_actual,
-                                   weight_decay_rate=self.generator_weight_decay_penalty,
-                                   adain_use=self.adain_use,
-                                   adain_preparation_model=self.adain_preparation_model,
-                                   debug_mode=self.debug_mode)
+                    self.generator_implementation(content_prototype=content_prototype_train,
+                                                  style_reference=style_reference_train_list,
+                                                  is_training=True,
+                                                  batch_size=self.batch_size,
+                                                  generator_device=self.generator_devices,
+                                                  residual_at_layer=self.generator_residual_at_layer,
+                                                  residual_block_num=self.generator_residual_blocks,
+                                                  scope=name_prefix,
+                                                  reuse=False,
+                                                  initializer=self.initializer,
+                                                  weight_decay=self.weight_decay_generator,
+                                                  weight_decay_rate=self.generator_weight_decay_penalty,
+                                                  adain_use=self.adain_use,
+                                                  adain_preparation_model=self.adain_preparation_model,
+                                                  debug_mode=self.debug_mode)
 
                 # encoded of the generated target on the content prototype encoder
                 encoded_content_prototype_generated_target = \
@@ -1161,9 +1174,15 @@ class WNet(object):
                                            weight_decay_rate=self.generator_weight_decay_penalty,
                                            adain_use=self.adain_use)[0]
 
+
                 # encoded of the generated target on the style reference encoder
+                if 'Emd' in self.experiment_id:
+                    tmp_input = tf.tile(generated_target_train,
+                                                          [1,1,1,self.style_input_number])
+                else:
+                    tmp_input = generated_target_train
                 encoded_style_reference_generated_target = \
-                    encoder_implementation(images=generated_target_train,
+                    encoder_implementation(images=tmp_input,
                                            is_training=True,
                                            encoder_device=self.generator_devices,
                                            residual_at_layer=self.generator_residual_at_layer,
@@ -1185,23 +1204,21 @@ class WNet(object):
 
 
                 generated_target_infer = \
-                    wnet_generator(content_prototype=content_prototype_infer,
-                                   style_reference=style_reference_infer_list,
-                                   is_training=False,
-                                   batch_size=self.batch_size,
-                                   generator_device=self.generator_devices,
-                                   residual_at_layer=self.generator_residual_at_layer,
-                                   residual_block_num=self.generator_residual_blocks,
-                                   scope=name_prefix,
-                                   reuse=True,
-                                   initializer=self.initializer,
-                                   weight_decay=False,
-                                   style_input_number=self.style_input_number,
-                                   content_prototype_number=self.content_input_number_actual,
-                                   weight_decay_rate=eps,
-                                   adain_use=self.adain_use,
-                                   adain_preparation_model=self.adain_preparation_model,
-                                   debug_mode=True)[0]
+                    self.generator_implementation(content_prototype=content_prototype_infer,
+                                                  style_reference=style_reference_infer_list,
+                                                  is_training=False,
+                                                  batch_size=self.batch_size,
+                                                  generator_device=self.generator_devices,
+                                                  residual_at_layer=self.generator_residual_at_layer,
+                                                  residual_block_num=self.generator_residual_blocks,
+                                                  scope=name_prefix,
+                                                  reuse=True,
+                                                  initializer=self.initializer,
+                                                  weight_decay=False,
+                                                  weight_decay_rate=eps,
+                                                  adain_use=self.adain_use,
+                                                  adain_preparation_model=self.adain_preparation_model,
+                                                  debug_mode=True)[0]
 
                 curt_generator_handle = GeneratorHandle(generated_target_train=generated_target_train,
                                                         generated_target_infer=generated_target_infer)
@@ -1214,14 +1231,20 @@ class WNet(object):
         g_merged_summary = []
 
         # batch discrimination loss on style encoder
-        style_shortcut_batch_discrimination_penalty = self.Batch_StyleFeature_Discrimination_Penalty * style_shortcut_batch_diff
-        style_residual_batch_discrimination_penalty = self.Batch_StyleFeature_Discrimination_Penalty * style_residual_batch_diff
-        g_loss += (style_shortcut_batch_discrimination_penalty + style_residual_batch_discrimination_penalty)
-        style_batch_diff_shortcut_summary = tf.summary.scalar("Loss_Generator/StyleDiscrimination_ShortCut",
-                                                              style_shortcut_batch_discrimination_penalty / self.Batch_StyleFeature_Discrimination_Penalty)
-        style_batch_diff_residual_summary = tf.summary.scalar("Loss_Generator/StyleDiscrimination_Residual",
-                                                              style_residual_batch_discrimination_penalty / self.Batch_StyleFeature_Discrimination_Penalty)
-        g_merged_summary = tf.summary.merge([g_merged_summary, style_batch_diff_shortcut_summary, style_batch_diff_residual_summary])
+        if self.Batch_StyleFeature_Discrimination_Penalty > eps * 10:
+            if not style_shortcut_batch_diff==-1:
+                style_shortcut_batch_discrimination_penalty = self.Batch_StyleFeature_Discrimination_Penalty * style_shortcut_batch_diff
+                g_loss += style_shortcut_batch_discrimination_penalty
+                style_batch_diff_shortcut_summary = tf.summary.scalar("Loss_Generator/StyleDiscrimination_ShortCut",
+                                                                      style_shortcut_batch_discrimination_penalty / self.Batch_StyleFeature_Discrimination_Penalty)
+                g_merged_summary = tf.summary.merge([g_merged_summary, style_batch_diff_shortcut_summary])
+
+            if not style_residual_batch_diff == -1:
+                style_residual_batch_discrimination_penalty = self.Batch_StyleFeature_Discrimination_Penalty * style_residual_batch_diff
+                g_loss += style_residual_batch_discrimination_penalty
+                style_batch_diff_residual_summary = tf.summary.scalar("Loss_Generator/StyleDiscrimination_Residual",
+                                                                      style_residual_batch_discrimination_penalty / self.Batch_StyleFeature_Discrimination_Penalty)
+                g_merged_summary = tf.summary.merge([g_merged_summary, style_batch_diff_residual_summary])
 
 
         # weight_decay_loss
@@ -1269,7 +1292,6 @@ class WNet(object):
 
         gen_vars_train = [var for var in tf.trainable_variables() if 'generator' in var.name]
         gen_vars_save = self.find_norm_avg_var(gen_vars_train)
-
         saver_generator = tf.train.Saver(max_to_keep=self.model_save_epochs, var_list=gen_vars_save)
 
 
@@ -2103,8 +2125,8 @@ class WNet(object):
 
                 if epoch_step.eval(session=self.sess) < self.init_training_epochs:
                     current_critic_logit_penalty_value = (float(global_step.eval(session=self.sess))/float(self.init_training_epochs*self.itrs_for_current_epoch))*self.Discriminative_Penalty + eps
-                    # current_lr_real = current_lr * 0.1
-                    current_lr_real = current_lr
+                    current_lr_real = current_lr * 0.1
+                    # current_lr_real = current_lr
                 else:
                     current_critic_logit_penalty_value = self.Discriminative_Penalty
                     current_lr_real = current_lr

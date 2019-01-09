@@ -23,14 +23,11 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
-    #'--training_from_model_dir',
-    #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20181225-AdaIN-Single_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv',
-
     '--debug_mode','0',
     '--style_input_number','4', # how many style inputs
     '--init_training_epochs','1',
     '--final_training_epochs','1500',
-    '--adain_use','1-Single',
+    '--adain_use','1',
 
     '--generator_device','/device:GPU:0',
     '--discriminator_device', '/device:GPU:0',
@@ -38,10 +35,10 @@ input_args = [
 
 
     '--train_data_augment','1', # translation? rotation?
-    '--train_data_augment_flip','1',
-    '--experiment_id','20190108-AdaIN-Single_StylePf50_ContentPf32-Flip',# experiment name prefix
-    '--experiment_dir','tfModels_WNet/', # model saving location
-    '--log_dir','tfLogsNew_WNet_Pf50/',# log file saving location
+    '--train_data_augment_flip','0',
+    '--experiment_id','20190109-EmdNet-Style4-AdaIN_StylePf50_ContentPf32',# experiment name prefix
+    '--experiment_dir','tfModels_EmdNet/', # model saving location
+    '--log_dir','tfLogsNew_EmdNet_Pf50/',# log file saving location
     '--print_info_seconds','750',
 
     '--content_data_dir', # standard data location
@@ -94,12 +91,13 @@ input_args = [
 
 
     # feature extractor parametrers
+
     '--true_fake_target_extractor_dir',
-    'tfModels_FeatureExtractor/checkpoint/Exp20181226_FeatureExtractor_ContentStyle_HW300Pf80_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181010_FeatureExtractor_ContentStyle_PF50_vgg16net/variables/',
     '--content_prototype_extractor_dir',
-    'tfModels_FeatureExtractor/checkpoint/Exp20181231_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32_vgg16net/variables/',
     '--style_reference_extractor_dir',
-    'tfModels_FeatureExtractor/checkpoint/Exp20181226_FeatureExtractor_Style_HW300Pf80_vgg16net/variables/',
+    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_PF50_vgg16net/variables/',
 
     '--Feature_Penalty_True_Fake_Target', '800',
     '--Feature_Penalty_Style_Reference','15',

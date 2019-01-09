@@ -770,7 +770,7 @@ def numpy_img_save(img,path):
     imgout = np.tile(np.reshape(imgout,
                                 [imgout.shape[0],
                                  imgout.shape[1], 1]),
-                       [1, 1, 3])
+                     [1, 1, 3])
     imgout_misc = Image.fromarray(np.uint8(imgout))
     misc.imsave(path,imgout_misc)
 

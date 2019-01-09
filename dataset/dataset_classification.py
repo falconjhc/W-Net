@@ -159,7 +159,7 @@ class DataProvider(object):
         train_label0_list, \
         train_label1_list, \
         self.label1_vec, \
-        self.label0_vec=\
+        self.label0_vec= \
             self.read_file_list(data_dir=self.data_dir_train_path,
                                 txt_path=file_list_txt_path_train)
 

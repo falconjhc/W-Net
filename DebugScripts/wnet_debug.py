@@ -27,7 +27,7 @@ input_args = [
     '--content_input_number_actual','3', # how many actual content inputs
     '--init_training_epochs','1',
     '--final_training_epochs','25',
-    '--adain_use','1-Multi',
+    '--adain_use','1',
 
     '--generator_device','/device:GPU:0',
     '--discriminator_device', '/device:GPU:0',
@@ -36,7 +36,7 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','DEBUG',# experiment name prefix
+    '--experiment_id','DEBUG-Emd',# experiment name prefix
     '--experiment_dir','../../DEBUG', # model saving location
     '--log_dir','DEBUG/',# log file saving location
     '--print_info_seconds','3',
@@ -67,7 +67,7 @@ input_args = [
 
     # generator && discriminator
     '--generator_residual_at_layer','3',
-    '--generator_residual_blocks','1',
+    '--generator_residual_blocks','5',
     '--discriminator','DisMdy6conv',
 
     '--batch_size','8',

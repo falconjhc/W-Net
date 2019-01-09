@@ -34,6 +34,49 @@ def adaptive_instance_norm(content,style,epsilon=1e-5):
     normed = tf.squeeze(s_std*(content-c_mean) / c_std + s_mean, axis=0)
     return normed
 
+def emd_mixer(content,style,initializer,device='-1',scope="emd_mixer"):
+    weight_stddev = 0.02
+    shape_dimension = int(content.shape[1])
+    K = shape_dimension
+    bias_init_stddev = 0.0
+
+    with tf.variable_scope(scope):
+
+        if initializer == 'NormalInit':
+            W = variable_creation_on_device(name='W',
+                                            shape=[shape_dimension, K, shape_dimension],
+                                            initializer=tf.random_normal_initializer(stddev=weight_stddev),
+                                            parameter_update_device=device)
+
+        else:
+            W = variable_creation_on_device(name='W',
+                                            shape=[shape_dimension, shape_dimension, shape_dimension],
+                                            initializer=tf.contrib.layers.xavier_initializer(uniform=False),
+                                            parameter_update_device=device)
+
+        travel_times = int(W.shape[2])
+        for ii in range(travel_times):
+            current_W = W[:,:,ii]
+            current_cal1 = tf.expand_dims(tf.matmul(style,current_W),axis=2)
+            if ii == 0:
+                cal1 = current_cal1
+            else:
+                cal1=tf.concat([cal1,current_cal1],axis=2)
+
+        batch_size = int(cal1.shape[0])
+        for ii in range(batch_size):
+            current_cal1 = cal1[ii,:,:]
+            current_cal2 = tf.expand_dims(tf.transpose(tf.matmul(current_cal1,
+                                                                 tf.transpose(content))),
+                                          axis=0)
+            if ii == 0:
+                cal2 = current_cal2
+            else:
+                cal2 = tf.concat([cal2,current_cal2],axis=0)
+
+        cal2 = tf.reduce_sum(cal2,axis=0)
+        return cal2
+
 
 def conv2d(x,
            output_filters,

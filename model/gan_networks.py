@@ -8,6 +8,7 @@ sys.path.append('..')
 import numpy as np
 from utilities.ops import lrelu, relu, batch_norm, layer_norm, instance_norm, adaptive_instance_norm
 from utilities.ops import conv2d, deconv2d, fc
+from utilities.ops import emd_mixer
 
 
 import math
@@ -15,6 +16,10 @@ import math
 print_separater="#########################################################"
 
 eps = 1e-9
+
+generator_dim = 64
+discriminator_dim = 32
+
 
 def minibatch_discrimination(parameter_update_device,
                              input_pattern,
@@ -80,7 +85,6 @@ def encoder_framework(images,
     return_str = "Encoder %d Layers" % int(np.floor(math.log(int(images.shape[1])) / math.log(2)))
     if not residual_at_layer == -1:
         return_str = return_str + " with residual blocks at layer %d" % residual_at_layer
-    generator_dim = 64
 
 
 
@@ -366,15 +370,16 @@ def residual_block_concatenation(input_res_list1,input_res_list2):
 
     return output_residual_block_list
 
-def decoder_framework(encoded_layer_list,
-                      is_training,
-                      output_width,
-                      output_filters,
-                      batch_size,
-                      decoder_device,
-                      scope,initializer, weight_decay,weight_decay_rate,
-                      adain_use,
-                      reuse=False):
+def wnet_decoder_framework(encoded_layer_list,
+                           decoder_input_org,
+                           is_training,
+                           output_width,
+                           output_filters,
+                           batch_size,
+                           decoder_device,
+                           scope,initializer, weight_decay,weight_decay_rate,
+                           adain_use,
+                           reuse=False):
     def decoder(x,
                 output_width,
                 output_filters,
@@ -406,9 +411,8 @@ def decoder_framework(encoded_layer_list,
             dec = tf.concat([dec, enc_layer], 3)
         return dec
 
-    decoder_input = encoded_layer_list[0]
+    decoder_input = decoder_input_org
     return_str = "Decoder %d Layers" % int(np.floor(math.log(output_width) / math.log(2)))
-    generator_dim=64
     full_decoded_feature_list = list()
 
     full_encoder_layer_num = int(np.floor(math.log(output_width) / math.log(2)))
@@ -596,8 +600,306 @@ def wnet_feature_mixer_framework(generator_device,scope,is_training,reuse,initia
     encoded_layer_list = fused_shortcut_interfaces
     encoded_layer_list.extend(residual_output_list)
 
-    return encoded_layer_list, style_shortcut_batch_diff, style_residual_batch_diff,\
+    return encoded_layer_list, style_shortcut_batch_diff, style_residual_batch_diff, \
            encoded_style_final
+
+
+def emdnet_decoder_framework(encoded_layer_list,
+                             decoder_input_org,
+                             is_training,
+                             output_width,
+                             output_filters,
+                             batch_size,
+                             decoder_device,
+                             scope,initializer, weight_decay,weight_decay_rate,
+                             adain_use,
+                             reuse=False):
+    def decoder(x,
+                output_width,
+                output_filters,
+                layer,
+                do_norm=False,
+                dropout=False):
+        dec = deconv2d(x=tf.nn.relu(x),
+                       output_shape=[batch_size, output_width, output_width, output_filters],
+                       scope="layer%d_conv" % layer,
+                       parameter_update_device=decoder_device,
+                       weight_decay=weight_decay,initializer=initializer,
+                       name_prefix=scope,
+                       weight_decay_rate=weight_decay_rate)
+        if do_norm:
+            # IMPORTANT: normalization for last layer
+            # Very important, otherwise GAN is unstable
+            if not adain_use:
+                dec = batch_norm(dec, is_training, scope="layer%d_bn" % layer,
+                                 parameter_update_device=decoder_device)
+            else:
+                dec = layer_norm(x=dec, scope="layer%d_ln" % layer,
+                                 parameter_update_device=decoder_device)
+
+        if dropout:
+            dec = tf.nn.dropout(dec, 0.5)
+
+        return dec
+
+    decoder_input = decoder_input_org
+    return_str = "Decoder %d Layers" % int(np.floor(math.log(output_width) / math.log(2)))
+    full_decoded_feature_list = list()
+
+    full_encoder_layer_num = int(np.floor(math.log(output_width) / math.log(2)))
+    with tf.variable_scope(tf.get_variable_scope()):
+        with tf.device(decoder_device):
+            with tf.variable_scope(scope):
+                if reuse:
+                    tf.get_variable_scope().reuse_variables()
+
+                feature_size = int(decoder_input.shape[1])
+                ii=0
+                while not feature_size == output_width:
+                    power_times = full_encoder_layer_num-2-ii
+                    output_feature_size = output_width / np.power(2, full_encoder_layer_num - ii - 1)
+                    if ii < full_encoder_layer_num-1:
+                        output_filter_num_expansion = np.min([np.power(2,power_times), 8])
+                        output_filter_num = generator_dim * output_filter_num_expansion
+                        do_norm = True
+                        do_drop= True and is_training
+
+
+                    else:
+                        output_filter_num = output_filters
+                        do_norm = False
+                        do_drop = False
+
+                    encoded_respective = encoded_layer_list[ii]
+                    if not encoded_respective == None:
+                        decoder_input = tf.concat([decoder_input, encoded_respective], axis=3)
+
+                    decoder_output = decoder(x=decoder_input,
+                                             output_width=output_feature_size,
+                                             output_filters=output_filter_num,
+                                             layer=ii + 1,
+                                             do_norm=do_norm,
+                                             dropout=do_drop)
+                    full_decoded_feature_list.append(decoder_output)
+
+                    if ii == full_encoder_layer_num-1:
+                        output = tf.nn.tanh(decoder_output)
+                    ii+=1
+                    decoder_input = decoder_output
+                    feature_size = int(decoder_input.shape[1])
+
+        return output, full_decoded_feature_list, return_str
+
+
+def emdnet_mixer_with_adain(generator_device,reuse,scope,initializer,
+                            weight_decay,weight_decay_rate,
+                            encoded_content_final,content_shortcut_interface,encoded_style_final):
+    def _calculate_batch_diff(input_feature):
+        diff = tf.abs(tf.expand_dims(input_feature, 4) -
+                      tf.expand_dims(tf.transpose(input_feature, [1, 2, 3, 0]), 0))
+        diff = tf.reduce_sum(tf.exp(-diff), 4)
+        return tf.reduce_mean(diff)
+
+    # mixer
+    with tf.variable_scope(tf.get_variable_scope()):
+        with tf.device(generator_device):
+            with tf.variable_scope(scope):
+                if reuse:
+                    tf.get_variable_scope().reuse_variables()
+
+                encoded_style_final_expand = tf.expand_dims(encoded_style_final,axis=0)
+
+                mixed_feature = adaptive_instance_norm(content=encoded_content_final,
+                                                       style=encoded_style_final_expand)
+
+                valid_encoded_content_shortcut_list = list()
+                batch_diff = 0
+                batch_diff_count = 0
+                for ii in range(len(content_shortcut_interface)):
+                    if ii == 0 or ii == len(content_shortcut_interface) - 1:
+                        valid_encoded_content_shortcut_list.append(content_shortcut_interface[ii])
+                        batch_diff += _calculate_batch_diff(input_feature=content_shortcut_interface[ii])
+                        batch_diff_count += 1
+                    else:
+                        valid_encoded_content_shortcut_list.append(None)
+                valid_encoded_content_shortcut_list.reverse()
+                batch_diff = batch_diff / batch_diff_count
+
+    return valid_encoded_content_shortcut_list, mixed_feature, batch_diff
+
+def emdnet_mixer_non_adain(generator_device,reuse,scope,initializer,
+                           weight_decay,weight_decay_rate,
+                           encoded_content_final,content_shortcut_interface,encoded_style_final):
+
+    def _calculate_batch_diff(input_feature):
+        diff = tf.abs(tf.expand_dims(input_feature, 4) -
+                      tf.expand_dims(tf.transpose(input_feature, [1, 2, 3, 0]), 0))
+        diff = tf.reduce_sum(tf.exp(-diff), 4)
+        return tf.reduce_mean(diff)
+
+
+    # mixer
+    with tf.variable_scope(tf.get_variable_scope()):
+        with tf.device(generator_device):
+
+            with tf.variable_scope(scope):
+                if reuse:
+                    tf.get_variable_scope().reuse_variables()
+
+                encoded_content_final_squeeze = tf.squeeze(encoded_content_final)
+                encoded_style_final_squeeze = tf.squeeze(encoded_style_final)
+                encoded_content_fc = lrelu(fc(x=encoded_content_final_squeeze,
+                                              output_size=generator_dim,
+                                              scope="emd_mixer/content_fc",
+                                              parameter_update_device=generator_device,
+                                              initializer=initializer,
+                                              weight_decay=weight_decay,
+                                              name_prefix=scope, weight_decay_rate=weight_decay_rate))
+                encoded_style_fc = lrelu(fc(x=encoded_style_final_squeeze,
+                                            output_size=generator_dim,
+                                            scope="emd_mixer/style_fc",
+                                            parameter_update_device=generator_device,
+                                            initializer=initializer,
+                                            weight_decay=weight_decay,
+                                            name_prefix=scope, weight_decay_rate=weight_decay_rate))
+                mix_content_style = emd_mixer(content=encoded_content_fc,
+                                              style=encoded_style_fc,
+                                              initializer=initializer,
+                                              device=generator_device)
+                mixed_fc = relu(fc(x=mix_content_style,
+                                   output_size=int(encoded_content_final.shape[3]),
+                                   scope="emd_mixer/mixed_fc",
+                                   parameter_update_device=generator_device,
+                                   initializer=initializer,
+                                   weight_decay=weight_decay,
+                                   name_prefix=scope, weight_decay_rate=weight_decay_rate))
+
+                mixed_fc = tf.expand_dims(mixed_fc, axis=1)
+                mixed_fc = tf.expand_dims(mixed_fc, axis=1)
+
+                valid_encoded_content_shortcut_list = list()
+                batch_diff = 0
+                batch_diff_count = 0
+                for ii in range(len(content_shortcut_interface)):
+                    if ii == 0 or ii == len(content_shortcut_interface) - 1:
+                        valid_encoded_content_shortcut_list.append(content_shortcut_interface[ii])
+                        batch_diff += _calculate_batch_diff(input_feature=content_shortcut_interface[ii])
+                        batch_diff_count += 1
+                    else:
+                        valid_encoded_content_shortcut_list.append(None)
+                valid_encoded_content_shortcut_list.reverse()
+                batch_diff = batch_diff / batch_diff_count
+
+    return valid_encoded_content_shortcut_list,mixed_fc,batch_diff
+
+def EmdNet_Generator(content_prototype,
+                     style_reference,
+                     is_training,
+                     batch_size,
+                     generator_device,
+                     residual_at_layer,
+                     residual_block_num,
+                     scope,
+                     initializer,
+                     weight_decay, weight_decay_rate,
+                     reuse=False,
+                     adain_use=False,
+                     adain_preparation_model=None,
+                     debug_mode=True):
+
+
+
+    style_input_number = len(style_reference)
+    content_prototype_number = int(content_prototype.shape[3])
+
+    # content prototype encoder part
+    encoded_content_final, content_shortcut_interface, _, content_full_feature_list, _ = \
+        encoder_framework(images=content_prototype,
+                          is_training=is_training,
+                          encoder_device=generator_device,
+                          residual_at_layer=residual_at_layer,
+                          residual_connection_mode='Multi',
+                          scope=scope + '/content_encoder',
+                          reuse=reuse,
+                          initializer=initializer,
+                          weight_decay=weight_decay,
+                          weight_decay_rate=weight_decay_rate,
+                          adain_use=adain_use)
+
+
+
+
+
+    # style reference encoder part
+    for ii in range(len(style_reference)):
+        if ii == 0:
+            style_reference_tensor = style_reference[ii]
+        else:
+            style_reference_tensor = tf.concat([style_reference_tensor,style_reference[ii]],
+                                               axis=3)
+    encoded_style_final, _, _, style_full_feature_list, _ = \
+        encoder_framework(images=style_reference_tensor,
+                          is_training=is_training,
+                          encoder_device=generator_device,
+                          residual_at_layer=residual_at_layer,
+                          residual_connection_mode='Single',
+                          scope=scope + '/style_encoder',
+                          reuse=reuse,
+                          initializer=initializer,
+                          weight_decay=weight_decay,
+                          weight_decay_rate=weight_decay_rate,
+                          adain_use=adain_use)
+
+
+    # emd network mixer
+    if adain_use==0:
+        valid_encoded_content_shortcut_list, mixed_fc, batch_diff = \
+            emdnet_mixer_non_adain(generator_device=generator_device,
+                                   reuse=reuse, scope=scope, initializer=initializer,
+                                   weight_decay=weight_decay, weight_decay_rate=weight_decay_rate,
+                                   encoded_content_final=encoded_content_final,
+                                   content_shortcut_interface=content_shortcut_interface,
+                                   encoded_style_final=encoded_style_final)
+    else:
+        valid_encoded_content_shortcut_list, mixed_fc, batch_diff = \
+            emdnet_mixer_with_adain(generator_device=generator_device,
+                                    reuse=reuse, scope=scope, initializer=initializer,
+                                    weight_decay=weight_decay, weight_decay_rate=weight_decay_rate,
+                                    encoded_content_final=encoded_content_final,
+                                    content_shortcut_interface=content_shortcut_interface,
+                                    encoded_style_final=encoded_style_final)
+
+
+
+
+    # decoder part
+    img_width = int(content_prototype.shape[1])
+    img_filters = int(int(content_prototype.shape[3]) / content_prototype_number)
+    generated_img, decoder_full_feature_list, _ = \
+        emdnet_decoder_framework(encoded_layer_list=valid_encoded_content_shortcut_list,
+                                 decoder_input_org=mixed_fc,
+                                 is_training=is_training,
+                                 output_width=img_width,
+                                 output_filters=img_filters,
+                                 batch_size=batch_size,
+                                 decoder_device=generator_device,
+                                 scope=scope + '/decoder',
+                                 reuse=reuse,
+                                 weight_decay=weight_decay,
+                                 initializer=initializer,
+                                 weight_decay_rate=weight_decay_rate,
+                                 adain_use=adain_use)
+
+    return_str = ("Emd-Net-GeneratorEncoderDecoder %d Layers"
+                  % (int(np.floor(math.log(int(content_prototype[0].shape[1])) / math.log(2)))))
+
+
+    return generated_img, encoded_content_final, encoded_style_final, return_str, \
+           batch_diff, -1, \
+           content_full_feature_list, style_full_feature_list, decoder_full_feature_list
+
+
+
 
 def WNet_Generator(content_prototype,
                    style_reference,
@@ -609,12 +911,13 @@ def WNet_Generator(content_prototype,
                    scope,
                    initializer,
                    weight_decay, weight_decay_rate,
-                   style_input_number,
-                   content_prototype_number,
                    reuse=False,
                    adain_use=False,
                    adain_preparation_model=None,
                    debug_mode=True):
+
+    style_input_number = len(style_reference)
+    content_prototype_number = int(content_prototype.shape[3])
 
     # content prototype encoder part
     encoded_content_final, content_short_cut_interface, content_residual_interface, content_full_feature_list, _ = \
@@ -682,7 +985,7 @@ def WNet_Generator(content_prototype,
                                      adain_preparation_model=adain_preparation_model)
 
 
-    return_str = ("GeneratorEncoderDecoder %d Layers with %d ResidualBlocks connecting %d-th layer"
+    return_str = ("W-Net-GeneratorEncoderDecoder %d Layers with %d ResidualBlocks connecting %d-th layer"
                   % (int(np.floor(math.log(int(content_prototype[0].shape[1])) / math.log(2))),
                      residual_block_num,
                      residual_at_layer))
@@ -691,18 +994,19 @@ def WNet_Generator(content_prototype,
     img_width = int(content_prototype.shape[1])
     img_filters = int(int(content_prototype.shape[3]) / content_prototype_number)
     generated_img,decoder_full_feature_list, _ = \
-        decoder_framework(encoded_layer_list=encoded_layer_list,
-                          is_training=is_training,
-                          output_width=img_width,
-                          output_filters=img_filters,
-                          batch_size=batch_size,
-                          decoder_device=generator_device,
-                          scope=scope+'/decoder',
-                          reuse=reuse,
-                          weight_decay=weight_decay,
-                          initializer=initializer,
-                          weight_decay_rate=weight_decay_rate,
-                          adain_use=adain_use)
+        wnet_decoder_framework(encoded_layer_list=encoded_layer_list,
+                               decoder_input_org=encoded_layer_list[0],
+                               is_training=is_training,
+                               output_width=img_width,
+                               output_filters=img_filters,
+                               batch_size=batch_size,
+                               decoder_device=generator_device,
+                               scope=scope+'/decoder',
+                               reuse=reuse,
+                               weight_decay=weight_decay,
+                               initializer=initializer,
+                               weight_decay_rate=weight_decay_rate,
+                               adain_use=adain_use)
 
     return generated_img, encoded_content_final, encoded_style_final, return_str, \
            style_shortcut_batch_diff, style_residual_batch_diff, \
@@ -721,7 +1025,7 @@ def discriminator_mdy_6_convs(image,
                               reuse=False):
     return_str = ("Discriminator-6Convs")
     return_str = "WST-" + return_str + "-Crc:%d" % critic_length
-    discriminator_dim=32
+
 
     with tf.variable_scope(scope):
         if reuse:

@@ -215,7 +215,7 @@ def train_procedures(args_input):
         with tf.device(run_device):
 
             model_id, \
-            ckpt_variables_dir, ckpt_framework_dir,\
+            ckpt_variables_dir, ckpt_framework_dir, \
             log_dir = get_model_id_and_create_dirs(experiment_id=experiment_id,
                                                    experiment_dir=experiment_dir,
                                                    log_dir=args_input.log_dir,
@@ -240,9 +240,9 @@ def train_procedures(args_input):
                 with tf.device(run_device):
 
 
-                    merged_loss_summary, loss_optimization,\
-                    label0_loss_ce,label1_loss_ce,label0_loss_ct,label1_loss_ct,\
-                        input_handle,center_update_op, center_vars\
+                    merged_loss_summary, loss_optimization, \
+                    label0_loss_ce,label1_loss_ce,label0_loss_ct,label1_loss_ct, \
+                    input_handle,center_update_op, center_vars \
                         = build_model(batch_size=batch_size,
                                       learning_rate=learning_rate,
                                       input_filters=args_input.image_filters,
@@ -256,9 +256,9 @@ def train_procedures(args_input):
 
                     train_acry_summary, test_acry_summary, \
                     train_enpy_summary, test_enpy_summary, \
-                    acry_0_lgt, acry_1_lgt,\
-                    label0_acry,label1_acry,label0_enpy,label1_enpy,\
-                        eval_handle= \
+                    acry_0_lgt, acry_1_lgt, \
+                    label0_acry,label1_acry,label0_enpy,label1_enpy, \
+                    eval_handle= \
                         network_inference(batch_size=batch_size,
                                           logits_length_label1=len(data_provider.label1_vec),
                                           logits_length_label0=len(data_provider.label0_vec),
@@ -424,7 +424,7 @@ def train_procedures(args_input):
                     this_itr_start = time.time()
 
                     read_data_start = time.time()
-                    batch_images_train, batch_label1_labels_train,batch_label0_labels_train\
+                    batch_images_train, batch_label1_labels_train,batch_label0_labels_train \
                         = data_provider.train.get_next_batch(sess=sess,
                                                              augment=args_input.augment,
                                                              augment_for_flip=args_input.augnemt_for_flip)
@@ -512,7 +512,7 @@ def train_procedures(args_input):
                             data_provider.epoch * data_provider.iters_for_each_epoch) * 100
                         percentage_to_be_fulfilled = 100 - percentage_completed
                         hrs_estimated_remaining = (float(passed_full) / (
-                            percentage_completed + eps)) * percentage_to_be_fulfilled / 3600
+                                percentage_completed + eps)) * percentage_to_be_fulfilled / 3600
                         print("CompletePctg:%.2f,TimeRemainingEstm:%.2fhrs(%.2fdays)" % (
                             percentage_completed, hrs_estimated_remaining,
                             hrs_estimated_remaining / 24))
@@ -531,8 +531,8 @@ def train_procedures(args_input):
                                                                    involved_label_list=data_provider.label0_vec)
 
 
-                        test_accuracy_label1,test_accuracy_label0,\
-                        test_entropy_label1,test_entropy_label0,\
+                        test_accuracy_label1,test_accuracy_label0, \
+                        test_entropy_label1,test_entropy_label0, \
                         accuracy_summary_test_output,entropy_summary_test_output = \
                             sess.run([label1_acry,label0_acry,
                                       label1_enpy,label0_enpy,
@@ -569,11 +569,11 @@ def train_procedures(args_input):
                         merged_batch_train_val_img = np.concatenate([merged_batch_train_img, merged_batch_val_img], axis=1)
                         batch_train_val_image_summary_output=sess.run(batch_train_val_image_summary,
                                                                       feed_dict={batch_train_val_image:
-                                                                                 np.reshape(merged_batch_train_val_img,
-                                                                                            (1,
-                                                                                             merged_batch_train_val_img.shape[0],
-                                                                                             merged_batch_train_val_img.shape[1],
-                                                                                             merged_batch_train_val_img.shape[2]))})
+                                                                                     np.reshape(merged_batch_train_val_img,
+                                                                                                (1,
+                                                                                                 merged_batch_train_val_img.shape[0],
+                                                                                                 merged_batch_train_val_img.shape[1],
+                                                                                                 merged_batch_train_val_img.shape[2]))})
                         summary_writer.add_summary(batch_train_val_image_summary_output, global_step.eval(session=sess))
                         summary_writer.flush()
 
@@ -741,13 +741,13 @@ def network_inference(batch_size,
     merged_enpy_train_summary = tf.summary.merge([enpy_train_label0_summary,enpy_train_label1_summary])
     merged_enpy_test_summary = tf.summary.merge([enpy_test_label0_summary,enpy_test_label1_summary])
 
-    return merged_acry_train_summary,\
+    return merged_acry_train_summary, \
            merged_acry_test_summary, \
            merged_enpy_train_summary, \
-           merged_enpy_test_summary,\
-           batch_label0_logits,\
-           batch_label1_logits,\
-           accuracy_label0,\
+           merged_enpy_test_summary, \
+           batch_label0_logits, \
+           batch_label1_logits, \
+           accuracy_label0, \
            accuracy_label1, \
            entropy_label0, \
            entropy_label1, \
@@ -852,7 +852,7 @@ def check_class_centralization(sess,
         if time.time()-print_info_start > print_info_secs or ii == 0 or ii ==iter_num-1:
             print_info_start=time.time()
             print("CheckingCentralization:Eval@Epoch:%d,Iter:%d/%d,Elps:%.3f" % (
-            ei, ii + 1, iter_num,  time.time() - time_start))
+                ei, ii + 1, iter_num,  time.time() - time_start))
     print(print_separater)
 
     intra2inter_for_training_list=list()
@@ -1054,8 +1054,8 @@ def build_model(batch_size,learning_rate,
 
 
     batch_label1_labels = tf.placeholder(tf.float32,
-                                  [batch_size, logits_length_label1],
-                                  name='batch_label1_train')
+                                         [batch_size, logits_length_label1],
+                                         name='batch_label1_train')
 
     batch_label0_labels = tf.placeholder(tf.float32,
                                          [batch_size, logits_length_label0],
@@ -1143,8 +1143,8 @@ def build_model(batch_size,learning_rate,
         loss_optimization = loss_optimization + weight_decay_loss
         merged_loss_summary = tf.summary.merge([merged_loss_summary,weight_decay_loss_summary])
 
-    return merged_loss_summary,loss_optimization,\
-           cross_entropy_label0_avg,cross_entropy_label1_avg,center_loss_label0,center_loss_label1,\
+    return merged_loss_summary,loss_optimization, \
+           cross_entropy_label0_avg,cross_entropy_label1_avg,center_loss_label0,center_loss_label1, \
            current_input_handle,center_update_op,center_vars
 
 
