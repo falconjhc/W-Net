@@ -22,53 +22,53 @@ print_separater = "#############################################################
 
 
 input_args = [
-              '--targeted_content_input_txt',
+    '--targeted_content_input_txt',
     # '../ContentTxt/过秦论_繁体_220.txt',
     #'../ContentTxt/大韩民国爱国歌_140.txt',
     '../ContentTxt/韩_64.txt',
     #'../ContentTxt/终战诏书_230.txt',
-    
 
-    		  '--save_mode','7:8',
-              '--adain_use','0',
 
-    		  '--known_style_img_path',
+    '--save_mode','7:8',
+    '--adain_use','0',
+
+    '--known_style_img_path',
     '../StyleExamples/Brush3.jpeg',            # input a image with multiple written chars
     #'../FontFiles/TTTGB-Medium.ttf', # input a ttf / otf file to generate printed chars
     # '../StyleExamples/PrintedSamples',  # input a image directory with multiple single chars
 
-              '--content_data_dir', # standard data location
+    '--content_data_dir', # standard data location
     #'../FontFiles/HeiTi_Chinese.ttf',
     '../FontFiles/HeiTi_Korean.ttf',
     #'../FontFiles/HeiTi_Jap1.otf',
 
 
-  ####################################################################
-  ####################################################################
-  #################### DO NOT TOUCH BELOW ############################
-  ####################################################################
-  ####################################################################
+    ####################################################################
+    ####################################################################
+    #################### DO NOT TOUCH BELOW ############################
+    ####################################################################
+    ####################################################################
 
-              '--save_path',
+    '--save_path',
     '../../GeneratedChars/'+ time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
-              
-    		      '--debug_mode','0',
-              '--style_input_number','4',
 
-              '--file_list_txt_content',  'N/A',
-              
-              '--channels','1',
-              '--img_width', '64',
+    '--debug_mode','0',
+    '--style_input_number','4',
 
-              '--generator_residual_at_layer','3',
-              '--generator_residual_blocks','5',
+    '--file_list_txt_content',  'N/A',
 
-              '--generator_device','/device:GPU:0',
+    '--channels','1',
+    '--img_width', '64',
 
-              '--model_dir',
+    '--generator_residual_at_layer','3',
+    '--generator_residual_blocks','5',
+
+    '--generator_device','/device:GPU:0',
+
+    '--model_dir',
     'TrainedModels_WNet/Exp20181115_StylePf50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
 
-              ]
+    ]
 
 parser = argparse.ArgumentParser(description='Train')
 parser.add_argument('--debug_mode', dest='debug_mode',type=int,required=True)

@@ -13,50 +13,50 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
 input_args = [
 
-            #'--training_from_model_dir',
-            #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_FeatureExtractor/checkpoint/Exp20181017_FeatureExtractor_Style_HW300_vgg16net/variables',
+    #'--training_from_model_dir',
+    #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_FeatureExtractor/checkpoint/Exp20181017_FeatureExtractor_Style_HW300_vgg16net/variables',
 
-            '--data_dir_train_path',
-      'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
-      'CASIA_Dataset/PrintedData/GB2312_L1/',
+    '--data_dir_train_path',
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
+    'CASIA_Dataset/PrintedData/GB2312_L1/',
 
-              '--data_dir_validation_path',
-	    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/,'
-      'CASIA_Dataset/PrintedData/GB2312_L1/',
+    '--data_dir_validation_path',
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/,'
+    'CASIA_Dataset/PrintedData/GB2312_L1/',
 
-              '--file_list_txt_train',
-      '../FileList/HandWritingData/Char_0_3754_Writer_1001_1300_Isolated.txt,'
-      '../FileList/PrintedData/Char_0_3754_Font_0_79_GB2312L1.txt',
+    '--file_list_txt_train',
+    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1300_Isolated.txt,'
+    '../FileList/PrintedData/Char_0_3754_Font_0_79_GB2312L1.txt',
 
 
-              '--file_list_txt_validation',
-	    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1300_Cursive.txt,'
-      '../FileList/PrintedData/Char_0_3754_Font_0_79_GB2312L1.txt',
+    '--file_list_txt_validation',
+    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1300_Cursive.txt,'
+    '../FileList/PrintedData/Char_0_3754_Font_0_79_GB2312L1.txt',
 
-              '--experiment_dir',
-            'tfModels_FeatureExtractor/',
+    '--experiment_dir',
+    'tfModels_FeatureExtractor/',
 
-              '--log_dir',
-              'tfLogs_FeatureExtractor/',
+    '--log_dir',
+    'tfLogs_FeatureExtractor/',
 
-              '--image_filters','1',
-              '--experiment_id','20181226_FeatureExtractor_Style_HW300Pf80',
-              '--train_resume_mode','1',
+    '--image_filters','1',
+    '--experiment_id','20181226_FeatureExtractor_Style_HW300Pf80',
+    '--train_resume_mode','1',
 
-              '--batch_size','16',
-              '--image_size','64',
-              '--epoch_num', '2500',
-              '--network', 'vgg16net',
-              '--init_lr','0.0001',
-              '--label0_loss','0',
-              '--label1_loss','1',
-              '--center_loss_penalty_rate','0',
+    '--batch_size','16',
+    '--image_size','64',
+    '--epoch_num', '2500',
+    '--network', 'vgg16net',
+    '--init_lr','0.0001',
+    '--label0_loss','0',
+    '--label1_loss','1',
+    '--center_loss_penalty_rate','0',
 
-              '--augment','1',
-              '--augnemt_for_flip','1',
+    '--augment','1',
+    '--augnemt_for_flip','1',
 
-              '--debug_mode','0',
-              '--cheat_mode','1']
+    '--debug_mode','0',
+    '--cheat_mode','1']
 
 
 parser = argparse.ArgumentParser(description='Train')
@@ -134,4 +134,4 @@ for ii in range(len(args.data_dir_validation_path)):
     args.data_dir_validation_path[ii] = os.path.join(data_path_root,args.data_dir_validation_path[ii])
 args.log_dir = os.path.join(model_log_path_root,args.log_dir)
 if __name__ == '__main__':
-  tf.app.run()
+    tf.app.run()

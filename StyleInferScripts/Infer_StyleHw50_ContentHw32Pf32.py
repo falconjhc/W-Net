@@ -22,53 +22,53 @@ print_separater = "#############################################################
 
 
 input_args = [
-              '--targeted_content_input_txt',
+    '--targeted_content_input_txt',
     '../ContentTxt/YW.txt',
-              '--save_mode','1:2',
-              '--adain_use','0',
+    '--save_mode','1:2',
+    '--adain_use','0',
 
-              '--known_style_img_path',
+    '--known_style_img_path',
     '../StyleExamples/YW2.jpeg',            # input a image with multiple written chars
     #'../FontFiles/TTTGB-Medium.ttf', # input a ttf / otf file to generate printed chars
     #'../StyleExamples/HandWritingSamples', # input a image directory with multiple single chars
 
 
 
-  ####################################################################
-  ####################################################################
-  #################### DO NOT TOUCH BELOW ############################
-  ####################################################################
-  ####################################################################
+    ####################################################################
+    ####################################################################
+    #################### DO NOT TOUCH BELOW ############################
+    ####################################################################
+    ####################################################################
 
-              '--save_path',
+    '--save_path',
     '../../GeneratedChars/'+ time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
 
-              '--debug_mode','0',
-              '--style_input_number','4',
+    '--debug_mode','0',
+    '--style_input_number','4',
 
-              '--content_data_dir', # standard data location
+    '--content_data_dir', # standard data location
     'CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/,'
     'CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/,'
     'CASIA_Dataset/PrintedData/',
 
-              '--file_list_txt_content',  # file list of the standard data
+    '--file_list_txt_content',  # file list of the standard data
     '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt,'
     '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt,'
     '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
-              
 
-              '--channels','1',
-              '--img_width', '64',
 
-              '--generator_residual_at_layer','3',
-              '--generator_residual_blocks','5',
+    '--channels','1',
+    '--img_width', '64',
 
-              '--generator_device','/device:GPU:0',
+    '--generator_residual_at_layer','3',
+    '--generator_residual_blocks','5',
 
-              '--model_dir',
+    '--generator_device','/device:GPU:0',
+
+    '--model_dir',
     'TrainedModels_WNet/Exp20181115_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
 
-              ]
+    ]
 
 parser = argparse.ArgumentParser(description='Train')
 parser.add_argument('--debug_mode', dest='debug_mode',type=int,required=True)

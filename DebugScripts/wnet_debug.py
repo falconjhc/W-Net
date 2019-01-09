@@ -22,88 +22,88 @@ model_log_path_root = '/DataA/Harric/ChineseCharacterExp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
-              '--debug_mode','1',
-              '--style_input_number','4', # how many style inputs
-              '--content_input_number_actual','3', # how many actual content inputs
-              '--init_training_epochs','1',
-              '--final_training_epochs','25',
-              '--adain_use','1-Multi',
+    '--debug_mode','1',
+    '--style_input_number','4', # how many style inputs
+    '--content_input_number_actual','3', # how many actual content inputs
+    '--init_training_epochs','1',
+    '--final_training_epochs','25',
+    '--adain_use','1-Multi',
 
-              '--generator_device','/device:GPU:0',
-              '--discriminator_device', '/device:GPU:0',
-              '--feature_extractor_device','/device:GPU:0',
+    '--generator_device','/device:GPU:0',
+    '--discriminator_device', '/device:GPU:0',
+    '--feature_extractor_device','/device:GPU:0',
 
 
-              '--train_data_augment','1', # translation? rotation?
-              '--train_data_augment_flip','1',
-              '--experiment_id','DEBUG',# experiment name prefix
-              '--experiment_dir','../../DEBUG', # model saving location
-              '--log_dir','DEBUG/',# log file saving location
-              '--print_info_seconds','3',
+    '--train_data_augment','1', # translation? rotation?
+    '--train_data_augment_flip','1',
+    '--experiment_id','DEBUG',# experiment name prefix
+    '--experiment_dir','../../DEBUG', # model saving location
+    '--log_dir','DEBUG/',# log file saving location
+    '--print_info_seconds','3',
 
-              '--content_data_dir', # standard data location
+    '--content_data_dir', # standard data location
     'CASIA_Dataset/StandardChars/GB2312_L1/,'
     'CASIA_Dataset/StandardChars/GB2312_L2/,'
     'CASIA_Dataset/PrintedData/',
 
-              '--style_train_data_dir', # training data location
+    '--style_train_data_dir', # training data location
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/',
 
-              '--style_validation_data_dir',# validation data location
+    '--style_validation_data_dir',# validation data location
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
-              '--file_list_txt_content', # file list of the standard data
+    '--file_list_txt_content', # file list of the standard data
     '../FileList/StandardChars/Char_0_3754_GB2312L1.txt,'
     '../FileList/StandardChars/Char_3755_6762_GB2312L2.txt,'
     '../FileList/PrintedData/Char_0_3754_Font_Selected15_Printed_Fonts_GB2312L1.txt',
 
-              '--file_list_txt_style_train', # file list of the training data
+    '--file_list_txt_style_train', # file list of the training data
     '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt',
 
-              '--file_list_txt_style_validation', # file list of the validation data
+    '--file_list_txt_style_validation', # file list of the validation data
     '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Cursive.txt',
 
 
 
-              # generator && discriminator
-              '--generator_residual_at_layer','3',
-              '--generator_residual_blocks','1',
-              '--discriminator','DisMdy6conv',
+    # generator && discriminator
+    '--generator_residual_at_layer','3',
+    '--generator_residual_blocks','1',
+    '--discriminator','DisMdy6conv',
 
-              '--batch_size','8',
-              '--img_width','64',
-              '--channels','1',
+    '--batch_size','8',
+    '--img_width','64',
+    '--channels','1',
 
-              # optimizer parameters
-              '--init_lr','0.0001',
-              '--epoch','50',
-              '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
+    # optimizer parameters
+    '--init_lr','0.0001',
+    '--epoch','50',
+    '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
 
-              '--optimization_method','adam',
-              '--final_learning_rate_pctg','0.01',
+    '--optimization_method','adam',
+    '--final_learning_rate_pctg','0.01',
 
 
-              # penalties
-              '--generator_weight_decay_penalty','0.0001',
-              '--discriminator_weight_decay_penalty','0.0003',
-              '--Pixel_Reconstruction_Penalty','5',
-              '--Lconst_content_Penalty','5',
-              '--Lconst_style_Penalty','3',
-              '--Discriminative_Penalty', '3',
-              '--Discriminator_Categorical_Penalty', '1',
-              '--Discriminator_Gradient_Penalty', '10',
-              '--Batch_StyleFeature_Discrimination_Penalty','10',
+    # penalties
+    '--generator_weight_decay_penalty','0.0001',
+    '--discriminator_weight_decay_penalty','0.0003',
+    '--Pixel_Reconstruction_Penalty','5',
+    '--Lconst_content_Penalty','5',
+    '--Lconst_style_Penalty','3',
+    '--Discriminative_Penalty', '3',
+    '--Discriminator_Categorical_Penalty', '1',
+    '--Discriminator_Gradient_Penalty', '10',
+    '--Batch_StyleFeature_Discrimination_Penalty','10',
 
-              # feature extractor parametrers
-              '--true_fake_target_extractor_dir',
+    # feature extractor parametrers
+    '--true_fake_target_extractor_dir',
     'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181010_FeatureExtractor_ContentStyle_HW50_vgg16net/variables/',
-              '--content_prototype_extractor_dir',
+    '--content_prototype_extractor_dir',
     'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
-              '--style_reference_extractor_dir',
+    '--style_reference_extractor_dir',
     'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_HW50_vgg16net/variables/',
-    		  '--Feature_Penalty_True_Fake_Target', '1',
-              '--Feature_Penalty_Style_Reference','1',
-              '--Feature_Penalty_Content_Prototype','1']
+    '--Feature_Penalty_True_Fake_Target', '1',
+    '--Feature_Penalty_Style_Reference','1',
+    '--Feature_Penalty_Content_Prototype','1']
 
 
 
@@ -275,7 +275,7 @@ def main(_):
 
     model = WNET(debug_mode=args.debug_mode,
                  print_info_seconds=args.print_info_seconds,
-                 experiment_dir=args.experiment_dir, 
+                 experiment_dir=args.experiment_dir,
                  experiment_id=args.experiment_id,
                  log_dir=os.path.join(model_log_path_root, args.log_dir),
                  training_from_model=args.training_from_model_dir,
