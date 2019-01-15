@@ -37,7 +37,7 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','20190108-NonAdaIN_StyleHw50_ContentPfStd1-Flip',# experiment name prefix
+    '--experiment_id','20190108-NonAdaIN_StyleHw50_ContentPfStd1',# experiment name prefix
     '--experiment_dir','tfModels_WNet/', # model saving location
     '--log_dir','tfLogsNew_WNet_Hw50/',# log file saving location
     '--print_info_seconds','750',
@@ -84,10 +84,10 @@ input_args = [
     # penalties
     '--generator_weight_decay_penalty','0.0001',
     '--discriminator_weight_decay_penalty','0.0003',
-    '--Pixel_Reconstruction_Penalty','750',
+    '--Pixel_Reconstruction_Penalty','850',
     '--Lconst_content_Penalty','3',
     '--Lconst_style_Penalty','5',
-    '--Discriminative_Penalty', '150',
+    '--Discriminative_Penalty', '125',
 
     '--Discriminator_Categorical_Penalty', '75',
     '--Discriminator_Gradient_Penalty', '10',
@@ -102,9 +102,9 @@ input_args = [
     '--style_reference_extractor_dir',
     'tfModels_FeatureExtractor/checkpoint/Exp20181226_FeatureExtractor_Style_HW300Pf80_vgg16net/variables/',
 
-    '--Feature_Penalty_True_Fake_Target', '650',
-    '--Feature_Penalty_Style_Reference','5',
-    '--Feature_Penalty_Content_Prototype','2']
+    '--Feature_Penalty_True_Fake_Target', '750',
+    '--Feature_Penalty_Style_Reference','1',
+    '--Feature_Penalty_Content_Prototype','1']
 
 
 

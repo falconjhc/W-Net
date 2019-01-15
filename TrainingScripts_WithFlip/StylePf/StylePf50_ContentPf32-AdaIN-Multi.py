@@ -39,7 +39,7 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','20190108-AdaIN-Multi_StylePf50_ContentPf32-Flip',# experiment name prefix
+    '--experiment_id','20190108-AdaIN-Multi_StylePf50_ContentPf32',# experiment name prefix
     '--experiment_dir','tfModels_WNet/', # model saving location
     '--log_dir','tfLogsNew_WNet_Pf50/',# log file saving location
     '--print_info_seconds','750',
@@ -87,7 +87,7 @@ input_args = [
     '--Pixel_Reconstruction_Penalty','750',
     '--Lconst_content_Penalty','3',
     '--Lconst_style_Penalty','5',
-    '--Discriminative_Penalty', '50',
+    '--Discriminative_Penalty', '125',
     '--Discriminator_Categorical_Penalty', '50',
     '--Discriminator_Gradient_Penalty', '10',
     '--Batch_StyleFeature_Discrimination_Penalty','0',
@@ -102,8 +102,8 @@ input_args = [
     'tfModels_FeatureExtractor/checkpoint/Exp20181226_FeatureExtractor_Style_HW300Pf80_vgg16net/variables/',
 
     '--Feature_Penalty_True_Fake_Target', '800',
-    '--Feature_Penalty_Style_Reference','15',
-    '--Feature_Penalty_Content_Prototype','15']
+    '--Feature_Penalty_Style_Reference','1',
+    '--Feature_Penalty_Content_Prototype','1']
 
 
 
