@@ -13,7 +13,7 @@ from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/home/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
@@ -89,7 +89,7 @@ input_args = [
     # penalties
     '--generator_weight_decay_penalty','0.0001',
     '--discriminator_weight_decay_penalty','0.0003',
-    '--Pixel_Reconstruction_Penalty','750',
+    '--Pixel_Reconstruction_Penalty','850',
     '--Lconst_content_Penalty','3',
     '--Lconst_style_Penalty','5',
     '--Discriminative_Penalty', '150',
@@ -108,8 +108,8 @@ input_args = [
     'tfModels_FeatureExtractor/checkpoint/Exp20181226_FeatureExtractor_Style_HW300Pf80_vgg16net/variables/',
 
     '--Feature_Penalty_True_Fake_Target', '550',
-    '--Feature_Penalty_Style_Reference','5',
-    '--Feature_Penalty_Content_Prototype','2']
+    '--Feature_Penalty_Style_Reference','1',
+    '--Feature_Penalty_Content_Prototype','1']
 
 
 

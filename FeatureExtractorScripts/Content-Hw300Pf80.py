@@ -43,7 +43,7 @@ input_args = [
     '--experiment_id','20190106_FeatureExtractor_Content_HW300Pf80',
     '--train_resume_mode','1',
 
-    '--batch_size','16',
+    '--batch_size','64',
     '--image_size','64',
     '--epoch_num', '2500',
     '--network', 'vgg16net',

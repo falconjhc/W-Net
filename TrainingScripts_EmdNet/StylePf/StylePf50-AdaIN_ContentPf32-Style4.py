@@ -35,7 +35,7 @@ input_args = [
 
 
     '--train_data_augment','1', # translation? rotation?
-    '--train_data_augment_flip','0',
+    '--train_data_augment_flip','1',
     '--experiment_id','20190109-EmdNet-Style4-AdaIN_StylePf50_ContentPf32',# experiment name prefix
     '--experiment_dir','tfModels_EmdNet/', # model saving location
     '--log_dir','tfLogsNew_EmdNet_Pf50/',# log file saving location
