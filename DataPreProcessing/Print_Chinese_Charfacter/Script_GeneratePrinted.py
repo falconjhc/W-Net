@@ -26,37 +26,18 @@ KR_CHARSET = None
 
 
 
-input_args = ['--dst_font_dir','/data/Harric/CASIA_Sources/PrintedSources/80_PF/',
-              '--src_font','../standard_font.ttf',
-              '--paired_img_dir_256','/data/Harric/CASIA_256/PrintedData/PairChars/',
-              '--single_img_dir_256', '/data/Harric/CASIA_256/PrintedData/SingleChars/',
-              '--paired_img_dir_128', '/data/Harric/CASIA_128/PrintedData/PairChars/',
-              '--single_img_dir_128', '/data/Harric/CASIA_128/PrintedData/SingleChars/',
-              '--paired_img_dir_64', '/data/Harric/CASIA_64/PrintedData/PairChars/',
-              '--single_img_dir_64', '/data/Harric/CASIA_64/PrintedData/SingleChars/'
+input_args = ['--dst_font_dir','/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/Sources/64_FoundContentPrototypeTtfOtfs/Simplified/',
+              '--single_img_dir', '/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/PrintedData_64Fonts/'
               ]
 
-
-
-
 parser = argparse.ArgumentParser(description='Convert font to images')
-parser.add_argument('--src_font', dest='src_font', required=True, help='path of the source font')
-
 
 parser.add_argument('--dst_font_dir', dest='dst_font_dir', required=True, help='path of the target font dir')
-
 parser.add_argument('--char_size', dest='char_size', type=int, default=150, help='character size')
 parser.add_argument('--canvas_size', dest='canvas_size', type=int, default=256, help='canvas size')
 parser.add_argument('--x_offset', dest='x_offset', type=int, default=20, help='x offset')
 parser.add_argument('--y_offset', dest='y_offset', type=int, default=20, help='y_offset')
-
-
-parser.add_argument('--paired_img_dir_256', dest='paired_img_dir_256', required=True,help='directory to save paired imgs')
-parser.add_argument('--single_img_dir_256', dest='single_img_dir_256', required=True,help='directory to save paired imgs')
-parser.add_argument('--paired_img_dir_128', dest='paired_img_dir_128', required=True,help='directory to save paired imgs')
-parser.add_argument('--single_img_dir_128', dest='single_img_dir_128', required=True,help='directory to save paired imgs')
-parser.add_argument('--paired_img_dir_64', dest='paired_img_dir_64', required=True,help='directory to save paired imgs')
-parser.add_argument('--single_img_dir_64', dest='single_img_dir_64', required=True,help='directory to save paired imgs')
+parser.add_argument('--single_img_dir', dest='single_img_dir', required=True,help='directory to save paired imgs')
 
 args = parser.parse_args(input_args)
 
@@ -66,7 +47,7 @@ args = parser.parse_args(input_args)
 
 
 
-def draw_example(ch, src_font, dst_font, canvas_size, x_offset, y_offset):
+def draw_example(ch, dst_font, canvas_size, x_offset, y_offset):
     def draw_single_char(ch, font, canvas_size, x_offset, y_offset):
         img = Image.new("RGB", (canvas_size, canvas_size), (255, 255, 255))
         draw = ImageDraw.Draw(img)
@@ -156,88 +137,39 @@ def draw_example(ch, src_font, dst_font, canvas_size, x_offset, y_offset):
 
 
     dst_img = draw_single_char(ch, dst_font, canvas_size, x_offset, y_offset)
-    src_img = draw_single_char(ch, src_font, canvas_size, x_offset, y_offset)
 
     invalid_img = (np.max(dst_img) == np.min(dst_img))
 
-
-    example_img = Image.new("RGB", (canvas_size * 2, canvas_size), (255, 255, 255))
-    example_img.paste(dst_img, (0, 0))
-    example_img.paste(src_img, (canvas_size, 0))
-    return example_img,dst_img,invalid_img
+    return dst_img,invalid_img
 
 
 
 
 def font2img(charset,
              character_label_list,
-             src,
              dst,
              char_size,
              canvas_size,
              x_offset,
              y_offset,
-             pair_save_dir_256,
-             single_save_dir_256,
-             pair_save_dir_128,
-             single_save_dir_128,
-             pair_save_dir_64,
-             single_save_dir_64,
-             pair_label=0):
-    src_font = ImageFont.truetype(src, size=char_size)
+             single_save_dir,
+             font_label=0):
     dst_font = ImageFont.truetype(dst, size=char_size)
 
-    
-
-
-
-    current_pair_dir = ("Font_Pair_No_%04d" % pair_label)
-    current_single_dir = ("Font_No_%04d" % pair_label)
-
-    current_pair_dir_256 = os.path.join(pair_save_dir_256,current_pair_dir)
-    if not os.path.exists(current_pair_dir_256):
-        os.makedirs(current_pair_dir_256)
-    current_single_dir_256 = os.path.join(single_save_dir_256, current_single_dir)
-    if not os.path.exists(current_single_dir_256):
-        os.makedirs(current_single_dir_256)
-
-    current_pair_dir_128 = os.path.join(pair_save_dir_128, current_pair_dir)
-    if not os.path.exists(current_pair_dir_128):
-        os.makedirs(current_pair_dir_128)
-    current_single_dir_128 = os.path.join(single_save_dir_128, current_single_dir)
-    if not os.path.exists(current_single_dir_128):
-        os.makedirs(current_single_dir_128)
-
-    current_pair_dir_64 = os.path.join(pair_save_dir_64, current_pair_dir)
-    if not os.path.exists(current_pair_dir_64):
-        os.makedirs(current_pair_dir_64)
-    current_single_dir_64 = os.path.join(single_save_dir_64, current_single_dir)
-    if not os.path.exists(current_single_dir_64):
-        os.makedirs(current_single_dir_64)
-
-
+    if not os.path.exists(single_save_dir):
+        os.makedirs(single_save_dir)
 
     count = 0
 
     for c in charset:
 
-
         if count == len(charset):
             break
-        pair_256, single_256, invalid_img = draw_example(c, src_font, dst_font, canvas_size, x_offset, y_offset)
-        if pair_256 and (not invalid_img):
-            pair_256.save(os.path.join(current_pair_dir_256, "%09d_%s_%05d.jpg" % (count, character_label_list[count],pair_label)))
-            single_256.save(os.path.join(current_single_dir_256, "%09d_%s_%05d.png" % (count,character_label_list[count], pair_label)))
+        single_256, invalid_img = draw_example(c, dst_font, canvas_size, x_offset, y_offset)
+        if single_256 and (not invalid_img):
 
-            pair_128 = pair_256.resize((256,128),Image.ANTIALIAS)
-            single_128 = single_256.resize((128,128),Image.ANTIALIAS)
-            pair_128.save(os.path.join(current_pair_dir_128,"%09d_%s_%05d.jpg" % (count, character_label_list[count], pair_label)))
-            single_128.save(os.path.join(current_single_dir_128,"%09d_%s_%05d.png" % (count, character_label_list[count], pair_label)))
-
-            pair_64 = pair_256.resize((128, 64), Image.ANTIALIAS)
             single_64 = single_256.resize((64, 64), Image.ANTIALIAS)
-            pair_64.save(os.path.join(current_pair_dir_64, "%09d_%s_%05d.jpg" % (count, character_label_list[count], pair_label)))
-            single_64.save(os.path.join(current_single_dir_64, "%09d_%s_%05d.png" % (count, character_label_list[count], pair_label)))
+            single_64.save(os.path.join(single_save_dir, "%09d_%s_%s.png" % (count, character_label_list[count], font_label)))
 
             count += 1
 
@@ -312,24 +244,6 @@ def find_file_list( path,train_mark):
     return file_list
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
 
     dir_serach_list=args.dst_font_dir.split(",")
@@ -354,26 +268,10 @@ if __name__ == "__main__":
     charset_level2, character_label_level2 = get_chars_set_from_level1_2(path='../charset/GB2312_Level_2.txt',level=2)
 
 
-    if os.path.exists(args.paired_img_dir_256):
-        shutil.rmtree(args.paired_img_dir_256)
-    if os.path.exists(args.single_img_dir_256):
-        shutil.rmtree(args.single_img_dir_256)
-    if os.path.exists(args.paired_img_dir_128):
-        shutil.rmtree(args.paired_img_dir_128)
-    if os.path.exists(args.single_img_dir_128):
-        shutil.rmtree(args.single_img_dir_128)
-    if os.path.exists(args.paired_img_dir_64):
-        shutil.rmtree(args.paired_img_dir_64)
-    if os.path.exists(args.single_img_dir_64):
-        shutil.rmtree(args.single_img_dir_64)
 
-
-    os.makedirs(args.paired_img_dir_256)
-    os.makedirs(args.single_img_dir_256)
-    os.makedirs(args.paired_img_dir_128)
-    os.makedirs(args.single_img_dir_128)
-    os.makedirs(args.paired_img_dir_64)
-    os.makedirs(args.single_img_dir_64)
+    if os.path.exists(args.single_img_dir):
+        shutil.rmtree(args.single_img_dir)
+    os.makedirs(args.single_img_dir)
 
 
 
@@ -384,35 +282,31 @@ if __name__ == "__main__":
 
         file_name=dst_file.split('/')
         file_name=file_name[len(file_name)-1]
-        pair_label=file_name.split('_')
-        pair_label=int(pair_label[0])
+        font_label=file_name.split('_')
+        font_label=str(font_label[0])
 
-        print("%s, Processing Font-->Pict:%d/%d with PairLabel:%04d" % (dst_file, font_counter, len(dst_file_list),pair_label))
+        current_save_dir_l1 = os.path.join(args.single_img_dir,'GB2312_L1')
+        current_save_dir_l2 = os.path.join(args.single_img_dir, 'GB2312_L2')
+        current_save_dir_l1 = os.path.join(current_save_dir_l1, font_label)
+        current_save_dir_l2 = os.path.join(current_save_dir_l2, font_label)
+
+
+
+        print("%s, Processing Font-->Pict:%d/%d with FontLabel:%s" % (dst_file, font_counter, len(dst_file_list),font_label))
 
         font2img(charset=charset_level1,
-                 character_label_list=character_label_level1,
-                 src=args.src_font, dst=dst_file,
+                 character_label_list=character_label_level1, dst=dst_file,
                  char_size=args.char_size,canvas_size=args.canvas_size,
                  x_offset=args.x_offset, y_offset=args.y_offset,
-                 pair_save_dir_256=os.path.join(args.paired_img_dir_256,'GB2312_L1'),
-                 single_save_dir_256=os.path.join(args.single_img_dir_256,'GB2312_L1'),
-                 pair_save_dir_128=os.path.join(args.paired_img_dir_128, 'GB2312_L1'),
-                 single_save_dir_128=os.path.join(args.single_img_dir_128, 'GB2312_L1'),
-                 pair_save_dir_64=os.path.join(args.paired_img_dir_64, 'GB2312_L1'),
-                 single_save_dir_64=os.path.join(args.single_img_dir_64, 'GB2312_L1'),
-                 pair_label=pair_label)
+                 single_save_dir=current_save_dir_l1,
+                 font_label=font_label)
         font2img(charset=charset_level2,
                  character_label_list=character_label_level2,
-                 src=args.src_font, dst=dst_file,
+                 dst=dst_file,
                  char_size=args.char_size,canvas_size=args.canvas_size,
                  x_offset=args.x_offset, y_offset=args.y_offset,
-                 pair_save_dir_256=os.path.join(args.paired_img_dir_256, 'GB2312_L2'),
-                 single_save_dir_256=os.path.join(args.single_img_dir_256, 'GB2312_L2'),
-                 pair_save_dir_128=os.path.join(args.paired_img_dir_128, 'GB2312_L2'),
-                 single_save_dir_128=os.path.join(args.single_img_dir_128, 'GB2312_L2'),
-                 pair_save_dir_64=os.path.join(args.paired_img_dir_64, 'GB2312_L2'),
-                 single_save_dir_64=os.path.join(args.single_img_dir_64, 'GB2312_L2'),
-                 pair_label=pair_label)
+                 single_save_dir=current_save_dir_l2,
+                 font_label=font_label)
 
         font_counter=font_counter+1
 

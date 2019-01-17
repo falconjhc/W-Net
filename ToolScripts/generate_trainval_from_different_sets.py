@@ -10,21 +10,20 @@ import numpy as np
 
 input_args = [
               # '--data_type','SINGLE', # 'SINGLE' or STANDARD'
-              # '--data_dir_path','/DataA/Harric/MSMC_Exp/CASIA_64/HandWritingData/CASIA-HWDB2.1/',
+              # '--data_dir_path','/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/HandWritingData/CASIA-HWDB2.1/',
               # '--file_write_path', '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt',
 
               '--data_type','SINGLE', # 'SINGLE' or STANDARD'
-              '--data_dir_path','/DataA/Harric/MSMC_Exp/CASIA_64/PrintedData/',
-              '--file_write_path', '../FileList/PrintedData/Char_0_3755_Font_Selected15_Printed_Fonts_GB2312L1.txt',
-
+              '--data_dir_path','/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/PrintedData_64Fonts/GB2312_L1/',
+              '--file_write_path', '../FileList/PrintedData/Char_0_3754_64PrintedFonts_GB2312L1.txt',
 
 
               # '--data_type','STANDARD', # 'SINGLE' OR 'PAIR or STANDARD'
-              # '--data_dir_path','/DataA/Harric/WNet_Exp/CASIA_64/StandardChars/GB2312_L1/',
+              # '--data_dir_path','/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/StandardChars/GB2312_L1/',
               # '--file_write_path', '../FileList/StandardChars/char_0_3754',
 
-              '--label0','0:1:3754',
-              '--label1','13,14,15,16,17,18,20,21,22,23,25,26,27,29,30']
+              '--label0','ALL',
+              '--label1','ALL']
 
 
 
@@ -44,8 +43,6 @@ parser.add_argument('--file_write_path', dest='file_write_path',type=str,require
 # find all the data with label0 / label1 with the give path
 # searching for all the dirs and subdirs
 def find_file_and_label_list_from_given_path(input_path, data_type,selected_label0,selected_label1):
-
-
     find_extension = 'png'
 
     if not selected_label0 == 'ALL':
@@ -62,8 +59,6 @@ def find_file_and_label_list_from_given_path(input_path, data_type,selected_labe
                 selected_label1_output.append(int(ii))
             selected_label1 = selected_label1_output
 
-
-
     data_list = []
     label0_list = []
     label1_list = []
@@ -71,8 +66,6 @@ def find_file_and_label_list_from_given_path(input_path, data_type,selected_labe
     for root, dirs, files in os.walk(input_path):
 
         if files:
-
-
 
             files.sort()
             for name in files:
@@ -87,9 +80,6 @@ def find_file_and_label_list_from_given_path(input_path, data_type,selected_labe
                     label1 = file_name.split("_")[2]
                     label1 = label1[0:label1.index('.')]
                     label1 = int(label1)
-
-                    if label1 == 1031 or label1 == 1032:
-                        a=1
 
                     label0 = file_name.split("_")[1]
                     character_id_1 = int(label0[0:3])
@@ -110,16 +100,10 @@ def find_file_and_label_list_from_given_path(input_path, data_type,selected_labe
                         record_char1=True
                     record_char = record_char0 and record_char1
 
-
-
-
-
                     if record_char:
                         label0_list.append(label0)
                         label1_list.append(label1)
                         data_list.append(os.path.join(root, name))
-
-
 
     label0_vec = np.unique(label0_list)
     label1_vec = np.unique(label1_list)
