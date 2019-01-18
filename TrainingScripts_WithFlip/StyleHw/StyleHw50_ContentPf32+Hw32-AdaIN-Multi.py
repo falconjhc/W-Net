@@ -37,7 +37,7 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','20190108-AdaIN-Multi_StyleHw50_ContentPf32+Hw32',# experiment name prefix
+    '--experiment_id','20190108-WNet-AdaIN-Multi_StyleHw50_ContentPf32+Hw32',# experiment name prefix
     '--experiment_dir','tfModels_WNet/', # model saving location
     '--log_dir','tfLogsNew_WNet_Hw50/',# log file saving location
     '--print_info_seconds','750',
@@ -106,7 +106,7 @@ input_args = [
     '--style_reference_extractor_dir',
     'tfModels_FeatureExtractor/checkpoint/Exp20181226_FeatureExtractor_Style_HW300Pf80_vgg16net/variables/',
 
-    '--Feature_Penalty_True_Fake_Target', '650',
+    '--Feature_Penalty_True_Fake_Target', '750',
     '--Feature_Penalty_Style_Reference','1',
     '--Feature_Penalty_Content_Prototype','1']
 

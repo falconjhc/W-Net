@@ -203,6 +203,7 @@ if __name__ == "__main__":
 
 
     font_counter=0
+    print("###########################################################################")
     for dst_file in dst_file_list:
 
         file_name=dst_file.split('/')
@@ -236,10 +237,13 @@ if __name__ == "__main__":
 
         dst_file_name = dst_file.split("/")[-1]
 
-        print("%s, ScanningFont:%d/%d: ValidL1_Smp:%d,InvalidL1_Smp:%d; ValidL2_Smp:%d,InvalidL2_Smp:%d;; ValidL1_Trd:%d,InvalidL1_Trd:%d; ValidL2_Trd:%d,InvalidL2_Trd:%d"
-              % (dst_file_name, font_counter, len(dst_file_list),
-                 valid_l1_simplified, invalid_l1_simplified, valid_l2_simplified, invalid_l2_simplified,
-                 valid_l1_traditional, invalid_l1_traditional, valid_l2_traditional, invalid_l2_traditional))
+        print("%s, ScanningFont:%d/%d: "
+              % (dst_file_name, font_counter, len(dst_file_list)))
+        print("ValidL1_Smp:%d,InvalidL1_Smp:%d; ValidL2_Smp:%d,InvalidL2_Smp:%d;" 
+            % (valid_l1_simplified, invalid_l1_simplified, valid_l2_simplified, invalid_l2_simplified))
+        print("ValidL1_Trd:%d,InvalidL1_Trd:%d; ValidL2_Trd:%d,InvalidL2_Trd:%d;" 
+            % (valid_l1_traditional, invalid_l1_traditional, valid_l2_traditional, invalid_l2_traditional))
+        print("###########################################################################")
 
 
 

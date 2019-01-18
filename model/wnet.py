@@ -167,7 +167,7 @@ class WNet(object):
             # self.adain_mark = '0'
             # self.adain_use = False
             # self.adain_preparation_model = None
-        else:
+        elif 'WNet' in experiment_id:
             self.generator_implementation = generator_dict['WNet']
 
         self.print_info_seconds=print_info_seconds
@@ -340,11 +340,17 @@ class WNet(object):
 
     def get_model_id_and_dir_for_train(self):
         encoder_decoder_layer_num = int(np.floor(math.log(self.img2img_width) / math.log(2)))
-        model_id = "Exp%s_GenEncDec%d-Res%d@Lyr%d_%s" % (self.experiment_id,
-                                                         encoder_decoder_layer_num,
-                                                         self.generator_residual_blocks,
-                                                         self.generator_residual_at_layer,
-                                                         self.discriminator)
+
+        if "WNet" in self.experiment_id:
+            model_id = "Exp%s_GenEncDec%d-Res%d@Lyr%d_%s" % (self.experiment_id,
+                                                             encoder_decoder_layer_num,
+                                                             self.generator_residual_blocks,
+                                                             self.generator_residual_at_layer,
+                                                             self.discriminator)
+        elif "Emd" in self.experiment_id:
+            model_id = "Exp%s_GenEncDec%d_%s" % (self.experiment_id,
+                                                 encoder_decoder_layer_num,
+                                                 self.discriminator)
 
         if self.random_content:
             model_id = model_id + "_Random%dContent" % self.content_input_number_actual
@@ -1178,7 +1184,7 @@ class WNet(object):
                 # encoded of the generated target on the style reference encoder
                 if 'Emd' in self.experiment_id:
                     tmp_input = tf.tile(generated_target_train,
-                                                          [1,1,1,self.style_input_number])
+                                        [1,1,1,self.style_input_number])
                 else:
                     tmp_input = generated_target_train
                 encoded_style_reference_generated_target = \

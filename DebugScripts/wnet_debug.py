@@ -24,7 +24,7 @@ model_log_path_root = '/DataA/Harric/ChineseCharacterExp/'
 input_args = [
     '--debug_mode','1',
     '--style_input_number','4', # how many style inputs
-    '--content_input_number_actual','3', # how many actual content inputs
+    # '--content_input_number_actual','3', # how many actual content inputs
     '--init_training_epochs','1',
     '--final_training_epochs','25',
     '--adain_use','1',
@@ -36,7 +36,7 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','DEBUG-Emd',# experiment name prefix
+    '--experiment_id','DEBUG-WNet',# experiment name prefix
     '--experiment_dir','../../DEBUG', # model saving location
     '--log_dir','DEBUG/',# log file saving location
     '--print_info_seconds','3',
