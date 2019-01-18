@@ -15,6 +15,7 @@ import shutil
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+from utilities.utils import image_show, image_revalue
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -53,7 +54,10 @@ def draw_example(ch, dst_font, canvas_size, x_offset, y_offset):
     def draw_single_char(ch, font, canvas_size, x_offset, y_offset):
         img = Image.new("RGB", (canvas_size, canvas_size), (255, 255, 255))
         draw = ImageDraw.Draw(img)
-        draw.text((x_offset, y_offset), ch, (0, 0, 0), font=font)
+        try:
+            draw.text((x_offset, y_offset), ch, (0, 0, 0), font=font)
+        except IOError:
+            return False
 
         img_matrix = np.asarray(img)[:, :, 0]
         if np.min(img_matrix) == np.max(img_matrix) or (0 not in img_matrix):
@@ -80,6 +84,8 @@ def font2img(charset,
     valid_counter = 0
     invalid_counter = 0
     for c in charset:
+
+
         if count == len(charset):
             break
         return_mark = draw_example(c, dst_font, canvas_size, x_offset, y_offset)
@@ -88,6 +94,7 @@ def font2img(charset,
             valid_counter+=1
         else:
             invalid_counter+=1
+        count += 1
     return valid_counter,invalid_counter
 
 
@@ -181,36 +188,55 @@ if __name__ == "__main__":
 
 
 
-    charset_level1, character_label_level1 = get_chars_set_from_level1_2(path='../charset/GB2312_Level_1.txt',level=1)
-    charset_level2, character_label_level2 = get_chars_set_from_level1_2(path='../charset/GB2312_Level_2.txt',level=2)
-
+    charset_level1_simplified, character_label_level1_simplified = \
+        get_chars_set_from_level1_2(path='../charset/GB2312_Level1_Simplified.txt',level=1)
+    charset_level2_simplified, character_label_level2_simplified = \
+        get_chars_set_from_level1_2(path='../charset/GB2312_Level2_Simplified.txt',level=2)
+    charset_level1_traditional, character_label_level1_traditional = \
+        get_chars_set_from_level1_2(path='../charset/GB2312_Level1_Traditional.txt', level=1)
+    charset_level2_traditional, character_label_level2_traditional = \
+        get_chars_set_from_level1_2(path='../charset/GB2312_Level2_Traditional.txt', level=2)
 
 
 
     font_counter=0
     for dst_file in dst_file_list:
 
-
         file_name=dst_file.split('/')
         file_name=file_name[len(file_name)-1]
 
-        valid_l1,invalid_l1= \
-            font2img(charset=charset_level1,
-                     character_label_list=character_label_level1, dst=dst_file,
+        valid_l1_simplified,invalid_l1_simplified= \
+            font2img(charset=charset_level1_simplified,
+                     character_label_list=character_label_level1_simplified, dst=dst_file,
                      char_size=args.char_size,canvas_size=args.canvas_size,
                      x_offset=args.x_offset, y_offset=args.y_offset)
-        valid_l2, invalid_l2 = \
-            font2img(charset=charset_level2,
-                     character_label_list=character_label_level2,
+        valid_l2_simplified, invalid_l2_simplified = \
+            font2img(charset=charset_level2_simplified,
+                     character_label_list=character_label_level2_simplified,
                      dst=dst_file,
                      char_size=args.char_size,canvas_size=args.canvas_size,
                      x_offset=args.x_offset, y_offset=args.y_offset)
 
+        valid_l1_traditional, invalid_l1_traditional = \
+            font2img(charset=charset_level1_traditional,
+                     character_label_list=character_label_level1_traditional, dst=dst_file,
+                     char_size=args.char_size, canvas_size=args.canvas_size,
+                     x_offset=args.x_offset, y_offset=args.y_offset)
+        valid_l2_traditional, invalid_l2_traditional = \
+            font2img(charset=charset_level2_traditional,
+                     character_label_list=character_label_level2_traditional,
+                     dst=dst_file,
+                     char_size=args.char_size, canvas_size=args.canvas_size,
+                     x_offset=args.x_offset, y_offset=args.y_offset)
+
         font_counter=font_counter+1
 
-        print("%s, ScanningFont:%d/%d: ValidL1:%d,InvalidL1:%d; ValidL2:%d,InvalidL2:%d"
-              % (dst_file, font_counter, len(dst_file_list),
-                 valid_l1, invalid_l1, valid_l2, invalid_l2))
+        dst_file_name = dst_file.split("/")[-1]
+
+        print("%s, ScanningFont:%d/%d: ValidL1_Sip:%d,InvalidL1_Sip:%d; ValidL2_Sip:%d,InvalidL2_Sip:%d;; ValidL1_Trd:%d,InvalidL1_Trd:%d; ValidL2_Trd:%d,InvalidL2_Trd:%d"
+              % (dst_file_name, font_counter, len(dst_file_list),
+                 valid_l1_simplified, invalid_l1_simplified, valid_l2_simplified, invalid_l2_simplified,
+                 valid_l1_traditional, invalid_l1_traditional, valid_l2_traditional, invalid_l2_traditional))
 
 
 
