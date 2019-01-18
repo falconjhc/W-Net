@@ -5,6 +5,9 @@ from __future__ import absolute_import
 import argparse
 import sys
 import os
+sys.path.append('..')
+sys.path.append('../../')
+
 
 
 import matplotlib.pyplot as plt
