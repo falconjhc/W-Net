@@ -1,18 +1,12 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import print_function
+
 GRAYSCALE_AVG = 127.5
 TINIEST_LR = 0.00005
 
-import matplotlib.pyplot as plt
-
-
-
 import sys
 sys.path.append('..')
-
-import copy as cp
-import random as rd
 
 import tensorflow as tf
 import numpy as np
@@ -25,16 +19,19 @@ from collections import namedtuple
 from dataset.dataset import DataProvider
 
 from utilities.utils import scale_back_for_img, scale_back_for_dif, merge, correct_ckpt_path
-from utilities.utils import image_show, image_revalue
-from model.gan_networks import discriminator_mdy_6_convs
+from model.discriminators import discriminator_mdy_6_convs
 
 
-from model.gan_networks import vgg_16_net as feature_extractor_network
+from model.vggs import vgg_16_net as feature_extractor_network
 
 
-from model.gan_networks import WNet_Generator as wnet_generator
-from model.gan_networks import EmdNet_Generator as emdnet_generator
-from model.gan_networks import encoder_framework as encoder_implementation
+from model.generators import WNet_Generator as wnet_generator
+from model.generators import EmdNet_Generator as emdnet_generator
+from model.generators import ResEmd_EmdNet_Generator as resemdnet_generator
+
+from model.generators import encoder_framework as encoder_implementation
+from model.generators import encoder_resemd_framework as encoder_ResEmd_framework
+
 
 
 import math
@@ -68,7 +65,11 @@ FeatureExtractorHandle = namedtuple("FeatureExtractor",
 
 discriminator_dict = {"DisMdy6conv": discriminator_mdy_6_convs}
 generator_dict = {"WNet": wnet_generator,
-                  "EmdNet": emdnet_generator}
+                  "EmdNet": emdnet_generator,
+                  "ResEmdNet": resemdnet_generator}
+
+encoder_dict = {"Normal": encoder_implementation,
+                "ResEmdNet": encoder_ResEmd_framework}
 
 eps = 1e-9
 
@@ -161,7 +162,12 @@ class WNet(object):
             self.adain_preparation_model = None
 
         if 'Emd' in experiment_id:
-            self.generator_implementation = generator_dict['EmdNet']
+            if 'Res' in experiment_id:
+                self.generator_implementation=generator_dict['ResEmdNet']
+                self.encoder_implementation = encoder_dict['ResEmdNet']
+            else:
+                self.generator_implementation = generator_dict['EmdNet']
+                self.encoder_implementation = encoder_dict['Normal']
             self.generator_residual_at_layer = -1
             self.generator_residual_blocks = -1
             # self.adain_mark = '0'
@@ -169,6 +175,7 @@ class WNet(object):
             # self.adain_preparation_model = None
         elif 'WNet' in experiment_id:
             self.generator_implementation = generator_dict['WNet']
+            self.encoder_implementation = encoder_dict['Normal']
 
         self.print_info_seconds=print_info_seconds
         self.discriminator_initialization_iters=25
@@ -1167,18 +1174,18 @@ class WNet(object):
 
                 # encoded of the generated target on the content prototype encoder
                 encoded_content_prototype_generated_target = \
-                    encoder_implementation(images=tf.tile(generated_target_train,
-                                                          [1,1,1,self.content_input_number_actual]),
-                                           is_training=True,
-                                           encoder_device=self.generator_devices,
-                                           residual_at_layer=self.generator_residual_at_layer,
-                                           residual_connection_mode='Multi',
-                                           scope=name_prefix+'/content_encoder',
-                                           reuse=True,
-                                           initializer=self.initializer,
-                                           weight_decay=False,
-                                           weight_decay_rate=self.generator_weight_decay_penalty,
-                                           adain_use=self.adain_use)[0]
+                    self.encoder_implementation(images=tf.tile(generated_target_train,
+                                                               [1,1,1,self.content_input_number_actual]),
+                                                is_training=True,
+                                                encoder_device=self.generator_devices,
+                                                residual_at_layer=self.generator_residual_at_layer,
+                                                residual_connection_mode='Multi',
+                                                scope=name_prefix+'/content_encoder',
+                                                reuse=True,
+                                                initializer=self.initializer,
+                                                weight_decay=False,
+                                                weight_decay_rate=self.generator_weight_decay_penalty,
+                                                adain_use=self.adain_use)[0]
 
 
                 # encoded of the generated target on the style reference encoder
@@ -1188,17 +1195,17 @@ class WNet(object):
                 else:
                     tmp_input = generated_target_train
                 encoded_style_reference_generated_target = \
-                    encoder_implementation(images=tmp_input,
-                                           is_training=True,
-                                           encoder_device=self.generator_devices,
-                                           residual_at_layer=self.generator_residual_at_layer,
-                                           residual_connection_mode='Single',
-                                           scope=name_prefix + '/style_encoder',
-                                           reuse=True,
-                                           initializer=self.initializer,
-                                           weight_decay=False,
-                                           weight_decay_rate=self.generator_weight_decay_penalty,
-                                           adain_use=self.adain_use)[0]
+                    self.encoder_implementation(images=tmp_input,
+                                                is_training=True,
+                                                encoder_device=self.generator_devices,
+                                                residual_at_layer=self.generator_residual_at_layer,
+                                                residual_connection_mode='Single',
+                                                scope=name_prefix + '/style_encoder',
+                                                reuse=True,
+                                                initializer=self.initializer,
+                                                weight_decay=False,
+                                                weight_decay_rate=self.generator_weight_decay_penalty,
+                                                adain_use=self.adain_use)[0]
 
 
                 # for inferring

@@ -7,26 +7,26 @@ from tensorflow.python.client import device_lib
 import argparse
 import sys
 import os
-sys.path.append('..')
+sys.path.append('../../')
 
 from model.wnet import WNet as WNET
 eps = 1e-9
 
 
+data_path_root = '/home/harric/ChineseCharacterExp/'
+model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
-data_path_root = '/DataA/Harric/ChineseCharacterExp/'
-model_log_path_root = '/DataA/Harric/ChineseCharacterExp/'
+# exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
 
 # OPTIONS SPECIFICATION
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
-    '--debug_mode','1',
-    '--style_input_number','4', # how many style inputs
-    # '--content_input_number_actual','3', # how many actual content inputs
+    '--debug_mode','0',
+    '--style_input_number','1', # how many style inputs
     '--init_training_epochs','1',
-    '--final_training_epochs','25',
+    '--final_training_epochs','1500',
     '--adain_use','1',
 
     '--generator_device','/device:GPU:0',
@@ -36,33 +36,28 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','DEBUG-EmdRes',# experiment name prefix
-    '--experiment_dir','../../DEBUG-Model', # model saving location
-    '--log_dir','DEBUG-Log/',# log file saving location
-    '--print_info_seconds','3',
+    '--experiment_id','20190118-ResEmdNet-Style1-AdaIN_StylePf50_ContentPf32',# experiment name prefix
+    '--experiment_dir','tfModels_EmdNet/', # model saving location
+    '--log_dir','tfLogsNew_EmdNet_Pf50/',# log file saving location
+    '--print_info_seconds','750',
 
     '--content_data_dir', # standard data location
-    'CASIA_Dataset/StandardChars/GB2312_L1/,'
-    'CASIA_Dataset/StandardChars/GB2312_L2/,'
-    'CASIA_Dataset/PrintedData_80Fonts/',
+    'CASIA_Dataset/PrintedData/',
 
     '--style_train_data_dir', # training data location
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/',
+    'CASIA_Dataset/PrintedData/GB2312_L1/',
 
     '--style_validation_data_dir',# validation data location
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
+    'CASIA_Dataset/PrintedData/GB2312_L1/',
 
     '--file_list_txt_content', # file list of the standard data
-    '../FileList/StandardChars/Char_0_3754_GB2312L1.txt,'
-    '../FileList/StandardChars/Char_3755_6762_GB2312L2.txt,'
-    '../FileList/PrintedData/Char_0_3754_Font_Selected15_Printed_Fonts_GB2312L1.txt',
+    '../../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
 
     '--file_list_txt_style_train', # file list of the training data
-    '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt',
+    '../../FileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1.txt',
 
     '--file_list_txt_style_validation', # file list of the validation data
-    '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Cursive.txt',
-
+    '../../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt',
 
 
     # generator && discriminator
@@ -70,13 +65,13 @@ input_args = [
     '--generator_residual_blocks','5',
     '--discriminator','DisMdy6conv',
 
-    '--batch_size','5',
+    '--batch_size','8',
     '--img_width','64',
     '--channels','1',
 
     # optimizer parameters
-    '--init_lr','0.0001',
-    '--epoch','50',
+    '--init_lr','0.0002',
+    '--epoch','5000',
     '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
 
     '--optimization_method','adam',
@@ -86,15 +81,17 @@ input_args = [
     # penalties
     '--generator_weight_decay_penalty','0.0001',
     '--discriminator_weight_decay_penalty','0.0003',
-    '--Pixel_Reconstruction_Penalty','5',
-    '--Lconst_content_Penalty','5',
-    '--Lconst_style_Penalty','3',
-    '--Discriminative_Penalty', '3',
-    '--Discriminator_Categorical_Penalty', '1',
+    '--Pixel_Reconstruction_Penalty','750',
+    '--Lconst_content_Penalty','3',
+    '--Lconst_style_Penalty','5',
+    '--Discriminative_Penalty', '50',
+    '--Discriminator_Categorical_Penalty', '50',
     '--Discriminator_Gradient_Penalty', '10',
-    '--Batch_StyleFeature_Discrimination_Penalty','10',
+    '--Batch_StyleFeature_Discrimination_Penalty','0',
+
 
     # feature extractor parametrers
+
     '--true_fake_target_extractor_dir',
     'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181010_FeatureExtractor_ContentStyle_PF50_vgg16net/variables/',
     '--content_prototype_extractor_dir',
@@ -102,9 +99,10 @@ input_args = [
     '--style_reference_extractor_dir',
     'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_PF50_vgg16net/variables/',
 
-    '--Feature_Penalty_True_Fake_Target', '1',
-    '--Feature_Penalty_Style_Reference','1',
-    '--Feature_Penalty_Content_Prototype','1']
+    '--Feature_Penalty_True_Fake_Target', '800',
+    '--Feature_Penalty_Style_Reference','15',
+    '--Feature_Penalty_Content_Prototype','15']
+
 
 
 
@@ -117,7 +115,6 @@ parser.add_argument('--print_info_seconds', dest='print_info_seconds',type=int,r
 parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)
 parser.add_argument('--content_input_number_actual', dest='content_input_number_actual',type=int, default=0)
 parser.add_argument('--adain_use', dest='adain_use',type=str, default=None)
-
 
 
 # directories setting
@@ -276,7 +273,7 @@ def main(_):
 
     model = WNET(debug_mode=args.debug_mode,
                  print_info_seconds=args.print_info_seconds,
-                 experiment_dir=args.experiment_dir,
+                 experiment_dir=os.path.join(model_log_path_root, args.experiment_dir),
                  experiment_id=args.experiment_id,
                  log_dir=os.path.join(model_log_path_root, args.log_dir),
                  training_from_model=args.training_from_model_dir,
@@ -306,7 +303,6 @@ def main(_):
                  Lconst_style_Penalty=args.Lconst_style_Penalty,
                  Discriminative_Penalty=args.Discriminative_Penalty,
                  Discriminator_Categorical_Penalty=args.Discriminator_Categorical_Penalty,
-
                  Discriminator_Gradient_Penalty=args.Discriminator_Gradient_Penalty,
                  generator_weight_decay_penalty=args.generator_weight_decay_penalty,
                  discriminator_weight_decay_penalty=args.discriminator_weight_decay_penalty,
