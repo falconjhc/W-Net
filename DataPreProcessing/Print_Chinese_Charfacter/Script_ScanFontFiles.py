@@ -236,7 +236,7 @@ if __name__ == "__main__":
 
         dst_file_name = dst_file.split("/")[-1]
 
-        print("%s, ScanningFont:%d/%d: ValidL1_Sip:%d,InvalidL1_Sip:%d; ValidL2_Sip:%d,InvalidL2_Sip:%d;; ValidL1_Trd:%d,InvalidL1_Trd:%d; ValidL2_Trd:%d,InvalidL2_Trd:%d"
+        print("%s, ScanningFont:%d/%d: ValidL1_Smp:%d,InvalidL1_Smp:%d; ValidL2_Smp:%d,InvalidL2_Smp:%d;; ValidL1_Trd:%d,InvalidL1_Trd:%d; ValidL2_Trd:%d,InvalidL2_Trd:%d"
               % (dst_file_name, font_counter, len(dst_file_list),
                  valid_l1_simplified, invalid_l1_simplified, valid_l2_simplified, invalid_l2_simplified,
                  valid_l1_traditional, invalid_l1_traditional, valid_l2_traditional, invalid_l2_traditional))
