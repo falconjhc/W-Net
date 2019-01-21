@@ -88,10 +88,10 @@ input_args = [
     # penalties
     '--generator_weight_decay_penalty','0.0001',
     '--discriminator_weight_decay_penalty','0.0003',
-    '--Pixel_Reconstruction_Penalty','750',
+    '--Pixel_Reconstruction_Penalty','850',
     '--Lconst_content_Penalty','3',
     '--Lconst_style_Penalty','5',
-    '--Discriminative_Penalty', '150',
+    '--Discriminative_Penalty', '125',
 
     '--Discriminator_Categorical_Penalty', '50',
     '--Discriminator_Gradient_Penalty', '10',
