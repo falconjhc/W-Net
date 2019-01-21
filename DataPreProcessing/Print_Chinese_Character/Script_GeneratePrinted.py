@@ -51,14 +51,19 @@ def draw_example(ch, dst_font, canvas_size, x_offset, y_offset):
     def draw_single_char(ch, font, canvas_size, x_offset, y_offset):
         img = Image.new("RGB", (canvas_size, canvas_size), (255, 255, 255))
         draw = ImageDraw.Draw(img)
-        draw.text((x_offset, y_offset), ch, (0, 0, 0), font=font)
+
+        try:
+            draw.text((x_offset, y_offset), ch, (0, 0, 0), font=font)
+        except IOError:
+            img_output = np.zeros(shape=[256, 256, 3])
+            img_output = Image.fromarray(np.uint8(img_output))
+            return img_output
 
         img_matrix = np.asarray(img)[:, :, 0]
         zero_indices = np.where(img_matrix == 0)
         exceed = 'NONE'
 
         if np.min(img_matrix) == np.max(img_matrix) or (0 not in img_matrix):
-
             img_output = np.zeros(shape=[256,256,3])
             img_output = Image.fromarray(np.uint8(img_output))
         else:
@@ -153,25 +158,32 @@ def font2img(charset,
              x_offset,
              y_offset,
              single_save_dir,
-             font_label=0):
+             font_label='0'):
     dst_font = ImageFont.truetype(dst, size=char_size)
 
     if not os.path.exists(single_save_dir):
         os.makedirs(single_save_dir)
 
     count = 0
+    valid_counter = 0
+    invalid_counter = 0
 
     for c in charset:
 
         if count == len(charset):
             break
+
+
         single_256, invalid_img = draw_example(c, dst_font, canvas_size, x_offset, y_offset)
         if single_256 and (not invalid_img):
-
             single_64 = single_256.resize((64, 64), Image.ANTIALIAS)
             single_64.save(os.path.join(single_save_dir, "%09d_%s_%s.png" % (count, character_label_list[count], font_label)))
+            valid_counter+=1
+        else:
+            invalid_counter+=1
 
-            count += 1
+        count += 1
+    return valid_counter, invalid_counter
 
 
 
@@ -264,18 +276,17 @@ if __name__ == "__main__":
 
 
 
-    charset_level1, character_label_level1 = get_chars_set_from_level1_2(path='../charset/GB2312_Level_1.txt',level=1)
-    charset_level2, character_label_level2 = get_chars_set_from_level1_2(path='../charset/GB2312_Level_2.txt',level=2)
-
-
+    charset_level1_smp, character_label_level1_smp = get_chars_set_from_level1_2(path='../charset/GB2312_Level1_Simplified.txt',level=1)
+    charset_level2_smp, character_label_level2_smp = get_chars_set_from_level1_2(path='../charset/GB2312_Level2_Simplified.txt',level=2)
+    charset_level1_trd, character_label_level1_trd = get_chars_set_from_level1_2(path='../charset/GB2312_Level1_Traditional.txt', level=1)
+    charset_level2_trd, character_label_level2_trd = get_chars_set_from_level1_2(path='../charset/GB2312_Level2_Traditional.txt', level=2)
 
     if os.path.exists(args.single_img_dir):
         shutil.rmtree(args.single_img_dir)
     os.makedirs(args.single_img_dir)
 
-
-
     font_counter=0
+    print("###########################################################################")
     for dst_file in dst_file_list:
 
 
@@ -285,33 +296,61 @@ if __name__ == "__main__":
         font_label=file_name.split('_')
         font_label=str(font_label[0])
 
-        current_save_dir_l1 = os.path.join(args.single_img_dir,'GB2312_L1')
-        current_save_dir_l2 = os.path.join(args.single_img_dir, 'GB2312_L2')
-        current_save_dir_l1 = os.path.join(current_save_dir_l1, font_label)
-        current_save_dir_l2 = os.path.join(current_save_dir_l2, font_label)
+        current_dir_smp = os.path.join(args.single_img_dir,'Simplified')
+        current_dir_trd = os.path.join(args.single_img_dir, 'Traditional')
+
+        current_save_dir_l1_smp = os.path.join(current_dir_smp,'GB2312_L1')
+        current_save_dir_l2_smp = os.path.join(current_dir_smp, 'GB2312_L2')
+        current_save_dir_l1_smp = os.path.join(current_save_dir_l1_smp, font_label)
+        current_save_dir_l2_smp = os.path.join(current_save_dir_l2_smp, font_label)
+
+        current_save_dir_l1_trd = os.path.join(current_dir_trd, 'GB2312_L1')
+        current_save_dir_l2_trd = os.path.join(current_dir_trd, 'GB2312_L2')
+        current_save_dir_l1_trd = os.path.join(current_save_dir_l1_trd, font_label)
+        current_save_dir_l2_trd = os.path.join(current_save_dir_l2_trd, font_label)
+
+        valid_l1_smp, invalid_l1_smp = \
+            font2img(charset=charset_level1_smp,
+                     character_label_list=character_label_level1_smp, dst=dst_file,
+                     char_size=args.char_size,canvas_size=args.canvas_size,
+                     x_offset=args.x_offset, y_offset=args.y_offset,
+                     single_save_dir=current_save_dir_l1_smp,
+                     font_label=font_label)
+        valid_l2_smp, invalid_l2_smp = \
+            font2img(charset=charset_level2_smp,
+                     character_label_list=character_label_level2_smp,
+                     dst=dst_file,
+                     char_size=args.char_size,canvas_size=args.canvas_size,
+                     x_offset=args.x_offset, y_offset=args.y_offset,
+                     single_save_dir=current_save_dir_l2_smp,
+                     font_label=font_label)
+
+        valid_l1_trd, invalid_l1_trd = \
+            font2img(charset=charset_level1_trd,
+                     character_label_list=character_label_level1_trd, dst=dst_file,
+                     char_size=args.char_size, canvas_size=args.canvas_size,
+                     x_offset=args.x_offset, y_offset=args.y_offset,
+                     single_save_dir=current_save_dir_l1_trd,
+                     font_label=font_label)
+        valid_l2_trd, invalid_l2_trd = \
+            font2img(charset=charset_level2_trd,
+                     character_label_list=character_label_level2_trd,
+                     dst=dst_file,
+                     char_size=args.char_size, canvas_size=args.canvas_size,
+                     x_offset=args.x_offset, y_offset=args.y_offset,
+                     single_save_dir=current_save_dir_l2_trd,
+                     font_label=font_label)
 
 
-
-        print("%s, Processing Font-->Pict:%d/%d with FontLabel:%s" % (dst_file, font_counter, len(dst_file_list),font_label))
-
-        font2img(charset=charset_level1,
-                 character_label_list=character_label_level1, dst=dst_file,
-                 char_size=args.char_size,canvas_size=args.canvas_size,
-                 x_offset=args.x_offset, y_offset=args.y_offset,
-                 single_save_dir=current_save_dir_l1,
-                 font_label=font_label)
-        font2img(charset=charset_level2,
-                 character_label_list=character_label_level2,
-                 dst=dst_file,
-                 char_size=args.char_size,canvas_size=args.canvas_size,
-                 x_offset=args.x_offset, y_offset=args.y_offset,
-                 single_save_dir=current_save_dir_l2,
-                 font_label=font_label)
 
         font_counter=font_counter+1
 
+        dst_file_name = dst_file.split("/")[-1]
+        print("%s, Processing Font-->Pict:%d/%d with FontLabel:%s"
+              % (dst_file_name, font_counter, len(dst_file_list), font_label))
 
-
-
-
-
+        print("ValidL1_Smp:%04d,InvalidL1_Smp:%04d; ValidL2_Smp:%04d,InvalidL2_Smp:%04d;"
+              % (valid_l1_smp, invalid_l1_smp, valid_l2_smp, invalid_l2_smp))
+        print("ValidL1_Trd:%04d,InvalidL1_Trd:%04d; ValidL2_Trd:%04d,InvalidL2_Trd:%04d;"
+              % (valid_l1_trd, invalid_l1_trd, valid_l2_trd, invalid_l2_trd))
+        print("###########################################################################")

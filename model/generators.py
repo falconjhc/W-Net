@@ -1027,8 +1027,6 @@ def EmdNet_Generator(content_prototype,
                      adain_preparation_model=None,
                      debug_mode=True):
 
-
-
     style_input_number = len(style_reference)
     content_prototype_number = int(content_prototype.shape[3])
 
@@ -1065,7 +1063,6 @@ def EmdNet_Generator(content_prototype,
                           weight_decay=weight_decay,
                           weight_decay_rate=weight_decay_rate,
                           adain_use=adain_use)
-
 
     # emd network mixer
     if adain_use==0:
