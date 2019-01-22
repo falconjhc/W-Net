@@ -230,8 +230,7 @@ def resblock(x,initializer,
              layer,sh,sw,kh,kw,batch_norm_used,is_training,
              weight_decay,weight_decay_rate,
              scope="resblock",
-             parameter_update_devices='-1',
-             ):
+             parameter_update_devices='-1'):
     filters = int(x.shape[3])
     with tf.variable_scope(scope):
         # filter : [height, width, output_channels, in_channels]
@@ -273,6 +272,53 @@ def resblock(x,initializer,
         act2 = lrelu(bn2)
 
         return act2 + x
+
+def desblock(input_x,output_filters,
+             initializer,
+             layer,sh,sw,kh,kw,batch_norm_used,is_training,
+             weight_decay,weight_decay_rate,
+             scope="resblock",
+             parameter_update_devices='-1'):
+    with tf.variable_scope(scope):
+        # filter : [height, width, output_channels, in_channels]
+        conv1 = conv2d(x=input_x,
+                       output_filters=output_filters,
+                       scope="layer%d_conv1" % layer,
+                       parameter_update_device=parameter_update_devices,
+                       kh=kh,kw=kw,sh=sh,sw=sw,
+                       initializer=initializer,
+                       weight_decay=weight_decay,
+                       name_prefix=scope,
+                       weight_decay_rate=weight_decay_rate)
+
+        if batch_norm_used:
+            bn1 = batch_norm(x=conv1,
+                             is_training=is_training,
+                             scope="layer%d_bn1" % layer,
+                             parameter_update_device=parameter_update_devices)
+
+        act1 = lrelu(bn1)
+
+
+        conv2 = conv2d(x=act1,
+                       output_filters=output_filters,
+                       scope="layer%d_conv2" % layer,
+                       parameter_update_device=parameter_update_devices,
+                       kh=kh,kw=kw,sh=sh,sw=sw,
+                       initializer=initializer,
+                       weight_decay=weight_decay,
+                       name_prefix=scope,
+                       weight_decay_rate=weight_decay_rate)
+
+        if batch_norm_used:
+            bn2 = batch_norm(x=conv2,
+                             is_training=is_training,
+                             scope="layer%d_bn2" % layer,
+                             parameter_update_device=parameter_update_devices)
+
+        act2 = lrelu(bn2)
+        return act2
+
 
 
 

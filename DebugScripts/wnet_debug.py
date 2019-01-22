@@ -36,7 +36,7 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','DEBUG-AdobeNet',# experiment name prefix
+    '--experiment_id','DEBUG-ResMixer-5-DenseMixer',# experiment name prefix
     '--experiment_dir','../../DEBUG-Model', # model saving location
     '--log_dir','DEBUG-Log/',# log file saving location
     '--print_info_seconds','3',

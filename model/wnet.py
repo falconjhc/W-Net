@@ -17,6 +17,7 @@ import shutil
 import time
 from collections import namedtuple
 from dataset.dataset import DataProvider
+import re
 
 from utilities.utils import scale_back_for_img, scale_back_for_dif, merge, correct_ckpt_path
 from model.discriminators import discriminator_mdy_6_convs
@@ -29,11 +30,13 @@ from model.generators import WNet_Generator as wnet_generator
 from model.generators import EmdNet_Generator as emdnet_generator
 from model.generators import ResEmd_EmdNet_Generator as resemdnet_generator
 from model.generators import AdobeNet_Generator as adobenet_generator
+from model.generators import ResMixerNet_Generator as resmixernet_generator
 
 
-from model.generators import encoder_framework as encoder_implementation
-from model.generators import encoder_resemd_framework as encoder_ResEmd_framework
-from model.generators import encoder_adobenet_framework as encoder_Adobe_framework
+from model.encoders import encoder_framework as encoder_implementation
+from model.encoders import encoder_resemd_framework as encoder_ResEmd_framework
+from model.encoders import encoder_adobenet_framework as encoder_Adobe_framework
+from model.encoders import encoder_resmixernet_framework as encoder_resmixernet_framework
 
 
 
@@ -70,12 +73,14 @@ discriminator_dict = {"DisMdy6conv": discriminator_mdy_6_convs}
 generator_dict = {"WNet": wnet_generator,
                   "EmdNet": emdnet_generator,
                   "ResEmdNet": resemdnet_generator,
-                  "AdobeNet": adobenet_generator
+                  "AdobeNet": adobenet_generator,
+                  "ResMixerNet": resmixernet_generator
                   }
 
 encoder_dict = {"Normal": encoder_implementation,
                 "ResEmdNet": encoder_ResEmd_framework,
-                "AdobeNet": encoder_Adobe_framework}
+                "AdobeNet": encoder_Adobe_framework,
+                "ResMixerNet": encoder_resmixernet_framework}
 
 eps = 1e-9
 
@@ -186,6 +191,25 @@ class WNet(object):
         elif 'Adobe' in experiment_id:
             self.generator_implementation = generator_dict['AdobeNet']
             self.encoder_implementation = encoder_dict['AdobeNet']
+        elif 'ResMixer' in experiment_id:
+            self.generator_implementation = generator_dict['ResMixerNet']
+            self.encoder_implementation = encoder_dict['ResMixerNet']
+            if 'SimpleMixer' in experiment_id:
+                other_info_pos = experiment_id.find('SimpleMixer')
+                possible_pos = other_info_pos-10
+                if possible_pos<0:
+                    possible_pos=0
+                possible_extracted_info = experiment_id[possible_pos:]
+                other_info_pos = possible_extracted_info.find('SimpleMixer')
+                self.other_info=possible_extracted_info[other_info_pos-len(re.findall('\d+',possible_extracted_info)[0])-1:]
+            elif 'DenseMixer' in experiment_id:
+                other_info_pos = experiment_id.find('DenseMixer')
+                possible_pos = other_info_pos - 10
+                if possible_pos < 0:
+                    possible_pos = 0
+                possible_extracted_info = experiment_id[possible_pos:]
+                other_info_pos = possible_extracted_info.find('DenseMixer')
+                self.other_info = possible_extracted_info[other_info_pos - len(re.findall('\d+', possible_extracted_info)[0]) - 1:]
 
         self.print_info_seconds=print_info_seconds
         self.discriminator_initialization_iters=25
@@ -369,6 +393,10 @@ class WNet(object):
                                                  encoder_decoder_layer_num,
                                                  self.discriminator)
         elif 'Adobe' in self.experiment_id:
+            model_id = "Exp%s_GenEncDec%d_%s" % (self.experiment_id,
+                                                 encoder_decoder_layer_num,
+                                                 self.discriminator)
+        elif 'ResMixer' in self.experiment_id:
             model_id = "Exp%s_GenEncDec%d_%s" % (self.experiment_id,
                                                  encoder_decoder_layer_num,
                                                  self.discriminator)
