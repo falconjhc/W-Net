@@ -13,7 +13,7 @@ from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/DataA/Harric/ChineseCharacterExp/'
+data_path_root = '/home/harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
@@ -37,8 +37,8 @@ input_args = [
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
     '--experiment_id','20190122-ResMixer-5-DenseMixer-Style4-AdaIN_StylePf50_ContentPf32',# experiment name prefix
-    '--experiment_dir','tfModels_AdobeNet/', # model saving location
-    '--log_dir','tfLogsNew_AdobeNet_Pf50/',# log file saving location
+    '--experiment_dir','tfModels_ResMixerNet/', # model saving location
+    '--log_dir','tfLogsNew_ResMixerNet_Pf50/',# log file saving location
     '--print_info_seconds','750',
 
     '--content_data_dir', # standard data location
