@@ -23,7 +23,7 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 #                   1: training from a based model
 input_args = [
     '--debug_mode','0',
-    '--style_input_number','1', # how many style inputs
+    '--style_input_number','4', # how many style inputs
     '--init_training_epochs','1',
     '--final_training_epochs','1500',
     '--adain_use','1',
@@ -35,9 +35,9 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','20190118-ResEmdNet-Style1-AdaIN_StyleHw50_ContentPf32+Hw32',# experiment name prefix
-    '--experiment_dir','tfModels_EmdNet/', # model saving location
-    '--log_dir','tfLogsNew_EmdNet_Hw50/',# log file saving location
+    '--experiment_id','20190122-AdobeNet-Style4-AdaIN_StyleHw50_ContentPf32+Hw32',# experiment name prefix
+    '--experiment_dir','tfModels_AdobeNet/', # model saving location
+    '--log_dir','tfLogsNew_AdobeNet_Hw50/',# log file saving location
     '--print_info_seconds','750',
 
     '--content_data_dir', # standard data location
@@ -77,7 +77,7 @@ input_args = [
     # optimizer parameters
     '--init_lr','0.0002',
     '--epoch','5000',
-    '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
+    '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
 
     '--optimization_method','adam',
     '--final_learning_rate_pctg','0.01',

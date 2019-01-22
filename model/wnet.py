@@ -28,9 +28,12 @@ from model.vggs import vgg_16_net as feature_extractor_network
 from model.generators import WNet_Generator as wnet_generator
 from model.generators import EmdNet_Generator as emdnet_generator
 from model.generators import ResEmd_EmdNet_Generator as resemdnet_generator
+from model.generators import AdobeNet_Generator as adobenet_generator
+
 
 from model.generators import encoder_framework as encoder_implementation
 from model.generators import encoder_resemd_framework as encoder_ResEmd_framework
+from model.generators import encoder_adobenet_framework as encoder_Adobe_framework
 
 
 
@@ -66,10 +69,13 @@ FeatureExtractorHandle = namedtuple("FeatureExtractor",
 discriminator_dict = {"DisMdy6conv": discriminator_mdy_6_convs}
 generator_dict = {"WNet": wnet_generator,
                   "EmdNet": emdnet_generator,
-                  "ResEmdNet": resemdnet_generator}
+                  "ResEmdNet": resemdnet_generator,
+                  "AdobeNet": adobenet_generator
+                  }
 
 encoder_dict = {"Normal": encoder_implementation,
-                "ResEmdNet": encoder_ResEmd_framework}
+                "ResEmdNet": encoder_ResEmd_framework,
+                "AdobeNet": encoder_Adobe_framework}
 
 eps = 1e-9
 
@@ -150,8 +156,7 @@ class WNet(object):
         self.style_input_number=style_input_number
 
         self.experiment_id = experiment_id
-        self.generator_residual_at_layer = generator_residual_at_layer
-        self.generator_residual_blocks = generator_residual_blocks
+
         self.adain_mark = adain_use
         self.adain_use = ('1' in adain_use)
         if adain_use and 'Multi' in adain_use:
@@ -161,21 +166,26 @@ class WNet(object):
         else:
             self.adain_preparation_model = None
 
+        self.other_info=None
+        self.generator_residual_at_layer = -1
+        self.generator_residual_blocks = -1
         if 'Emd' in experiment_id:
             if 'Res' in experiment_id:
                 self.generator_implementation=generator_dict['ResEmdNet']
                 self.encoder_implementation = encoder_dict['ResEmdNet']
+                if 'NN' in experiment_id:
+                    self.other_info = 'NN'
             else:
                 self.generator_implementation = generator_dict['EmdNet']
                 self.encoder_implementation = encoder_dict['Normal']
-            self.generator_residual_at_layer = -1
-            self.generator_residual_blocks = -1
-            # self.adain_mark = '0'
-            # self.adain_use = False
-            # self.adain_preparation_model = None
         elif 'WNet' in experiment_id:
             self.generator_implementation = generator_dict['WNet']
             self.encoder_implementation = encoder_dict['Normal']
+            self.generator_residual_at_layer = generator_residual_at_layer
+            self.generator_residual_blocks = generator_residual_blocks
+        elif 'Adobe' in experiment_id:
+            self.generator_implementation = generator_dict['AdobeNet']
+            self.encoder_implementation = encoder_dict['AdobeNet']
 
         self.print_info_seconds=print_info_seconds
         self.discriminator_initialization_iters=25
@@ -355,6 +365,10 @@ class WNet(object):
                                                              self.generator_residual_at_layer,
                                                              self.discriminator)
         elif "Emd" in self.experiment_id:
+            model_id = "Exp%s_GenEncDec%d_%s" % (self.experiment_id,
+                                                 encoder_decoder_layer_num,
+                                                 self.discriminator)
+        elif 'Adobe' in self.experiment_id:
             model_id = "Exp%s_GenEncDec%d_%s" % (self.experiment_id,
                                                  encoder_decoder_layer_num,
                                                  self.discriminator)
@@ -761,7 +775,8 @@ class WNet(object):
                                                   reuse=False,
                                                   adain_use=self.adain_use,
                                                   adain_preparation_model=self.adain_preparation_model,
-                                                  debug_mode=False)
+                                                  debug_mode=False,
+                                                  other_info=self.other_info)
 
                 gen_vars_save = self.find_norm_avg_var([var for var in tf.trainable_variables() if 'generator' in var.name])
 
@@ -1170,7 +1185,9 @@ class WNet(object):
                                                   weight_decay_rate=self.generator_weight_decay_penalty,
                                                   adain_use=self.adain_use,
                                                   adain_preparation_model=self.adain_preparation_model,
-                                                  debug_mode=self.debug_mode)
+                                                  debug_mode=self.debug_mode,
+                                                  other_info=self.other_info)
+
 
                 # encoded of the generated target on the content prototype encoder
                 encoded_content_prototype_generated_target = \
@@ -1187,11 +1204,10 @@ class WNet(object):
                                                 weight_decay_rate=self.generator_weight_decay_penalty,
                                                 adain_use=self.adain_use)[0]
 
-
                 # encoded of the generated target on the style reference encoder
-                if 'Emd' in self.experiment_id:
+                if not 'WNet' in self.experiment_id :
                     tmp_input = tf.tile(generated_target_train,
-                                        [1,1,1,self.style_input_number])
+                                        [1, 1, 1, self.style_input_number])
                 else:
                     tmp_input = generated_target_train
                 encoded_style_reference_generated_target = \
@@ -1206,6 +1222,12 @@ class WNet(object):
                                                 weight_decay=False,
                                                 weight_decay_rate=self.generator_weight_decay_penalty,
                                                 adain_use=self.adain_use)[0]
+
+
+
+
+
+
 
 
                 # for inferring
@@ -1231,7 +1253,8 @@ class WNet(object):
                                                   weight_decay_rate=eps,
                                                   adain_use=self.adain_use,
                                                   adain_preparation_model=self.adain_preparation_model,
-                                                  debug_mode=True)[0]
+                                                  debug_mode=True,
+                                                  other_info=self.other_info)[0]
 
                 curt_generator_handle = GeneratorHandle(generated_target_train=generated_target_train,
                                                         generated_target_infer=generated_target_infer)

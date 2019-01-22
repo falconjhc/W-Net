@@ -36,7 +36,7 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','DEBUG-EmdRes',# experiment name prefix
+    '--experiment_id','DEBUG-AdobeNet',# experiment name prefix
     '--experiment_dir','../../DEBUG-Model', # model saving location
     '--log_dir','DEBUG-Log/',# log file saving location
     '--print_info_seconds','3',
@@ -96,11 +96,11 @@ input_args = [
 
     # feature extractor parametrers
     '--true_fake_target_extractor_dir',
-    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181010_FeatureExtractor_ContentStyle_PF50_vgg16net/variables/',
+    'TrainedModels_Vgg16/Exp20181226_FeatureExtractor_ContentStyle_HW300Pf80_vgg16net/variables/',
     '--content_prototype_extractor_dir',
-    'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32_vgg16net/variables/',
+    'TrainedModels_Vgg16/Exp20181231_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
     '--style_reference_extractor_dir',
-    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_PF50_vgg16net/variables/',
+    'TrainedModels_Vgg16/Exp20181226_FeatureExtractor_Style_HW300Pf80_vgg16net/variables/',
 
     '--Feature_Penalty_True_Fake_Target', '1',
     '--Feature_Penalty_Style_Reference','1',

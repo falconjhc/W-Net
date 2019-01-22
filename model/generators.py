@@ -6,7 +6,7 @@ sys.path.append('..')
 
 import numpy as np
 from utilities.ops import lrelu, relu, batch_norm, layer_norm, instance_norm, adaptive_instance_norm, resblock, global_average_pooling
-from utilities.ops import conv2d, deconv2d, fc
+from utilities.ops import conv2d, deconv2d, fc, dilated_conv2d, dilated_conv_resblock, normal_conv_resblock
 from utilities.ops import emd_mixer
 
 
@@ -16,6 +16,13 @@ print_separater="#########################################################"
 
 eps = 1e-9
 generator_dim = 64
+
+
+def _calculate_batch_diff(input_feature):
+    diff = tf.abs(tf.expand_dims(input_feature, 4) -
+                  tf.expand_dims(tf.transpose(input_feature, [1, 2, 3, 0]), 0))
+    diff = tf.reduce_sum(tf.exp(-diff), 4)
+    return tf.reduce_mean(diff)
 
 
 ##############################################################################################
@@ -32,7 +39,8 @@ def encoder_framework(images,
                       residual_connection_mode,
                       scope,initializer,weight_decay,
                       weight_decay_rate,
-                      reuse = False,adain_use=False):
+                      reuse = False,
+                      adain_use=False):
     def encoder(x, output_filters, layer):
 
         act = lrelu(x)
@@ -119,11 +127,12 @@ def encoder_framework(images,
 def encoder_resemd_framework(images,
                              is_training,
                              encoder_device,
-                             scope,initializer,weight_decay,
-                             weight_decay_rate,
+                             scope,initializer,
+                             weight_decay,weight_decay_rate,
                              residual_at_layer=-1,
                              residual_connection_mode=None,
-                             reuse = False,adain_use=False):
+                             reuse=False,
+                             adain_use=False):
     residual_connection_mode=None
     residual_at_layer=-1
     adain_use=False
@@ -147,7 +156,7 @@ def encoder_resemd_framework(images,
 
                 conv2 = lrelu(conv2d(x=conv1,
                                      output_filters=128,
-                                     kh=3,kw=3, sh=2, sw=2,
+                                     kh=3, kw=3, sh=2, sw=2,
                                      scope="layer%d_conv" % 2,
                                      parameter_update_device=encoder_device,
                                      initializer=initializer,
@@ -215,11 +224,44 @@ def encoder_resemd_framework(images,
                 full_feature_list.append(res4)
 
 
-                return_str = "EmdGeneralized-StyleEncoder %d Layers" % (len(full_feature_list))
+                return_str = "ResEmdNet-Encoder %d Layers" % (len(full_feature_list))
 
     return res4, -1, -1, full_feature_list, return_str
 
 
+def encoder_adobenet_framework(images,
+                               is_training,
+                               encoder_device,
+                               scope,initializer,
+                               weight_decay,weight_decay_rate,
+                               residual_at_layer=-1,
+                               residual_connection_mode=None,
+                               reuse=False,
+                               adain_use=False):
+    residual_connection_mode = None
+    residual_at_layer = -1
+    adain_use = False
+    full_feature_list = list()
+
+    with tf.variable_scope(tf.get_variable_scope()):
+        with tf.device(encoder_device):
+            with tf.variable_scope(scope):
+                if reuse:
+                    tf.get_variable_scope().reuse_variables()
+                conv1 = relu(conv2d(x=images,
+                                    output_filters=64,
+                                    kh=7,kw=7, sh=1, sw=1,
+                                    scope="layer%d_conv" % 1,
+                                    parameter_update_device=encoder_device,
+                                    initializer=initializer,
+                                    weight_decay=weight_decay,
+                                    name_prefix=scope,
+                                    weight_decay_rate=weight_decay_rate))
+                full_feature_list.append(conv1)
+
+                return_str = "AdobeNet-Encoder %d Layers" % (len(full_feature_list))
+
+    return conv1, -1, -1, full_feature_list, return_str
 
 
 ##############################################################################################
@@ -238,7 +280,8 @@ def wnet_decoder_framework(encoded_layer_list,
                            decoder_device,
                            scope,initializer, weight_decay,weight_decay_rate,
                            adain_use,
-                           reuse=False):
+                           reuse=False,
+                           other_info=None):
     def decoder(x,
                 output_width,
                 output_filters,
@@ -271,7 +314,7 @@ def wnet_decoder_framework(encoded_layer_list,
         return dec
 
     decoder_input = decoder_input_org
-    return_str = "Decoder %d Layers" % int(np.floor(math.log(output_width) / math.log(2)))
+    return_str = "WNet-Decoder %d Layers" % int(np.floor(math.log(output_width) / math.log(2)))
     full_decoded_feature_list = list()
 
     full_encoder_layer_num = int(np.floor(math.log(output_width) / math.log(2)))
@@ -325,7 +368,8 @@ def emdnet_decoder_framework(encoded_layer_list,
                              decoder_device,
                              scope,initializer, weight_decay,weight_decay_rate,
                              adain_use,
-                             reuse=False):
+                             reuse=False,
+                             other_info=None):
     def decoder(x,
                 output_width,
                 output_filters,
@@ -355,7 +399,7 @@ def emdnet_decoder_framework(encoded_layer_list,
         return dec
 
     decoder_input = decoder_input_org
-    return_str = "Decoder %d Layers" % int(np.floor(math.log(output_width) / math.log(2)))
+    return_str = "EmdNet-Decoder %d Layers" % int(np.floor(math.log(output_width) / math.log(2)))
     full_decoded_feature_list = list()
 
     full_encoder_layer_num = int(np.floor(math.log(output_width) / math.log(2)))
@@ -412,7 +456,8 @@ def decoder_resemdnet_framework(encoded_layer_list,
                                 decoder_device,
                                 scope,initializer, weight_decay,weight_decay_rate,
                                 adain_use,
-                                reuse=False):
+                                reuse=False,
+                                other_info=None):
 
     residual_connection_mode = None
     residual_at_layer = -1
@@ -472,28 +517,59 @@ def decoder_resemdnet_framework(encoded_layer_list,
                                          weight_decay_rate=weight_decay_rate))
                 full_feature_list.append(deconv1)
 
-                deconv2 = lrelu(deconv2d(x=deconv1,
-                                         output_shape=[batch_size, int(deconv1.shape[2]) * 2,
-                                                       int(deconv1.shape[2]) * 2, 128],
-                                         kh=3, kw=3, sh=2, sw=2,
-                                         scope="layer%d_deconv" % 6,
-                                         parameter_update_device=decoder_device,
-                                         initializer=initializer,
-                                         weight_decay=weight_decay,
-                                         name_prefix=scope,
-                                         weight_decay_rate=weight_decay_rate))
+
+                if other_info==None:
+                    deconv2 = lrelu(deconv2d(x=deconv1,
+                                             output_shape=[batch_size, int(deconv1.shape[2]) * 2,
+                                                           int(deconv1.shape[2]) * 2, 128],
+                                             kh=3, kw=3, sh=2, sw=2,
+                                             scope="layer%d_deconv" % 6,
+                                             parameter_update_device=decoder_device,
+                                             initializer=initializer,
+                                             weight_decay=weight_decay,
+                                             name_prefix=scope,
+                                             weight_decay_rate=weight_decay_rate))
+                elif other_info=='NN':
+                    deconv2 = lrelu(deconv2d(x=deconv1,
+                                             output_shape=[batch_size, int(deconv1.shape[2]),
+                                                           int(deconv1.shape[2]), 128],
+                                             kh=3, kw=3, sh=1, sw=1,
+                                             scope="layer%d_deconv" % 6,
+                                             parameter_update_device=decoder_device,
+                                             initializer=initializer,
+                                             weight_decay=weight_decay,
+                                             name_prefix=scope,
+                                             weight_decay_rate=weight_decay_rate))
+
+                    deconv2 = tf.image.resize_nearest_neighbor(images=deconv2,
+                                                               size=[int(deconv2.shape[2])*2, int(deconv2.shape[2])*2])
                 full_feature_list.append(deconv2)
 
-                deconv3 = lrelu(deconv2d(x=deconv2,
-                                         output_shape=[batch_size, int(deconv2.shape[2]) * 2,
-                                                       int(deconv2.shape[2]) * 2, 64],
-                                         kh=3, kw=3, sh=2, sw=2,
-                                         scope="layer%d_deconv" % 7,
-                                         parameter_update_device=decoder_device,
-                                         initializer=initializer,
-                                         weight_decay=weight_decay,
-                                         name_prefix=scope,
-                                         weight_decay_rate=weight_decay_rate))
+                if other_info == None:
+                    deconv3 = lrelu(deconv2d(x=deconv2,
+                                             output_shape=[batch_size, int(deconv2.shape[2]) * 2,
+                                                           int(deconv2.shape[2]) * 2, 64],
+                                             kh=3, kw=3, sh=2, sw=2,
+                                             scope="layer%d_deconv" % 7,
+                                             parameter_update_device=decoder_device,
+                                             initializer=initializer,
+                                             weight_decay=weight_decay,
+                                             name_prefix=scope,
+                                             weight_decay_rate=weight_decay_rate))
+                elif other_info=='NN':
+                    deconv3 = lrelu(deconv2d(x=deconv2,
+                                             output_shape=[batch_size, int(deconv2.shape[2]),
+                                                           int(deconv2.shape[2]), 64],
+                                             kh=3, kw=3, sh=1, sw=1,
+                                             scope="layer%d_deconv" % 7,
+                                             parameter_update_device=decoder_device,
+                                             initializer=initializer,
+                                             weight_decay=weight_decay,
+                                             name_prefix=scope,
+                                             weight_decay_rate=weight_decay_rate))
+                    deconv3 = tf.image.resize_nearest_neighbor(images=deconv3,
+                                                               size=[int(deconv3.shape[2]) * 2, int(deconv3.shape[2]) * 2])
+
                 full_feature_list.append(deconv3)
 
                 deconv4 = tf.nn.tanh(deconv2d(x=deconv3,
@@ -508,12 +584,96 @@ def decoder_resemdnet_framework(encoded_layer_list,
                                               weight_decay_rate=weight_decay_rate))
                 full_feature_list.append(deconv4)
 
-                return_str = "Decoder %d Layers" % len(full_feature_list)
+                return_str = "ResEmdNet-Decoder %d Layers" % len(full_feature_list)
 
                 return deconv4, full_feature_list, return_str
 
 
+def decoder_adobenet_framework(encoded_layer_list,
+                               decoder_input_org,
+                               is_training,
+                               output_width,
+                               output_filters,
+                               batch_size,
+                               decoder_device,
+                               scope,initializer, weight_decay,weight_decay_rate,
+                               adain_use,
+                               reuse=False,
+                               other_info=None):
 
+    residual_connection_mode = None
+    residual_at_layer = -1
+    adain_use = False
+    full_feature_list = list()
+    with tf.variable_scope(tf.get_variable_scope()):
+        with tf.device(decoder_device):
+            with tf.variable_scope(scope):
+                if reuse:
+                    tf.get_variable_scope().reuse_variables()
+                normal_conv_resblock1 = normal_conv_resblock(x=decoder_input_org,
+                                                             initializer=initializer,
+                                                             is_training=is_training,
+                                                             layer=1,
+                                                             kh=3, kw=3, sh=1, sw=1,
+                                                             batch_norm_used=True,
+                                                             weight_decay=weight_decay,
+                                                             weight_decay_rate=weight_decay_rate,
+                                                             scope="layer%d_normal_resblock" % 1,
+                                                             parameter_update_devices=decoder_device)
+                full_feature_list.append(normal_conv_resblock1)
+
+                dilated_conv_resblock1 = dilated_conv_resblock(x=normal_conv_resblock1,
+                                                               initializer=initializer,
+                                                               is_training=is_training,
+                                                               layer=2,
+                                                               dilation=2, kh=3, kw=3,
+                                                               batch_norm_used=True,
+                                                               weight_decay=weight_decay,
+                                                               weight_decay_rate=weight_decay_rate,
+                                                               scope="layer%d_dilated_resblock" % 2,
+                                                               parameter_update_devices=decoder_device)
+                full_feature_list.append(dilated_conv_resblock1)
+
+                dilated_conv_resblock2 = dilated_conv_resblock(x=dilated_conv_resblock1,
+                                                               initializer=initializer,
+                                                               is_training=is_training,
+                                                               layer=3,
+                                                               dilation=4, kh=3, kw=3,
+                                                               batch_norm_used=True,
+                                                               weight_decay=weight_decay,
+                                                               weight_decay_rate=weight_decay_rate,
+                                                               scope="layer%d_dilated_resblock" % 3,
+                                                               parameter_update_devices=decoder_device)
+                full_feature_list.append(dilated_conv_resblock2)
+
+                dilated_conv_1 = relu(batch_norm(x=dilated_conv2d(x=dilated_conv_resblock2,
+                                                                  output_filters=128,
+                                                                  weight_decay_rate=weight_decay_rate, weight_decay=weight_decay,
+                                                                  kh=3, kw=3, dilation=2,
+                                                                  initializer=initializer,
+                                                                  scope="layer%d_dilated_conv" % 4,
+                                                                  parameter_update_device=decoder_device,
+                                                                  name_prefix=scope),
+                                                 is_training=is_training,
+                                                 scope="layer%d_bn"% 4,
+                                                 parameter_update_device=decoder_device))
+
+
+                full_feature_list.append(dilated_conv_1)
+
+                generated_img = tf.nn.tanh(conv2d(x=dilated_conv_1,
+                                                  output_filters=1,
+                                                  weight_decay_rate=weight_decay_rate, weight_decay=weight_decay,
+                                                  kh=3, kw=3, sw=1, sh=1,
+                                                  initializer=initializer,
+                                                  scope="layer%d_normal_conv" % 5,
+                                                  parameter_update_device=decoder_device,
+                                                  name_prefix=scope))
+                full_feature_list.append(generated_img)
+
+    return_str = "AdobeNet-Decoder %d Layers" % len(full_feature_list)
+
+    return generated_img, full_feature_list, return_str
 
 
 ##############################################################################################
@@ -532,11 +692,7 @@ def wnet_feature_mixer_framework(generator_device,scope,is_training,reuse,initia
                                  full_style_feature_list,
                                  adain_use,adain_preparation_model):
 
-    def _calculate_batch_diff(input_feature):
-        diff = tf.abs(tf.expand_dims(input_feature, 4) -
-                      tf.expand_dims(tf.transpose(input_feature, [1, 2, 3, 0]), 0))
-        diff = tf.reduce_sum(tf.exp(-diff), 4)
-        return tf.reduce_mean(diff)
+
 
     # multiple encoded information average calculation for style reference encoder
     with tf.variable_scope(tf.get_variable_scope()):
@@ -672,11 +828,6 @@ def wnet_feature_mixer_framework(generator_device,scope,is_training,reuse,initia
 def emdnet_mixer_with_adain(generator_device,reuse,scope,initializer,
                             weight_decay,weight_decay_rate,
                             encoded_content_final,content_shortcut_interface,encoded_style_final):
-    def _calculate_batch_diff(input_feature):
-        diff = tf.abs(tf.expand_dims(input_feature, 4) -
-                      tf.expand_dims(tf.transpose(input_feature, [1, 2, 3, 0]), 0))
-        diff = tf.reduce_sum(tf.exp(-diff), 4)
-        return tf.reduce_mean(diff)
 
     # mixer
     with tf.variable_scope(tf.get_variable_scope()):
@@ -709,11 +860,7 @@ def emdnet_mixer_non_adain(generator_device,reuse,scope,initializer,
                            weight_decay,weight_decay_rate,
                            encoded_content_final,content_shortcut_interface,encoded_style_final):
 
-    def _calculate_batch_diff(input_feature):
-        diff = tf.abs(tf.expand_dims(input_feature, 4) -
-                      tf.expand_dims(tf.transpose(input_feature, [1, 2, 3, 0]), 0))
-        diff = tf.reduce_sum(tf.exp(-diff), 4)
-        return tf.reduce_mean(diff)
+
 
 
     # mixer
@@ -1025,7 +1172,8 @@ def EmdNet_Generator(content_prototype,
                      reuse=False,
                      adain_use=False,
                      adain_preparation_model=None,
-                     debug_mode=True):
+                     debug_mode=True,
+                     other_info=None):
 
     style_input_number = len(style_reference)
     content_prototype_number = int(content_prototype.shape[3])
@@ -1121,12 +1269,9 @@ def ResEmd_EmdNet_Generator(content_prototype,
                             residual_at_layer=-1,
                             residual_block_num=-1,
                             adain_preparation_model=None,
-                            debug_mode=True):
-    def _calculate_batch_diff(input_feature):
-        diff = tf.abs(tf.expand_dims(input_feature, 4) -
-                      tf.expand_dims(tf.transpose(input_feature, [1, 2, 3, 0]), 0))
-        diff = tf.reduce_sum(tf.exp(-diff), 4)
-        return tf.reduce_mean(diff)
+                            debug_mode=True,
+                            other_info=None):
+
 
 
     residual_at_layer=-1
@@ -1142,8 +1287,7 @@ def ResEmd_EmdNet_Generator(content_prototype,
         if ii == 0:
             style_reference_tensor = style_reference[ii]
         else:
-            style_reference_tensor = tf.concat([style_reference_tensor, style_reference[ii]],
-                                               axis=3)
+            style_reference_tensor = tf.concat([style_reference_tensor, style_reference[ii]], axis=3)
     encoded_style_final, _, _, style_full_feature_list, _ = \
         encoder_resemd_framework(images=style_reference_tensor,
                                  is_training=is_training,
@@ -1205,10 +1349,15 @@ def ResEmd_EmdNet_Generator(content_prototype,
                                     weight_decay=weight_decay,
                                     initializer=initializer,
                                     weight_decay_rate=weight_decay_rate,
-                                    adain_use=adain_use)
+                                    adain_use=adain_use,
+                                    other_info=other_info)
 
-    return_str = ("Res-Emd-Net-GeneratorEncoderDecoder %d Layers"
-                  % (int(np.floor(math.log(int(content_prototype[0].shape[1])) / math.log(2)))))
+    if other_info == None:
+        return_str = ("Res-Emd-Net-GeneratorEncoderDecoder %d Layers"
+                      % (int(np.floor(math.log(int(content_prototype[0].shape[1])) / math.log(2)))))
+    elif other_info== 'NN':
+        return_str = ("NN-Res-Emd-Net-GeneratorEncoderDecoder %d Layers"
+                      % (int(np.floor(math.log(int(content_prototype[0].shape[1])) / math.log(2)))))
 
 
     return generated_img, encoded_content_final, encoded_style_final, return_str, \
@@ -1229,7 +1378,8 @@ def WNet_Generator(content_prototype,
                    reuse=False,
                    adain_use=False,
                    adain_preparation_model=None,
-                   debug_mode=True):
+                   debug_mode=True,
+                   other_info=None):
 
     style_input_number = len(style_reference)
     content_prototype_number = int(content_prototype.shape[3])
@@ -1326,3 +1476,92 @@ def WNet_Generator(content_prototype,
     return generated_img, encoded_content_final, encoded_style_final, return_str, \
            style_shortcut_batch_diff, style_residual_batch_diff, \
            content_full_feature_list, full_style_feature_list, decoder_full_feature_list
+
+
+def AdobeNet_Generator(content_prototype,
+                       style_reference,
+                       is_training,
+                       batch_size,
+                       generator_device,
+                       residual_at_layer,
+                       residual_block_num,
+                       scope,
+                       initializer,
+                       weight_decay, weight_decay_rate,
+                       reuse=False,
+                       adain_use=False,
+                       adain_preparation_model=None,
+                       debug_mode=True,
+                       other_info=None):
+    style_input_number = len(style_reference)
+    content_prototype_number = int(content_prototype.shape[3])
+
+    # style reference encoder part
+    for ii in range(len(style_reference)):
+        if ii == 0:
+            style_reference_tensor = style_reference[ii]
+        else:
+            style_reference_tensor = tf.concat([style_reference_tensor, style_reference[ii]], axis=3)
+
+    encoded_style_final, _, _, style_full_feature_list, _ = \
+        encoder_adobenet_framework(images=style_reference_tensor,
+                                   is_training=is_training,
+                                   encoder_device=generator_device,
+                                   scope=scope + '/style_encoder',
+                                   reuse=reuse,
+                                   initializer=initializer,
+                                   weight_decay=weight_decay,
+                                   weight_decay_rate=weight_decay_rate,
+                                   adain_use=adain_use)
+
+    # content prototype encoder part
+    encoded_content_final, _, _, content_full_feature_list, _ = \
+        encoder_adobenet_framework(images=content_prototype,
+                                   is_training=is_training,
+                                   encoder_device=generator_device,
+                                   residual_at_layer=residual_at_layer,
+                                   scope=scope + '/content_encoder',
+                                   reuse=reuse,
+                                   initializer=initializer,
+                                   weight_decay=weight_decay,
+                                   weight_decay_rate=weight_decay_rate,
+                                   adain_use=adain_use)
+
+    # mixer
+    mixed_feature = tf.concat([encoded_content_final,encoded_style_final], axis=3)
+    style_batch_diff=0
+    content_batch_diff=0
+    for ii in range(len(content_full_feature_list)):
+        content_batch_diff+=_calculate_batch_diff(content_full_feature_list[ii])
+    content_batch_diff=content_batch_diff/len(content_full_feature_list)
+    for ii in range(len(style_full_feature_list)):
+        style_batch_diff+=_calculate_batch_diff(style_full_feature_list[ii])
+    style_batch_diff=style_batch_diff/len(style_full_feature_list)
+
+    # decoder
+    img_width = int(content_prototype.shape[1])
+    img_filters = int(int(content_prototype.shape[3]) / content_prototype_number)
+    generated_img, decoder_full_feature_list, _ = \
+        decoder_adobenet_framework(encoded_layer_list=-1,
+                                   decoder_input_org=mixed_feature,
+                                   is_training=is_training,
+                                   output_width=img_width,
+                                   output_filters=img_filters,
+                                   batch_size=batch_size,
+                                   decoder_device=generator_device,
+                                   scope=scope + '/decoder',
+                                   reuse=reuse,
+                                   weight_decay=weight_decay,
+                                   initializer=initializer,
+                                   weight_decay_rate=weight_decay_rate,
+                                   adain_use=adain_use,
+                                   other_info=other_info)
+
+    return_str = ("Adobe-Net-GeneratorEncoderDecoder")
+
+    return generated_img, encoded_content_final, encoded_style_final, return_str, \
+           style_batch_diff, content_batch_diff, \
+           content_full_feature_list, style_full_feature_list, decoder_full_feature_list
+
+
+

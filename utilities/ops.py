@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import print_function
+
 import tensorflow as tf
+
 
 def batch_norm(x, is_training, epsilon=1e-5, decay=0.9, scope="batch_norm",
                parameter_update_device='-1'):
@@ -123,7 +125,49 @@ def conv2d(x,
         return Wconv_plus_b
 
 
+def dilated_conv2d(x,
+                   output_filters,
+                   weight_decay_rate,
+                   kh=5, kw=5, dilation=2,
+                   initializer='None',
+                   scope="conv2d",
+                   parameter_update_device='-1',
+                   weight_decay=False,
+                   name_prefix='None',
+                   padding='SAME'):
+    weight_stddev = 0.02
+    bias_init_stddev = 0.0
+    with tf.variable_scope(scope):
+        shape = x.get_shape().as_list()
 
+        if initializer == 'NormalInit':
+            W = variable_creation_on_device(name='W',
+                                            shape=[kh, kw, shape[-1], output_filters],
+                                            initializer=tf.truncated_normal_initializer(stddev=weight_stddev),
+                                            parameter_update_device=parameter_update_device)
+        elif initializer == 'XavierInit':
+            W = variable_creation_on_device(name='W',
+                                            shape=[kh, kw, shape[-1], output_filters],
+                                            initializer=tf.contrib.layers.xavier_initializer(uniform=False),
+                                            parameter_update_device=parameter_update_device)
+
+        if weight_decay:
+            weight_decay = tf.multiply(tf.nn.l2_loss(W), weight_decay_rate, name='weight_decay')
+            if not name_prefix.find('/') == -1:
+                tf.add_to_collection(name_prefix[0:name_prefix.find('/')] + '_weight_decay', weight_decay)
+            else:
+                tf.add_to_collection(name_prefix + '_weight_decay', weight_decay)
+
+        Wconv = tf.nn.atrous_conv2d(x, W, dilation, padding=padding)
+
+        biases = variable_creation_on_device('b',
+                                             shape=[output_filters],
+                                             initializer=tf.constant_initializer(bias_init_stddev),
+                                             parameter_update_device=parameter_update_device)
+
+        Wconv_plus_b = tf.reshape(tf.nn.bias_add(Wconv, biases), Wconv.get_shape())
+
+        return Wconv_plus_b
 
 
 def deconv2d(x, output_shape,weight_decay_rate,
@@ -229,6 +273,93 @@ def resblock(x,initializer,
         act2 = lrelu(bn2)
 
         return act2 + x
+
+
+
+def dilated_conv_resblock(x,initializer,
+                          layer,dilation,kh,kw,is_training,batch_norm_used,
+                          weight_decay,weight_decay_rate,
+                          scope="dilated_resblock",
+                          parameter_update_devices='-1'):
+    filters = int(x.shape[3])
+    with tf.variable_scope(scope):
+        dilated_conv1 = dilated_conv2d(x=x,
+                                       output_filters=filters,
+                                       scope="layer%d_conv1" % layer,
+                                       parameter_update_device=parameter_update_devices,
+                                       kh=kh,kw=kw,dilation=dilation,
+                                       initializer=initializer,
+                                       weight_decay=weight_decay,
+                                       name_prefix=scope,
+                                       weight_decay_rate=weight_decay_rate)
+        if batch_norm_used:
+            bn1 = batch_norm(x=dilated_conv1,
+                             is_training=is_training,
+                             scope="layer%d_bn1" % layer,
+                             parameter_update_device=parameter_update_devices)
+        else:
+            bn1 = dilated_conv1
+        act1 = relu(bn1)
+
+        if is_training:
+            drop1 = tf.nn.dropout(act1,0.5)
+        else:
+            drop1 = act1
+
+        dilated_conv2 = dilated_conv2d(x=drop1,
+                                       output_filters=filters,
+                                       scope="layer%d_conv2" % layer,
+                                       parameter_update_device=parameter_update_devices,
+                                       kh=kh,kw=kw,dilation=dilation,
+                                       initializer=initializer,
+                                       weight_decay=weight_decay,
+                                       name_prefix=scope,
+                                       weight_decay_rate=weight_decay_rate)
+
+        return x + dilated_conv2
+
+
+def normal_conv_resblock(x,initializer,is_training,
+                         layer,kh,kw,sh,sw,batch_norm_used,
+                         weight_decay,weight_decay_rate,
+                         scope="dilated_resblock",
+                         parameter_update_devices='-1'):
+    filters = int(x.shape[3])
+    with tf.variable_scope(scope):
+        conv1 = conv2d(x=x,
+                       output_filters=filters,
+                       scope="layer%d_conv1" % layer,
+                       parameter_update_device=parameter_update_devices,
+                       kh=kh, kw=kw, sh=sh,sw=sw,
+                       initializer=initializer,
+                       weight_decay=weight_decay,
+                       name_prefix=scope,
+                       weight_decay_rate=weight_decay_rate)
+        if batch_norm_used:
+            bn1 = batch_norm(x=conv1,
+                             is_training=is_training,
+                             scope="layer%d_bn1" % layer,
+                             parameter_update_device=parameter_update_devices)
+        else:
+            bn1 = conv1
+        act1 = relu(bn1)
+
+        if is_training:
+            drop1 = tf.nn.dropout(act1, 0.5)
+        else:
+            drop1 = act1
+
+        conv2 = conv2d(x=drop1,
+                       output_filters=filters,
+                       scope="layer%d_conv2" % layer,
+                       parameter_update_device=parameter_update_devices,
+                       kh=kh, kw=kw, sh=sh,sw=sw,
+                       initializer=initializer,
+                       weight_decay=weight_decay,
+                       name_prefix=scope,
+                       weight_decay_rate=weight_decay_rate)
+
+        return x + conv2
 
 
 

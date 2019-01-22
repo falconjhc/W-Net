@@ -13,7 +13,7 @@ from model.wnet import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/home/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
@@ -23,7 +23,7 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 #                   1: training from a based model
 input_args = [
     '--debug_mode','0',
-    '--style_input_number','1', # how many style inputs
+    '--style_input_number','4', # how many style inputs
     '--init_training_epochs','1',
     '--final_training_epochs','1500',
     '--adain_use','1',
@@ -35,7 +35,7 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','20190118-ResEmdNet-Style1-AdaIN_StyleHw50_ContentPf32+Hw32',# experiment name prefix
+    '--experiment_id','20190122-ResEmdNet-NN-Style4-AdaIN_StyleHw50_ContentPf32+Hw32',# experiment name prefix
     '--experiment_dir','tfModels_EmdNet/', # model saving location
     '--log_dir','tfLogsNew_EmdNet_Hw50/',# log file saving location
     '--print_info_seconds','750',
