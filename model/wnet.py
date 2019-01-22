@@ -199,7 +199,7 @@ class WNet(object):
                 possible_pos = other_info_pos-10
                 if possible_pos<0:
                     possible_pos=0
-                possible_extracted_info = experiment_id[possible_pos:]
+                possible_extracted_info = experiment_id[possible_pos:other_info_pos+11]
                 other_info_pos = possible_extracted_info.find('SimpleMixer')
                 self.other_info=possible_extracted_info[other_info_pos-len(re.findall('\d+',possible_extracted_info)[0])-1:]
             elif 'DenseMixer' in experiment_id:
@@ -207,7 +207,7 @@ class WNet(object):
                 possible_pos = other_info_pos - 10
                 if possible_pos < 0:
                     possible_pos = 0
-                possible_extracted_info = experiment_id[possible_pos:]
+                possible_extracted_info = experiment_id[possible_pos:other_info_pos+10]
                 other_info_pos = possible_extracted_info.find('DenseMixer')
                 self.other_info = possible_extracted_info[other_info_pos - len(re.findall('\d+', possible_extracted_info)[0]) - 1:]
 
