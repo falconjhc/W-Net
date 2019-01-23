@@ -476,7 +476,7 @@ def decoder_resmixernet_framework(decoder_input_org,
                                               parameter_update_device=decoder_device))
                 full_feature_list.append(deconv2)
 
-                deconv3 = lrelu(instance_norm(x=deconv2d(x=deconv2,
+                deconv3 = tf.nn.tanh(instance_norm(x=deconv2d(x=deconv2,
                                                          kh=7, kw=7, sh=1, sw=1,
                                                          output_shape=[batch_size, int(deconv2.shape[2]),
                                                                        int(deconv2.shape[2]), 1],
