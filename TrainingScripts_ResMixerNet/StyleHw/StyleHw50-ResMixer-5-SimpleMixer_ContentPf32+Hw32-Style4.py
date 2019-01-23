@@ -26,7 +26,7 @@ input_args = [
     '--style_input_number','4', # how many style inputs
     '--init_training_epochs','1',
     '--final_training_epochs','1500',
-    '--adain_use','1',
+    '--adain_use','0',
 
     '--generator_device','/device:GPU:0',
     '--discriminator_device', '/device:GPU:0',
@@ -35,7 +35,7 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','20190122-ResMixer-5-SimpleMixer-Style4-AdaIN_StyleHw50_ContentPf32+Hw32',# experiment name prefix
+    '--experiment_id','20190122-ResMixer-5-SimpleMixer-Style4_StyleHw50_ContentPf32+Hw32',# experiment name prefix
     '--experiment_dir','tfModels_ResMixerNet/', # model saving location
     '--log_dir','tfLogsNew_ResMixerNet_Hw50/',# log file saving location
     '--print_info_seconds','750',
@@ -77,7 +77,7 @@ input_args = [
     # optimizer parameters
     '--init_lr','0.0002',
     '--epoch','5000',
-    '--resume_training','5', # 0: training from scratch; 1: training from a pre-trained point
+    '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
 
     '--optimization_method','adam',
     '--final_learning_rate_pctg','0.01',

@@ -27,7 +27,7 @@ input_args = [
     '--style_input_number','1', # how many style inputs
     '--init_training_epochs','1',
     '--final_training_epochs','1500',
-    '--adain_use','1',
+    '--adain_use','0',
 
     '--generator_device','/device:GPU:0',
     '--discriminator_device', '/device:GPU:0',
@@ -36,7 +36,7 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','20190122-ResEmdNet-NN-Style1-AdaIN_StylePf50_ContentPf32',# experiment name prefix
+    '--experiment_id','20190122-ResEmdNet-NN-Style1_StylePf50_ContentPf32',# experiment name prefix
     '--experiment_dir','tfModels_EmdNet/', # model saving location
     '--log_dir','tfLogsNew_EmdNet_Pf50/',# log file saving location
     '--print_info_seconds','750',

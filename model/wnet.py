@@ -157,6 +157,8 @@ class WNet(object):
 
                  ):
 
+        self.print_separater = "#################################################################"
+
         self.initializer = 'XavierInit'
         self.style_input_number=style_input_number
 
@@ -170,6 +172,64 @@ class WNet(object):
             self.adain_preparation_model = 'Single'
         else:
             self.adain_preparation_model = None
+
+        if ('AdaIN' in experiment_id and (not self.adain_use)) or \
+            ((not 'AdaIN' in experiment_id) and self.adain_use):
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print("Error: AdaIN Comflicts in ExperimentID and AdaIN Marks")
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            return
+        if ('AdaIN' in experiment_id or self.adain_use) and (('Res' in experiment_id and 'Emd' in experiment_id)
+                                                             or 'Adobe' in experiment_id
+                                                             or 'ResMixer' in experiment_id):
+
+            if ('Res' in experiment_id and 'Emd' in experiment_id):
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print("Error: No AdaIN mode in ResEmdNet")
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+
+            if 'Adobe' in experiment_id:
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print("Error: No AdaIN in AdobeNet")
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+
+            if 'ResMixer' in experiment_id:
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print("Error: No AdaIN in ResMixerNet")
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+            return
 
         self.other_info=None
         self.generator_residual_at_layer = -1
@@ -333,7 +393,7 @@ class WNet(object):
 
         # init all the directories
         self.sess = None
-        self.print_separater = "#################################################################"
+
 
     def find_norm_avg_var(self,var_list):
         var_list_new = list()

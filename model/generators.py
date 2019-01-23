@@ -36,6 +36,118 @@ def _calculate_batch_diff(input_feature):
 ##############################################################################################
 ##############################################################################################
 ##############################################################################################
+def WNet_Generator(content_prototype,
+                   style_reference,
+                   is_training,
+                   batch_size,
+                   generator_device,
+                   residual_at_layer,
+                   residual_block_num,
+                   scope,
+                   initializer,
+                   weight_decay, weight_decay_rate,
+                   reuse=False,
+                   adain_use=False,
+                   adain_preparation_model=None,
+                   debug_mode=True,
+                   other_info=None):
+
+    style_input_number = len(style_reference)
+    content_prototype_number = int(content_prototype.shape[3])
+
+    # content prototype encoder part
+    encoded_content_final, content_short_cut_interface, content_residual_interface, content_full_feature_list, _ = \
+        encoder_framework(images=content_prototype,
+                          is_training=is_training,
+                          encoder_device=generator_device,
+                          residual_at_layer=residual_at_layer,
+                          residual_connection_mode='Multi',
+                          scope=scope + '/content_encoder',
+                          reuse=reuse,
+                          initializer=initializer,
+                          weight_decay=weight_decay,
+                          weight_decay_rate=weight_decay_rate,
+                          adain_use=adain_use)
+
+    # style reference encoder part
+    encoded_style_final_list = list()
+    style_short_cut_interface_list = list()
+    style_residual_interface_list = list()
+    full_style_feature_list = list()
+    for ii in range(style_input_number):
+        if ii==0:
+            curt_reuse=reuse
+            current_weight_decay = weight_decay
+        else:
+            curt_reuse=True
+            current_weight_decay = False
+
+        encoded_style_final, current_style_short_cut_interface, current_style_residual_interface, current_full_feature_list, _ = \
+            encoder_framework(images=style_reference[ii],
+                              is_training=is_training,
+                              encoder_device=generator_device,
+                              residual_at_layer=residual_at_layer,
+                              residual_connection_mode='Single',
+                              scope=scope + '/style_encoder',
+                              reuse=curt_reuse,
+                              initializer=initializer,
+                              weight_decay=current_weight_decay,
+                              weight_decay_rate=weight_decay_rate,
+                              adain_use=adain_use)
+        encoded_style_final_list.append(encoded_style_final)
+        style_short_cut_interface_list.append(current_style_short_cut_interface)
+        style_residual_interface_list.append(current_style_residual_interface)
+        full_style_feature_list.append(current_full_feature_list)
+
+    encoded_layer_list, style_shortcut_batch_diff, style_residual_batch_diff,encoded_style_final = \
+        wnet_feature_mixer_framework(generator_device=generator_device,
+                                     scope=scope,
+                                     is_training=is_training,
+                                     reuse=reuse,
+                                     initializer=initializer,
+                                     debug_mode=debug_mode,
+                                     weight_decay=weight_decay,
+                                     weight_decay_rate=weight_decay_rate,
+                                     style_input_number=style_input_number,
+                                     residual_block_num=residual_block_num,
+                                     residual_at_layer=residual_at_layer,
+                                     encoded_style_final_list=encoded_style_final_list,
+                                     style_short_cut_interface_list=style_short_cut_interface_list,
+                                     style_residual_interface_list=style_residual_interface_list,
+                                     content_short_cut_interface=content_short_cut_interface,
+                                     content_residual_interface=content_residual_interface,
+                                     full_style_feature_list=full_style_feature_list,
+                                     adain_use=adain_use,
+                                     adain_preparation_model=adain_preparation_model)
+
+
+    return_str = ("W-Net-GeneratorEncoderDecoder %d Layers with %d ResidualBlocks connecting %d-th layer"
+                  % (int(np.floor(math.log(int(content_prototype[0].shape[1])) / math.log(2))),
+                     residual_block_num,
+                     residual_at_layer))
+
+    # decoder part
+    img_width = int(content_prototype.shape[1])
+    img_filters = int(int(content_prototype.shape[3]) / content_prototype_number)
+    generated_img,decoder_full_feature_list, _ = \
+        wnet_decoder_framework(encoded_layer_list=encoded_layer_list,
+                               decoder_input_org=encoded_layer_list[0],
+                               is_training=is_training,
+                               output_width=img_width,
+                               output_filters=img_filters,
+                               batch_size=batch_size,
+                               decoder_device=generator_device,
+                               scope=scope+'/decoder',
+                               reuse=reuse,
+                               weight_decay=weight_decay,
+                               initializer=initializer,
+                               weight_decay_rate=weight_decay_rate,
+                               adain_use=adain_use)
+
+    return generated_img, encoded_content_final, encoded_style_final, return_str, \
+           style_shortcut_batch_diff, style_residual_batch_diff, \
+           content_full_feature_list, full_style_feature_list, decoder_full_feature_list
+
 def EmdNet_Generator(content_prototype,
                      style_reference,
                      is_training,
@@ -149,8 +261,6 @@ def ResEmd_EmdNet_Generator(content_prototype,
                             debug_mode=True,
                             other_info=None):
 
-
-
     residual_at_layer=-1
     residual_block_num=-1
     adain_preparation_model=None
@@ -242,117 +352,7 @@ def ResEmd_EmdNet_Generator(content_prototype,
            content_full_feature_list, style_full_feature_list, decoder_full_feature_list
 
 
-def WNet_Generator(content_prototype,
-                   style_reference,
-                   is_training,
-                   batch_size,
-                   generator_device,
-                   residual_at_layer,
-                   residual_block_num,
-                   scope,
-                   initializer,
-                   weight_decay, weight_decay_rate,
-                   reuse=False,
-                   adain_use=False,
-                   adain_preparation_model=None,
-                   debug_mode=True,
-                   other_info=None):
 
-    style_input_number = len(style_reference)
-    content_prototype_number = int(content_prototype.shape[3])
-
-    # content prototype encoder part
-    encoded_content_final, content_short_cut_interface, content_residual_interface, content_full_feature_list, _ = \
-        encoder_framework(images=content_prototype,
-                          is_training=is_training,
-                          encoder_device=generator_device,
-                          residual_at_layer=residual_at_layer,
-                          residual_connection_mode='Multi',
-                          scope=scope + '/content_encoder',
-                          reuse=reuse,
-                          initializer=initializer,
-                          weight_decay=weight_decay,
-                          weight_decay_rate=weight_decay_rate,
-                          adain_use=adain_use)
-
-    # style reference encoder part
-    encoded_style_final_list = list()
-    style_short_cut_interface_list = list()
-    style_residual_interface_list = list()
-    full_style_feature_list = list()
-    for ii in range(style_input_number):
-        if ii==0:
-            curt_reuse=reuse
-            current_weight_decay = weight_decay
-        else:
-            curt_reuse=True
-            current_weight_decay = False
-
-        encoded_style_final, current_style_short_cut_interface, current_style_residual_interface, current_full_feature_list, _ = \
-            encoder_framework(images=style_reference[ii],
-                              is_training=is_training,
-                              encoder_device=generator_device,
-                              residual_at_layer=residual_at_layer,
-                              residual_connection_mode='Single',
-                              scope=scope + '/style_encoder',
-                              reuse=curt_reuse,
-                              initializer=initializer,
-                              weight_decay=current_weight_decay,
-                              weight_decay_rate=weight_decay_rate,
-                              adain_use=adain_use)
-        encoded_style_final_list.append(encoded_style_final)
-        style_short_cut_interface_list.append(current_style_short_cut_interface)
-        style_residual_interface_list.append(current_style_residual_interface)
-        full_style_feature_list.append(current_full_feature_list)
-
-    encoded_layer_list, style_shortcut_batch_diff, style_residual_batch_diff,encoded_style_final = \
-        wnet_feature_mixer_framework(generator_device=generator_device,
-                                     scope=scope,
-                                     is_training=is_training,
-                                     reuse=reuse,
-                                     initializer=initializer,
-                                     debug_mode=debug_mode,
-                                     weight_decay=weight_decay,
-                                     weight_decay_rate=weight_decay_rate,
-                                     style_input_number=style_input_number,
-                                     residual_block_num=residual_block_num,
-                                     residual_at_layer=residual_at_layer,
-                                     encoded_style_final_list=encoded_style_final_list,
-                                     style_short_cut_interface_list=style_short_cut_interface_list,
-                                     style_residual_interface_list=style_residual_interface_list,
-                                     content_short_cut_interface=content_short_cut_interface,
-                                     content_residual_interface=content_residual_interface,
-                                     full_style_feature_list=full_style_feature_list,
-                                     adain_use=adain_use,
-                                     adain_preparation_model=adain_preparation_model)
-
-
-    return_str = ("W-Net-GeneratorEncoderDecoder %d Layers with %d ResidualBlocks connecting %d-th layer"
-                  % (int(np.floor(math.log(int(content_prototype[0].shape[1])) / math.log(2))),
-                     residual_block_num,
-                     residual_at_layer))
-
-    # decoder part
-    img_width = int(content_prototype.shape[1])
-    img_filters = int(int(content_prototype.shape[3]) / content_prototype_number)
-    generated_img,decoder_full_feature_list, _ = \
-        wnet_decoder_framework(encoded_layer_list=encoded_layer_list,
-                               decoder_input_org=encoded_layer_list[0],
-                               is_training=is_training,
-                               output_width=img_width,
-                               output_filters=img_filters,
-                               batch_size=batch_size,
-                               decoder_device=generator_device,
-                               scope=scope+'/decoder',
-                               reuse=reuse,
-                               weight_decay=weight_decay,
-                               initializer=initializer,
-                               weight_decay_rate=weight_decay_rate,
-                               adain_use=adain_use)
-
-    return generated_img, encoded_content_final, encoded_style_final, return_str, \
-           style_shortcut_batch_diff, style_residual_batch_diff, \
-           content_full_feature_list, full_style_feature_list, decoder_full_feature_list
 
 
 def AdobeNet_Generator(content_prototype,
@@ -370,6 +370,12 @@ def AdobeNet_Generator(content_prototype,
                        adain_preparation_model=None,
                        debug_mode=True,
                        other_info=None):
+    residual_at_layer = -1
+    residual_block_num = -1
+    adain_preparation_model = None
+    adain_use = False
+
+
     style_input_number = len(style_reference)
     content_prototype_number = int(content_prototype.shape[3])
 
@@ -458,6 +464,11 @@ def ResMixerNet_Generator(content_prototype,
                           adain_preparation_model=None,
                           debug_mode=True,
                           other_info=None):
+    residual_at_layer = -1
+    residual_block_num = -1
+    adain_preparation_model = None
+    adain_use = False
+
     style_input_number = len(style_reference)
     content_prototype_number = int(content_prototype.shape[3])
 

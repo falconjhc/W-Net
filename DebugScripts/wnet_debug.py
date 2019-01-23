@@ -27,7 +27,7 @@ input_args = [
     # '--content_input_number_actual','3', # how many actual content inputs
     '--init_training_epochs','1',
     '--final_training_epochs','25',
-    '--adain_use','1',
+    '--adain_use','0',
 
     '--generator_device','/device:GPU:0',
     '--discriminator_device', '/device:GPU:0',
@@ -36,7 +36,17 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','DEBUG-ResMixer-5-DenseMixer',# experiment name prefix
+
+
+    #'--experiment_id','DEBUG-EmdNet-Style4',# experiment name prefix
+    # '--experiment_id','DEBUG-EmdNet-Style4-AdaIN',
+    # '--experiment_id','DEBUG-ResEmdNet-Style4',
+    # '--experiment_id','DEBUG-ResEmdNet-NN-Style4',
+    # '--experiment_id','DEBUG-AdobeNet-Style4',
+    # '--experiment_id','DEBUG-ResMixer-5-SimpleMixer',
+    '--experiment_id','DEBUG-ResMixer-5-DenseMixer',
+
+
     '--experiment_dir','../../DEBUG-Model', # model saving location
     '--log_dir','DEBUG-Log/',# log file saving location
     '--print_info_seconds','3',

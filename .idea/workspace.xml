@@ -5,7 +5,40 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DebugScripts/wnet_debug.py" beforeDir="false" afterPath="$PROJECT_DIR$/DebugScripts/wnet_debug.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHP/StyleHP380_ContentPf32+Hw32.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw100_ContentPf32+Hw32.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw300_ContentPf32+Hw32.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32-AdaIN-Multi.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32-AdaIN-Single.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPf32+Hw32.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts/StyleHw/StyleHw50_ContentPfStd1.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32-AdaIN-Multi.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32-AdaIN-Single.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPf32.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf50_ContentPfStd1.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts/StylePf/StylePf80_ContentPf32.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_AdobeNet/StyleHw/StyleHw50-Adobe_ContentPf32+Hw32-Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_AdobeNet/StyleHw/StyleHw50-Adobe_ContentPf32+Hw32-Style1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_AdobeNet/StyleHw/StyleHw50-Adobe_ContentPf32+Hw32-Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_AdobeNet/StyleHw/StyleHw50-Adobe_ContentPf32+Hw32-Style4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_AdobeNet/StylePf/StylePf50-Adobe_ContentPf32-Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_AdobeNet/StylePf/StylePf50-Adobe_ContentPf32-Style1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_AdobeNet/StylePf/StylePf50-Adobe_ContentPf32-Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_AdobeNet/StylePf/StylePf50-Adobe_ContentPf32-Style4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd_ContentPf32+Hw32-Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd_ContentPf32+Hw32-Style1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd_ContentPf32+Hw32-Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd_ContentPf32+Hw32-Style4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf/StylePf50-ResEmd-NN_ContentPf32-Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf/StylePf50-ResEmd-NN_ContentPf32-Style1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf/StylePf50-ResEmd-NN_ContentPf32-Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf/StylePf50-ResEmd-NN_ContentPf32-Style4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf/StylePf50-ResEmd_ContentPf32-Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf/StylePf50-ResEmd_ContentPf32-Style1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf/StylePf50-ResEmd_ContentPf32-Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf/StylePf50-ResEmd_ContentPf32-Style4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StyleHw/StyleHw50-ResMixer-5-DenseMixer_ContentPf32+Hw32-Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StyleHw/StyleHw50-ResMixer-5-DenseMixer_ContentPf32+Hw32-Style1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StyleHw/StyleHw50-ResMixer-5-DenseMixer_ContentPf32+Hw32-Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StyleHw/StyleHw50-ResMixer-5-DenseMixer_ContentPf32+Hw32-Style4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StyleHw/StyleHw50-ResMixer-5-SimpleMixer_ContentPf32+Hw32-Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StyleHw/StyleHw50-ResMixer-5-SimpleMixer_ContentPf32+Hw32-Style1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StyleHw/StyleHw50-ResMixer-5-SimpleMixer_ContentPf32+Hw32-Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StyleHw/StyleHw50-ResMixer-5-SimpleMixer_ContentPf32+Hw32-Style4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StylePf/StylePf50-ResMixer-5-DenseMixer_ContentPf32-Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StylePf/StylePf50-ResMixer-5-DenseMixer_ContentPf32-Style1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StylePf/StylePf50-ResMixer-5-DenseMixer_ContentPf32-Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StylePf/StylePf50-ResMixer-5-DenseMixer_ContentPf32-Style4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StylePf/StylePf50-ResMixer-5-SimpleMixer_ContentPf32-Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StylePf/StylePf50-ResMixer-5-SimpleMixer_ContentPf32-Style1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StylePf/StylePf50-ResMixer-5-SimpleMixer_ContentPf32-Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StylePf/StylePf50-ResMixer-5-SimpleMixer_ContentPf32-Style4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/generators.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/generators.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/wnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,15 +56,16 @@
     <SUITE FILE_PATH="coverage/W_Net$generate_trainval_from_different_sets.coverage" NAME="generate_trainval_from_different_sets Coverage Results" MODIFIED="1547736101681" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ToolScripts" />
     <SUITE FILE_PATH="coverage/W_Net$Generate_FileList_Scripts.coverage" NAME="Generate_FileList_Scripts Coverage Results" MODIFIED="1547898594028" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing" />
     <SUITE FILE_PATH="coverage/W_Net$debug_infer.coverage" NAME="debug_infer Coverage Results" MODIFIED="1541760090040" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$StylePf50_Adobe_ContentPf32_Style1.coverage" NAME="StylePf50-Adobe_ContentPf32-Style1 Coverage Results" MODIFIED="1548227887767" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_AdobeNet/StylePf" />
     <SUITE FILE_PATH="coverage/W_Net$Script_ScanFontFiles.coverage" NAME="Script_ScanFontFiles Coverage Results" MODIFIED="1547778332480" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing/Print_Chinese_Charfacter" />
-    <SUITE FILE_PATH="coverage/W_Net$wnet.coverage" NAME="wnet Coverage Results" MODIFIED="1538555232986" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/W_Net$wnet.coverage" NAME="wnet Coverage Results" MODIFIED="1548236441215" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
     <SUITE FILE_PATH="coverage/W_Net$StylePf50_ResEmd_ContentPf32_Style1.coverage" NAME="StylePf50-ResEmd_ContentPf32-Style1 Coverage Results" MODIFIED="1547822161162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf" />
     <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ResEmd_ContentPf32_Hw32_Style1.coverage" NAME="StyleHw50-ResEmd_ContentPf32+Hw32-Style1 Coverage Results" MODIFIED="1547822061679" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw" />
     <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ResEmd_ContentPf32_Hw32_Style4.coverage" NAME="StyleHw50-ResEmd_ContentPf32+Hw32-Style4 Coverage Results" MODIFIED="1547822149746" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw" />
     <SUITE FILE_PATH="coverage/W_Net$Infer_StylePf50_ContentStd1.coverage" NAME="Infer_StylePf50_ContentStd1 Coverage Results" MODIFIED="1545713322110" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/StyleInferScripts" />
     <SUITE FILE_PATH="coverage/W_Net$StylePf50_ResEmd_ContentPf32_Style4.coverage" NAME="StylePf50-ResEmd_ContentPf32-Style4 Coverage Results" MODIFIED="1547822180477" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf" />
     <SUITE FILE_PATH="coverage/W_Net$rename.coverage" NAME="rename Coverage Results" MODIFIED="1547902992634" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utilities" />
-    <SUITE FILE_PATH="coverage/W_Net$wnet_debug.coverage" NAME="wnet_debug Coverage Results" MODIFIED="1548164630666" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$wnet_debug.coverage" NAME="wnet_debug Coverage Results" MODIFIED="1548236449354" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
     <SUITE FILE_PATH="coverage/W_Net$Infer_StylePf50_ContentPf32.coverage" NAME="Infer_StylePf50_ContentPf32 Coverage Results" MODIFIED="1546926471797" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/StyleInferScripts" />
     <SUITE FILE_PATH="coverage/W_Net$gnt_to_png.coverage" NAME="gnt_to_png Coverage Results" MODIFIED="1539063667636" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing/Handwriting_Chinese_Character" />
     <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ResEmd_NN_ContentPf32_Hw32_Style1.coverage" NAME="StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style1 Coverage Results" MODIFIED="1548136699566" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw" />
@@ -46,20 +80,49 @@
     <window id="2">
       <content type="file-editors">
         <state>
-          <leaf>
-            <file pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/model/wnet.py">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="594">
-                    <caret line="213" selection-start-line="213" selection-end-line="213" />
-                    <folding>
-                      <element signature="e#24#62#0" expanded="true" />
-                    </folding>
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
+          <splitter split-orientation="horizontal" split-proportion="0.5359375">
+            <split-first>
+              <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+                <file pinned="false" current-in-tab="true">
+                  <entry file="file://$PROJECT_DIR$/model/wnet.py">
+                    <provider selected="true" editor-type-id="text-editor">
+                      <state relative-caret-position="19692">
+                        <caret line="1283" selection-start-line="1283" selection-end-line="1283" />
+                        <folding>
+                          <element signature="e#24#62#0" expanded="true" />
+                        </folding>
+                      </state>
+                    </provider>
+                  </entry>
+                </file>
+              </leaf>
+            </split-first>
+            <split-second>
+              <leaf>
+                <file pinned="false" current-in-tab="false">
+                  <entry file="file://$PROJECT_DIR$/model/generators.py">
+                    <provider selected="true" editor-type-id="text-editor">
+                      <state relative-caret-position="2014">
+                        <caret line="462" column="35" selection-start-line="462" selection-start-column="26" selection-end-line="462" selection-end-column="35" />
+                        <folding>
+                          <element signature="e#1#24#0" expanded="true" />
+                        </folding>
+                      </state>
+                    </provider>
+                  </entry>
+                </file>
+                <file pinned="false" current-in-tab="true">
+                  <entry file="file://$PROJECT_DIR$/model/mixers.py">
+                    <provider selected="true" editor-type-id="text-editor">
+                      <state relative-caret-position="-6334">
+                        <caret line="154" column="63" selection-start-line="154" selection-start-column="34" selection-end-line="154" selection-end-column="63" />
+                      </state>
+                    </provider>
+                  </entry>
+                </file>
+              </leaf>
+            </split-second>
+          </splitter>
         </state>
       </content>
     </window>
@@ -76,32 +139,32 @@
           <entry key="project.open.time.4" value="2" />
           <entry key="project.open.time.5" value="12" />
           <entry key="project.open.time.6" value="15" />
-          <entry key="project.open.time.7" value="10" />
+          <entry key="project.open.time.7" value="11" />
           <entry key="project.open.time.8" value="4" />
           <entry key="project.open.time.9" value="2" />
-          <entry key="project.opened" value="52" />
+          <entry key="project.opened" value="53" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="517" />
+          <entry key="py" value="533" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="517" />
+          <entry key="Python" value="533" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="2554" />
           <entry key="Script_GeneratePrinted" value="1" />
-          <entry key="py" value="22648" />
+          <entry key="py" value="23235" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="25203" />
+          <entry key="Python" value="25790" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
@@ -148,17 +211,7 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/DebugScripts/wnet_debug.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="38" column="39" lean-forward="true" selection-start-line="38" selection-start-column="39" selection-end-line="38" selection-end-column="39" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -262,11 +315,11 @@
         <option value="$PROJECT_DIR$/model/mixers.py" />
         <option value="$PROJECT_DIR$/model/decoders.py" />
         <option value="$PROJECT_DIR$/model/encoders.py" />
-        <option value="$PROJECT_DIR$/model/generators.py" />
-        <option value="$PROJECT_DIR$/model/wnet.py" />
         <option value="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StyleHw/StyleHw50-ResMixer-5-DenseMixer_ContentPf32+Hw32-Style1.py" />
         <option value="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StyleHw/StyleHw50-ResMixer-5-SimpleMixer_ContentPf32+Hw32-Style1.py" />
+        <option value="$PROJECT_DIR$/model/wnet.py" />
         <option value="$PROJECT_DIR$/DebugScripts/wnet_debug.py" />
+        <option value="$PROJECT_DIR$/model/generators.py" />
       </list>
     </option>
   </component>
@@ -276,7 +329,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-27" />
     <option name="y" value="27" />
     <option name="width" value="861" />
@@ -307,6 +360,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -327,19 +381,23 @@
             <path>
               <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
               <item name="W-Net" type="462c0819:PsiDirectoryNode" />
-              <item name="TrainingScripts_ResMixerNet" type="462c0819:PsiDirectoryNode" />
+              <item name="TrainingScripts_AdobeNet" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
               <item name="W-Net" type="462c0819:PsiDirectoryNode" />
-              <item name="TrainingScripts_ResMixerNet" type="462c0819:PsiDirectoryNode" />
-              <item name="StyleHw" type="462c0819:PsiDirectoryNode" />
+              <item name="TrainingScripts_AdobeNet" type="462c0819:PsiDirectoryNode" />
+              <item name="StylePf" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net" type="462c0819:PsiDirectoryNode" />
+              <item name="TrainingScripts_EmdNet" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -362,50 +420,6 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.wnet_debug">
-    <configuration name="Generate_FileList_Scripts" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="W-Net" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/DataPreProcessing" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DataPreProcessing/Generate_FileList_Scripts.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style1" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="W-Net" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style1.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="StyleHw50-ResMixer-5-DenseMixer_ContentPf32+Hw32-Style1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -450,6 +464,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="StylePf50-Adobe_ContentPf32-Style1" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="W-Net" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/TrainingScripts_AdobeNet/StylePf" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TrainingScripts_AdobeNet/StylePf/StylePf50-Adobe_ContentPf32-Style1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -464,6 +500,28 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="wnet" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="W-Net" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/model/wnet.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -492,19 +550,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.Generate_FileList_Scripts" />
       <item itemvalue="Python.wnet_debug" />
-      <item itemvalue="Python.StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style1" />
       <item itemvalue="Python.StyleHw50-ResMixer-5-DenseMixer_ContentPf32+Hw32-Style1" />
       <item itemvalue="Python.StyleHw50-ResMixer-5-SimpleMixer_ContentPf32+Hw32-Style1" />
+      <item itemvalue="Python.StylePf50-Adobe_ContentPf32-Style1" />
+      <item itemvalue="Python.wnet" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.wnet_debug" />
+        <item itemvalue="Python.wnet" />
+        <item itemvalue="Python.StylePf50-Adobe_ContentPf32-Style1" />
         <item itemvalue="Python.StyleHw50-ResMixer-5-SimpleMixer_ContentPf32+Hw32-Style1" />
         <item itemvalue="Python.StyleHw50-ResMixer-5-DenseMixer_ContentPf32+Hw32-Style1" />
-        <item itemvalue="Python.StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style1" />
-        <item itemvalue="Python.Generate_FileList_Scripts" />
       </list>
     </recent_temporary>
   </component>
@@ -522,16 +580,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="51" y="25" width="1229" height="999" extended-state="6" />
-    <editor active="true" />
+    <frame x="51" y="25" width="1229" height="999" extended-state="7" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19526628" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1986475" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.29976302" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3092417" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.6066351" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -539,7 +596,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="11" weight="0.27725118" />
+      <window_info anchor="bottom" id="Python Console" order="11" weight="0.45734596" />
       <window_info anchor="bottom" id="Terminal" order="12" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" weight="0.32938388" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -547,7 +604,7 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" x="938" y="27" width="342" height="513" id="SciView" order="3" show_stripe_button="false" sideWeight="0.8138748" type="FLOATING" weight="0.2766625" />
       <window_info anchor="right" id="Database" order="4" />
-      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.18612522" side_tool="true" visible="true" weight="0.068469994" />
+      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.18612522" side_tool="true" visible="true" weight="0.05663567" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23330516" />
@@ -616,12 +673,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/wnet.py</url>
-          <line>2037</line>
+          <line>2097</line>
           <option name="timeStamp" value="259" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/wnet.py</url>
-          <line>801</line>
+          <line>861</line>
           <option name="timeStamp" value="324" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -645,24 +702,19 @@
           <option name="timeStamp" value="400" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/wnet.py</url>
-          <line>176</line>
-          <option name="timeStamp" value="458" />
+          <url>file://$PROJECT_DIR$/model/generators.py</url>
+          <line>263</line>
+          <option name="timeStamp" value="461" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/generators.py</url>
+          <line>349</line>
+          <option name="timeStamp" value="462" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/FeatureExtractorScripts/ContentStyle-Hw300Pf80.py" />
-    <entry file="file://$PROJECT_DIR$/FeatureExtractorScripts/Content-Hw300Pf80.py" />
-    <entry file="file://$PROJECT_DIR$/FeatureExtractorScripts/Style-Hw300Pf80.py" />
-    <entry file="file://$PROJECT_DIR$/TrainingScripts_WithFlip/StyleHw/StyleHw50_ContentPf32+Hw32.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="31" column="22" lean-forward="true" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utilities/infer_implementations.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="440">
@@ -756,11 +808,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd_ContentPf32+Hw32-Style4.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-162" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd_ContentPf32+Hw32-Style1.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-54" />
@@ -845,13 +892,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="15" column="31" selection-start-line="15" selection-start-column="31" selection-end-line="15" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf/StylePf50-ResEmd-NN_ContentPf32-Style4.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
@@ -884,13 +924,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/platform/app.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="103" column="35" lean-forward="true" selection-start-line="103" selection-start-column="35" selection-end-line="103" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/decoders.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-252">
@@ -902,23 +935,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="828">
           <caret line="332" selection-start-line="332" selection-end-line="332" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/mixers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2754">
-          <caret line="154" column="63" selection-start-line="154" selection-start-column="34" selection-end-line="154" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/generators.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="12" column="44" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="44" />
-          <folding>
-            <element signature="e#1#24#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -936,20 +952,82 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/wnet.py">
+    <entry file="file://$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd_ContentPf32+Hw32-Style4.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="213" selection-start-line="213" selection-end-line="213" />
+        <state relative-caret-position="-108" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-AdaIN_ContentPf32+Hw32-Style1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="37" column="51" selection-start-line="37" selection-start-column="32" selection-end-line="37" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="37" column="51" lean-forward="true" selection-start-line="37" selection-start-column="32" selection-end-line="37" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf/StylePf50_ContentPf32-Style1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="38" column="45" lean-forward="true" selection-start-line="38" selection-start-column="32" selection-end-line="38" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf/StylePf50-AdaIN_ContentPf32-Style1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-162" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/platform/app.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="124" selection-start-line="124" selection-end-line="124" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TrainingScripts_AdobeNet/StylePf/StylePf50-Adobe_ContentPf32-Style1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="38" column="40" selection-start-line="38" selection-start-column="32" selection-end-line="38" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/generators.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2014">
+          <caret line="462" column="35" selection-start-line="462" selection-start-column="26" selection-end-line="462" selection-end-column="35" />
           <folding>
-            <element signature="e#24#62#0" expanded="true" />
+            <element signature="e#1#24#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/mixers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6334">
+          <caret line="154" column="63" selection-start-line="154" selection-start-column="34" selection-end-line="154" selection-end-column="63" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/DebugScripts/wnet_debug.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="38" column="39" lean-forward="true" selection-start-line="38" selection-start-column="39" selection-end-line="38" selection-end-column="39" />
+        <state relative-caret-position="93">
+          <caret line="77" column="32" lean-forward="true" selection-start-line="77" selection-start-column="32" selection-end-line="77" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/wnet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19692">
+          <caret line="1283" selection-start-line="1283" selection-end-line="1283" />
+          <folding>
+            <element signature="e#24#62#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
