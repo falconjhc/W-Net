@@ -175,18 +175,19 @@ class WNet(object):
 
         if ('AdaIN' in experiment_id and (not self.adain_use)) or \
             ((not 'AdaIN' in experiment_id) and self.adain_use):
-            print(self.print_separater)
-            print(self.print_separater)
-            print(self.print_separater)
-            print(self.print_separater)
-            print(self.print_separater)
-            print("Error: AdaIN Comflicts in ExperimentID and AdaIN Marks")
-            print(self.print_separater)
-            print(self.print_separater)
-            print(self.print_separater)
-            print(self.print_separater)
-            print(self.print_separater)
-            return
+            if not 'NonAdaIN' in experiment_id:
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print("Error: AdaIN Comflicts in ExperimentID and AdaIN Marks")
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                return
         if ('AdaIN' in experiment_id or self.adain_use) and (('Res' in experiment_id and 'Emd' in experiment_id)
                                                              or 'Adobe' in experiment_id
                                                              or 'ResMixer' in experiment_id):
@@ -776,235 +777,6 @@ class WNet(object):
                                        trn_fake_dis_extr_summaries=trn_fake_dis_extr_summaries,
                                        val_fake_dis_extr_summaries=val_fake_dis_extr_summaries)
         setattr(self, "summary_handle", summary_handle)
-
-
-    def character_generation(self):
-
-        def _feed(content, style):
-            return_dict = {}
-            return_dict.update({content_prototype_placeholder:content})
-            for ii in range(style.shape[3]):
-                return_dict.update({style_reference_placeholder_list[ii]: np.expand_dims(style[:,:,:,ii],axis=3)})
-            return return_dict
-
-
-        charset_level1, character_label_level1 = \
-            inf_tools.get_chars_set_from_level1_2(path='../ContentTxt/GB2312_Level_1.txt',
-                                                  level=1)
-        charset_level2, character_label_level2 = \
-            inf_tools.get_chars_set_from_level1_2(path='../ContentTxt/GB2312_Level_2.txt',
-                                                  level=2)
-
-        # get data available
-        print(self.print_separater)
-        content_prototype, content_label1_vec, valid_mark = \
-            inf_tools.get_prototype_on_targeted_content_input_txt(targeted_content_input_txt=self.targeted_content_input_txt,
-                                                                  level1_charlist=charset_level1,
-                                                                  level2_charlist=charset_level2,
-                                                                  level1_labellist=character_label_level1,
-                                                                  level2_labellist=character_label_level2,
-                                                                  content_file_list_txt=self.file_list_txt_content,
-                                                                  content_file_data_dir=self.content_data_dir,
-                                                                  img_width=self.img2img_width,
-                                                                  img_filters=self.input_output_img_filter_num)
-        if not valid_mark:
-            print("Generation Terminated.")
-
-        style_reference = inf_tools.get_style_references(img_path=self.known_style_img_path,
-                                                         resave_path=self.save_path,
-                                                         style_input_number=self.style_input_number)
-
-        output_paper_shape = self.save_mode.split(':')
-        output_paper_rows = int(output_paper_shape[0])
-        output_paper_cols = int(output_paper_shape[1])
-        if output_paper_rows * output_paper_cols < content_prototype.shape[0]:
-            print('Incorrect Paper Size !@!~!@~!~@~!@~')
-            return
-
-
-
-        with tf.Graph().as_default():
-            config = tf.ConfigProto(allow_soft_placement=True, log_device_placement=False)
-            config.gpu_options.allow_growth = True
-            self.sess = tf.Session(config=config)
-
-            # build style reference encoder
-            with tf.device(self.generator_devices):
-
-
-
-                style_reference_placeholder_list = list()
-                for ii in range(style_reference.shape[3]):
-                    current_style_reference_placeholder = tf.placeholder(tf.float32, [1, self.source_img_width,
-                                                                                      self.source_img_width,
-                                                                                      1],
-                                                                         name='placeholder_style_reference')
-                    style_reference_placeholder_list.append(current_style_reference_placeholder)
-
-
-                content_prototype_placeholder = tf.placeholder(tf.float32,
-                                                               [1,
-                                                                self.source_img_width,
-                                                                self.source_img_width,
-                                                                content_prototype.shape[3]],
-                                                               name='placeholder_content_prototype')
-
-                generated_infer,_,_,_,_,_,content_full_faeture_list,style_full_feature_list,decoded_feature_list = \
-                    self.generator_implementation(content_prototype=content_prototype_placeholder,
-                                                  style_reference=style_reference_placeholder_list,
-                                                  is_training=False,
-                                                  batch_size=1,
-                                                  generator_device=self.generator_devices,
-                                                  residual_at_layer=self.generator_residual_at_layer,
-                                                  residual_block_num=self.generator_residual_blocks,
-                                                  scope='generator',
-                                                  initializer=self.initializer,
-                                                  weight_decay=False, weight_decay_rate=0,
-                                                  reuse=False,
-                                                  adain_use=self.adain_use,
-                                                  adain_preparation_model=self.adain_preparation_model,
-                                                  debug_mode=False,
-                                                  other_info=self.other_info)
-
-                gen_vars_save = self.find_norm_avg_var([var for var in tf.trainable_variables() if 'generator' in var.name])
-
-
-
-            # model load
-            saver_generator = tf.train.Saver(max_to_keep=1, var_list=gen_vars_save)
-            generator_restored = self.restore_model(saver=saver_generator,
-                                                    model_dir=self.model_dir,
-                                                    model_name='Generator')
-
-            if not generator_restored:
-                return
-            print(self.print_separater)
-
-        # generating characters
-        full_content = np.zeros(dtype=np.float32,
-                                shape=[content_prototype.shape[0],
-                                       self.img2img_width,self.img2img_width,
-                                       content_prototype.shape[3]])
-        full_generated = np.zeros(dtype=np.float32,
-                                  shape=[content_prototype.shape[0],
-                                         self.img2img_width,self.img2img_width,
-                                         self.input_output_img_filter_num])
-        current_counter=0
-        for current_generating_content_counter in range(content_prototype.shape[0]):
-            current_content_char = np.expand_dims(np.squeeze(content_prototype[current_generating_content_counter,:,:,:]),axis=0)
-            if current_content_char.ndim==3:
-                current_content_char = np.expand_dims(current_content_char,axis=3)
-            current_generated_char, \
-            style_full_features,content_full_features,decoded_full_features = \
-                self.sess.run([generated_infer,
-                               style_full_feature_list,content_full_faeture_list,decoded_feature_list],
-                              feed_dict=_feed(content=current_content_char,
-                                              style=style_reference))
-
-
-
-
-            # feature_saving_path = '/Users/harric/Desktop/Features'
-            #
-            # style_path = os.path.join(feature_saving_path,'Style')
-            # for ii in range(len(style_full_features)):
-            #     current_style_path = 'StyleNo%d' % ii
-            #     current_style_path = os.path.join(style_path, current_style_path)
-            #     if os.path.exists(current_style_path):
-            #         shutil.rmtree(current_style_path)
-            #     os.makedirs(current_style_path)
-            #     for jj in range(len(style_full_features[ii])):
-            #         if style_full_features[ii][jj].shape[1] > 1:
-            #             current_style_current_feature_level_path = 'LevelNo%d' % jj
-            #             current_style_current_feature_level_path = os.path.join(current_style_path, current_style_current_feature_level_path)
-            #             if os.path.exists(current_style_current_feature_level_path):
-            #                 shutil.rmtree(current_style_current_feature_level_path)
-            #             os.makedirs(current_style_current_feature_level_path)
-            #
-            #             for kk in range(style_full_features[ii][jj].shape[3]):
-            #
-            #                 inf_tools.numpy_img_save(img=image_revalue(style_full_features[ii][jj][:, :, :, kk],
-            #                                                            tah_mark=True),
-            #                                          path=os.path.join(current_style_current_feature_level_path,
-            #                                                            'Style%dFeatureLevel%dChannel%d.png'
-            #                                                            % (ii,jj,kk)))
-            #     inf_tools.numpy_img_save(img=image_revalue(style_reference[:,:,:,ii], tah_mark=False),
-            #                              path=os.path.join(current_style_path,
-            #                                                'StyleRef%d.png' % ii))
-            #
-            # content_path = os.path.join(feature_saving_path,'Content')
-            # for ii in range(len(content_full_features)):
-            #     if content_full_features[ii].shape[1] > 1:
-            #         current_content_path = 'ContentFeatureLevel%d' % ii
-            #         current_content_path = os.path.join(content_path,current_content_path)
-            #         if os.path.exists(current_content_path):
-            #             shutil.rmtree(current_content_path)
-            #         os.makedirs(current_content_path)
-            #         for jj in range(content_full_features[ii].shape[3]):
-            #             inf_tools.numpy_img_save(img=image_revalue(content_full_features[ii][:, :, :, jj],tah_mark=True),
-            #                                      path=os.path.join(current_content_path,
-            #                                                        'ContentFeatureLevel%dChannel%d.png'
-            #                                                        % (ii, jj)))
-            #
-            # content_path = os.path.join(content_path,'ContentPrototype')
-            # if os.path.exists(content_path):
-            #     shutil.rmtree(content_path)
-            # os.makedirs(content_path)
-            # for ii in range(current_content_char.shape[3]):
-            #     inf_tools.numpy_img_save(img=image_revalue(current_content_char[:, :, :, ii],tah_mark=False),
-            #                              path=os.path.join(content_path,
-            #                                                'ContentPro%d.png.png'
-            #                                                % ii))
-            #
-            # decoded_path = os.path.join(feature_saving_path,'Decoder')
-            # for ii in range(len(decoded_full_features)):
-            #     if decoded_full_features[ii].shape[1] > 1:
-            #         current_decoded_path = 'DecodedFeatureLevel%d' % ii
-            #         current_decoded_path = os.path.join(decoded_path,current_decoded_path)
-            #         if os.path.exists(current_decoded_path):
-            #             shutil.rmtree(current_decoded_path)
-            #         os.makedirs(current_decoded_path)
-            #         for jj in range(decoded_full_features[ii].shape[3]):
-            #             inf_tools.numpy_img_save(img=image_revalue(decoded_full_features[ii][:, :, :, jj],tah_mark=True),
-            #                                      path=os.path.join(current_decoded_path,
-            #                                                        'DecodedFeatureLevel%dChannel%d.png'
-            #                                                        % (ii, jj)))
-
-            full_generated[current_counter,:,:,:]=current_generated_char
-            for ii in range(content_prototype.shape[3]):
-                full_content[current_counter,:,:,ii]=current_content_char[:,:,:,ii]
-
-            if current_counter % 5 == 0:
-                print("Generated %d/%d samples already" % (current_counter+1,content_prototype.shape[0]))
-            current_counter+=1
-        print("In total %d chars have been generated" % full_generated.shape[0])
-        print(self.print_separater)
-
-        # saving chars
-        generated_paper = inf_tools.matrix_paper_generation(images=full_generated,
-                                                            rows=output_paper_rows,
-                                                            columns=output_paper_cols)
-        misc.imsave(os.path.join(self.save_path, 'Generated.png'), generated_paper)
-        print("Generated Paper Saved @ %s" % os.path.join(self.save_path, 'Generated.png'))
-
-        style_paper = inf_tools.matrix_paper_generation(images=np.transpose(style_reference,axes=(3,1,2,0)),
-                                                        rows=output_paper_rows,
-                                                        columns=output_paper_cols)
-        misc.imsave(os.path.join(self.save_path, 'RealStyle.png'), style_paper)
-        print("Style Paper Saved @ %s" % os.path.join(self.save_path, 'ActualStyles.png'))
-
-        for ii in range(content_prototype.shape[3]):
-            content_paper=inf_tools.matrix_paper_generation(images=np.expand_dims(full_content[:,:,:,ii],axis=3),
-                                                            rows=output_paper_rows,
-                                                            columns=output_paper_cols)
-            if not os.path.exists(os.path.join(self.save_path,'Content')):
-                os.makedirs(os.path.join(self.save_path,'Content'))
-            misc.imsave(os.path.join(os.path.join(self.save_path,'Content'), 'Content_%s.png' % content_label1_vec[ii]), content_paper)
-        print("Content Papers Saved @ %s" % os.path.join(os.path.join(self.save_path,'Content')))
-
-        print(self.print_separater)
-        print("Generated Completed")
-
 
     def framework_building(self):
         # for model base frameworks

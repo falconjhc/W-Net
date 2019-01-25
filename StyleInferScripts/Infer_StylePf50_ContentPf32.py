@@ -10,7 +10,7 @@ sys.path.append('..')
 import os
 import time
 
-from model.wnet import WNet as WNET
+from model.wnet_forInferring import WNet as WNET
 
 #exp_root_path = '/Users/harric/ChineseCharacterExp/'
 exp_root_path = '/DataA/Harric/ChineseCharacterExp/'
@@ -22,14 +22,25 @@ print_separater = "#############################################################
 
 input_args = [
     '--targeted_content_input_txt',
-    '../ContentTxt/YW.txt',
-    '--save_mode','2:1',
+    '../ContentTxt/滚滚长江东逝水_简体_有替代_64.txt',
+    '--save_mode','8:8',
     '--adain_use','0',
 
     '--known_style_img_path',
     '../StyleExamples/YW2.jpeg',         # input a image with multiple written chars
     # '../FontFiles/DroidSansFallback.ttf', # input a ttf / otf file to generate printed chars
     # '../StyleExamples/PrintedSamples', # input a image directory with multiple single chars
+
+    '--experiment_id','WNet-NonAdaIN',# experiment name prefix
+    # '--experiment_id','WNet-AdaIN',
+    # '--experiment_id','DEBUG-EmdNet-Style4',# experiment name prefix
+    # '--experiment_id','DEBUG-EmdNet-Style4-AdaIN',
+    # '--experiment_id','DEBUG-ResEmdNet-Style4',
+    # '--experiment_id','DEBUG-ResEmdNet-NN-Style4',
+    # '--experiment_id','DEBUG-AdobeNet-Style4',
+    # '--experiment_id','DEBUG-ResMixer-5-SimpleMixer',
+    # '--experiment_id','DEBUG-ResMixer-5-DenseMixer',
+
 
     ####################################################################
     ####################################################################
@@ -42,18 +53,16 @@ input_args = [
     '--save_path',
     '../../GeneratedChars/'+ time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime())+'/',
 
-    '--debug_mode','0',
     '--style_input_number','4',
 
     '--content_data_dir', # standard data location
-    'CASIA_Dataset/PrintedData/',
+    'CASIA_Dataset/PrintedData_80Fonts/',
 
     '--file_list_txt_content',  # file list of the standard data
     '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
 
 
     '--channels','1',
-    '--img_width', '64',
 
     '--generator_residual_at_layer','3',
     '--generator_residual_blocks','5',
@@ -61,12 +70,11 @@ input_args = [
     '--generator_device','/device:GPU:0',
 
     '--model_dir',
-    'TrainedModels_WNet/Exp20181115_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/',
+    'TrainedModels_WNet/Exp20190108-WNet-NonAdaIN_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
 
     ]
 
 parser = argparse.ArgumentParser(description='Train')
-parser.add_argument('--debug_mode', dest='debug_mode',type=int,required=True)
 parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)
 parser.add_argument('--adain_use', dest='adain_use',type=str, default=0)
 
@@ -75,6 +83,7 @@ parser.add_argument('--adain_use', dest='adain_use',type=str, default=0)
 parser.add_argument('--targeted_content_input_txt', dest='targeted_content_input_txt', type=str,required=True)
 parser.add_argument('--save_path', dest='save_path', type=str,required=True)
 parser.add_argument('--save_mode', dest='save_mode', type=str,required=True)
+parser.add_argument('--experiment_id', dest='experiment_id', type=str, required=True)
 
 
 
@@ -85,8 +94,7 @@ parser.add_argument('--generator_residual_at_layer', dest='generator_residual_at
 parser.add_argument('--generator_residual_blocks', dest='generator_residual_blocks', type=int, required=True)
 
 
-parser.add_argument('--generator_device', dest='generator_device',type=str,required=True,
-                    help='Devices for generator')
+parser.add_argument('--generator_device', dest='generator_device',type=str,required=True, help='Devices for generator')
 
 # input data setting
 parser.add_argument('--content_data_dir',dest='content_data_dir',type=str,required=True)
@@ -94,7 +102,6 @@ parser.add_argument('--file_list_txt_content',dest='file_list_txt_content',type=
 
 
 parser.add_argument('--channels',dest='channels',type=int,required=True)
-parser.add_argument('--img_width',dest='img_width',type=int,required=True)
 
 # training param setting
 
@@ -118,14 +125,11 @@ def main(_):
 
     content_data_dir = args.content_data_dir.split(',')
     for ii in range(len(content_data_dir)):
-        if not (os.path.splitext(content_data_dir[ii])[-1] == '.ttc' \
-                or os.path.splitext(content_data_dir[ii])[-1] == '.ttf' \
-                or os.path.splitext(content_data_dir[ii])[-1] == '.otf'):
-            content_data_dir[ii] = os.path.join(exp_root_path, content_data_dir[ii])
+        content_data_dir[ii] = os.path.join(exp_root_path, content_data_dir[ii])
 
-    model = WNET(debug_mode=args.debug_mode,
-                 style_input_number=args.style_input_number,
+    model = WNET(style_input_number=args.style_input_number,
                  adain_use=args.adain_use,
+                 experiment_id=args.experiment_id,
 
                  targeted_content_input_txt=args.targeted_content_input_txt,
                  save_path=args.save_path,
@@ -135,7 +139,6 @@ def main(_):
                  file_list_txt_content=args.file_list_txt_content.split(','),
 
                  channels=args.channels,
-                 img_width=args.img_width,
 
                  generator_residual_at_layer=args.generator_residual_at_layer,
                  generator_residual_blocks=args.generator_residual_blocks,

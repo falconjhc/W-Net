@@ -38,7 +38,7 @@ input_args = [
     '--train_data_augment_flip','1',
 
 
-    #'--experiment_id','DEBUG-EmdNet-Style4',# experiment name prefix
+    # '--experiment_id','DEBUG-EmdNet-Style4',# experiment name prefix
     # '--experiment_id','DEBUG-EmdNet-Style4-AdaIN',
     # '--experiment_id','DEBUG-ResEmdNet-Style4',
     # '--experiment_id','DEBUG-ResEmdNet-NN-Style4',

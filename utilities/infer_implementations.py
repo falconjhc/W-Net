@@ -93,6 +93,20 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
                                                 level1_labellist,level2_labellist,
                                                 content_file_list_txt,content_file_data_dir,
                                                 img_width,img_filters):
+    def list_all_files(rootdir):
+        _files = []
+        list = os.listdir(rootdir)
+        for i in range(0, len(list)):
+            path = os.path.join(rootdir, list[i])
+            if os.path.isdir(path):
+                _files.extend(list_all_files(path))
+            if os.path.isfile(path):
+                _files.append(path)
+        return _files
+
+
+
+
     def read_content_from_dir():
 
         # get label0 for the targeted content input txt
@@ -281,7 +295,7 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
 
         return img_output.resize((64,64), Image.ANTIALIAS)
 
-    def generate_content_from_ttf():
+    def generate_content_from_single_font_file(content_files):
         targeted_chars_list = list()
         targeted_character_label0_list = list()
 
@@ -299,19 +313,17 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
                     targeted_chars_list.append(current_char)
         print("In total %d targeted chars are found." % len(targeted_chars_list))
 
-
-
         content_label1_vec = list()
         corresponding_content_prototype = np.zeros(
             shape=[len(targeted_character_label0_list),
                    img_width, img_width,
-                   img_filters * len(content_file_data_dir)],
+                   img_filters * len(content_files)],
             dtype=np.float32)
 
 
-        for label1_counter in range(len(content_file_data_dir)):
-            current_font_misc = ImageFont.truetype(content_file_data_dir[label1_counter], size=150)
-            current_file_path = content_file_data_dir[label1_counter]
+        for label1_counter in range(len(content_files)):
+            current_font_misc = ImageFont.truetype(content_files[label1_counter], size=150)
+            current_file_path = content_files[label1_counter]
             current_file_name = os.path.splitext(current_file_path)[0]
             current_file_name = current_file_name.split('/')[len(current_file_name.split('/'))-1]
             content_label1_vec.append(current_file_name)
@@ -333,44 +345,55 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
         return corresponding_content_prototype,content_label1_vec
 
 
-
-
-
-    dir_content = True
+    dir_img_content = False
     for check_dir in content_file_data_dir:
-        if not os.path.isdir(check_dir):
-            dir_content=False
-            break
+        if os.path.isdir(check_dir):
+            file_list = list_all_files(check_dir)
+            if (os.path.isdir(check_dir)) and \
+                    os.path.splitext(file_list[np.random.randint(0,len(file_list)-1)])[-1]=='.png':
+                dir_img_content=True
+                break
 
-    ttf_content = True
-    for check_ttf in content_file_data_dir:
-        is_file = not os.path.isdir(check_ttf)
-        is_ttf = os.path.splitext(check_ttf)[-1]=='.ttf'
-        if not (is_file and is_ttf):
-            ttf_content=False
-            break
+    single_font_file = False
+    font_file_dir = False
+    if not dir_img_content:
+        for check_file in content_file_data_dir:
+            is_file = os.path.isfile(check_file)
+            is_dir = os.path.isdir(check_file)
+            is_ttf = (os.path.splitext(check_file)[-1] == '.ttf') or (os.path.splitext(check_file)[-1] == '.TTF')
+            is_ttc = (os.path.splitext(check_file)[-1] == '.ttc') or (os.path.splitext(check_file)[-1] == '.TTC')
+            is_otf = (os.path.splitext(check_file)[-1] == '.otf') or (os.path.splitext(check_file)[-1] == '.OTF')
 
-    ttc_content = True
-    for check_ttc in content_file_data_dir:
-        is_file = not os.path.isdir(check_ttc)
-        is_ttc = os.path.splitext(check_ttc)[-1]=='.ttc'
-        if not (is_file and is_ttc):
-            ttc_content=False
-            break
+            if is_file and (is_ttf or is_ttc or is_otf):
+                single_font_file = True
+            elif is_dir:
+                file_list_in_the_dir = list_all_files(check_file)
+                for sub_file in file_list_in_the_dir:
+                    is_ttf = (os.path.splitext(sub_file)[-1] == '.ttf') or (os.path.splitext(sub_file)[-1] == '.TTF')
+                    is_ttc = (os.path.splitext(sub_file)[-1] == '.ttc') or (os.path.splitext(sub_file)[-1] == '.TTC')
+                    is_otf = (os.path.splitext(sub_file)[-1] == '.otf') or (os.path.splitext(sub_file)[-1] == '.OTF')
+                    if not (is_ttf or is_ttc or is_otf):
+                        break
+                font_file_dir = True
 
-    otf_content = True
-    for check_otf in content_file_data_dir:
-        is_file = not os.path.isdir(check_otf)
-        is_otf = os.path.splitext(check_otf)[-1]=='.otf'
-        if not (is_file and is_otf):
-            otf_content=False
-            break
+            if single_font_file or font_file_dir:
+                break
 
-    if dir_content:
+
+
+    if dir_img_content:
         corresponding_content_prototype, content_label1_vec = read_content_from_dir()
 
-    if ttf_content or ttc_content or otf_content:
-        corresponding_content_prototype, content_label1_vec = generate_content_from_ttf()
+    if single_font_file or font_file_dir:
+        if font_file_dir:
+            content_file_data_dir_new = list()
+            for file_dir in content_file_data_dir:
+                files = list_all_files(file_dir)
+                content_file_data_dir_new.extend(files)
+            content_file_data_dir = content_file_data_dir_new
+            content_file_data_dir.sort()
+
+        corresponding_content_prototype, content_label1_vec = generate_content_from_single_font_file(content_files=content_file_data_dir)
 
     return corresponding_content_prototype, content_label1_vec, True
 
