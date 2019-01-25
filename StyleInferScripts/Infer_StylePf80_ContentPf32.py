@@ -22,7 +22,7 @@ print_separater = "#############################################################
 
 input_args = [
     '--targeted_content_input_txt',
-    '../ContentTxt/滾滾長江東逝水_繁体_64.txt',
+    '../ContentTxt/滚滚长江东逝水_简体_原文_64.txt',
     '--save_mode','8:8',
     '--adain_use','0',
 

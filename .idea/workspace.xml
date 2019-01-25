@@ -4,28 +4,7 @@
     <bookmark url="file://$PROJECT_DIR$/model/generators.py" line="30" mnemonic="9" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ContentTxt/滚滚长江东逝水_简体_有替代.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ContentTxt/滾滾長江東逝水_繁体.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ContentTxt/韩_64.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DebugScripts/wnet_debug.py" beforeDir="false" afterPath="$PROJECT_DIR$/DebugScripts/wnet_debug.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FontFiles/DroidSansFallback.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FontFiles/HeiTi_Chinese.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FontFiles/HeiTi_Jap1.otf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FontFiles/HeiTi_Jap2.otf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FontFiles/HeiTi_Korean.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FontFiles/Heiti_Jap1.otf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FontFiles/Heiti_Jap2.otf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FontFiles/ItalicHeiTi.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StyleInferScripts/Infer_StyleHw50_ContentHw32Pf32.py" beforeDir="false" afterPath="$PROJECT_DIR$/StyleInferScripts/Infer_StyleHw50_ContentHw32Pf32.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentPf32.py" beforeDir="false" afterPath="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentPf32.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentStd1.py" beforeDir="false" afterPath="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentStd1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf80_ContentPf32.py" beforeDir="false" afterPath="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf80_ContentPf32.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts_WithFlip/StylePf/StylePf80_ContentPf64.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_WithFlip/StylePf/StylePf80_ContentPf64.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/wnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/infer_implementations.py" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/infer_implementations.py" afterDir="false" />
-    </list>
+    <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,14 +45,14 @@
     <window id="2">
       <content type="file-editors">
         <state>
-          <splitter split-orientation="horizontal" split-proportion="0.72291666">
+          <splitter split-orientation="horizontal" split-proportion="0.61614585">
             <split-first>
               <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
                 <file pinned="false" current-in-tab="false">
                   <entry file="file://$PROJECT_DIR$/StyleInferScripts/Infer_StyleHw50_ContentHw32Pf32.py">
                     <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="1098">
-                        <caret line="67" selection-start-line="67" selection-end-line="67" />
+                      <state relative-caret-position="820">
+                        <caret line="63" column="64" lean-forward="true" selection-start-line="63" selection-start-column="64" selection-end-line="63" selection-end-column="64" />
                       </state>
                     </provider>
                   </entry>
@@ -90,7 +69,7 @@
                 <file pinned="false" current-in-tab="false">
                   <entry file="file://$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentStd1.py">
                     <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="414">
+                      <state relative-caret-position="18">
                         <caret line="29" selection-start-line="29" selection-end-line="29" />
                       </state>
                     </provider>
@@ -100,7 +79,7 @@
                   <entry file="file://$PROJECT_DIR$/StyleInferScripts/Infer_StylePf80_ContentPf32.py">
                     <provider selected="true" editor-type-id="text-editor">
                       <state relative-caret-position="324">
-                        <caret line="24" column="32" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="32" />
+                        <caret line="24" column="35" selection-start-line="24" selection-start-column="35" selection-end-line="24" selection-end-column="35" />
                       </state>
                     </provider>
                   </entry>
@@ -608,6 +587,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="51" y="25" width="1229" height="999" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76680386" visible="true" weight="0.24598478" />
       <window_info id="Structure" order="1" sideWeight="0.23319615" side_tool="true" weight="0.18512256" />
@@ -1039,27 +1019,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/StyleInferScripts/Infer_StyleHw50_ContentHw32Pf32.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1098">
-          <caret line="67" selection-start-line="67" selection-end-line="67" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentPf32.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="24" column="36" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentStd1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="29" selection-start-line="29" selection-end-line="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/wnet_forInferring.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="58">
@@ -1078,10 +1037,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentStd1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="29" selection-start-line="29" selection-end-line="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentPf32.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="24" column="36" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/StyleInferScripts/Infer_StyleHw50_ContentHw32Pf32.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="820">
+          <caret line="63" column="64" lean-forward="true" selection-start-line="63" selection-start-column="64" selection-end-line="63" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/StyleInferScripts/Infer_StylePf80_ContentPf32.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
-          <caret line="24" column="32" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="32" />
+          <caret line="24" column="35" selection-start-line="24" selection-start-column="35" selection-end-line="24" selection-end-column="35" />
         </state>
       </provider>
     </entry>
