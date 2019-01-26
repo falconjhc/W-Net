@@ -249,6 +249,10 @@ class WNet(object):
             self.encoder_implementation = encoder_dict['Normal']
             self.generator_residual_at_layer = generator_residual_at_layer
             self.generator_residual_blocks = generator_residual_blocks
+            if 'DenseMixer' in experiment_id:
+                self.other_info='DenseMixer'
+            else:
+                self.other_info='ResidualMixer'
         elif 'Adobe' in experiment_id:
             self.generator_implementation = generator_dict['AdobeNet']
             self.encoder_implementation = encoder_dict['AdobeNet']
@@ -444,11 +448,18 @@ class WNet(object):
         encoder_decoder_layer_num = int(np.floor(math.log(self.img2img_width) / math.log(2)))
 
         if "WNet" in self.experiment_id:
-            model_id = "Exp%s_GenEncDec%d-Res%d@Lyr%d_%s" % (self.experiment_id,
-                                                             encoder_decoder_layer_num,
-                                                             self.generator_residual_blocks,
-                                                             self.generator_residual_at_layer,
-                                                             self.discriminator)
+            if self.other_info=='DenseMixer':
+                model_id = "Exp%s_GenEncDec%d-Des%d@Lyr%d_%s" % (self.experiment_id,
+                                                                 encoder_decoder_layer_num,
+                                                                 self.generator_residual_blocks,
+                                                                 self.generator_residual_at_layer,
+                                                                 self.discriminator)
+            elif self.other_info=='ResidualMixer':
+                model_id = "Exp%s_GenEncDec%d-Res%d@Lyr%d_%s" % (self.experiment_id,
+                                                                 encoder_decoder_layer_num,
+                                                                 self.generator_residual_blocks,
+                                                                 self.generator_residual_at_layer,
+                                                                 self.discriminator)
         elif "Emd" in self.experiment_id:
             model_id = "Exp%s_GenEncDec%d_%s" % (self.experiment_id,
                                                  encoder_decoder_layer_num,

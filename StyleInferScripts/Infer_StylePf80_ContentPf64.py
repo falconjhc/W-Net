@@ -56,8 +56,8 @@ input_args = [
     '--style_input_number','4',
 
     '--content_data_dir', # standard data location
-    #'CASIA_Dataset/Sources/PrintedSources/64_FoundContentPrototypeTtfOtfs/Simplified/',
-    'CASIA_Dataset/PrintedData_64Fonts/Simplified/GB2312_L1/',
+    'CASIA_Dataset/Sources/PrintedSources/64_FoundContentPrototypeTtfOtfs/Simplified/',
+    # 'CASIA_Dataset/PrintedData_64Fonts/Simplified/GB2312_L1/',
 
     '--file_list_txt_content',  # file list of the standard data
     '../FileList/PrintedData/Char_0_3754_64PrintedFonts_GB2312L1_Simplified.txt',

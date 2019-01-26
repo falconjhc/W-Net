@@ -118,7 +118,8 @@ def WNet_Generator(content_prototype,
                                      content_residual_interface=content_residual_interface,
                                      full_style_feature_list=full_style_feature_list,
                                      adain_use=adain_use,
-                                     adain_preparation_model=adain_preparation_model)
+                                     adain_preparation_model=adain_preparation_model,
+                                     other_info=other_info)
 
 
     return_str = ("W-Net-GeneratorEncoderDecoder %d Layers with %d ResidualBlocks connecting %d-th layer"

@@ -40,7 +40,8 @@ def wnet_feature_mixer_framework(generator_device,scope,is_training,reuse,initia
                                  style_short_cut_interface_list,style_residual_interface_list,
                                  content_short_cut_interface, content_residual_interface,
                                  full_style_feature_list,
-                                 adain_use,adain_preparation_model):
+                                 adain_use,adain_preparation_model,
+                                 other_info):
 
 
 
@@ -165,7 +166,8 @@ def wnet_feature_mixer_framework(generator_device,scope,is_training,reuse,initia
                                                                 style_features=full_style_feature_list_reformat,
                                                                 adain_use=adain_use,
                                                                 adain_preparation_model=adain_preparation_model,
-                                                                debug_mode=debug_mode)
+                                                                debug_mode=debug_mode,
+                                                                other_info=other_info)
 
     # combination of all the encoder outputs
     fused_shortcut_interfaces.reverse()
@@ -327,17 +329,22 @@ def resmixer(generator_device,reuse,is_training, scope,initializer, mixer_form,
 ##############################################################################################
 def single_resblock(adain_use, is_training, residual_device, initializer,scope,
                     weight_decay, weight_decay_rate,
-                    x,layer,style):
+                    x,layer,style, filters, other_info):
 
-    filters = int(x.shape[3])
     if not adain_use:
         norm1 = batch_norm(x=x,
                            is_training=is_training,
                            scope="layer%d_bn1" % layer,
                            parameter_update_device=residual_device)
     else:
-        norm1 = adaptive_instance_norm(content=x,
-                                       style=style)
+        if other_info == 'DenseMixer':
+            travel_times = int(int(x.shape[3]) / int(style.shape[4]))
+            style_tile = tf.tile(style,[1,1,1,1,travel_times])
+            norm1 = adaptive_instance_norm(content=x,
+                                           style=style_tile)
+        elif other_info == 'ResidualMixer':
+            norm1 = adaptive_instance_norm(content=x,
+                                           style=style)
 
     act1 = relu(norm1)
     conv1 = conv2d(x=act1,
@@ -355,6 +362,7 @@ def single_resblock(adain_use, is_training, residual_device, initializer,scope,
                            scope="layer%d_bn2" % layer,
                            parameter_update_device=residual_device)
     else:
+
         norm2 = adaptive_instance_norm(content=conv1,
                                        style=style)
     act2 = relu(norm2)
@@ -367,7 +375,10 @@ def single_resblock(adain_use, is_training, residual_device, initializer,scope,
                    weight_decay_rate=weight_decay_rate,
                    kh=3,kw=3,sh=1,sw=1)
 
-    output = x + conv2
+    if other_info=='ResidualMixer':
+        output = x + conv2
+    elif other_info=='DenseMixer':
+        output = conv2
 
     return output
 
@@ -381,6 +392,7 @@ def residual_block_implementation(input_list,
                                   weight_decay,
                                   weight_decay_rate,
                                   style_features,
+                                  other_info,
                                   adain_use=False,
                                   adain_preparation_model=None,
                                   debug_mode=False):
@@ -472,16 +484,16 @@ def residual_block_implementation(input_list,
                                     style_cnn_layer_num += 1
 
                                     if current_output_filter_num > filter_num_end and \
-                                            math.log(int(current_init_residual_input.shape[3])) < math.log(int(current_residual_input.shape[3])):
+                                            math.log(int(current_init_residual_input.shape[3])) \
+                                            < math.log(int(current_residual_input.shape[3])):
                                         current_output_filter_num = filter_num_end
                                     if current_output_filter_num < filter_num_end and \
-                                            math.log(int(current_init_residual_input.shape[3])) > math.log(int(current_residual_input.shape[3])):
+                                            math.log(int(current_init_residual_input.shape[3])) \
+                                            > math.log(int(current_residual_input.shape[3])):
                                         current_output_filter_num = filter_num_end
 
                                     if int(style_conv.shape[3]) == filter_num_end:
                                         continue_build = False
-
-
 
                             elif adain_preparation_model == 'Single':
                                 if int(current_init_residual_input.shape[3]) == int(current_residual_input.shape[3]):
@@ -500,8 +512,6 @@ def residual_block_implementation(input_list,
                                         print (style_conv)
                                     style_conv = relu(style_conv)
 
-
-
                             if jj == 0:
                                 style_features_new = tf.expand_dims(style_conv, axis=0)
                             else:
@@ -511,8 +521,6 @@ def residual_block_implementation(input_list,
 
                     if (not reuse) and (not math.log(int(current_init_residual_input.shape[3])) == math.log(int(current_residual_input.shape[3]))):
                         print (print_separater)
-
-
                 else:
                     style_features_new=None
 
@@ -521,11 +529,22 @@ def residual_block_implementation(input_list,
                     if reuse:
                         tf.get_variable_scope().reuse_variables()
 
+                    tmp_residual_output_list_on_current_place = list()
+                    filter_num = int(current_residual_input.shape[3])
                     for jj in range(current_residual_num):
                         if jj == 0:
                             residual_input = current_residual_input
                         else:
-                            residual_input = residual_block_output
+                            if other_info == 'DenseMixer':
+                                for kk in range(len(tmp_residual_output_list_on_current_place)):
+                                    if kk == 0:
+                                        residual_input = tmp_residual_output_list_on_current_place[kk]
+                                    else:
+                                        residual_input = tf.concat([residual_input,
+                                                                    tmp_residual_output_list_on_current_place[kk]],
+                                                                   axis=3)
+                            elif other_info=='ResidualMixer':
+                                residual_input = residual_block_output
                         residual_block_output = \
                             single_resblock(adain_use=adain_use,
                                             is_training=is_training,
@@ -536,7 +555,10 @@ def residual_block_implementation(input_list,
                                             weight_decay_rate=weight_decay_rate,
                                             x=residual_input,
                                             layer=jj+1,
-                                            style=style_features_new)
+                                            style=style_features_new,
+                                            filters=filter_num,
+                                            other_info=other_info)
+                        tmp_residual_output_list_on_current_place.append(residual_block_output)
                         if jj == current_residual_num-1:
                             residual_output = residual_block_output
 
