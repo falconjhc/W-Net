@@ -22,8 +22,8 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
-    '--training_from_model_dir',
-    '/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20190108-WNet-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
+    #'--training_from_model_dir',
+    #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20190108-WNet-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
 
     '--debug_mode','0',
     '--style_input_number','4', # how many style inputs
@@ -32,8 +32,8 @@ input_args = [
     '--adain_use','0',
 
     '--generator_device','/device:GPU:0',
-    '--discriminator_device', '/device:GPU:0',
-    '--feature_extractor_device','/device:GPU:0',
+    '--discriminator_device', '/device:GPU:1',
+    '--feature_extractor_device','/device:GPU:1',
 
 
     '--train_data_augment','1', # translation? rotation?
