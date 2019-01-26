@@ -10,20 +10,16 @@ sys.path.append('..')
 
 import tensorflow as tf
 import numpy as np
-import random as rnd
 import scipy.misc as misc
 import os
 import shutil
-import time
 from collections import namedtuple
-from dataset.dataset import DataProvider
 import re
 
-from utilities.utils import scale_back_for_img, scale_back_for_dif, merge, correct_ckpt_path
+from utilities.utils import correct_ckpt_path
 from utilities.utils import image_show
 
 
-from model.vggs import vgg_16_net as feature_extractor_network
 
 
 from model.generators import WNet_Generator as wnet_generator
@@ -325,6 +321,20 @@ class WNet(object):
                                                   level=2)
 
         # get data available
+        # tmp = list()
+        # tmp.append('/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/Sources/PrintedSources/64_FoundContentPrototypeTtfOtfs/Simplified/')
+        # content_prototype1, content_label1_vec1, valid_mark1 = \
+        #     inf_tools.get_prototype_on_targeted_content_input_txt(
+        #         targeted_content_input_txt=self.targeted_content_input_txt,
+        #         level1_charlist=charset_level1,
+        #         level2_charlist=charset_level2,
+        #         level1_labellist=character_label_level1,
+        #         level2_labellist=character_label_level2,
+        #         content_file_list_txt=self.file_list_txt_content,
+        #         content_file_data_dir=tmp,
+        #         img_width=self.img2img_width,
+        #         img_filters=self.input_output_img_filter_num)
+
         print(self.print_separater)
         content_prototype, content_label1_vec, valid_mark = \
             inf_tools.get_prototype_on_targeted_content_input_txt(targeted_content_input_txt=self.targeted_content_input_txt,
@@ -336,6 +346,10 @@ class WNet(object):
                                                                   content_file_data_dir=self.content_data_dir,
                                                                   img_width=self.img2img_width,
                                                                   img_filters=self.input_output_img_filter_num)
+
+
+
+
         if not valid_mark:
             print("Generation Terminated.")
 

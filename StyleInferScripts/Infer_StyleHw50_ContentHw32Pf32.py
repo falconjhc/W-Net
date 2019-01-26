@@ -57,8 +57,8 @@ input_args = [
     '--style_input_number','4',
 
     '--content_data_dir', # standard data location
-    'CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/,'
-    'CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/,'
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/,'
     'CASIA_Dataset/PrintedData_80Fonts/',
 
     '--file_list_txt_content',  # file list of the standard data

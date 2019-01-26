@@ -194,7 +194,7 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
                         char_img = np.expand_dims(char_img[:, :, 0], axis=2)
                     elif char_img.ndim == 2:
                         char_img = np.expand_dims(char_img, axis=2)
-                    char_img = char_img / GRAYSCALE_AVG - 1
+                    # char_img = char_img / GRAYSCALE_AVG - 1
                     corresponding_content_prototype[target_counter, :, :,
                     label1_counter * img_filters:(label1_counter + 1) * img_filters] \
                         = char_img
@@ -331,7 +331,7 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
             for target_counter in range(len(targeted_chars_list)):
                 char_misc = draw_single_char(ch=targeted_chars_list[target_counter], font=current_font_misc)
                 char_img = np.asarray(char_misc)[:, :, 0]
-                char_img = char_img / GRAYSCALE_AVG - 1
+                # char_img = char_img / GRAYSCALE_AVG - 1
                 char_img = np.expand_dims(char_img, axis=2)
 
                 if char_img.ndim == 3:
@@ -379,8 +379,6 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
             if single_font_file or font_file_dir:
                 break
 
-
-
     if dir_img_content:
         corresponding_content_prototype, content_label1_vec = read_content_from_dir()
 
@@ -392,9 +390,11 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
                 content_file_data_dir_new.extend(files)
             content_file_data_dir = content_file_data_dir_new
             content_file_data_dir.sort()
-
         corresponding_content_prototype, content_label1_vec = generate_content_from_single_font_file(content_files=content_file_data_dir)
 
+    corresponding_content_prototype[np.where(corresponding_content_prototype < 240)] = 0
+    corresponding_content_prototype[np.where(corresponding_content_prototype >= 240)] = 255
+    corresponding_content_prototype = corresponding_content_prototype / GRAYSCALE_AVG - 1
     return corresponding_content_prototype, content_label1_vec, True
 
 

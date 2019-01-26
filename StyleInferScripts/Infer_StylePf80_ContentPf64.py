@@ -22,7 +22,7 @@ print_separater = "#############################################################
 
 input_args = [
     '--targeted_content_input_txt',
-    '../ContentTxt/滚滚长江东逝水_简体_原文_64.txt',
+    '../ContentTxt/滚滚长江东逝水_简体_有替代_64.txt',
     '--save_mode','8:8',
     '--adain_use','0',
 
@@ -56,17 +56,17 @@ input_args = [
     '--style_input_number','4',
 
     '--content_data_dir', # standard data location
-    'CASIA_Dataset/Sources/PrintedSources/64_FoundContentPrototypeTtfOtfs/Simplified/',
-    # 'CASIA_Dataset/PrintedData_80Fonts/',
+    #'CASIA_Dataset/Sources/PrintedSources/64_FoundContentPrototypeTtfOtfs/Simplified/',
+    'CASIA_Dataset/PrintedData_64Fonts/Simplified/GB2312_L1/',
 
     '--file_list_txt_content',  # file list of the standard data
-    '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
+    '../FileList/PrintedData/Char_0_3754_64PrintedFonts_GB2312L1_Simplified.txt',
 
 
     '--channels','1',
 
     '--generator_residual_at_layer','3',
-    '--generator_residual_blocks','5',
+    '--generator_residual_blocks','7',
 
     '--generator_device','/device:GPU:0',
 
