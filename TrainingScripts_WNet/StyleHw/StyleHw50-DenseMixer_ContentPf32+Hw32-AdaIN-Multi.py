@@ -80,7 +80,7 @@ input_args = [
     # optimizer parameters
     '--init_lr','0.0002',
     '--epoch','5000',
-    '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
+    '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
 
     '--optimization_method','adam',
     '--final_learning_rate_pctg','0.01',
@@ -101,11 +101,11 @@ input_args = [
 
     # feature extractor parametrers
     '--true_fake_target_extractor_dir',
-    'tfModels_FeatureExtractor/checkpoint/Exp20181226_FeatureExtractor_ContentStyle_HW300Pf80_vgg16net/variables/',
+    'tfModels_FeatureExtractor/checkpoint/Exp20190119_FeatureExtractor_ContentStyle_HW300Pf144_vgg16net/variables/',
     '--content_prototype_extractor_dir',
-    'tfModels_FeatureExtractor/checkpoint/Exp20181231_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
+    'tfModels_FeatureExtractor/checkpoint/Exp20190119_FeatureExtractor_Content_HW300Pf144_vgg16net/variables/',
     '--style_reference_extractor_dir',
-    'tfModels_FeatureExtractor/checkpoint/Exp20181226_FeatureExtractor_Style_HW300Pf80_vgg16net/variables/',
+    'tfModels_FeatureExtractor/checkpoint/Exp20190119_FeatureExtractor_Style_HW300Pf144_vgg16net/variables/',
 
     '--Feature_Penalty_True_Fake_Target', '750',
     '--Feature_Penalty_Style_Reference','1',

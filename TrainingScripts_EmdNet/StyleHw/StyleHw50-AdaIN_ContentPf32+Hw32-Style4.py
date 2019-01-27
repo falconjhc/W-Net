@@ -97,13 +97,12 @@ input_args = [
 
 
     # feature extractor parametrers
-    # feature extractor parametrers
     '--true_fake_target_extractor_dir',
-    'tfModels_FeatureExtractor/checkpoint/Exp20181226_FeatureExtractor_ContentStyle_HW300Pf80_vgg16net/variables/',
+    'tfModels_FeatureExtractor/checkpoint/Exp20190119_FeatureExtractor_ContentStyle_HW300Pf144_vgg16net/variables/',
     '--content_prototype_extractor_dir',
-    'tfModels_FeatureExtractor/checkpoint/Exp20181231_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
+    'tfModels_FeatureExtractor/checkpoint/Exp20190119_FeatureExtractor_Content_HW300Pf144_vgg16net/variables/',
     '--style_reference_extractor_dir',
-    'tfModels_FeatureExtractor/checkpoint/Exp20181226_FeatureExtractor_Style_HW300Pf80_vgg16net/variables/',
+    'tfModels_FeatureExtractor/checkpoint/Exp20190119_FeatureExtractor_Style_HW300Pf144_vgg16net/variables/',
 
     '--Feature_Penalty_True_Fake_Target', '550',
     '--Feature_Penalty_Style_Reference','5',

@@ -91,13 +91,12 @@ input_args = [
 
 
     # feature extractor parametrers
-
     '--true_fake_target_extractor_dir',
-    'TrainedModel_CNN_WithAugment/ContentStyleBoth/Exp20181010_FeatureExtractor_ContentStyle_PF50_vgg16net/variables/',
+    'tfModels_FeatureExtractor/checkpoint/Exp20190119_FeatureExtractor_ContentStyle_HW300Pf144_vgg16net/variables/',
     '--content_prototype_extractor_dir',
-    'TrainedModel_CNN_WithAugment/ContentOnly/Exp20181010_FeatureExtractor_Content_PF32_vgg16net/variables/',
+    'tfModels_FeatureExtractor/checkpoint/Exp20190119_FeatureExtractor_Content_HW300Pf144_vgg16net/variables/',
     '--style_reference_extractor_dir',
-    'TrainedModel_CNN_WithAugment/StyleOnly/Exp20181010_FeatureExtractor_Style_PF50_vgg16net/variables/',
+    'tfModels_FeatureExtractor/checkpoint/Exp20190119_FeatureExtractor_Style_HW300Pf144_vgg16net/variables/',
 
     '--Feature_Penalty_True_Fake_Target', '800',
     '--Feature_Penalty_Style_Reference','15',
