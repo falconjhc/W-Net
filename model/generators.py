@@ -101,7 +101,7 @@ def WNet_Generator(content_prototype,
 
     encoded_layer_list, style_shortcut_batch_diff, style_residual_batch_diff,encoded_style_final = \
         wnet_feature_mixer_framework(generator_device=generator_device,
-                                     scope=scope,
+                                     scope=scope+'/mixer',
                                      is_training=is_training,
                                      reuse=reuse,
                                      initializer=initializer,
@@ -206,7 +206,7 @@ def EmdNet_Generator(content_prototype,
     if adain_use==0:
         valid_encoded_content_shortcut_list, mixed_fc, batch_diff = \
             emdnet_mixer_non_adain(generator_device=generator_device,
-                                   reuse=reuse, scope=scope, initializer=initializer,
+                                   reuse=reuse, scope=scope+'/mixer', initializer=initializer,
                                    weight_decay=weight_decay, weight_decay_rate=weight_decay_rate,
                                    encoded_content_final=encoded_content_final,
                                    content_shortcut_interface=content_shortcut_interface,
@@ -214,7 +214,7 @@ def EmdNet_Generator(content_prototype,
     else:
         valid_encoded_content_shortcut_list, mixed_fc, batch_diff = \
             emdnet_mixer_with_adain(generator_device=generator_device,
-                                    reuse=reuse, scope=scope, initializer=initializer,
+                                    reuse=reuse, scope=scope+'/mixer', initializer=initializer,
                                     weight_decay=weight_decay, weight_decay_rate=weight_decay_rate,
                                     encoded_content_final=encoded_content_final,
                                     content_shortcut_interface=content_shortcut_interface,
@@ -303,9 +303,10 @@ def ResEmd_EmdNet_Generator(content_prototype,
     # res-emd network mixer
     with tf.variable_scope(tf.get_variable_scope()):
         with tf.device(generator_device):
-            with tf.variable_scope(scope):
+            with tf.variable_scope(scope+'/mixer'):
                 if reuse:
                     tf.get_variable_scope().reuse_variables()
+
                 mixed_feature = adaptive_instance_norm(content=encoded_content_final,
                                                        style=tf.expand_dims(encoded_style_final, axis=0))
 
@@ -412,15 +413,21 @@ def AdobeNet_Generator(content_prototype,
                                    adain_use=adain_use)
 
     # mixer
-    mixed_feature = tf.concat([encoded_content_final,encoded_style_final], axis=3)
-    style_batch_diff=0
-    content_batch_diff=0
-    for ii in range(len(content_full_feature_list)):
-        content_batch_diff+=_calculate_batch_diff(content_full_feature_list[ii])
-    content_batch_diff=content_batch_diff/len(content_full_feature_list)
-    for ii in range(len(style_full_feature_list)):
-        style_batch_diff+=_calculate_batch_diff(style_full_feature_list[ii])
-    style_batch_diff=style_batch_diff/len(style_full_feature_list)
+    with tf.variable_scope(tf.get_variable_scope()):
+        with tf.device(generator_device):
+            with tf.variable_scope(scope+'/mixer'):
+                if reuse:
+                    tf.get_variable_scope().reuse_variables()
+
+                mixed_feature = tf.concat([encoded_content_final,encoded_style_final], axis=3)
+                style_batch_diff=0
+                content_batch_diff=0
+                for ii in range(len(content_full_feature_list)):
+                    content_batch_diff+=_calculate_batch_diff(content_full_feature_list[ii])
+                content_batch_diff=content_batch_diff/len(content_full_feature_list)
+                for ii in range(len(style_full_feature_list)):
+                    style_batch_diff+=_calculate_batch_diff(style_full_feature_list[ii])
+                style_batch_diff=style_batch_diff/len(style_full_feature_list)
 
     # decoder
     img_width = int(content_prototype.shape[1])

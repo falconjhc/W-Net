@@ -185,9 +185,6 @@ def delete_prefix_for_file_path(data_list,prefix):
 
 
 def write_to_file(path,data_list,label0_list,label1_list,mark):
-    # if os.path.exists(path):
-    #     print("File exists: %s, failed to write" % path)
-    #     return
 
     file_handle = open(path,'w')
     full_line_num = len(data_list)
