@@ -1,10 +1,9 @@
 import os
 import numpy as np
 
-data_dir = 'CASIA_Dataset/StandardChars/GB2312_L1/'
-file_list_txt = '../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Isolated.txt'
+file_list_txt = '../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated.txt'
 file_written_dir = '../TrainTestFileList/HandWritingData/'
-file_written_file_name = 'Char_0_3754_Writer_1296_1300_Isolated'
+file_written_file_name = 'Char_0_3754_Writer_1101_1150_Isolated'
 
 if not os.path.exists(file_written_dir):
     os.makedirs(file_written_dir)
@@ -12,7 +11,7 @@ if not os.path.exists(file_written_dir):
 
 label0_split_train_test_label = 3000
 
-def data_file_list_read(file_list_txt, file_data_dir):
+def data_file_list_read(file_list_txt):
     label0_list = list()
     label1_list = list()
     data_list = list()
@@ -27,8 +26,8 @@ def data_file_list_read(file_list_txt, file_data_dir):
         curt_data = curt_line[3].split('\n')[0]
         if curt_data[0] == '/':
             curt_data = curt_data[1:]
-        curt_data_path = os.path.join(file_data_dir, curt_data)
-        data_list.append(curt_data_path)
+        # curt_data_path = os.path.join(file_data_dir, curt_data)
+        data_list.append(curt_data)
     file_handle.close()
 
 
@@ -77,8 +76,7 @@ def write_to_file(path,data_list,label0_list,label1_list,mark):
 
 
 label1_list, label0_list, data_list = \
-    data_file_list_read(file_list_txt=file_list_txt,
-                        file_data_dir=data_dir)
+    data_file_list_read(file_list_txt=file_list_txt)
 
 train_label0_list,\
 train_label1_list,\

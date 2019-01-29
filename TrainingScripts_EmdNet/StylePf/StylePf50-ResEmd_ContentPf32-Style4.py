@@ -36,9 +36,9 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','20190118-ResEmdNet-Style4_StylePf50_ContentPf32',# experiment name prefix
-    '--experiment_dir','tfModels_EmdNet/', # model saving location
-    '--log_dir','tfLogsNew_EmdNet_Pf50/',# log file saving location
+    '--experiment_id','20190129-ResEmdNet-Style4_StylePf50_ContentPf32',# experiment name prefix
+    '--experiment_dir','tfModels2019_EmdNet/', # model saving location
+    '--log_dir','tfLogs2019_EmdNet_Pf50/',# log file saving location
     '--print_info_seconds','750',
 
     '--content_data_dir', # standard data location
@@ -51,10 +51,10 @@ input_args = [
     'CASIA_Dataset/PrintedData/GB2312_L1/',
 
     '--file_list_txt_content', # file list of the standard data
-    '../../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
+    '../../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Train.txt',
 
     '--file_list_txt_style_train', # file list of the training data
-    '../../FileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1.txt',
+    '../../TrainTestFileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1_Train.txt',
 
     '--file_list_txt_style_validation', # file list of the validation data
     '../../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt',
@@ -72,7 +72,7 @@ input_args = [
     # optimizer parameters
     '--init_lr','0.0002',
     '--epoch','5000',
-    '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
+    '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
 
     '--optimization_method','adam',
     '--final_learning_rate_pctg','0.01',
