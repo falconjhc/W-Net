@@ -24,7 +24,7 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 #                   1: training from a based model
 input_args = [
     '--training_from_model_dir',
-    '/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20190126-WNet-DenseMixer-AdaIN-Single_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv/',
+    '/Data_HDD/Harric/ChineseCharacterExp/tfModels2019_WNet/checkpoint/Exp20190129-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv/',
 
     '--debug_mode','0',
     '--style_input_number','4', # how many style inputs

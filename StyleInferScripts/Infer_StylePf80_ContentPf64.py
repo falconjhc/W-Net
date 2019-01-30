@@ -27,8 +27,11 @@ input_args = [
     '--adain_use','0',
 
 
-    '--experiment_id','WNet-NonAdaIN',# experiment name prefix
-    # '--experiment_id','WNet-AdaIN',
+    '--experiment_id','DEBUG-WNet-NonAdaIN-ResidualMixer',# experiment name prefix
+    # '--experiment_id','DEBUG-WNet-AdaIN-ResidualMixer',# experiment name prefix
+    # '--experiment_id','DEBUG-WNet-NonAdaIN-DenseMixer',# experiment name prefix
+    # '--experiment_id','DEBUG-WNet-AdaIN-Multi-DenseMixer',# experiment name prefix
+    # '--experiment_id','DEBUG-WNet-AdaIN-Single-DenseMixer',# experiment name prefix
     # '--experiment_id','DEBUG-EmdNet-Style4',# experiment name prefix
     # '--experiment_id','DEBUG-EmdNet-Style4-AdaIN',
     # '--experiment_id','DEBUG-ResEmdNet-Style4',

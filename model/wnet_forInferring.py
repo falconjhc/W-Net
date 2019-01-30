@@ -119,8 +119,21 @@ class WNet(object):
         else:
             self.adain_preparation_model = None
 
+        if ('NonAdaIN' in experiment_id) and self.adain_use:
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print("Error: AdaIN Comflicts in ExperimentID and AdaIN Marks")
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+
         if ('AdaIN' in experiment_id and (not self.adain_use)) or \
-            ((not 'AdaIN' in experiment_id) and self.adain_use):
+                ((not 'AdaIN' in experiment_id) and self.adain_use):
             if not 'NonAdaIN' in experiment_id:
                 print(self.print_separater)
                 print(self.print_separater)
@@ -178,12 +191,12 @@ class WNet(object):
                 print(self.print_separater)
             return
 
-        self.other_info=None
+        self.other_info = None
         self.generator_residual_at_layer = -1
         self.generator_residual_blocks = -1
         if 'Emd' in experiment_id:
             if 'Res' in experiment_id:
-                self.generator_implementation=generator_dict['ResEmdNet']
+                self.generator_implementation = generator_dict['ResEmdNet']
                 if 'NN' in experiment_id:
                     self.other_info = 'NN'
             else:
@@ -192,26 +205,33 @@ class WNet(object):
             self.generator_implementation = generator_dict['WNet']
             self.generator_residual_at_layer = generator_residual_at_layer
             self.generator_residual_blocks = generator_residual_blocks
+            if 'DenseMixer' in experiment_id:
+                self.other_info = 'DenseMixer'
+            elif 'ResidualMixer' in experiment_id:
+                self.other_info = 'ResidualMixer'
         elif 'Adobe' in experiment_id:
             self.generator_implementation = generator_dict['AdobeNet']
         elif 'ResMixer' in experiment_id:
             self.generator_implementation = generator_dict['ResMixerNet']
             if 'SimpleMixer' in experiment_id:
                 other_info_pos = experiment_id.find('SimpleMixer')
-                possible_pos = other_info_pos-10
-                if possible_pos<0:
-                    possible_pos=0
-                possible_extracted_info = experiment_id[possible_pos:other_info_pos+11]
+                possible_pos = other_info_pos - 10
+                if possible_pos < 0:
+                    possible_pos = 0
+                possible_extracted_info = experiment_id[possible_pos:other_info_pos + 11]
                 other_info_pos = possible_extracted_info.find('SimpleMixer')
-                self.other_info=possible_extracted_info[other_info_pos-len(re.findall('\d+',possible_extracted_info)[0])-1:]
+                self.other_info = possible_extracted_info[
+                                  other_info_pos - len(re.findall('\d+', possible_extracted_info)[0]) - 1:]
             elif 'DenseMixer' in experiment_id:
                 other_info_pos = experiment_id.find('DenseMixer')
                 possible_pos = other_info_pos - 10
                 if possible_pos < 0:
                     possible_pos = 0
-                possible_extracted_info = experiment_id[possible_pos:other_info_pos+10]
+                possible_extracted_info = experiment_id[possible_pos:other_info_pos + 10]
                 other_info_pos = possible_extracted_info.find('DenseMixer')
-                self.other_info = possible_extracted_info[other_info_pos - len(re.findall('\d+', possible_extracted_info)[0]) - 1:]
+                self.other_info = possible_extracted_info[
+                                  other_info_pos - len(re.findall('\d+', possible_extracted_info)[0]) - 1:]
+
 
         self.print_info_seconds=print_info_seconds
 

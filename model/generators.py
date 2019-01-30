@@ -122,7 +122,7 @@ def WNet_Generator(content_prototype,
                                      other_info=other_info)
 
 
-    return_str = ("W-Net-GeneratorEncoderDecoder-%s %d Layers with %d ResidualBlocks connecting %d-th layer"
+    return_str = ("W-Net-GeneratorEncoderDecoder-%s %d Layers\nwith %d ResidualBlocks connecting %d-th layer"
                   % (other_info,
                      int(np.floor(math.log(int(content_prototype[0].shape[1])) / math.log(2))),
                      residual_block_num,

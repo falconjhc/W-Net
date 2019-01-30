@@ -9,13 +9,13 @@ import numpy as np
 
 
 input_args = [
-              # '--data_type','SINGLE', # 'SINGLE' or STANDARD'
-              # '--data_dir_path','/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/HandWritingData/CASIA-HWDB2.1/',
-              # '--file_write_path', '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt',
-
               '--data_type','SINGLE', # 'SINGLE' or STANDARD'
-              '--data_dir_path','/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/PrintedData_64Fonts/Simplified/GB2312_L2/',
-              '--file_write_path', '../FileList/PrintedData/Char_3755_6762_64PrintedFonts_GB2312L2_Simplified.txt',
+              '--data_dir_path','/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/',
+              '--file_write_path', '../FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive.txt',
+
+              # '--data_type','SINGLE', # 'SINGLE' or STANDARD'
+              # '--data_dir_path','/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/PrintedData_64Fonts/Simplified/GB2312_L2/',
+              # '--file_write_path', '../FileList/PrintedData/Char_3755_6762_64PrintedFonts_GB2312L2_Simplified.txt',
 
 
               # '--data_type','STANDARD', # 'SINGLE' OR 'PAIR or STANDARD'
@@ -23,7 +23,7 @@ input_args = [
               # '--file_write_path', '../FileList/StandardChars/char_0_3754',
 
               '--label0','ALL',
-              '--label1','ALL']
+              '--label1','1151:1:1200']
 
 
 

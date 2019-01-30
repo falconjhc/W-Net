@@ -173,6 +173,19 @@ class WNet(object):
         else:
             self.adain_preparation_model = None
 
+        if ('NonAdaIN' in experiment_id) and self.adain_use:
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print("Error: AdaIN Comflicts in ExperimentID and AdaIN Marks")
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+            print(self.print_separater)
+
         if ('AdaIN' in experiment_id and (not self.adain_use)) or \
             ((not 'AdaIN' in experiment_id) and self.adain_use):
             if not 'NonAdaIN' in experiment_id:
@@ -251,7 +264,7 @@ class WNet(object):
             self.generator_residual_blocks = generator_residual_blocks
             if 'DenseMixer' in experiment_id:
                 self.other_info='DenseMixer'
-            else:
+            elif 'ResidualMixer' in experiment_id:
                 self.other_info='ResidualMixer'
         elif 'Adobe' in experiment_id:
             self.generator_implementation = generator_dict['AdobeNet']
@@ -835,9 +848,10 @@ class WNet(object):
                 this_feature_loss = tf.reduce_mean(square_root_mean_squared_feature_diff)
 
 
-                feature1_normed = (feature1[counter] + 1) / 2
-                feature2_normed = (feature2[counter] + 1) / 2
-
+                # feature1_normed = (feature1[counter] + 1) / 2
+                # feature2_normed = (feature2[counter] + 1) / 2
+                feature1_normed = tf.nn.tanh(feature1[counter])+2
+                feature2_normed = tf.nn.tanh(feature2[counter])+2
                 vn_loss = tf.trace(tf.multiply(feature1_normed, tf.log(feature1_normed)) -
                                    tf.multiply(feature1_normed, tf.log(feature2_normed)) +
                                    - feature1_normed + feature2_normed + eps)
@@ -1922,12 +1936,12 @@ class WNet(object):
 
             info=""
 
-            # batch_true_style_train,\
-            # batch_train_prototype, batch_train_reference, \
-            # batch_train_label0_onehot, batch_train_label1_onehot,\
-            # batch_train_label0_dense, batch_train_label1_dense, \
-            # true_style_threshold_train, content_threshold_train, style_threshold_train= \
-            #     data_provider.train_iterator.get_next_batch(sess=self.sess)
+            batch_true_style_train,\
+            batch_train_prototype, batch_train_reference, \
+            batch_train_label0_onehot, batch_train_label1_onehot,\
+            batch_train_label0_dense, batch_train_label1_dense, \
+            true_style_threshold_train, content_threshold_train, style_threshold_train= \
+                data_provider.train_iterator.get_next_batch(sess=self.sess)
             #
             # batch_true_style_val, \
             # batch_val_prototype, batch_val_reference, \

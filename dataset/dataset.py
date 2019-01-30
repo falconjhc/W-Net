@@ -4,6 +4,9 @@ import os
 
 import sys
 sys.path.append('..')
+
+reload(sys)
+sys.setdefaultencoding('utf8')
 from utilities.utils import image_show
 import random as rnd
 import time
@@ -11,12 +14,14 @@ import multiprocessing as multi_thread
 print_separator = "#################################################################"
 from tensorflow.python.client import device_lib
 import copy as cpy
+import scipy.misc as misc
+
 
 STANDARD_GRAYSCALE_THRESHOLD_VALUE = 240
 ALTERNATE_GRAYSCALE_LOW=170
 ALTERNATE_GRAYSCALE_HGH=250
 
-# GRAYSCALE_AVG = 127.5
+GRAYSCALE_AVG = 127.5
 class Dataset(object):
     def __init__(self,
                  data_list,
@@ -96,9 +101,14 @@ class Dataset_Iterator(object):
                 self.label1_vec = range(1001, 1051)
                 self.label0_vec = map(str, self.label0_vec)
                 self.label1_vec = map(str, self.label1_vec)
+            else:
+                self.label0_vec = self.label0_vec.tolist()
+                self.label1_vec = self.label1_vec.tolist()
+
         else:
             self.label0_vec = label0_vec
             self.label1_vec = label1_vec
+
 
         self.content_data_list_alignment_with_true_style_data(content_prototype_list=content_prototype_list,
                                                               print_marks=print_marks,
@@ -182,7 +192,6 @@ class Dataset_Iterator(object):
     def reproduce_dataset_lists(self, info, shuffle,info_print_interval):
 
         if shuffle:
-
             old_content_prototype_list = cpy.deepcopy(self.content_prototype_list)
             old_true_style_data_list = self.true_style.data_list
             old_true_style_label0_list = self.true_style.label0_list
@@ -503,10 +512,6 @@ class Dataset_Iterator(object):
         all_prototype_tensor = (all_prototype_tensor - 0.5) * 2
         all_reference_tensor = (all_reference_tensor - 0.5) * 2
 
-
-
-
-
         self.output_tensor_list = list()
         self.output_tensor_list.append(true_style_img_tensor) # 0
         self.output_tensor_list.append(all_prototype_tensor)  # 1
@@ -548,10 +553,14 @@ class DataProvider(object):
                  input_filters,style_input_num,
                  info_print_interval,
                  file_list_txt_content, file_list_txt_style_train, file_list_txt_style_validation,
-                 content_data_dir, style_train_data_dir,style_validation_data_dir,content_input_number_actual,
-                 augment_train_data=True,
-                 augment_train_data_flip=True,
-                 debug_mode=False):
+                 content_data_dir, style_train_data_dir,style_validation_data_dir,content_input_number_actual=0,
+                 augment_train_data=False,
+                 augment_train_data_flip=False,
+                 debug_mode=False,
+                 fixed_style_reference_dir=None,
+                 fixed_file_list_txt_style_reference=None,
+                 dataset_mode='Train',
+                 fixed_char_list_txt=None):
 
         local_device_protos = device_lib.list_local_devices()
         gpu_device = [x.name for x in local_device_protos if x.device_type == 'GPU']
@@ -574,8 +583,25 @@ class DataProvider(object):
                                      style_validation_data_dir=style_validation_data_dir,
                                      file_list_txt_style_validation=file_list_txt_style_validation,
                                      info_print_interval=info_print_interval,
-                                     debug_mode=debug_mode)
-        # self.content_input_num = self.train_iterator.content_input_num
+                                     debug_mode=debug_mode,
+                                     dataset_mode=dataset_mode)
+
+        if dataset_mode=='Eval':
+            fixed_style_reference_label1_list, fixed_style_reference_label0_list, fixed_style_reference_data_list = \
+                self.data_file_list_read(file_list_txt=fixed_file_list_txt_style_reference,
+                                         file_data_dir=fixed_style_reference_dir)
+
+            fixed_style_reference_list,fixed_style_reference_data_path_list, char_list = \
+                self.data_sort_by_fixed_label0_order(label1_list=fixed_style_reference_label1_list,
+                                                     label0_list=fixed_style_reference_label0_list,
+                                                     data_list=fixed_style_reference_data_list,
+                                                     fixed_char_list_txt=fixed_char_list_txt)
+            self.train_iterator.fixed_style_reference_image_list = fixed_style_reference_list
+            self.train_iterator.fixed_style_reference_data_path_list = fixed_style_reference_data_path_list
+            self.train_iterator.fixed_style_reference_char_list = char_list
+            print(print_separator)
+            if not debug_mode:
+                raw_input("Press any key to continue...")
 
     def dataset_reinitialization(self, sess, init_for_val, info_interval):
         self.train_iterator.reproduce_dataset_lists(info="TrainData", shuffle=True, info_print_interval=info_interval)
@@ -608,13 +634,82 @@ class DataProvider(object):
             file_handle.close()
         return label1_list, label0_list, data_list
 
+    def data_sort_by_fixed_label0_order(self,fixed_char_list_txt,label1_list,label0_list,data_list):
 
+        def read_content_from_dir():
+            # get label0 for the targeted content input txt
+            chars_list = list()
+            with open(fixed_char_list_txt) as f:
+                for line in f:
+
+                    line = u"%s" % line
+                    char_counter = 0
+                    for char in line:
+
+                        current_char = line[char_counter]
+                        char_counter += 1
+                        chars_list.append(current_char)
+
+
+            return chars_list
+
+        char_list = read_content_from_dir()
+        label0_vec = list()
+        label1_vec = np.unique(label1_list)
+        for label0 in label0_list:
+            if not label0 in label0_vec:
+                label0_vec.append(label0)
+        label0_counter=0
+        output_img_list=list()
+        output_data_path_list=list()
+        print("Fixed Char Lists:")
+        for label0 in label0_vec:
+            label0_counter+=1
+            print_str="%s|%s|" % (label0,char_list[label0_counter-1])
+            relevant_indices_label0 = [ii for ii in range(len(label0_list)) if label0_list[ii]==label0]
+            current_label1_list=list()
+            current_label1_data_list=list()
+            current_label1_label0_list=list()
+            for ii in relevant_indices_label0:
+                current_label1_list.append(label1_list[ii])
+                current_label1_data_list.append(data_list[ii])
+                current_label1_label0_list.append(label0_list[ii])
+
+            current_label1_img_matrix_list=list()
+            current_data_path_list=list()
+            for label1 in label1_vec:
+                relevant_indices_label1 = [jj for jj in range(len(current_label1_list)) if current_label1_list[jj]==label1]
+                current_label0_current_label1_img_matrix = np.zeros(shape=[len(relevant_indices_label1),self.input_width,self.input_width,1])
+                current_current_data_path_list=list()
+                counter=0
+                for jj in relevant_indices_label1:
+                    char_read=misc.imread(current_label1_data_list[jj])
+                    char_read = char_read/GRAYSCALE_AVG-1
+                    if np.ndim(char_read)==3:
+                        char_read=char_read[:,:,0]
+                    char_read=np.expand_dims(char_read,axis=2)
+                    current_label0_current_label1_img_matrix[counter,:,:,:]=char_read
+                    current_current_data_path_list.append(current_label1_data_list[jj])
+                    counter+=1
+                    # image_show(tmp)
+                    # print("%s||%s||%s" % (current_label1_data_list[jj].split("/")[-1],
+                    #                       current_label1_list[jj],
+                    #                       current_label1_label0_list[jj]))
+                print_str = print_str + "%2d|" % len(relevant_indices_label1)
+                current_label1_img_matrix_list.append(current_label0_current_label1_img_matrix)
+                current_data_path_list.append(current_current_data_path_list)
+            print(print_str)
+            # image_show(char_read)
+            output_img_list.append(current_label1_img_matrix_list)
+            output_data_path_list.append(current_data_path_list)
+        return output_img_list, output_data_path_list, char_list,
 
     def dataset_iterator_create(self,info_print_interval,
                                 content_data_dir,file_list_txt_content,
                                 style_train_data_dir, file_list_txt_style_train,
                                 style_validation_data_dir, file_list_txt_style_validation,
-                                debug_mode=False):
+                                debug_mode=False,
+                                dataset_mode='Train'):
 
         def _filter_current_label1_data(current_label1, full_data_list, full_label1_list,full_label0_list):
             selected_indices = [ii for ii in range(len(full_label1_list)) if full_label1_list[ii] == current_label1]
@@ -694,57 +789,57 @@ class DataProvider(object):
                                                train_iterator_mark=True,
                                                debug_mode=debug_mode,
                                                content_input_number_actual=self.content_input_number_actual)
-        self.style_label0_vec = np.unique(self.train_iterator.label0_vec)
-        self.style_label1_vec = np.unique(self.train_iterator.label1_vec)
-
+        self.style_label0_vec = np.unique(self.train_iterator.label0_vec).tolist()
+        self.style_label1_vec = np.unique(self.train_iterator.label1_vec).tolist()
+        self.train_iterator.create_dataset_op()
 
 
 
 
         # building for style data set for validation
-        validation_style_label1_list, validation_style_label0_list, validation_style_data_path_list = \
-            self.data_file_list_read(file_list_txt=file_list_txt_style_validation,
-                                     file_data_dir=style_validation_data_dir)
+        if dataset_mode=='Train':
+            validation_style_label1_list, validation_style_label0_list, validation_style_data_path_list = \
+                self.data_file_list_read(file_list_txt=file_list_txt_style_validation,
+                                         file_data_dir=style_validation_data_dir)
 
+            validation_style_reference_list = list()
+            for ii in range(self.style_input_num):
+                validation_style_dataset = Dataset(data_list=cpy.deepcopy(validation_style_data_path_list),
+                                                   label0_list=cpy.deepcopy(validation_style_label0_list),
+                                                   label1_list=cpy.deepcopy(validation_style_label1_list),
+                                                   sorted_by_label0=False,
+                                                   print_marks='ForStyleReferenceValidationData:',
+                                                   info_print_interval=info_print_interval)
+                validation_style_reference_list.append(validation_style_dataset)
 
-        validation_style_reference_list = list()
-        for ii in range(self.style_input_num):
-            validation_style_dataset = Dataset(data_list=cpy.deepcopy(validation_style_data_path_list),
-                                               label0_list=cpy.deepcopy(validation_style_label0_list),
-                                               label1_list=cpy.deepcopy(validation_style_label1_list),
-                                               sorted_by_label0=False,
-                                               print_marks='ForStyleReferenceValidationData:',
-                                               info_print_interval=info_print_interval)
-            validation_style_reference_list.append(validation_style_dataset)
+            # building for true style data set for validation
+            validation_true_style_dataset = Dataset(data_list=cpy.deepcopy(validation_style_data_path_list),
+                                                    label0_list=cpy.deepcopy(validation_style_label0_list),
+                                                    label1_list=cpy.deepcopy(validation_style_label1_list),
+                                                    sorted_by_label0=True,
+                                                    print_marks='ForTrueStyleValidationData:',
+                                                    info_print_interval=info_print_interval)
 
-        # building for true style data set for validation
-        validation_true_style_dataset = Dataset(data_list=cpy.deepcopy(validation_style_data_path_list),
-                                                label0_list=cpy.deepcopy(validation_style_label0_list),
-                                                label1_list=cpy.deepcopy(validation_style_label1_list),
-                                                sorted_by_label0=True,
-                                                print_marks='ForTrueStyleValidationData:',
-                                                info_print_interval=info_print_interval)
-
-        # construct the validation iterator
-        self.validate_iterator = Dataset_Iterator(batch_size=self.batch_size,
-                                                  thread_num=self.thread_num,
-                                                  input_width=self.input_width,
-                                                  input_channel=self.input_filters,
-                                                  true_style=validation_true_style_dataset,
-                                                  style_reference_list=cpy.deepcopy(validation_style_reference_list),
-                                                  content_prototype_list=cpy.deepcopy(content_prototype_list),
-                                                  augment=False,
-                                                  augment_flip=False,
-                                                  style_input_num=self.style_input_num,
-                                                  info_print_interval=info_print_interval,
-                                                  print_marks='ForValidationIterator:',
-                                                  train_iterator_mark=False,
-                                                  label0_vec=self.train_iterator.label0_vec,
-                                                  label1_vec=self.train_iterator.label1_vec,
-                                                  debug_mode=debug_mode,
-                                                  content_input_number_actual=self.content_input_number_actual)
-        self.train_iterator.create_dataset_op()
-        self.validate_iterator.create_dataset_op()
+            # construct the validation iterator
+            self.validate_iterator = Dataset_Iterator(batch_size=self.batch_size,
+                                                      thread_num=self.thread_num,
+                                                      input_width=self.input_width,
+                                                      input_channel=self.input_filters,
+                                                      true_style=validation_true_style_dataset,
+                                                      style_reference_list=cpy.deepcopy(
+                                                          validation_style_reference_list),
+                                                      content_prototype_list=cpy.deepcopy(content_prototype_list),
+                                                      augment=False,
+                                                      augment_flip=False,
+                                                      style_input_num=self.style_input_num,
+                                                      info_print_interval=info_print_interval,
+                                                      print_marks='ForValidationIterator:',
+                                                      train_iterator_mark=False,
+                                                      label0_vec=self.train_iterator.label0_vec,
+                                                      label1_vec=self.train_iterator.label1_vec,
+                                                      debug_mode=debug_mode,
+                                                      content_input_number_actual=self.content_input_number_actual)
+            self.validate_iterator.create_dataset_op()
 
         print(print_separator)
 
