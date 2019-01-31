@@ -665,7 +665,7 @@ class DataProvider(object):
         print("Fixed Char Lists:")
         for label0 in label0_vec:
             label0_counter+=1
-            print_str="%s|%s|" % (label0,char_list[label0_counter-1])
+            print_str="%s|" % (label0)
             relevant_indices_label0 = [ii for ii in range(len(label0_list)) if label0_list[ii]==label0]
             current_label1_list=list()
             current_label1_data_list=list()

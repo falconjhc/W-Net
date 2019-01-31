@@ -850,9 +850,9 @@ class WNet(object):
 
                     current_epoch_str = "Epoch:%d/%d, Iteration:%d/%d for Style Reference Chars: " % (ei+1, total_eval_epochs,
                                                                                                       iter + 1, self.itrs_for_current_epoch)
-                    for char in current_fixed_style_reference_char_list:
-                        current_epoch_str = current_epoch_str + char
-                    current_epoch_str=current_epoch_str+":"
+                    # for char in current_fixed_style_reference_char_list:
+                    #     current_epoch_str = current_epoch_str + char
+                    # current_epoch_str=current_epoch_str+":"
                     print(current_epoch_str)
                     print("FeatureDiffMSE:")
                     print("------------------------------------------------------------------------")
@@ -869,9 +869,9 @@ class WNet(object):
                                     prefix = 'StyleRandom  :'
                                 elif ii == 4:
                                     prefix = 'StyleSame    :'
-                                print_str_line = prefix+"|%3.5f|" % (full_mse[ii][jj]/(iter+1))
+                                print_str_line = prefix+"|%3.5f|" % (full_mse[ii][jj]/((iter+1)*self.batch_size))
                             else:
-                                print_str_line = print_str_line + "%3.5f|" % (full_mse[ii][jj]/(iter+1))
+                                print_str_line = print_str_line + "%3.5f|" % (full_mse[ii][jj]/((iter+1)*self.batch_size))
                         print(print_str_line)
                     print("------------------------------------------------------------------------")
                     print("FeatureDiffVN:")
@@ -889,10 +889,9 @@ class WNet(object):
                                     prefix = 'StyleRandom  :'
                                 elif ii == 4:
                                     prefix = 'StyleSame    :'
-
-                                print_str_line = prefix+"|%3.5f|" % (full_vn[ii][jj]/(iter+1))
+                                print_str_line = prefix+"|%3.5f|" % (full_vn[ii][jj]/((iter+1)*self.batch_size))
                             else:
-                                print_str_line = print_str_line + "%3.5f|" % (full_vn[ii][jj]/(iter+1))
+                                print_str_line = print_str_line + "%3.5f|" % (full_vn[ii][jj]/((iter+1)*self.batch_size))
                         print(print_str_line)
                     print("------------------------------------------------------------------------")
                     print("PixelDiff:")
@@ -909,17 +908,17 @@ class WNet(object):
                     print("----------------------------------------------------------------------------------------------------------------")
                     print(self.print_separater)
 
-            full_mse = full_mse / ((self.itrs_for_current_epoch-1) + float(self.batch_size-added_num)/float(self.batch_size))
-            full_vn = full_vn / ((self.itrs_for_current_epoch - 1) + float(self.batch_size - added_num) / float(self.batch_size))
-            full_pixel = full_pixel / ((self.itrs_for_current_epoch - 1) + float(self.batch_size - added_num) / float(self.batch_size))
+            full_mse = full_mse / (((self.itrs_for_current_epoch-1) + float(self.batch_size-added_num)/float(self.batch_size))*self.batch_size)
+            full_vn = full_vn / (((self.itrs_for_current_epoch-1) + float(self.batch_size-added_num)/float(self.batch_size))*self.batch_size)
+            full_pixel = full_pixel / (((self.itrs_for_current_epoch-1) + float(self.batch_size-added_num)/float(self.batch_size))*self.batch_size)
 
 
             print(self.print_separater)
             print(self.print_separater)
             current_epoch_str = "Epoch:%d/%d Completed for Style Reference Chars: " % (ei + 1, total_eval_epochs)
-            for char in current_fixed_style_reference_char_list:
-                current_epoch_str = current_epoch_str + char
-            current_epoch_str = current_epoch_str + ":"
+            # for char in current_fixed_style_reference_char_list:
+            #     current_epoch_str = current_epoch_str + char
+            # current_epoch_str = current_epoch_str + ":"
             print(current_epoch_str)
             print("FeatureDiffMSE:")
             print("------------------------------------------------------------------------")
@@ -986,7 +985,7 @@ class WNet(object):
                 pixel += full_pixel
         mse = mse / total_eval_epochs
         vn = vn / total_eval_epochs
-        pixel =  pixel / total_eval_epochs
+        pixel = pixel / total_eval_epochs
 
         evaluation_resule_save_dir = os.path.join(self.evaluation_resule_save_dir,self.experiment_id)
         if not os.path.exists(evaluation_resule_save_dir):
