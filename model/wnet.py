@@ -836,6 +836,13 @@ class WNet(object):
 
     def feature_extractor_build(self, g_loss, g_merged_summary,data_provider):
 
+        def feature_linear_norm(feature):
+            min_v= tf.reduce_min(feature)
+            feature = feature - min_v
+            max_v = tf.reduce_max(feature)
+            feature = feature / max_v
+            return feature+eps
+
         def calculate_high_level_feature_loss(feature1,feature2):
             for counter in range(len(feature1)):
 
@@ -850,8 +857,11 @@ class WNet(object):
 
                 # feature1_normed = (feature1[counter] + 1) / 2
                 # feature2_normed = (feature2[counter] + 1) / 2
-                feature1_normed = tf.nn.tanh(feature1[counter])+2
-                feature2_normed = tf.nn.tanh(feature2[counter])+2
+                # feature1_normed = tf.nn.tanh(feature1[counter])+2
+                # feature2_normed = tf.nn.tanh(feature2[counter])+2
+
+                feature1_normed = feature_linear_norm(feature=feature1[counter])
+                feature2_normed = feature_linear_norm(feature=feature2[counter])
                 vn_loss = tf.trace(tf.multiply(feature1_normed, tf.log(feature1_normed)) -
                                    tf.multiply(feature1_normed, tf.log(feature2_normed)) +
                                    - feature1_normed + feature2_normed + eps)

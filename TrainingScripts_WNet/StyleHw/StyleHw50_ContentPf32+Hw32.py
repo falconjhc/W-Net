@@ -22,8 +22,8 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
-    '--training_from_model_dir',
-    '/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20190108-WNet-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
+    #'--training_from_model_dir',
+    #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20190108-WNet-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
 
     '--debug_mode','0',
     '--style_input_number','4', # how many style inputs
@@ -80,7 +80,7 @@ input_args = [
     # optimizer parameters
     '--init_lr','0.0002',
     '--epoch','5000',
-    '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
+    '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
 
     '--optimization_method','adam',
     '--final_learning_rate_pctg','0.01',
@@ -108,8 +108,8 @@ input_args = [
     'tfModels_FeatureExtractor/checkpoint/Exp20190119_FeatureExtractor_Style_HW300Pf144_vgg16net/variables/',
 
     '--Feature_Penalty_True_Fake_Target', '750',
-    '--Feature_Penalty_Style_Reference','1',
-    '--Feature_Penalty_Content_Prototype','1']
+    '--Feature_Penalty_Style_Reference','15',
+    '--Feature_Penalty_Content_Prototype','15']
 
 
 

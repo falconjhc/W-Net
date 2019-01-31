@@ -17,6 +17,12 @@ eps = 1e-9
 data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_path_root = '/DataA/Harric/ChineseCharacterExp/'
 
+content_known_unknown='Known'
+style_known_unknown='Known'
+style_input_number=4
+evaluation_resule_save_dir = '../../EvaluationResult_201901/'
+
+
 # evaluating_generator_dir=\
 #     'TrainedModels_WNet/Exp20190129-WNet-ResidualMixer-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/'
 # evaluating_generator_dir=\
@@ -24,14 +30,21 @@ model_path_root = '/DataA/Harric/ChineseCharacterExp/'
 evaluating_generator_dir=\
     'TrainedModels_WNet/Exp20190129-AdobeNet-Style4_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/'
 
-
+# content dir
 content_data_dir=list()
 content_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/')
 content_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/')
 content_data_dir.append('CASIA_Dataset/PrintedData_80Fonts/')
 
+# style dir
 style_train_data_dir=list()
 style_train_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/')
+
+# fixed style dir
+fixed_style_data_dir=list()
+fixed_style_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/')
+fixed_style_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/')
+
 
 
 ## known content
@@ -50,39 +63,26 @@ unknown_content_file_list.append('../TrainTestFileList/PrintedData/Char_0_3754_W
 ## known style
 known_style_file_list=list()
 known_style_file_list.append('../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt')
+known_fixed_style_file_list=list()
+known_fixed_style_file_list.append('../EvaluationScripts/EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
+known_fixed_style_file_list.append('../EvaluationScripts/EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
 
 
 ## unknown style
 unknown_style_file_list=list()
 unknown_style_file_list.append('../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt')
+unknown_fixed_style_file_list=list()
+unknown_fixed_style_file_list.append('../EvaluationScripts/EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
+unknown_fixed_style_file_list.append('../EvaluationScripts/EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
 
 
 
 
 input_args = [
-    '--style_input_number','4', # how many style inputs
-
-    '--evaluation_resule_save_dir',
-    '../../EvaluationResult/',
-
-    '--content_known_unknown','Known',
-    '--style_known_unknown', 'Known',
-
-
-
 
     '--debug_mode','1',
     '--generator_device','/device:GPU:0',
     '--feature_extractor_device','/device:GPU:0',
-
-    '--fixed_style_reference_dir',
-    'CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/,'
-    'CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/',
-
-
-    '--fixed_file_list_txt_style_reference',
-    '../EvaluationScripts/EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt,'
-    '../EvaluationScripts/EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt',
 
 
     '--fixed_char_list_txt',
@@ -109,12 +109,8 @@ input_args = [
 
 parser = argparse.ArgumentParser(description='Train')
 parser.add_argument('--debug_mode', dest='debug_mode',type=int,required=True)
-parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)
-parser.add_argument('--evaluation_resule_save_dir', dest='evaluation_resule_save_dir', type=str,required=True)
 
 
-
-# directories setting
 
 # network settings
 parser.add_argument('--generator_device', dest='generator_device',type=str,required=True)
@@ -132,10 +128,6 @@ parser.add_argument('--content_prototype_extractor_dir', dest='content_prototype
 
 
 # input data setting
-parser.add_argument('--content_known_unknown',dest='content_known_unknown',type=str,required=True)
-parser.add_argument('--style_known_unknown',dest='style_known_unknown',type=str,required=True)
-parser.add_argument('--fixed_style_reference_dir',dest='fixed_style_reference_dir',type=str,required=True)
-parser.add_argument('--fixed_file_list_txt_style_reference',dest='fixed_file_list_txt_style_reference',type=str,required=True)
 parser.add_argument('--fixed_char_list_txt',dest='fixed_char_list_txt',type=str,required=True)
 
 
@@ -222,50 +214,49 @@ def main(_):
     print("#####################################################")
 
     # content data process
-    if args.content_known_unknown == 'Known':
+    if content_known_unknown == 'Known':
         content_file_list = known_content_file_list
         experiment_id=experiment_id+'-ContentKnown'
-    elif args.content_known_unknown == 'UnKnown':
+    elif content_known_unknown == 'UnKnown':
         content_file_list = unknown_content_file_list
         experiment_id = experiment_id + '-ContentUnKnown'
     for ii in range(len(content_data_dir)):
         content_data_dir[ii] = os.path.join(data_path_root, content_data_dir[ii])
 
 
-    # style data process
-    if args.style_known_unknown == 'Known':
+    # style data process and fixed style data process
+    if style_known_unknown == 'Known':
         style_file_list = known_style_file_list
+        fixed_style_file_list = known_fixed_style_file_list
         experiment_id = experiment_id + '-StyleKnown'
-    elif args.style_known_unknown == 'UnKnown':
+    elif style_known_unknown == 'UnKnown':
         style_file_list = unknown_style_file_list
+        fixed_style_file_list = unknown_fixed_style_file_list
         experiment_id = experiment_id + '-StyleUnKnown'
     for ii in range(len(style_train_data_dir)):
         style_train_data_dir[ii] = os.path.join(data_path_root, style_train_data_dir[ii])
+    for ii in range(len(fixed_style_data_dir)):
+        fixed_style_data_dir[ii] = os.path.join(data_path_root, fixed_style_data_dir[ii])
 
 
-    # fixed style reference process
-    fixed_style_reference_dir=args.fixed_style_reference_dir.split(',')
-    fixed_file_list_txt_style_reference=args.fixed_file_list_txt_style_reference.split(',')
-    for ii in range(len(fixed_style_reference_dir)):
-        fixed_style_reference_dir[ii] = os.path.join(data_path_root,fixed_style_reference_dir[ii])
 
     if 'Style4' in experiment_id:
         style_input_number=4
     elif 'Style1' in experiment_id:
         style_input_number=1
     else:
-        style_input_number=args.style_input_number
+        global style_input_number
         experiment_id = experiment_id+'-Style%d' % style_input_number
 
 
     model = WNET(debug_mode=args.debug_mode,
                  experiment_id=experiment_id,
-                 evaluation_resule_save_dir=args.evaluation_resule_save_dir,
+                 evaluation_resule_save_dir=evaluation_resule_save_dir,
                  style_input_number=style_input_number,
                  content_data_dir=content_data_dir,
                  style_train_data_dir=style_train_data_dir,
-                 fixed_style_reference_dir=fixed_style_reference_dir,
-                 fixed_file_list_txt_style_reference=fixed_file_list_txt_style_reference,
+                 fixed_style_reference_dir=fixed_style_data_dir,
+                 fixed_file_list_txt_style_reference=fixed_style_file_list,
                  file_list_txt_content=content_file_list,
                  file_list_txt_style_train=style_file_list,
                  fixed_char_list_txt=args.fixed_char_list_txt,

@@ -236,13 +236,13 @@ def vgg_16_net(image,
                                padding='SAME', name='pool5')
         # block 6
         fc6 = tf.reshape(pool5, [batch_size, -1])
-        fc6=fc(x=fc6,
-               output_size=4096,
-               scope="fc6",
-               weight_decay=weight_decay,
-               initializer=initializer,
-               parameter_update_device=device,
-               weight_decay_rate=weight_decay_rate)
+        fc6 = fc(x=fc6,
+                 output_size=4096,
+                 scope="fc6",
+                 weight_decay=weight_decay,
+                 initializer=initializer,
+                 parameter_update_device=device,
+                 weight_decay_rate=weight_decay_rate)
         if 6 in output_high_level_features:
             features.append(fc6)
         fc6 = tf.nn.dropout(x=relu(fc6),
@@ -260,4 +260,4 @@ def vgg_16_net(image,
         if 7 in output_high_level_features:
             features.append(fc7)
 
-        return  features, return_str
+        return features, return_str

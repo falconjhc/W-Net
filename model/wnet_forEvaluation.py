@@ -44,6 +44,7 @@ from model.encoders import encoder_resmixernet_framework as encoder_resmixernet_
 import math
 import utilities.infer_implementations as inf_tools
 
+STANDARD_GRAYSCALE_THRESHOLD_VALUE = 240
 
 
 # Auxiliary wrapper classes
@@ -133,10 +134,10 @@ class WNet(object):
         self.evaluation_resule_save_dir=evaluation_resule_save_dir
 
         self.adain_use = ('AdaIN' in experiment_id) and (not 'NonAdaIN' in experiment_id)
-        if self.adain_use and 'AdaIN-Multi' in self.adain_use:
+        if self.adain_use and 'AdaIN-Multi' in self.experiment_id:
             self.adain_preparation_model = 'Multi'
             self.adain_mark = '1-Multi'
-        elif self.adain_use and 'AdaIN-Single' in self.adain_use:
+        elif self.adain_use and 'AdaIN-Single' in self.experiment_id:
             self.adain_preparation_model = 'Single'
             self.adain_mark = '1-Single'
         else:
@@ -259,6 +260,8 @@ class WNet(object):
                 other_info_pos = possible_extracted_info.find('DenseMixer')
                 self.other_info = possible_extracted_info[other_info_pos - len(re.findall('\d+', possible_extracted_info)[0]) - 1:]
 
+
+
         self.print_info_seconds=30
         self.debug_mode = debug_mode
 
@@ -293,6 +296,16 @@ class WNet(object):
 
 
 
+        print(self.print_separater)
+        print(self.print_separater)
+        print(self.print_separater)
+        print("Evaluation on:" )
+        print(self.experiment_id)
+        print(self.print_separater)
+        print(self.print_separater)
+        print(self.print_separater)
+        # if not self.debug_mode:
+        #     raw_input("Press enter to continue")
 
 
 
@@ -359,14 +372,68 @@ class WNet(object):
             print(self.print_separater)
             return False
 
+    def pixel_wise_difference_build(self, generated, true_style,
+                                    random_content,random_style):
+        def calculas(img1,img2):
+            l1=tf.abs(img1-img2)
+            squared_diff = l1 ** 2
+            mse = tf.reduce_mean(squared_diff,axis=[1,2,3])
+            mse = tf.sqrt(eps+mse)
+
+            threshold = (STANDARD_GRAYSCALE_THRESHOLD_VALUE/GRAYSCALE_AVG-1) * \
+                        tf.ones(shape=generated.shape,
+                                dtype=generated.dtype)
+            img1_binary_condition = tf.greater(img1, threshold)
+            img2_binary_condition = tf.greater(img2, threshold)
+            img1_binary = tf.where(img1_binary_condition,
+                                   tf.ones_like(img1),
+                                   tf.zeros_like(img1))
+            img2_binary = tf.where(img2_binary_condition,
+                                   tf.ones_like(img2),
+                                   tf.zeros_like(img2))
+            binary_diff = tf.abs(img1_binary-img2_binary)
+            pdar = tf.div(tf.cast(tf.reduce_sum(binary_diff), dtype=tf.float32),
+                          tf.cast(int(binary_diff.shape[0]) *
+                                  int(binary_diff.shape[1]) *
+                                  int(binary_diff.shape[2]) *
+                                  int(binary_diff.shape[3]),
+                                  dtype=tf.float32))
+
+            return tf.reduce_mean(l1,axis=[1,2,3]),mse, pdar
+
+
+        l1_1, mse_1, pdar_1 = calculas(generated, true_style)
+        l1_2, mse_2, pdar_2 = calculas(generated, random_content)
+        l1_3, mse_3, pdar_3 = calculas(generated, random_style)
+
+        result = tf.concat([tf.reshape(tf.reduce_mean(l1_1),shape=[1,1]),
+                            tf.reshape(tf.reduce_mean(mse_1), shape=[1, 1]),
+                            tf.reshape(tf.reduce_mean(pdar_2), shape=[1, 1]),
+                            tf.reshape(tf.reduce_mean(l1_2), shape=[1, 1]),
+                            tf.reshape(tf.reduce_mean(mse_2), shape=[1, 1]),
+                            tf.reshape(tf.reduce_mean(pdar_2), shape=[1, 1]),
+                            tf.reshape(tf.reduce_mean(l1_3), shape=[1, 1]),
+                            tf.reshape(tf.reduce_mean(mse_3), shape=[1, 1]),
+                            tf.reshape(tf.reduce_mean(pdar_3), shape=[1, 1])],
+                           axis=1)
+
+
+
+        return result
+
+
+
+
     def feature_extractor_build(self, data_provider, input_generated_img):
 
-        def calculate_high_level_feature_loss(feature1,feature2):
+        def feature_linear_norm(feature):
+            min_v= tf.reduce_min(feature)
+            feature = feature - min_v
+            max_v = tf.reduce_max(feature)
+            feature = feature / max_v
+            return feature+eps
 
-            feature_mse_diff = tf.zeros(dtype=tf.float64,
-                                        shape=[len(feature1),1])
-            feature_vn_diff = tf.zeros(dtype=tf.float64,
-                                       shape=[len(feature1), 1])
+        def calculate_high_level_feature_loss(feature1,feature2):
             for counter in range(len(feature1)):
 
                 feature_diff = feature1[counter] - feature2[counter]
@@ -375,12 +442,14 @@ class WNet(object):
                 squared_feature_diff = feature_diff**2
                 mean_squared_feature_diff = tf.reduce_mean(squared_feature_diff,axis=[1,2,3])
                 square_root_mean_squared_feature_diff = tf.sqrt(eps+mean_squared_feature_diff)
-                square_root_mean_squared_feature_diff=tf.reshape(square_root_mean_squared_feature_diff,[int(square_root_mean_squared_feature_diff.shape[0]),1])
+                square_root_mean_squared_feature_diff=tf.reshape(square_root_mean_squared_feature_diff,
+                                                                 [int(square_root_mean_squared_feature_diff.shape[0]),1])
                 this_mse_loss = tf.reduce_mean(square_root_mean_squared_feature_diff,axis=0)
                 this_mse_loss = tf.reshape(this_mse_loss,shape=[1,1])
 
-                feature1_normed = tf.nn.tanh(feature1[counter])+2
-                feature2_normed = tf.nn.tanh(feature2[counter])+2
+                feature1_normed = feature_linear_norm(feature=feature1[counter])
+                feature2_normed = feature_linear_norm(feature=feature2[counter])
+
                 vn_loss = tf.trace(tf.multiply(feature1_normed, tf.log(feature1_normed)) -
                                    tf.multiply(feature1_normed, tf.log(feature2_normed)) +
                                    - feature1_normed + feature2_normed + eps)
@@ -394,16 +463,6 @@ class WNet(object):
                     feature_mse_diff = tf.concat([feature_mse_diff,this_mse_loss], axis=1)
                     feature_vn_diff = tf.concat([feature_vn_diff, vn_loss], axis=1)
 
-
-
-            #     if counter == 0:
-            #         final_loss_mse = this_feature_loss
-            #         final_loss_vn = vn_loss
-            #     else:
-            #         final_loss_mse += this_feature_loss
-            #         final_loss_vn += vn_loss
-            # final_loss_mse = final_loss_mse / len(feature1)
-            # final_loss_vn = final_loss_vn / len(feature1)
 
             return feature_mse_diff, feature_vn_diff
 
@@ -517,8 +576,6 @@ class WNet(object):
         vn_difference = tf.concat([vn_difference, style_reference_feature_vn_loss_random], axis=0)
         vn_difference = tf.concat([vn_difference, style_reference_feature_vn_loss_same], axis=0)
 
-
-
         extr_vars_style_reference = [var for var in tf.trainable_variables() if
                                      'StyleReference_FeatureExtractor' in var.name]
         extr_vars_style_reference = self.find_norm_avg_var(extr_vars_style_reference)
@@ -532,7 +589,9 @@ class WNet(object):
         saver_list.append(saver_extractor_style_reference)
 
 
-        return saver_list,mse_difference,vn_difference
+        return saver_list,mse_difference,vn_difference, \
+               data_provider.train_iterator.output_tensor_list[0], \
+               selected_content_prototype, selected_style_reference
 
 
     def generator_build(self,data_provider):
@@ -667,9 +726,18 @@ class WNet(object):
                 = self.generator_build(data_provider=data_provider)
 
             # for feature extractor
-            feature_extractor_saver_list, mse_difference, vn_difference = \
+            feature_extractor_saver_list, mse_difference, vn_difference, \
+            true_style,random_selected_content, random_selected_style= \
                 self.feature_extractor_build(data_provider=data_provider,
                                              input_generated_img=generated_batch)
+
+            # for pixel-wise difference
+            pixel_diff = \
+                self.pixel_wise_difference_build(generated=generated_batch,
+                                                 true_style=true_style,
+                                                 random_content = random_selected_content,
+                                                 random_style = random_selected_style)
+
 
 
             # model initialization
@@ -705,10 +773,10 @@ class WNet(object):
         for ei in range(total_eval_epochs):
             current_fixed_style_reference_img_list = \
                 data_provider.train_iterator.fixed_style_reference_image_list[ei*self.style_input_number:(ei+1)*self.style_input_number]
-            current_fixed_style_reference_char_list=\
+            current_fixed_style_reference_char_list= \
                 data_provider.train_iterator.fixed_style_reference_char_list[ei*self.style_input_number:(ei+1)*self.style_input_number]
-            # current_fixed_style_reference_data_path_list = \
-            #     data_provider.train_iterator.fixed_style_reference_data_path_list[ei * self.style_input_number:(ei + 1) * self.style_input_number]
+            current_fixed_style_reference_data_path_list = \
+                data_provider.train_iterator.fixed_style_reference_data_path_list[ei * self.style_input_number:(ei + 1) * self.style_input_number]
 
             self.itrs_for_current_epoch = data_provider.compute_total_batch_num()
             data_provider.dataset_reinitialization(sess=self.sess, init_for_val=False,
@@ -731,30 +799,36 @@ class WNet(object):
 
 
                 current_style_reference_feed_list = list()
+                current_style_reference_data_path_list = list()
                 for ii in range(len(current_fixed_style_reference_img_list)):
+                    this_single_style_reference_data_path_list = list()
                     for jj in range(len(current_batch_label1)):
                         jj_index = data_provider.train_iterator.label1_vec.index(current_batch_label1[jj])
                         current_label1_num = current_fixed_style_reference_img_list[ii][jj_index].shape[0]
                         random_index_selected = np.random.randint(low=0, high=current_label1_num)
                         selected_char_img = current_fixed_style_reference_img_list[ii][jj_index][random_index_selected,:,:,:]
-                        # selected_char_img_path = current_fixed_style_reference_data_path_list[ii][jj_index][random_index_selected]
+                        selected_char_img_path = current_fixed_style_reference_data_path_list[ii][jj_index][random_index_selected]
                         selected_char_img = np.expand_dims(selected_char_img,axis=0)
                         if jj==0:
                             this_single_img_style_references = selected_char_img
                         else:
                             this_single_img_style_references = np.concatenate([this_single_img_style_references,selected_char_img],axis=0)
+                        this_single_style_reference_data_path_list.append(selected_char_img_path)
                     current_style_reference_feed_list.append(this_single_img_style_references)
+                    current_style_reference_data_path_list.append(this_single_style_reference_data_path_list)
 
                 feed_dict={}
                 for ii in range(len(style_reference_train_list)):
                     feed_dict.update({style_reference_train_list[ii]:current_style_reference_feed_list[ii]})
 
-                tmp = \
-                    self.sess.run(generated_batch,
-                                  feed_dict=feed_dict)
+                # tmp0, tmp1, tmp2, tmp3 = \
+                #     self.sess.run([generated_batch, true_style,random_selected_content, random_selected_style],
+                #                   feed_dict=feed_dict)
 
-                calculated_mse, calculated_vn = \
-                    self.sess.run([mse_difference, vn_difference],
+                calculated_mse, calculated_vn, calculated_pixel, label0, label1 = \
+                    self.sess.run([mse_difference, vn_difference,pixel_diff,
+                                   data_provider.train_iterator.output_tensor_list[5],
+                                   data_provider.train_iterator.output_tensor_list[6]],
                                   feed_dict=feed_dict)
 
 
@@ -763,16 +837,19 @@ class WNet(object):
                     if iter==0:
                         full_mse = calculated_mse*self.batch_size
                         full_vn = calculated_vn*self.batch_size
+                        full_pixel = calculated_pixel*self.batch_size
                     elif iter == self.itrs_for_current_epoch-1:
                         full_mse = full_mse + calculated_mse*self.batch_size*(self.batch_size-added_num)/self.batch_size
                         full_vn = full_vn + calculated_vn*self.batch_size*(self.batch_size-added_num)/self.batch_size
+                        full_pixel = full_pixel + calculated_pixel * self.batch_size * (self.batch_size - added_num) / self.batch_size
                     else:
                         full_mse = full_mse + calculated_mse * self.batch_size
                         full_vn = full_vn + calculated_vn * self.batch_size
+                        full_pixel = full_pixel + calculated_pixel * self.batch_size
 
 
                     current_epoch_str = "Epoch:%d/%d, Iteration:%d/%d for Style Reference Chars: " % (ei+1, total_eval_epochs,
-                                                                          iter + 1, self.itrs_for_current_epoch)
+                                                                                                      iter + 1, self.itrs_for_current_epoch)
                     for char in current_fixed_style_reference_char_list:
                         current_epoch_str = current_epoch_str + char
                     current_epoch_str=current_epoch_str+":"
@@ -818,10 +895,23 @@ class WNet(object):
                                 print_str_line = print_str_line + "%3.5f|" % (full_vn[ii][jj]/(iter+1))
                         print(print_str_line)
                     print("------------------------------------------------------------------------")
+                    print("PixelDiff:")
+                    print("----------------------------------------------------------------------------------------------------------------")
+                    print("||   L1-Sm   |  MSE-Sm   |  PDAR-Sm  | L1-RdmCtn | MSE-RdmCtn|PDAR-RdmCtn| L1-RdmSty | MSE-RdmSty|PDAR-RdmSty||")
+                    print("----------------------------------------------------------------------------------------------------------------")
+                    print_str_line = '||'
+                    for ii in range(full_pixel.shape[1]):
+                        if ii == full_pixel.shape[1]-1:
+                            print_str_line = print_str_line + "  %.5f  ||" % (full_pixel[0][ii]/(iter+1))
+                        else:
+                            print_str_line = print_str_line + "  %.5f  |" % (full_pixel[0][ii]/(iter+1))
+                    print(print_str_line)
+                    print("----------------------------------------------------------------------------------------------------------------")
                     print(self.print_separater)
 
             full_mse = full_mse / ((self.itrs_for_current_epoch-1) + float(self.batch_size-added_num)/float(self.batch_size))
             full_vn = full_vn / ((self.itrs_for_current_epoch - 1) + float(self.batch_size - added_num) / float(self.batch_size))
+            full_pixel = full_pixel / ((self.itrs_for_current_epoch - 1) + float(self.batch_size - added_num) / float(self.batch_size))
 
 
             print(self.print_separater)
@@ -871,20 +961,36 @@ class WNet(object):
                         print_str_line = print_str_line + "%3.5f|" % (full_vn[ii][jj])
                 print(print_str_line)
             print("------------------------------------------------------------------------")
+            print("PixelDiff:")
+            print("----------------------------------------------------------------------------------------------------------------")
+            print("||   L1-Sm   |  MSE-Sm   |  PDAR-Sm  | L1-RdmCtn | MSE-RdmCtn|PDAR-RdmCtn| L1-RdmSty | MSE-RdmSty|PDAR-RdmSty||")
+            print("----------------------------------------------------------------------------------------------------------------")
+            print_str_line = '||'
+            for ii in range(full_pixel.shape[1]):
+                if ii == full_pixel.shape[1] - 1:
+                    print_str_line = print_str_line + "  %.5f  ||" % (full_pixel[0][ii])
+                else:
+                    print_str_line = print_str_line + "  %.5f  |" % (full_pixel[0][ii])
+            print(print_str_line)
+            print("----------------------------------------------------------------------------------------------------------------")
             print(self.print_separater)
             print(self.print_separater)
 
             if ei==0:
                 mse = full_mse
                 vn = full_vn
+                pixel = full_pixel
             else:
                 mse += full_mse
                 vn += full_vn
+                pixel += full_pixel
         mse = mse / total_eval_epochs
         vn = vn / total_eval_epochs
+        pixel =  pixel / total_eval_epochs
 
         evaluation_resule_save_dir = os.path.join(self.evaluation_resule_save_dir,self.experiment_id)
         if not os.path.exists(evaluation_resule_save_dir):
             os.makedirs(evaluation_resule_save_dir)
         np.savetxt(os.path.join(evaluation_resule_save_dir,'MSE.csv'), mse, delimiter=',')
         np.savetxt(os.path.join(evaluation_resule_save_dir, 'VN.csv'), vn, delimiter=',')
+        np.savetxt(os.path.join(evaluation_resule_save_dir, 'PIXEL.csv'), pixel, delimiter=',')
