@@ -854,19 +854,12 @@ class WNet(object):
                 square_root_mean_squared_feature_diff = tf.sqrt(eps+mean_squared_feature_diff)
                 this_feature_loss = tf.reduce_mean(square_root_mean_squared_feature_diff)
 
-
-                # feature1_normed = (feature1[counter] + 1) / 2
-                # feature2_normed = (feature2[counter] + 1) / 2
-                # feature1_normed = tf.nn.tanh(feature1[counter])+2
-                # feature2_normed = tf.nn.tanh(feature2[counter])+2
-
                 feature1_normed = feature_linear_norm(feature=feature1[counter])
                 feature2_normed = feature_linear_norm(feature=feature2[counter])
                 vn_loss = tf.trace(tf.multiply(feature1_normed, tf.log(feature1_normed)) -
                                    tf.multiply(feature1_normed, tf.log(feature2_normed)) +
                                    - feature1_normed + feature2_normed + eps)
                 vn_loss = tf.reduce_mean(vn_loss)
-
 
                 if counter == 0:
                     final_loss_mse = this_feature_loss

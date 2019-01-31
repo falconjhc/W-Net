@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/wnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/wnet_forEvaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet_forEvaluation.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -44,7 +43,7 @@
     <SUITE FILE_PATH="coverage/W_Net$rename.coverage" NAME="rename Coverage Results" MODIFIED="1547902992634" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utilities" />
     <SUITE FILE_PATH="coverage/W_Net$wnet_debug.coverage" NAME="wnet_debug Coverage Results" MODIFIED="1548871091432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
     <SUITE FILE_PATH="coverage/W_Net$Infer_StylePf50_ContentPf32.coverage" NAME="Infer_StylePf50_ContentPf32 Coverage Results" MODIFIED="1548432761552" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/StyleInferScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$evaluate_debug.coverage" NAME="evaluate_debug Coverage Results" MODIFIED="1548947487569" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$evaluate_debug.coverage" NAME="evaluate_debug Coverage Results" MODIFIED="1548950922274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
     <SUITE FILE_PATH="coverage/W_Net$gnt_to_png.coverage" NAME="gnt_to_png Coverage Results" MODIFIED="1539063667636" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing/Handwriting_Chinese_Character" />
     <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ResEmd_NN_ContentPf32_Hw32_Style1.coverage" NAME="StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style1 Coverage Results" MODIFIED="1548136699566" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw" />
     <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ResMixer_5_SimpleMixer_ContentPf32_Hw32_Style1.coverage" NAME="StyleHw50-ResMixer-5-SimpleMixer_ContentPf32+Hw32-Style1 Coverage Results" MODIFIED="1548164611941" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StyleHw" />
@@ -66,22 +65,23 @@
             <file pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/model/wnet_forEvaluation.py">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="496">
-                    <caret line="912" column="147" selection-start-line="912" selection-start-column="147" selection-end-line="912" selection-end-column="147" />
+                  <state relative-caret-position="678">
+                    <caret line="861" column="62" selection-start-line="861" selection-start-column="62" selection-end-line="861" selection-end-column="62" />
                     <folding>
-                      <marker date="1548947762472" expanded="true" signature="17157:17165" ph="..." />
+                      <marker date="1548950992065" expanded="true" signature="17245:17253" ph="..." />
                     </folding>
                   </state>
                 </provider>
               </entry>
             </file>
             <file pinned="false" current-in-tab="false">
-              <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
+              <entry file="file://$PROJECT_DIR$/model/wnet.py">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="264">
-                    <caret line="597" selection-start-line="597" selection-end-line="597" />
+                  <state relative-caret-position="180">
+                    <caret line="2004" column="48" lean-forward="true" selection-start-line="2004" selection-start-column="12" selection-end-line="2004" selection-end-column="48" />
                     <folding>
-                      <element signature="e#0#18#0" expanded="true" />
+                      <element signature="e#24#62#0" expanded="true" />
+                      <marker date="1548951119489" expanded="true" signature="39794:39996" ph="..." />
                     </folding>
                   </state>
                 </provider>
@@ -114,28 +114,28 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="Split_Train_Test_Group" value="8" />
-          <entry key="py" value="906" />
+          <entry key="py" value="909" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="914" />
+          <entry key="Python" value="917" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Pf50_SingleContent_Eval_Script" value="2" />
-          <entry key="Python Console" value="4712" />
+          <entry key="Python Console" value="4735" />
           <entry key="Script_GeneratePrinted" value="1" />
           <entry key="Split_Train_Test_Group" value="1128" />
-          <entry key="py" value="41033" />
+          <entry key="py" value="41405" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="46876" />
+          <entry key="Python" value="47271" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
@@ -186,8 +186,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DebugScripts/evaluate_debug.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="37">
-              <caret line="274" selection-start-line="274" selection-end-line="274" />
+            <state relative-caret-position="100">
+              <caret line="260" column="24" selection-start-line="260" selection-start-column="24" selection-end-line="260" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -203,8 +203,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>data_sort_by_fixed_label0_order</find>
-      <find>fixed_style_reference_image_list</find>
       <find>read</find>
       <find>255</find>
       <find>_parse</find>
@@ -212,7 +210,6 @@
       <find>_random_thickness</find>
       <find>build_feature_extractor</find>
       <find>feature_extractor_build</find>
-      <find>pixel_wise_difference_build</find>
       <find>threshold</find>
       <find>STANDARD_GRAYSCALE_THRESHOLD_VALUE</find>
       <find>GRAYSCALE_AVG</find>
@@ -233,6 +230,9 @@
       <find>raw_input</find>
       <find>char</find>
       <find>char_list</find>
+      <find>ndims</find>
+      <find>pixel_wise_difference_build</find>
+      <find>feature_extractor_bui</find>
     </findStrings>
     <replaceStrings>
       <replace>Batch_StyleFeature_Discrimination_Penalty</replace>
@@ -292,7 +292,6 @@
         <option value="$PROJECT_DIR$/model/feature_extractor_training.py" />
         <option value="$PROJECT_DIR$/model/generators.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/Find_Related_DataList_Script.py" />
-        <option value="$PROJECT_DIR$/model/wnet.py" />
         <option value="$PROJECT_DIR$/model/vggs.py" />
         <option value="$PROJECT_DIR$/DataPreProcessing/Split_Train_Test_Group.py" />
         <option value="$PROJECT_DIR$/DebugScripts/evaluate_debug.py" />
@@ -302,6 +301,7 @@
         <option value="$PROJECT_DIR$/EvaluationScripts/Pf50_SingleContent_Eval_Script.py" />
         <option value="$PROJECT_DIR$/dataset/dataset.py" />
         <option value="$PROJECT_DIR$/model/wnet_forEvaluation.py" />
+        <option value="$PROJECT_DIR$/model/wnet.py" />
       </list>
     </option>
   </component>
@@ -517,9 +517,6 @@
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/DebugScripts" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -578,13 +575,13 @@
     <frame x="51" y="25" width="1229" height="999" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76680386" weight="0.3879966" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.76680386" visible="true" weight="0.3879966" />
       <window_info id="Structure" order="1" sideWeight="0.23319615" side_tool="true" weight="0.18512256" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.29976302" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.80450237" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.66943127" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32938388" />
@@ -592,7 +589,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="11" weight="0.64617044" />
+      <window_info anchor="bottom" id="Python Console" order="11" visible="true" weight="0.1800948" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="12" weight="0.32938388" />
       <window_info anchor="bottom" id="Terminal" order="13" weight="0.32938388" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -664,7 +661,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/wnet.py</url>
-          <line>1904</line>
+          <line>1897</line>
           <option name="timeStamp" value="259" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -704,7 +701,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/wnet.py</url>
-          <line>2010</line>
+          <line>2003</line>
           <option name="timeStamp" value="506" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -734,17 +731,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/wnet.py</url>
-          <line>1948</line>
+          <line>1941</line>
           <option name="timeStamp" value="734" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/wnet_forEvaluation.py</url>
-          <line>908</line>
-          <option name="timeStamp" value="755" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/wnet_forEvaluation.py</url>
-          <line>985</line>
+          <line>1004</line>
           <option name="timeStamp" value="756" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -754,8 +746,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/wnet_forEvaluation.py</url>
-          <line>827</line>
-          <option name="timeStamp" value="773" />
+          <line>864</line>
+          <option name="timeStamp" value="776" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -966,17 +958,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/wnet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="2011" column="48" lean-forward="true" selection-start-line="2011" selection-start-column="12" selection-end-line="2011" selection-end-column="48" />
-          <folding>
-            <element signature="e#24#62#0" expanded="true" />
-            <marker date="1548921795972" expanded="true" signature="39794:39996" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/platform/app.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="451">
@@ -1029,8 +1010,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="597" selection-start-line="597" selection-end-line="597" />
+        <state relative-caret-position="788">
+          <caret line="848" column="8" selection-start-line="848" selection-start-column="8" selection-end-line="848" selection-end-column="8" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -1039,17 +1020,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DebugScripts/evaluate_debug.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="37">
-          <caret line="274" selection-start-line="274" selection-end-line="274" />
+        <state relative-caret-position="100">
+          <caret line="260" column="24" selection-start-line="260" selection-start-column="24" selection-end-line="260" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/wnet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="2004" column="48" lean-forward="true" selection-start-line="2004" selection-start-column="12" selection-end-line="2004" selection-end-column="48" />
+          <folding>
+            <element signature="e#24#62#0" expanded="true" />
+            <marker date="1548951119489" expanded="true" signature="39794:39996" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model/wnet_forEvaluation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="496">
-          <caret line="912" column="147" selection-start-line="912" selection-start-column="147" selection-end-line="912" selection-end-column="147" />
+        <state relative-caret-position="678">
+          <caret line="861" column="62" selection-start-line="861" selection-start-column="62" selection-end-line="861" selection-end-column="62" />
           <folding>
-            <marker date="1548947762472" expanded="true" signature="17157:17165" ph="..." />
+            <marker date="1548950992065" expanded="true" signature="17245:17253" ph="..." />
           </folding>
         </state>
       </provider>

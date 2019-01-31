@@ -379,6 +379,9 @@ class WNet(object):
             squared_diff = l1 ** 2
             mse = tf.reduce_mean(squared_diff,axis=[1,2,3])
             mse = tf.sqrt(eps+mse)
+            l1 = tf.reduce_mean(l1,axis=[1,2,3])
+
+
 
             threshold = (STANDARD_GRAYSCALE_THRESHOLD_VALUE/GRAYSCALE_AVG-1) * \
                         tf.ones(shape=generated.shape,
@@ -392,14 +395,18 @@ class WNet(object):
                                    tf.ones_like(img2),
                                    tf.zeros_like(img2))
             binary_diff = tf.abs(img1_binary-img2_binary)
-            pdar = tf.div(tf.cast(tf.reduce_sum(binary_diff), dtype=tf.float32),
-                          tf.cast(int(binary_diff.shape[0]) *
-                                  int(binary_diff.shape[1]) *
+            pdar = tf.div(tf.cast(tf.reduce_sum(binary_diff, axis=[1,2,3]), dtype=tf.float32),
+                          tf.cast(int(binary_diff.shape[1]) *
                                   int(binary_diff.shape[2]) *
                                   int(binary_diff.shape[3]),
                                   dtype=tf.float32))
 
-            return tf.reduce_mean(l1,axis=[1,2,3]),mse, pdar
+
+            l1 = tf.reduce_sum(l1)
+            mse = tf.reduce_sum(mse)
+            pdar = tf.reduce_sum(pdar)
+
+            return l1, mse, pdar
 
 
         l1_1, mse_1, pdar_1 = calculas(generated, true_style)
@@ -436,32 +443,42 @@ class WNet(object):
         def calculate_high_level_feature_loss(feature1,feature2):
             for counter in range(len(feature1)):
 
+                # mse calculas
                 feature_diff = feature1[counter] - feature2[counter]
                 if not feature_diff.shape.ndims==4:
                     feature_diff = tf.reshape(feature_diff,[int(feature_diff.shape[0]),int(feature_diff.shape[1]),1,1])
                 squared_feature_diff = feature_diff**2
                 mean_squared_feature_diff = tf.reduce_mean(squared_feature_diff,axis=[1,2,3])
                 square_root_mean_squared_feature_diff = tf.sqrt(eps+mean_squared_feature_diff)
-                square_root_mean_squared_feature_diff=tf.reshape(square_root_mean_squared_feature_diff,
-                                                                 [int(square_root_mean_squared_feature_diff.shape[0]),1])
-                this_mse_loss = tf.reduce_mean(square_root_mean_squared_feature_diff,axis=0)
+                square_root_mean_squared_feature_diff = tf.reshape(square_root_mean_squared_feature_diff,
+                                                                   [int(square_root_mean_squared_feature_diff.shape[0]),1])
+                this_mse_loss = tf.reduce_sum(square_root_mean_squared_feature_diff,axis=0)
                 this_mse_loss = tf.reshape(this_mse_loss,shape=[1,1])
-
-                feature1_normed = feature_linear_norm(feature=feature1[counter])
-                feature2_normed = feature_linear_norm(feature=feature2[counter])
-
-                vn_loss = tf.trace(tf.multiply(feature1_normed, tf.log(feature1_normed)) -
-                                   tf.multiply(feature1_normed, tf.log(feature2_normed)) +
-                                   - feature1_normed + feature2_normed + eps)
-                vn_loss = tf.reduce_mean(vn_loss)
-                vn_loss = tf.reshape(vn_loss, shape=[1,1])
 
                 if counter == 0:
                     feature_mse_diff = this_mse_loss
-                    feature_vn_diff = vn_loss
                 else:
                     feature_mse_diff = tf.concat([feature_mse_diff,this_mse_loss], axis=1)
-                    feature_vn_diff = tf.concat([feature_vn_diff, vn_loss], axis=1)
+
+
+
+                # vn divergence calculas
+                feature1_normed = feature_linear_norm(feature=feature1[counter])
+                feature2_normed = feature_linear_norm(feature=feature2[counter])
+
+
+                if not feature1_normed.shape.ndims==2:
+                    vn_loss = tf.trace(tf.multiply(feature1_normed, tf.log(feature1_normed)) -
+                                       tf.multiply(feature1_normed, tf.log(feature2_normed)) +
+                                       - feature1_normed + feature2_normed + eps)
+                    vn_loss = tf.reduce_mean(vn_loss,axis=1)
+                    vn_loss = tf.reduce_sum(vn_loss)
+                    vn_loss = tf.reshape(vn_loss, shape=[1,1])
+                    if counter == 0:
+                        feature_vn_diff = vn_loss
+                    else:
+                        feature_vn_diff = tf.concat([feature_vn_diff, vn_loss], axis=1)
+
 
 
             return feature_mse_diff, feature_vn_diff
@@ -831,21 +848,23 @@ class WNet(object):
                                    data_provider.train_iterator.output_tensor_list[6]],
                                   feed_dict=feed_dict)
 
+                if iter == 0:
+                    full_mse = calculated_mse
+                    full_vn = calculated_vn
+                    full_pixel = calculated_pixel
+                elif iter == self.itrs_for_current_epoch - 1:
+                    full_mse = full_mse + calculated_mse / self.batch_size * (self.batch_size - added_num)
+                    full_vn = full_vn + calculated_vn / self.batch_size * (self.batch_size - added_num)
+                    full_pixel = full_pixel + calculated_pixel / self.batch_size * (self.batch_size - added_num)
+                else:
+                    full_mse = full_mse + calculated_mse
+                    full_vn = full_vn + calculated_vn
+                    full_pixel = full_pixel + calculated_pixel
+
 
                 if time.time()-timer_start>self.print_info_seconds:
                     timer_start=time.time()
-                    if iter==0:
-                        full_mse = calculated_mse*self.batch_size
-                        full_vn = calculated_vn*self.batch_size
-                        full_pixel = calculated_pixel*self.batch_size
-                    elif iter == self.itrs_for_current_epoch-1:
-                        full_mse = full_mse + calculated_mse*self.batch_size*(self.batch_size-added_num)/self.batch_size
-                        full_vn = full_vn + calculated_vn*self.batch_size*(self.batch_size-added_num)/self.batch_size
-                        full_pixel = full_pixel + calculated_pixel * self.batch_size * (self.batch_size - added_num) / self.batch_size
-                    else:
-                        full_mse = full_mse + calculated_mse * self.batch_size
-                        full_vn = full_vn + calculated_vn * self.batch_size
-                        full_pixel = full_pixel + calculated_pixel * self.batch_size
+
 
 
                     current_epoch_str = "Epoch:%d/%d, Iteration:%d/%d for Style Reference Chars: " % (ei+1, total_eval_epochs,
@@ -901,16 +920,16 @@ class WNet(object):
                     print_str_line = '||'
                     for ii in range(full_pixel.shape[1]):
                         if ii == full_pixel.shape[1]-1:
-                            print_str_line = print_str_line + "  %.5f  ||" % (full_pixel[0][ii]/(iter+1))
+                            print_str_line = print_str_line + "  %.5f  ||" % (full_pixel[0][ii]/((iter+1)*self.batch_size))
                         else:
-                            print_str_line = print_str_line + "  %.5f  |" % (full_pixel[0][ii]/(iter+1))
+                            print_str_line = print_str_line + "  %.5f  |" % (full_pixel[0][ii]/((iter+1)*self.batch_size))
                     print(print_str_line)
                     print("----------------------------------------------------------------------------------------------------------------")
                     print(self.print_separater)
 
-            full_mse = full_mse / (((self.itrs_for_current_epoch-1) + float(self.batch_size-added_num)/float(self.batch_size))*self.batch_size)
-            full_vn = full_vn / (((self.itrs_for_current_epoch-1) + float(self.batch_size-added_num)/float(self.batch_size))*self.batch_size)
-            full_pixel = full_pixel / (((self.itrs_for_current_epoch-1) + float(self.batch_size-added_num)/float(self.batch_size))*self.batch_size)
+            full_mse = full_mse / len(data_provider.train_iterator.true_style.data_list)
+            full_vn = full_vn / len(data_provider.train_iterator.true_style.data_list)
+            full_pixel = full_pixel / len(data_provider.train_iterator.true_style.data_list)
 
 
             print(self.print_separater)
