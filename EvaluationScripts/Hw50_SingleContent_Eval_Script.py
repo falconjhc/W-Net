@@ -36,8 +36,6 @@ content_data_dir.append('CASIA_Dataset/StandardChars/GB2312_L1/')
 style_train_data_dir=list()
 style_train_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/')
 style_train_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/')
-# style_train_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/')
-# style_train_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/')
 
 # fixed style dir
 fixed_style_data_dir=list()

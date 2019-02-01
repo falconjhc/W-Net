@@ -148,6 +148,8 @@ def get_revelant_data(targeted_input_txt,
         data_list = list()
 
         for ii in range(len(file_list_txt)):
+            if ii ==4:
+                a=1
 
             file_handle = open(file_list_txt[ii], 'r')
             lines = file_handle.readlines()
@@ -347,7 +349,7 @@ def get_revelant_data(targeted_input_txt,
         if os.path.isdir(check_dir):
             file_list = list_all_files(check_dir)
             if (os.path.isdir(check_dir)) and \
-                    os.path.splitext(file_list[np.random.randint(0,len(file_list)-1)])[-1]=='.png':
+                    (os.path.splitext(file_list[np.random.randint(0,len(file_list)-1)])[-1]=='.png' or os.path.splitext(file_list[np.random.randint(0,len(file_list)-1)])[-1]=='.jpg'):
                 dir_img=True
                 break
 

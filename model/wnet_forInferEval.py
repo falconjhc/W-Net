@@ -97,7 +97,6 @@ class WNet(object):
 
                  targeted_content_input_txt='./',
                  targeted_style_input_txt='./',
-                 save_mode='-1',
                  known_style_img_path='./',
 
 
@@ -266,7 +265,6 @@ class WNet(object):
         # for styleadd infer only
         self.targeted_content_input_txt=targeted_content_input_txt
         self.targeted_style_input_txt = targeted_style_input_txt
-        self.save_mode=save_mode
         self.known_style_img_path=known_style_img_path
 
 
@@ -478,21 +476,21 @@ class WNet(object):
 
 
 
-
-
         timer_start = time.time()
         for style_counter in range(styles_number_to_be_generated):
+            local_timer_start = time.time()
             for round_counter in range(round_num_per_style):
 
-                local_timer_start = time.time()
                 current_style_char = style_char_list[round_counter * self.style_input_number:(round_counter + 1) * self.style_input_number]
                 current_style_char_label0 = style_char_label0_list[round_counter * self.style_input_number:(round_counter + 1) * self.style_input_number]
                 dir_name_str = '_'
-                for tmp in current_style_char:
-                    dir_name_str = dir_name_str + unicode(tmp)
+                for tmp in current_style_char_label0:
+                    dir_name_str = dir_name_str + tmp
+                    if not tmp == current_style_char_label0[-1]:
+                        dir_name_str = dir_name_str + '_'
 
 
-                current_round_save_dir = os.path.join(self.save_path,'Round%02d%s' % (round_counter,dir_name_str))
+                current_round_save_dir = os.path.join(self.save_path,'Round%02d%s' % (round_counter+1,dir_name_str))
 
 
                 full_generated = np.zeros(dtype=np.float32,
@@ -510,6 +508,8 @@ class WNet(object):
                 for content_counter in range(content_number_to_be_generated):
                     current_content_char = np.expand_dims(np.squeeze(content_prototype[content_counter, :, :, :]),
                                                           axis=0)
+                    if current_content_char.ndim==3:
+                        current_content_char = np.expand_dims(current_content_char, axis=3)
                     current_generated_char = self.sess.run(generated_infer,
                                                            feed_dict=_feed(content=current_content_char,
                                                                            style=current_input_style))
@@ -550,16 +550,21 @@ class WNet(object):
                 misc.imsave(os.path.join(current_round_save_dir, 'Diff@%.9f_Style%s_TrueStyle.png'
                                          % (diff, current_style_label)),
                             true_style_paper)
+                # misc.imsave(os.path.join(current_round_save_dir, 'Style%s_GeneratedStyle.png'
+                #                          % (current_style_label)),
+                #             generated_paper)
+                # misc.imsave(os.path.join(current_round_save_dir, 'Style%s_TrueStyle.png'
+                #                          % (current_style_label)),
+                #             true_style_paper)
 
-                time_elapsed = time.time()-timer_start
-                local_time_elapsed = time.time()-local_timer_start
-                avg_elaped_per_round = time_elapsed / (style_counter * round_num_per_style + round_counter + 1)
+            time_elapsed = time.time()-timer_start
+            local_time_elapsed = time.time()-local_timer_start
+            avg_elaped_per_style = time_elapsed / (style_counter+1)
 
-                time_estimated_remain = avg_elaped_per_round * styles_number_to_be_generated * round_num_per_style
-                print("CurrentProcess: Style:%d/%d(%s), Round:%d/%d, CurrentRound/Avg:%d/%.3fsec, TimerRemain:%.3fhrs"
-                      %(style_counter+1, styles_number_to_be_generated, input_style_label1_vec[style_counter],
-                        round_counter+1, round_num_per_style,
-                        local_time_elapsed, avg_elaped_per_round, time_estimated_remain/3600))
+            time_estimated_remain = avg_elaped_per_style * styles_number_to_be_generated - time_elapsed
+            print("CurrentProcess: Style:%d/%d(%s), CurrentStyle/Avg:%d/%.3fsecs, TimerRemain:%.3fmins"
+                  %(style_counter+1, styles_number_to_be_generated, input_style_label1_vec[style_counter],
+                    local_time_elapsed, avg_elaped_per_style, time_estimated_remain/60))
 
 
         print(self.print_separater)

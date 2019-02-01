@@ -23,8 +23,8 @@ style_input_number=4
 evaluation_resule_save_dir = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201901/'
 
 # W-Net
-evaluating_generator_dir=\
-    'tfModels2019_WNet/checkpoint/Exp20190129-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv/generator/'
+#evaluating_generator_dir=\
+#    'tfModels2019_WNet/checkpoint/Exp20190129-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
 #     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-DenseMixer-AdaIN-Single_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
@@ -38,29 +38,29 @@ evaluating_generator_dir=\
 
 # Adobe-Net
 # evaluating_generator_dir=\
-#     'tfModels2019_WNet/checkpoint/Exp20190129-AdobeNet-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
-# evaluating_generator_dir=\
-#     'tfModels2019_WNet/checkpoint/Exp20190129-AdobeNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+#     'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+evaluating_generator_dir=\
+    'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 
 # Emd-Net
 # evaluating_generator_dir=\
-#     'TrainedModels_WNet/Exp20190129-ResEmdNet-NN-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+#     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-NN-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
-#     'TrainedModels_WNet/Exp20190129-ResEmdNet-NN-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+#     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-NN-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
-#     'TrainedModels_WNet/Exp20190129-ResEmdNet-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+#     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
-#     'TrainedModels_WNet/Exp20190129-ResEmdNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+#     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 
 # ResMixer-Net
 # evaluating_generator_dir=\
-#     'TrainedModels_WNet/Exp20190129-ResMixer-5-DenseMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+#     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-DenseMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
-#     'TrainedModels_WNet/Exp20190129-ResMixer-5-DenseMixer-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+#     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-DenseMixer-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
-#     'TrainedModels_WNet/Exp20190129-ResMixer-5-SimpleMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+#     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-SimpleMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
-#     'TrainedModels_WNet/Exp20190129-ResMixer-5-SimpleMixer-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+#     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-SimpleMixer-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 
 
 

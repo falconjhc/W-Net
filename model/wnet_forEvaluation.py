@@ -925,7 +925,7 @@ class WNet(object):
                     time_elapsed = time.time() - timer_start
                     local_time_elapsed = time.time() - local_timer_start
                     avg_elaped_per_round = time_elapsed / (ei * self.itrs_for_current_epoch + iter + 1)
-                    time_estimated_remain = avg_elaped_per_round * total_eval_epochs * self.itrs_for_current_epoch
+                    time_estimated_remain = avg_elaped_per_round * total_eval_epochs * self.itrs_for_current_epoch - time_elapsed
                     print("CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%d/%.3fsec, TimerRemain:%.3fhrs"
                           % (ei + 1, total_eval_epochs,
                              iter + 1, self.itrs_for_current_epoch,
