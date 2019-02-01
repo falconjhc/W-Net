@@ -68,7 +68,7 @@ evaluating_generator_dir=\
 content_data_dir=list()
 content_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/')
 content_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/')
-content_data_dir.append('CASIA_Dataset/PrintedData_80Fonts/')
+content_data_dir.append('CASIA_Dataset/PrintedData/')
 
 # style dir
 style_train_data_dir=list()

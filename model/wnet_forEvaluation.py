@@ -800,16 +800,15 @@ class WNet(object):
                                                    info_interval=self.print_info_seconds)
 
 
+            added_num = 0
             for iter in range(self.itrs_for_current_epoch):
-
-
-
                 if not iter == self.itrs_for_current_epoch-1:
                     current_batch_label1 = data_provider.train_iterator.true_style.label1_list[iter * self.batch_size:
                                                                                                (iter + 1) * self.batch_size]
                 else:
                     current_batch_label1 = data_provider.train_iterator.true_style.label1_list[iter * self.batch_size:]
                     if len(current_batch_label1) < self.batch_size:
+                        global added_num
                         added_num = self.batch_size-len(current_batch_label1)
                         current_batch_label1_added = data_provider.train_iterator.true_style.label1_list[0:added_num]
                         current_batch_label1.extend(current_batch_label1_added)
@@ -853,6 +852,7 @@ class WNet(object):
                     full_vn = calculated_vn
                     full_pixel = calculated_pixel
                 elif iter == self.itrs_for_current_epoch - 1:
+                    global added_num
                     full_mse = full_mse + calculated_mse / self.batch_size * (self.batch_size - added_num)
                     full_vn = full_vn + calculated_vn / self.batch_size * (self.batch_size - added_num)
                     full_pixel = full_pixel + calculated_pixel / self.batch_size * (self.batch_size - added_num)
