@@ -591,6 +591,13 @@ class DataProvider(object):
                 self.data_file_list_read(file_list_txt=fixed_file_list_txt_style_reference,
                                          file_data_dir=fixed_style_reference_dir)
 
+            fixed_style_reference_data_list, \
+            fixed_style_reference_label0_list, \
+            fixed_style_reference_label1_list,\
+                = self.eliminate_invalid_repeated_data(data_list=fixed_style_reference_data_list,
+                                                       label0_list=fixed_style_reference_label0_list,
+                                                       label1_list=fixed_style_reference_label1_list)
+
             fixed_style_reference_list,fixed_style_reference_data_path_list, char_list = \
                 self.data_sort_by_fixed_label0_order(label1_list=fixed_style_reference_label1_list,
                                                      label0_list=fixed_style_reference_label0_list,
@@ -610,6 +617,36 @@ class DataProvider(object):
             self.validate_iterator.reproduce_dataset_lists(info="ValData", shuffle=False, info_print_interval=info_interval)
             self.validate_iterator.iterator_reset(sess=sess)
         print(print_separator)
+
+    def eliminate_invalid_repeated_data(self,data_list, label0_list, label1_list):
+
+
+        output_data_list = list()
+        output_label0_list = list()
+        output_label1_list = list()
+        tmp_counter = 0
+        for label1 in np.unique(label1_list).tolist():
+            print(label1)
+            related_indices = [ii for ii in range(len(label1_list)) if label1_list[ii]==label1]
+            for jj in related_indices:
+                current_data = data_list[jj]
+                # print(current_data)
+                # if label1=='1150' and label0_list[jj] =='190170':
+                #     a=1
+
+                if not 'TmpChars' in current_data:
+                    output_data_list.append(data_list[jj])
+                    output_label0_list.append(label0_list[jj])
+                    output_label1_list.append(label1_list[jj])
+                    tmp_counter+=1
+                else:
+                    print("Delete:%s" % current_data)
+                if tmp_counter==0:
+                    print("ERROR: No Real Style for %s" % label1)
+                    return -1,-1,-1
+
+        return data_list, label0_list, label1_list
+
 
     def data_file_list_read(self,file_list_txt,file_data_dir):
 
@@ -631,6 +668,7 @@ class DataProvider(object):
                     curt_data = curt_data[1:]
                 curt_data_path = os.path.join(file_data_dir[ii], curt_data)
                 data_list.append(curt_data_path)
+                # print(curt_data)
             file_handle.close()
         return label1_list, label0_list, data_list
 
@@ -656,6 +694,10 @@ class DataProvider(object):
         char_list = read_content_from_dir()
         label0_vec = list()
         label1_vec = np.unique(label1_list)
+        print(print_separator)
+        print("Fixed Label1 Order:")
+        print(label1_vec)
+        print(print_separator)
         for label0 in label0_list:
             if not label0 in label0_vec:
                 label0_vec.append(label0)

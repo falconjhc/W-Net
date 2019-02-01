@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 GRAYSCALE_AVG = 127.5
-TINIEST_LR = 0.00005
 
 import sys
 sys.path.append('..')
@@ -19,7 +18,7 @@ import re
 from utilities.utils import correct_ckpt_path
 from utilities.utils import image_show
 
-
+import time
 
 
 from model.generators import WNet_Generator as wnet_generator
@@ -29,6 +28,7 @@ from model.generators import AdobeNet_Generator as adobenet_generator
 from model.generators import ResMixerNet_Generator as resmixernet_generator
 
 
+label0_split_train_test_label = 3000
 
 
 import math
@@ -74,13 +74,13 @@ class WNet(object):
                  style_input_number=-1,
 
                  experiment_id='0',
-                 content_data_dir='/tmp/',
-                 style_train_data_dir='/tmp/',
-                 style_validation_data_dir='/tmp/',
-                 file_list_txt_content=None,
-                 file_list_txt_style_train=None,
-                 file_list_txt_style_validation=None,
 
+                 content_data_dir='/tmp/',
+                 file_list_txt_content=None,
+
+                 style_data_dir='/tmp/',
+                 file_list_txt_true_style=None,
+                 file_list_txt_input_style=None,
 
                  img_width=64,
                  channels=1,
@@ -96,6 +96,7 @@ class WNet(object):
                  model_dir='./', save_path='./',
 
                  targeted_content_input_txt='./',
+                 targeted_style_input_txt='./',
                  save_mode='-1',
                  known_style_img_path='./',
 
@@ -242,11 +243,10 @@ class WNet(object):
 
 
         self.content_data_dir = content_data_dir
-        self.style_train_data_dir = style_train_data_dir
-        self.style_validation_data_dir = style_validation_data_dir
+        self.style_data_dir = style_data_dir
         self.file_list_txt_content = file_list_txt_content
-        self.file_list_txt_style_train = file_list_txt_style_train
-        self.file_list_txt_style_validation = file_list_txt_style_validation
+        self.file_list_txt_true_style = file_list_txt_true_style
+        self.file_list_txt_input_style = file_list_txt_input_style
         self.input_output_img_filter_num = channels
 
 
@@ -265,6 +265,7 @@ class WNet(object):
 
         # for styleadd infer only
         self.targeted_content_input_txt=targeted_content_input_txt
+        self.targeted_style_input_txt = targeted_style_input_txt
         self.save_mode=save_mode
         self.known_style_img_path=known_style_img_path
 
@@ -329,8 +330,8 @@ class WNet(object):
         def _feed(content, style):
             return_dict = {}
             return_dict.update({content_prototype_placeholder:content})
-            for ii in range(style.shape[3]):
-                return_dict.update({style_reference_placeholder_list[ii]: np.expand_dims(style[:,:,:,ii],axis=3)})
+            for ii in range(style.shape[0]):
+                return_dict.update({style_reference_placeholder_list[ii]: np.expand_dims(style[ii,:,:,:],axis=0)})
             return return_dict
 
 
@@ -341,23 +342,8 @@ class WNet(object):
             inf_tools.get_chars_set_from_level1_2(path='../ContentTxt/GB2312_Level_2.txt',
                                                   level=2)
 
-        # get data available
-        # tmp = list()
-        # tmp.append('/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/Sources/PrintedSources/64_FoundContentPrototypeTtfOtfs/Simplified/')
-        # content_prototype1, content_label1_vec1, valid_mark1 = \
-        #     inf_tools.get_prototype_on_targeted_content_input_txt(
-        #         targeted_content_input_txt=self.targeted_content_input_txt,
-        #         level1_charlist=charset_level1,
-        #         level2_charlist=charset_level2,
-        #         level1_labellist=character_label_level1,
-        #         level2_labellist=character_label_level2,
-        #         content_file_list_txt=self.file_list_txt_content,
-        #         content_file_data_dir=tmp,
-        #         img_width=self.img2img_width,
-        #         img_filters=self.input_output_img_filter_num)
-
         print(self.print_separater)
-        content_prototype, content_label1_vec, valid_mark = \
+        content_prototype, content_label1_vec, valid_mark, content_char_list, content_char_label0_list = \
             inf_tools.get_revelant_data(targeted_input_txt=self.targeted_content_input_txt,
                                         level1_charlist=charset_level1,
                                         level2_charlist=charset_level2,
@@ -366,24 +352,38 @@ class WNet(object):
                                         file_list_txt=self.file_list_txt_content,
                                         file_data_dir=self.content_data_dir,
                                         img_width=self.img2img_width,
-                                        img_filters=self.input_output_img_filter_num)
+                                        img_filters=self.input_output_img_filter_num,
+                                        info='ContentPrototype')
+        true_style_reference, true_style_label1_vec, valid_mark, _, _ = \
+            inf_tools.get_revelant_data(targeted_input_txt=self.targeted_content_input_txt,
+                                        level1_charlist=charset_level1,
+                                        level2_charlist=charset_level2,
+                                        level1_labellist=character_label_level1,
+                                        level2_labellist=character_label_level2,
+                                        file_list_txt=self.file_list_txt_true_style,
+                                        file_data_dir=self.style_data_dir,
+                                        img_width=self.img2img_width,
+                                        img_filters=self.input_output_img_filter_num,
+                                        info='True StyleReference')
 
+        input_style_reference, input_style_label1_vec, valid_mark, style_char_list, style_char_label0_list = \
+            inf_tools.get_revelant_data(targeted_input_txt=self.targeted_style_input_txt,
+                                        level1_charlist=charset_level1,
+                                        level2_charlist=charset_level2,
+                                        level1_labellist=character_label_level1,
+                                        level2_labellist=character_label_level2,
+                                        file_list_txt=self.file_list_txt_input_style,
+                                        file_data_dir=self.style_data_dir,
+                                        img_width=self.img2img_width,
+                                        img_filters=self.input_output_img_filter_num,
+                                        info='Input StyleReference')
 
 
 
         if not valid_mark:
             print("Generation Terminated.")
 
-        style_reference = inf_tools.get_style_references(img_path=self.known_style_img_path,
-                                                         resave_path=self.save_path,
-                                                         style_input_number=self.style_input_number)
 
-        output_paper_shape = self.save_mode.split(':')
-        output_paper_rows = int(output_paper_shape[0])
-        output_paper_cols = int(output_paper_shape[1])
-        if output_paper_rows * output_paper_cols < content_prototype.shape[0]:
-            print('Incorrect Paper Size !@!~!@~!~@~!@~')
-            return
 
 
 
@@ -398,7 +398,7 @@ class WNet(object):
 
 
                 style_reference_placeholder_list = list()
-                for ii in range(style_reference.shape[3]):
+                for ii in range(self.style_input_number):
                     current_style_reference_placeholder = tf.placeholder(tf.float32, [1, self.source_img_width,
                                                                                       self.source_img_width,
                                                                                       1],
@@ -445,127 +445,122 @@ class WNet(object):
             print(self.print_separater)
 
         # generating characters
-        full_content = np.zeros(dtype=np.float32,
-                                shape=[content_prototype.shape[0],
-                                       self.img2img_width,self.img2img_width,
-                                       content_prototype.shape[3]])
-        full_generated = np.zeros(dtype=np.float32,
-                                  shape=[content_prototype.shape[0],
-                                         self.img2img_width,self.img2img_width,
-                                         self.input_output_img_filter_num])
-        current_counter=0
-        for current_generating_content_counter in range(content_prototype.shape[0]):
-            current_content_char = np.expand_dims(np.squeeze(content_prototype[current_generating_content_counter,:,:,:]),axis=0)
-            if current_content_char.ndim==3:
-                current_content_char = np.expand_dims(current_content_char,axis=3)
-            current_generated_char, \
-            style_full_features,content_full_features,decoded_full_features = \
-                self.sess.run([generated_infer,
-                               style_full_feature_list,content_full_faeture_list,decoded_feature_list],
-                              feed_dict=_feed(content=current_content_char,
-                                              style=style_reference))
+        content_prototype_num = content_prototype.shape[3]
+        styles_number_to_be_generated = input_style_reference.shape[3]
+        content_number_to_be_generated = content_prototype.shape[0]
+        round_num_per_style = input_style_reference.shape[0] / self.style_input_number
+
+        content_save_path = os.path.join(self.save_path, 'Contents')
+        if not os.path.exists(content_save_path):
+            os.makedirs(content_save_path)
+        for content_prototype_counter in range(content_prototype_num):
+            full_content = np.zeros(dtype=np.float32,
+                                    shape=[content_number_to_be_generated,
+                                           self.img2img_width, self.img2img_width,
+                                           1])
+            current_content_prototype = content_prototype[:, :, :, content_prototype_counter]
+            current_content_prototype = np.expand_dims(current_content_prototype, axis=3)
+            full_content[:,:,:,:] = current_content_prototype
+
+            for content_counter in range(content_number_to_be_generated):
+                current_content_char_label0 = content_char_label0_list[content_counter]
+                current_label0_1 = current_content_char_label0[0:3]
+                current_label0_2 = current_content_char_label0[3:6]
+                current_label0_id = (int(current_label0_1) - 160 - 16) * 94 + (int(current_label0_2) - 160 - 1)
+                if not current_label0_id < label0_split_train_test_label:
+                    full_content[content_counter,:,:,:] = 1-full_content[content_counter,:,:,:]
+
+            content_paper = inf_tools.matrix_paper_generation(images=full_content,
+                                                              rows=content_number_to_be_generated,
+                                                              columns=1)
+
+            misc.imsave(os.path.join(content_save_path, 'Content%s.png' % content_label1_vec[content_prototype_counter]), content_paper)
 
 
 
 
-            # feature_saving_path = '/Users/harric/Desktop/Features'
-            #
-            # style_path = os.path.join(feature_saving_path,'Style')
-            # for ii in range(len(style_full_features)):
-            #     current_style_path = 'StyleNo%d' % ii
-            #     current_style_path = os.path.join(style_path, current_style_path)
-            #     if os.path.exists(current_style_path):
-            #         shutil.rmtree(current_style_path)
-            #     os.makedirs(current_style_path)
-            #     for jj in range(len(style_full_features[ii])):
-            #         if style_full_features[ii][jj].shape[1] > 1:
-            #             current_style_current_feature_level_path = 'LevelNo%d' % jj
-            #             current_style_current_feature_level_path = os.path.join(current_style_path, current_style_current_feature_level_path)
-            #             if os.path.exists(current_style_current_feature_level_path):
-            #                 shutil.rmtree(current_style_current_feature_level_path)
-            #             os.makedirs(current_style_current_feature_level_path)
-            #
-            #             for kk in range(style_full_features[ii][jj].shape[3]):
-            #
-            #                 inf_tools.numpy_img_save(img=image_revalue(style_full_features[ii][jj][:, :, :, kk],
-            #                                                            tah_mark=True),
-            #                                          path=os.path.join(current_style_current_feature_level_path,
-            #                                                            'Style%dFeatureLevel%dChannel%d.png'
-            #                                                            % (ii,jj,kk)))
-            #     inf_tools.numpy_img_save(img=image_revalue(style_reference[:,:,:,ii], tah_mark=False),
-            #                              path=os.path.join(current_style_path,
-            #                                                'StyleRef%d.png' % ii))
-            #
-            # content_path = os.path.join(feature_saving_path,'Content')
-            # for ii in range(len(content_full_features)):
-            #     if content_full_features[ii].shape[1] > 1:
-            #         current_content_path = 'ContentFeatureLevel%d' % ii
-            #         current_content_path = os.path.join(content_path,current_content_path)
-            #         if os.path.exists(current_content_path):
-            #             shutil.rmtree(current_content_path)
-            #         os.makedirs(current_content_path)
-            #         for jj in range(content_full_features[ii].shape[3]):
-            #             inf_tools.numpy_img_save(img=image_revalue(content_full_features[ii][:, :, :, jj],tah_mark=True),
-            #                                      path=os.path.join(current_content_path,
-            #                                                        'ContentFeatureLevel%dChannel%d.png'
-            #                                                        % (ii, jj)))
-            #
-            # content_path = os.path.join(content_path,'ContentPrototype')
-            # if os.path.exists(content_path):
-            #     shutil.rmtree(content_path)
-            # os.makedirs(content_path)
-            # for ii in range(current_content_char.shape[3]):
-            #     inf_tools.numpy_img_save(img=image_revalue(current_content_char[:, :, :, ii],tah_mark=False),
-            #                              path=os.path.join(content_path,
-            #                                                'ContentPro%d.png.png'
-            #                                                % ii))
-            #
-            # decoded_path = os.path.join(feature_saving_path,'Decoder')
-            # for ii in range(len(decoded_full_features)):
-            #     if decoded_full_features[ii].shape[1] > 1:
-            #         current_decoded_path = 'DecodedFeatureLevel%d' % ii
-            #         current_decoded_path = os.path.join(decoded_path,current_decoded_path)
-            #         if os.path.exists(current_decoded_path):
-            #             shutil.rmtree(current_decoded_path)
-            #         os.makedirs(current_decoded_path)
-            #         for jj in range(decoded_full_features[ii].shape[3]):
-            #             inf_tools.numpy_img_save(img=image_revalue(decoded_full_features[ii][:, :, :, jj],tah_mark=True),
-            #                                      path=os.path.join(current_decoded_path,
-            #                                                        'DecodedFeatureLevel%dChannel%d.png'
-            #                                                        % (ii, jj)))
 
-            full_generated[current_counter,:,:,:]=current_generated_char
-            for ii in range(content_prototype.shape[3]):
-                full_content[current_counter,:,:,ii]=current_content_char[:,:,:,ii]
+        timer_start = time.time()
+        for style_counter in range(styles_number_to_be_generated):
+            for round_counter in range(round_num_per_style):
 
-            if current_counter % 5 == 0:
-                print("Generated %d/%d samples already" % (current_counter+1,content_prototype.shape[0]))
-            current_counter+=1
-        print("In total %d chars have been generated" % full_generated.shape[0])
-        print(self.print_separater)
+                local_timer_start = time.time()
+                current_style_char = style_char_list[round_counter * self.style_input_number:(round_counter + 1) * self.style_input_number]
+                current_style_char_label0 = style_char_label0_list[round_counter * self.style_input_number:(round_counter + 1) * self.style_input_number]
+                dir_name_str = '_'
+                for tmp in current_style_char:
+                    dir_name_str = dir_name_str + unicode(tmp)
 
-        # saving chars
-        generated_paper = inf_tools.matrix_paper_generation(images=full_generated,
-                                                            rows=output_paper_rows,
-                                                            columns=output_paper_cols)
-        misc.imsave(os.path.join(self.save_path, 'Generated.png'), generated_paper)
-        print("Generated Paper Saved @ %s" % os.path.join(self.save_path, 'Generated.png'))
 
-        style_paper = inf_tools.matrix_paper_generation(images=np.transpose(style_reference,axes=(3,1,2,0)),
-                                                        rows=output_paper_rows,
-                                                        columns=output_paper_cols)
-        misc.imsave(os.path.join(self.save_path, 'RealStyle.png'), style_paper)
-        print("Style Paper Saved @ %s" % os.path.join(self.save_path, 'ActualStyles.png'))
+                current_round_save_dir = os.path.join(self.save_path,'Round%02d%s' % (round_counter,dir_name_str))
 
-        for ii in range(content_prototype.shape[3]):
-            content_paper=inf_tools.matrix_paper_generation(images=np.expand_dims(full_content[:,:,:,ii],axis=3),
-                                                            rows=output_paper_rows,
-                                                            columns=output_paper_cols)
-            if not os.path.exists(os.path.join(self.save_path,'Content')):
-                os.makedirs(os.path.join(self.save_path,'Content'))
-            misc.imsave(os.path.join(os.path.join(self.save_path,'Content'), 'Content%05d_%s.png'
-                                     % (ii,content_label1_vec[ii])), content_paper)
-        print("Content Papers Saved @ %s" % os.path.join(os.path.join(self.save_path,'Content')))
+
+                full_generated = np.zeros(dtype=np.float32,
+                                          shape=[content_prototype.shape[0],
+                                                 self.img2img_width, self.img2img_width,
+                                                 self.input_output_img_filter_num])
+                full_true_style = np.zeros(dtype=np.float32,
+                                           shape=[content_prototype.shape[0],
+                                                  self.img2img_width, self.img2img_width,
+                                                  self.input_output_img_filter_num])
+                current_input_style = \
+                    input_style_reference[round_counter*self.style_input_number:(round_counter+1)*self.style_input_number,:,:,style_counter]
+                current_input_style = np.expand_dims(current_input_style,axis=3)
+
+                for content_counter in range(content_number_to_be_generated):
+                    current_content_char = np.expand_dims(np.squeeze(content_prototype[content_counter, :, :, :]),
+                                                          axis=0)
+                    current_generated_char = self.sess.run(generated_infer,
+                                                           feed_dict=_feed(content=current_content_char,
+                                                                           style=current_input_style))
+                    current_true_char = true_style_reference[content_counter, :, :, style_counter]
+                    current_true_char = np.expand_dims(np.expand_dims(current_true_char, axis=0), axis=3)
+
+
+                    current_content_char = content_char_list[content_counter]
+                    current_content_char_label0 = content_char_label0_list[content_counter]
+                    current_label0_1 = current_content_char_label0[0:3]
+                    current_label0_2 = current_content_char_label0[3:6]
+                    current_label0_id = (int(current_label0_1) - 160 - 16) * 94 + (int(current_label0_2) - 160 - 1)
+                    if not current_label0_id<label0_split_train_test_label:
+                        # for test characters
+                        current_generated_char = 1-current_generated_char
+                        current_true_char=1-current_true_char
+
+                    full_generated[content_counter, :, :, :] = current_generated_char
+                    full_true_style[content_counter,:,:,:] = current_true_char
+
+                    diff = np.mean(np.abs(full_generated-full_true_style))
+
+                generated_paper = inf_tools.matrix_paper_generation(images=full_generated,
+                                                                    rows=content_number_to_be_generated,
+                                                                    columns=1)
+                true_style_paper = inf_tools.matrix_paper_generation(images=full_true_style,
+                                                                     rows=content_number_to_be_generated,
+                                                                     columns=1)
+
+                current_style_label = input_style_label1_vec[style_counter]
+                if len(current_style_label)==1:
+                    current_style_label = '0' + current_style_label
+                if not os.path.exists(current_round_save_dir):
+                    os.makedirs(current_round_save_dir)
+                misc.imsave(os.path.join(current_round_save_dir, 'Diff@%.9f_Style%s_GeneratedStyle.png'
+                                         % (diff,current_style_label)),
+                            generated_paper)
+                misc.imsave(os.path.join(current_round_save_dir, 'Diff@%.9f_Style%s_TrueStyle.png'
+                                         % (diff, current_style_label)),
+                            true_style_paper)
+
+                time_elapsed = time.time()-timer_start
+                local_time_elapsed = time.time()-local_timer_start
+                avg_elaped_per_round = time_elapsed / (style_counter * round_num_per_style + round_counter + 1)
+
+                time_estimated_remain = avg_elaped_per_round * styles_number_to_be_generated * round_num_per_style
+                print("CurrentProcess: Style:%d/%d(%s), Round:%d/%d, CurrentRound/Avg:%d/%.3fsec, TimerRemain:%.3fhrs"
+                      %(style_counter+1, styles_number_to_be_generated, input_style_label1_vec[style_counter],
+                        round_counter+1, round_num_per_style,
+                        local_time_elapsed, avg_elaped_per_round, time_estimated_remain/3600))
+
 
         print(self.print_separater)
         print("Generated Completed")

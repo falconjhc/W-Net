@@ -20,7 +20,7 @@ model_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 content_known_unknown='Known'
 style_known_unknown='Known'
 style_input_number=4
-evaluation_resule_save_dir = '/home/harric/Desktop/EvaluationResult_201901/'
+evaluation_resule_save_dir = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201901/'
 
 # W-Net
 evaluating_generator_dir=\

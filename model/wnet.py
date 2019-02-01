@@ -1876,8 +1876,8 @@ class WNet(object):
                                                                              self.summary_seconds,
                                                                              self.sample_seconds,
                                                                              self.record_seconds))
-            print("ForInitTraining: InvolvedLabel0:%d, InvolvedLabel1:%d" % (len(self.involved_label0_list),
-                                                                             len(self.involved_label1_list)))
+            print("InvolvedLabel0:%d, InvolvedLabel1:%d" % (len(self.involved_label0_list),
+                                                            len(self.involved_label1_list)))
             print("DataAugment/Flip:%d/%d, InputStyleNum:%d" % (self.train_data_augment, self.train_data_augment_flip, self.style_input_number))
             print(self.print_separater)
             print("Penalties:")

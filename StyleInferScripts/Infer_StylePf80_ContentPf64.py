@@ -24,21 +24,7 @@ input_args = [
     '--targeted_content_input_txt',
     '../ContentTxt/滚滚长江东逝水_简体_有替代_64.txt',
     '--save_mode','8:8',
-    '--adain_use','0',
 
-
-    '--experiment_id','DEBUG-WNet-NonAdaIN-ResidualMixer',# experiment name prefix
-    # '--experiment_id','DEBUG-WNet-AdaIN-ResidualMixer',# experiment name prefix
-    # '--experiment_id','DEBUG-WNet-NonAdaIN-DenseMixer',# experiment name prefix
-    # '--experiment_id','DEBUG-WNet-AdaIN-Multi-DenseMixer',# experiment name prefix
-    # '--experiment_id','DEBUG-WNet-AdaIN-Single-DenseMixer',# experiment name prefix
-    # '--experiment_id','DEBUG-EmdNet-Style4',# experiment name prefix
-    # '--experiment_id','DEBUG-EmdNet-Style4-AdaIN',
-    # '--experiment_id','DEBUG-ResEmdNet-Style4',
-    # '--experiment_id','DEBUG-ResEmdNet-NN-Style4',
-    # '--experiment_id','DEBUG-AdobeNet-Style4',
-    # '--experiment_id','DEBUG-ResMixer-5-SimpleMixer',
-    # '--experiment_id','DEBUG-ResMixer-5-DenseMixer',
 
     '--known_style_img_path',
     '../StyleExamples/Brush1.png',         # input a image with multiple written chars
@@ -66,7 +52,6 @@ input_args = [
     '../FileList/PrintedData/Char_0_3754_64PrintedFonts_GB2312L1_Simplified.txt',
 
 
-    '--channels','1',
 
     '--generator_residual_at_layer','3',
     '--generator_residual_blocks','7',
@@ -74,20 +59,18 @@ input_args = [
     '--generator_device','/device:GPU:0',
 
     '--model_dir',
-    'TrainedModels_WNet/Exp20190119-WNet-NonAdaIN_StylePf80_ContentPf64_GenEncDec6-Res7@Lyr3_DisMdy6conv/',
+    'TrainedModels_WNet/Exp20190129-WNet-ResidualMixer-NonAdaIN_StylePf144_ContentPf64_GenEncDec6-Res7@Lyr3_DisMdy6conv/',
 
     ]
 
 parser = argparse.ArgumentParser(description='Train')
 parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)
-parser.add_argument('--adain_use', dest='adain_use',type=str, default=0)
 
 
 # directories setting
 parser.add_argument('--targeted_content_input_txt', dest='targeted_content_input_txt', type=str,required=True)
 parser.add_argument('--save_path', dest='save_path', type=str,required=True)
 parser.add_argument('--save_mode', dest='save_mode', type=str,required=True)
-parser.add_argument('--experiment_id', dest='experiment_id', type=str, required=True)
 
 
 
@@ -105,9 +88,7 @@ parser.add_argument('--content_data_dir',dest='content_data_dir',type=str,requir
 parser.add_argument('--file_list_txt_content',dest='file_list_txt_content',type=str,required=True)
 
 
-parser.add_argument('--channels',dest='channels',type=int,required=True)
 
-# training param setting
 
 
 def get_available_gpus():
@@ -131,9 +112,13 @@ def main(_):
     for ii in range(len(content_data_dir)):
         content_data_dir[ii] = os.path.join(exp_root_path, content_data_dir[ii])
 
+    experiment_id_list = args.model_dir.split('/')
+    for experiment_id in experiment_id_list:
+        if 'Exp' in experiment_id:
+            break
+
     model = WNET(style_input_number=args.style_input_number,
-                 adain_use=args.adain_use,
-                 experiment_id=args.experiment_id,
+                 experiment_id=experiment_id,
 
                  targeted_content_input_txt=args.targeted_content_input_txt,
                  save_path=args.save_path,
@@ -142,7 +127,6 @@ def main(_):
                  content_data_dir=content_data_dir,
                  file_list_txt_content=args.file_list_txt_content.split(','),
 
-                 channels=args.channels,
 
                  generator_residual_at_layer=args.generator_residual_at_layer,
                  generator_residual_blocks=args.generator_residual_blocks,

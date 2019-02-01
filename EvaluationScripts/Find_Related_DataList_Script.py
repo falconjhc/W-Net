@@ -4,48 +4,72 @@ import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
 import utilities.infer_implementations as inf_tools
+from utilities.infer_implementations import draw_single_char
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
+import scipy.misc as misc
+
+from utilities.utils import image_show
+
+
+
 checking_file_list = list()
+lost_data_complete = True
+lost_data_complete_font_file = '/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/Sources/PrintedSources/CustomalizedFonts/HeiTi_Chinese.ttf'
+# lost_data_complete_font_file = '/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/Sources/PrintedSources/CustomalizedFonts/HeiTi_Korean.ttf'
+# lost_data_complete_font_file = '/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/Sources/PrintedSources/CustomalizedFonts/Heiti_Jap1.otf'
 
 
-
-#input_txt = '../ContentTxt/StyleChars_Paintings.txt'
-input_txt = '../ContentTxt/ContentChars_BlancaPython.txt'
+input_txt = '../ContentTxt/ContentChars_BlancaPython_32.txt'
+# input_txt = '../ContentTxt/StyleChars_Paintings_20.txt'
 
 # file_written_dir = '../EvaluationScripts/EvaluateDataFileLists/HandWritingData/'
 file_written_dir = '../EvaluationScripts/EvaluateDataFileLists/PrintedData/'
 
+# datapath_prefix = '/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/'
+# checking_file_list.append('../FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated.txt')
+# checking_file_list.append('../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated.txt')
+# checking_file_list.append('../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt')
 
-
+# datapath_prefix = '/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/'
 # checking_file_list.append('../FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive.txt')
 # checking_file_list.append('../FileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive.txt')
 # checking_file_list.append('../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive.txt')
 
+datapath_prefix = '/DataA/Harric/ChineseCharacterExp/CASIA_Dataset/PrintedData/GB2312_L1/'
 # checking_file_list.append('../FileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1.txt')
-# checking_file_list.append('../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt')
-checking_file_list.append('../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt')
+checking_file_list.append('../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt')
+# checking_file_list.append('../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt')
 
 
 
 
 
+# file_written_file_name = 'tmp.txt'
+# file_written_file_name = 'ContentChar_BlancaPython_Writer_1151_1200_Isolated.txt'
+# file_written_file_name = 'ContentChar_BlancaPython_Writer_1101_1150_Isolated.txt'
+# file_written_file_name = 'ContentChar_BlancaPython_Writer_1001_1032_Isolated.txt'
+# file_written_file_name = 'ContentChar_BlancaPython_Writer_1151_1200_Cursive.txt'
+# file_written_file_name = 'ContentChar_BlancaPython_Writer_1101_1150_Cursive.txt'
+# file_written_file_name = 'ContentChar_BlancaPython_Writer_1001_1032_Cursive.txt'
 
+# file_written_file_name = 'StyleChars_Paintings_Writer_1151_1200_Isolated.txt'
+# file_written_file_name = 'StyleChars_Paintings_Writer_1101_1150_Isolated.txt'
+# file_written_file_name = 'StyleChars_Paintings_Writer_1001_1032_Isolated.txt'
 # file_written_file_name = 'StyleChars_Paintings_Writer_1151_1200_Cursive.txt'
 # file_written_file_name = 'StyleChars_Paintings_Writer_1101_1150_Cursive.txt'
 # file_written_file_name = 'StyleChars_Paintings_Writer_1001_1032_Cursive.txt'
 
-#file_written_file_name = 'ContentChar_BlancaPython_Writer_1151_1200_Isolated.txt'
-#file_written_file_name = 'ContentChar_BlancaPython_Writer_1101_1150_Isolated.txt'
-#file_written_file_name = 'ContentChar_BlancaPython_Writer_1001_1032_Isolated.txt'
 
 
+# file_written_file_name = 'ContentChar_BlancaPython_Font_0_49_GB2312L1.txt'
+file_written_file_name = 'ContentChar_BlancaPython_Font_50_79_GB2312L1.txt'
+# file_written_file_name = 'ContentChar_BlancaPython_Selected32_Printed_Fonts_GB2312L1.txt'
 # file_written_file_name = 'StyleChar_Paintings_Font_0_49_GB2312L1.txt'
 # file_written_file_name = 'StyleChar_Paintings_Font_50_79_GB2312L1.txt'
 # file_written_file_name = 'StyleChar_Paintings_Writer_Selected32_Printed_Fonts_GB2312L1.txt'
 
-
-# file_written_file_name = 'ContentChar_BlancaPython_Font_0_49_GB2312L1.txt'
-# file_written_file_name = 'ContentChar_BlancaPython_Font_50_79_GB2312L1.txt'
-file_written_file_name = 'ContentChar_BlancaPython_Selected32_Printed_Fonts_GB2312L1.txt'
 
 
 
@@ -135,11 +159,32 @@ def data_file_list_read(file_list_txt):
     return label1_list, label0_list, data_list
 
 
-def find_related_data_list(dataset_label1_list, dataset_label0_list, dataset_data_list,label0_list_to_be_checked):
+def find_related_data_list(dataset_label1_list,
+                           dataset_label0_list,
+                           dataset_data_list,
+                           label0_list_to_be_checked,
+                           char_list,
+                           lost_data_complete,lost_data_complete_font_file):
+    def _diff(list1,list2):
+        c = set(list1).union(set(list2))
+        d = set(list1).intersection(set(list2))
+        output = list(c-d)
+        return output
+
     dataset_label1_vec=np.unique(dataset_label1_list)
     found_label0_list=list()
     found_label1_list=list()
     found_data_list=list()
+    sample_font = ImageFont.truetype(lost_data_complete_font_file, size=150)
+
+
+    tmpfile_counter=0
+    invalid_dataset=False
+    tmpchar_save_dir = os.path.join(datapath_prefix, 'TmpChars')
+    if not os.path.exists(tmpchar_save_dir):
+        os.makedirs(tmpchar_save_dir)
+
+
     for label1 in dataset_label1_vec:
         current_found_label0_list=list()
         current_found_label1_list=list()
@@ -154,6 +199,7 @@ def find_related_data_list(dataset_label1_list, dataset_label0_list, dataset_dat
             current_possible_label1_list.append(dataset_label1_list[ii])
             current_possible_data_list.append(dataset_data_list[ii])
 
+        label0_travel_counter = 0
         for current_checking_label0 in label0_list_to_be_checked:
             if current_checking_label0 in current_possible_label0_list:
                 found_indices = [ii for ii in range(len(current_possible_label0_list)) if current_possible_label0_list[ii] == current_checking_label0]
@@ -163,13 +209,41 @@ def find_related_data_list(dataset_label1_list, dataset_label0_list, dataset_dat
                     current_found_label0_list.append(current_possible_label0_list[ii])
                     current_found_label1_list.append(current_possible_label1_list[ii])
                     current_found_data_list.append(current_possible_data_list[ii])
+            else:
+                lost_char = char_list[label0_travel_counter]
+
+                if not lost_data_complete:
+                    print("Error: Character:%s(%s) not found in Style:%s"
+                          % (current_checking_label0, lost_char, label1))
+                    invalid_dataset=True
+                else:
+                    print("Error: Character:%s(%s) not found in Style:%s, But saved a replacement:%d"
+                          % (current_checking_label0, lost_char, label1, tmpfile_counter+1))
+                    tmp_single_char_completed = draw_single_char(ch=lost_char,
+                                                                 font=sample_font,
+                                                                 canvas_size=64)
+
+                    tmp_file_name = "%09d_%s_%s.png"  % (tmpfile_counter, current_checking_label0, label1)
+                    misc.imsave(os.path.join(tmpchar_save_dir, tmp_file_name),
+                                tmp_single_char_completed)
+
+                    current_found_data_list.append('TmpChars/'+tmp_file_name)
+                    current_found_label1_list.append(label1)
+                    current_found_label0_list.append(current_checking_label0)
+
+                    tmpfile_counter+=1
+
+            label0_travel_counter+=1
 
         found_label0_list.extend(current_found_label0_list)
         found_label1_list.extend(current_found_label1_list)
         found_data_list.extend(current_found_data_list)
 
     print("In Total Styles:%d, Lack Char Style:%d;" % (len(np.unique(dataset_label1_list)),len(np.unique(dataset_label1_list))-len(np.unique(found_label1_list))))
-    return found_label0_list, found_label1_list, found_data_list
+    if not invalid_dataset:
+        return found_label0_list, found_label1_list, found_data_list
+    else:
+        return -1,-1,-1
 
 
 def write_to_file(path,data_list,label0_list,label1_list,mark):
@@ -208,8 +282,10 @@ found_label0_list, found_label1_list, found_data_list = \
     find_related_data_list(dataset_label1_list=dataset_label1_list,
                            dataset_label0_list=dataset_label0_list,
                            dataset_data_list=dataset_data_list,
-                           label0_list_to_be_checked=input_label0_list)
-
+                           label0_list_to_be_checked=input_label0_list,
+                           char_list = input_char_list,
+                           lost_data_complete=lost_data_complete,
+                           lost_data_complete_font_file=lost_data_complete_font_file)
 
 write_to_file(path=os.path.join(file_written_dir,file_written_file_name),
               data_list=found_data_list,

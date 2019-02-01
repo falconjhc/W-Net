@@ -28,13 +28,13 @@ evaluation_resule_save_dir = '../../EvaluationResult_201901/'
 # evaluating_generator_dir=\
 #     'TrainedModels_WNet/Exp20190129-AdobeNet-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/'
 evaluating_generator_dir=\
-    'TrainedModels_WNet/Exp20190129-AdobeNet-Style4_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/'
+    'TrainedModels_WNet/Exp20190129-WNet-ResidualMixer-NonAdaIN_StylePf144_ContentPf64_GenEncDec6-Res7@Lyr3_DisMdy6conv/'
 
 # content dir
 content_data_dir=list()
 content_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/')
 content_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/')
-content_data_dir.append('CASIA_Dataset/PrintedData_80Fonts/')
+content_data_dir.append('CASIA_Dataset/PrintedData/')
 
 # style dir
 style_train_data_dir=list()
@@ -86,7 +86,7 @@ input_args = [
 
 
     '--fixed_char_list_txt',
-    '../ContentTxt/StyleChars_Paintings.txt',
+    '../ContentTxt/StyleChars_Paintings_20.txt',
 
 
     # generator

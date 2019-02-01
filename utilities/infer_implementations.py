@@ -88,11 +88,11 @@ def get_chars_set_from_level1_2(path,level):
                 char_counter+=1
     return chars,character_list
 
-def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
-                                                level1_charlist,level2_charlist,
-                                                level1_labellist,level2_labellist,
-                                                content_file_list_txt,content_file_data_dir,
-                                                img_width,img_filters):
+def get_revelant_data(targeted_input_txt,
+                      level1_charlist,level2_charlist,
+                      level1_labellist,level2_labellist,
+                      file_list_txt,file_data_dir,
+                      img_width,img_filters, info):
     def list_all_files(rootdir):
         _files = []
         list = os.listdir(rootdir)
@@ -104,16 +104,13 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
                 _files.append(path)
         return _files
 
+    def read_from_dir():
 
-
-
-    def read_content_from_dir():
-
-        # get label0 for the targeted content input txt
+        # get label0 for the targeted char img input txt
         targeted_chars_list = list()
         targeted_character_label0_list = list()
 
-        with open(targeted_content_input_txt) as f:
+        with open(targeted_input_txt) as f:
             for line in f:
 
                 line = u"%s" % line
@@ -134,57 +131,57 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
                             idx = level2_charlist.index(current_char)
                             character_id = level2_labellist[idx]
                         else:
-                            print("Fails! Didnt find %s" % unicode(char))
+                            print("Fails! Didnt find %s in Set" % unicode(char))
                             character_id = 0
                             return -1, -1, False
 
                         targeted_character_label0_list.append(str(character_id))
                         targeted_chars_list.append(current_char)
         actual_char_list = line
-        print("In total %d targeted chars are found in the standard GB2312 set" % len(targeted_chars_list))
+        print("In total %d targeted chars are found in the standard GB2312 set for %s" % (len(targeted_chars_list), info))
 
 
 
-        # read all content data
-        content_label0_list = list()
-        content_label1_list = list()
-        content_data_list = list()
+        # read all char img data
+        label0_list = list()
+        label1_list = list()
+        data_list = list()
 
-        for ii in range(len(content_file_list_txt)):
+        for ii in range(len(file_list_txt)):
 
-            file_handle = open(content_file_list_txt[ii], 'r')
+            file_handle = open(file_list_txt[ii], 'r')
             lines = file_handle.readlines()
 
             for line in lines:
                 curt_line = line.split('@')
-                content_label1_list.append(curt_line[2])
-                content_label0_list.append(curt_line[1])
+                label1_list.append(curt_line[2])
+                label0_list.append(curt_line[1])
                 curt_data = curt_line[3].split('\n')[0]
                 if curt_data[0] == '/':
                     curt_data = curt_data[1:]
-                curt_data_path = os.path.join(content_file_data_dir[ii], curt_data)
-                content_data_list.append(curt_data_path)
+                curt_data_path = os.path.join(file_data_dir[ii], curt_data)
+                data_list.append(curt_data_path)
             file_handle.close()
 
-        # find corresponding content data
-        content_label1_vec = np.unique(content_label1_list)
-        content_label1_vec.sort()
-        corresponding_content_prototype = np.zeros(
-            shape=[len(targeted_character_label0_list), img_width, img_width, img_filters * len(content_label1_vec)],
+        # find corresponding char img data
+        label1_vec = np.unique(label1_list)
+        label1_vec.sort()
+        corresponding_char_img = np.zeros(
+            shape=[len(targeted_character_label0_list), img_width, img_width, img_filters * len(label1_vec)],
             dtype=np.float32)
         label1_counter = 0
-        for content_label1 in content_label1_vec:
-            current_label1_indices = [ii for ii in range(len(content_label1_list)) if
-                                      content_label1_list[ii] == content_label1]
+        for label1 in label1_vec:
+            current_label1_indices = [ii for ii in range(len(label1_list)) if
+                                      label1_list[ii] == label1]
             current_label0_on_current_label1 = list()
             current_data_on_current_label1 = list()
             for ii in current_label1_indices:
-                current_label0_on_current_label1.append(content_label0_list[ii])
-                current_data_on_current_label1.append(content_data_list[ii])
+                current_label0_on_current_label1.append(label0_list[ii])
+                current_data_on_current_label1.append(data_list[ii])
             target_counter = 0
             for ii in targeted_character_label0_list:
                 if ii not in current_label0_on_current_label1:
-                    print("Fails! Didnt find %s" % unicode(actual_char_list[target_counter]))
+                    print("Fails! Didnt find %s in Dataset" % unicode(actual_char_list[target_counter]))
                     return -1, -1, False
                 else:
                     index_found = current_label0_on_current_label1.index(ii)
@@ -195,16 +192,16 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
                     elif char_img.ndim == 2:
                         char_img = np.expand_dims(char_img, axis=2)
                     # char_img = char_img / GRAYSCALE_AVG - 1
-                    corresponding_content_prototype[target_counter, :, :,
+                    corresponding_char_img[target_counter, :, :,
                     label1_counter * img_filters:(label1_counter + 1) * img_filters] \
                         = char_img
                 target_counter += 1
 
             label1_counter += 1
 
-        print("In total %d targeted chars are corresponded with content prototypes" % len(targeted_chars_list))
+        print("In total %d targeted chars are corresponded in the specific dataset for %s" % (len(targeted_chars_list), info))
         print(print_separater)
-        return corresponding_content_prototype, content_label1_vec
+        return corresponding_char_img, label1_vec, targeted_chars_list, targeted_character_label0_list
 
 
     def draw_single_char(ch, font):
@@ -295,11 +292,11 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
 
         return img_output.resize((64,64), Image.ANTIALIAS)
 
-    def generate_content_from_single_font_file(content_files):
+    def generate_from_single_font_file(files):
         targeted_chars_list = list()
         targeted_character_label0_list = list()
 
-        with open(targeted_content_input_txt) as f:
+        with open(targeted_input_txt) as f:
             for line in f:
 
                 line = u"%s" % line
@@ -313,20 +310,20 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
                     targeted_chars_list.append(current_char)
         print("In total %d targeted chars are found." % len(targeted_chars_list))
 
-        content_label1_vec = list()
-        corresponding_content_prototype = np.zeros(
+        label1_vec = list()
+        corresponding_char_img = np.zeros(
             shape=[len(targeted_character_label0_list),
                    img_width, img_width,
-                   img_filters * len(content_files)],
+                   img_filters * len(files)],
             dtype=np.float32)
 
 
-        for label1_counter in range(len(content_files)):
-            current_font_misc = ImageFont.truetype(content_files[label1_counter], size=150)
-            current_file_path = content_files[label1_counter]
+        for label1_counter in range(len(files)):
+            current_font_misc = ImageFont.truetype(files[label1_counter], size=150)
+            current_file_path = files[label1_counter]
             current_file_name = os.path.splitext(current_file_path)[0]
             current_file_name = current_file_name.split('/')[len(current_file_name.split('/'))-1]
-            content_label1_vec.append(current_file_name)
+            label1_vec.append(current_file_name)
 
             for target_counter in range(len(targeted_chars_list)):
                 char_misc = draw_single_char(ch=targeted_chars_list[target_counter], font=current_font_misc)
@@ -338,26 +335,26 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
                     char_img = np.expand_dims(char_img[:, :, 0], axis=2)
                 elif char_img.ndim == 2:
                     char_img = np.expand_dims(char_img, axis=2)
-                corresponding_content_prototype[target_counter, :, :,
+                corresponding_char_img[target_counter, :, :,
                 label1_counter * img_filters:(label1_counter + 1) * img_filters] \
                     = char_img
 
-        return corresponding_content_prototype,content_label1_vec
+        return corresponding_char_img,label1_vec
 
 
-    dir_img_content = False
-    for check_dir in content_file_data_dir:
+    dir_img = False
+    for check_dir in file_data_dir:
         if os.path.isdir(check_dir):
             file_list = list_all_files(check_dir)
             if (os.path.isdir(check_dir)) and \
                     os.path.splitext(file_list[np.random.randint(0,len(file_list)-1)])[-1]=='.png':
-                dir_img_content=True
+                dir_img=True
                 break
 
     single_font_file = False
     font_file_dir = False
-    if not dir_img_content:
-        for check_file in content_file_data_dir:
+    if not dir_img:
+        for check_file in file_data_dir:
             is_file = os.path.isfile(check_file)
             is_dir = os.path.isdir(check_file)
             is_ttf = (os.path.splitext(check_file)[-1] == '.ttf') or (os.path.splitext(check_file)[-1] == '.TTF')
@@ -379,23 +376,23 @@ def get_prototype_on_targeted_content_input_txt(targeted_content_input_txt,
             if single_font_file or font_file_dir:
                 break
 
-    if dir_img_content:
-        corresponding_content_prototype, content_label1_vec = read_content_from_dir()
+    if dir_img:
+        corresponding_char_img, label1_vec, char_list, char_label0_list = read_from_dir()
 
     if single_font_file or font_file_dir:
         if font_file_dir:
-            content_file_data_dir_new = list()
-            for file_dir in content_file_data_dir:
+            file_data_dir_new = list()
+            for file_dir in file_data_dir:
                 files = list_all_files(file_dir)
-                content_file_data_dir_new.extend(files)
-            content_file_data_dir = content_file_data_dir_new
-            content_file_data_dir.sort()
-        corresponding_content_prototype, content_label1_vec = generate_content_from_single_font_file(content_files=content_file_data_dir)
+                file_data_dir_new.extend(files)
+            file_data_dir = file_data_dir_new
+            file_data_dir.sort()
+        corresponding_char_img, label1_vec = generate_from_single_font_file(files=file_data_dir)
 
-    corresponding_content_prototype[np.where(corresponding_content_prototype < 240)] = 0
-    corresponding_content_prototype[np.where(corresponding_content_prototype >= 240)] = 255
-    corresponding_content_prototype = corresponding_content_prototype / GRAYSCALE_AVG - 1
-    return corresponding_content_prototype, content_label1_vec, True
+    corresponding_char_img[np.where(corresponding_char_img < 240)] = 0
+    corresponding_char_img[np.where(corresponding_char_img >= 240)] = 255
+    corresponding_char_img = corresponding_char_img / GRAYSCALE_AVG - 1
+    return corresponding_char_img, label1_vec, True, char_list, char_label0_list
 
 
 def get_style_references(img_path, resave_path, style_input_number):

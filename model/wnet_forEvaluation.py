@@ -78,10 +78,7 @@ generator_dict = {"WNet": wnet_generator,
                   "ResMixerNet": resmixernet_generator
                   }
 
-encoder_dict = {"Normal": encoder_implementation,
-                "ResEmdNet": encoder_ResEmd_framework,
-                "AdobeNet": encoder_Adobe_framework,
-                "ResMixerNet": encoder_resmixernet_framework}
+
 
 eps = 1e-9
 
@@ -222,15 +219,12 @@ class WNet(object):
         if 'Emd' in experiment_id:
             if 'Res' in experiment_id:
                 self.generator_implementation=generator_dict['ResEmdNet']
-                self.encoder_implementation = encoder_dict['ResEmdNet']
                 if 'NN' in experiment_id:
                     self.other_info = 'NN'
             else:
                 self.generator_implementation = generator_dict['EmdNet']
-                self.encoder_implementation = encoder_dict['Normal']
         elif 'WNet' in experiment_id:
             self.generator_implementation = generator_dict['WNet']
-            self.encoder_implementation = encoder_dict['Normal']
             self.generator_residual_at_layer = generator_residual_at_layer
             self.generator_residual_blocks = generator_residual_blocks
             if 'DenseMixer' in experiment_id:
@@ -239,10 +233,8 @@ class WNet(object):
                 self.other_info='ResidualMixer'
         elif 'Adobe' in experiment_id:
             self.generator_implementation = generator_dict['AdobeNet']
-            self.encoder_implementation = encoder_dict['AdobeNet']
         elif 'ResMixer' in experiment_id:
             self.generator_implementation = generator_dict['ResMixerNet']
-            self.encoder_implementation = encoder_dict['ResMixerNet']
             if 'SimpleMixer' in experiment_id:
                 other_info_pos = experiment_id.find('SimpleMixer')
                 possible_pos = other_info_pos-10
@@ -672,7 +664,7 @@ class WNet(object):
 
     def model_initialization(self,saver_generator, feature_extractor_saver_list):
         # initialization of all the variables
-        self.sess.run(tf.global_variables_initializer())
+        # self.sess.run(tf.global_variables_initializer())
         self.sess.run(tf.tables_initializer())
 
         # restore of high_level feature extractor
@@ -695,7 +687,7 @@ class WNet(object):
     def evaluate_process(self):
 
         timer_start = time.time()
-
+        info_timer_start = time.time()
         if self.debug_mode == 1:
             self.print_info_seconds = 5
 
@@ -779,6 +771,9 @@ class WNet(object):
 
         print("AdaIN_Mode:%s" % self.adain_mark)
         print(self.print_separater)
+        print("ContentLabel1Vec:")
+        print(data_provider.content_label1_vec)
+        print(self.print_separater)
         print("Initialization completed, and evaluation started right now.")
 
         if self.debug_mode == 0:
@@ -802,6 +797,7 @@ class WNet(object):
 
             added_num = 0
             for iter in range(self.itrs_for_current_epoch):
+                local_timer_start = time.time()
                 if not iter == self.itrs_for_current_epoch-1:
                     current_batch_label1 = data_provider.train_iterator.true_style.label1_list[iter * self.batch_size:
                                                                                                (iter + 1) * self.batch_size]
@@ -862,8 +858,8 @@ class WNet(object):
                     full_pixel = full_pixel + calculated_pixel
 
 
-                if time.time()-timer_start>self.print_info_seconds:
-                    timer_start=time.time()
+                if time.time()-info_timer_start>self.print_info_seconds:
+                    info_timer_start=time.time()
 
 
 
@@ -925,7 +921,19 @@ class WNet(object):
                             print_str_line = print_str_line + "  %.5f  |" % (full_pixel[0][ii]/((iter+1)*self.batch_size))
                     print(print_str_line)
                     print("----------------------------------------------------------------------------------------------------------------")
+
+                    time_elapsed = time.time() - timer_start
+                    local_time_elapsed = time.time() - local_timer_start
+                    avg_elaped_per_round = time_elapsed / (ei * self.itrs_for_current_epoch + iter + 1)
+                    time_estimated_remain = avg_elaped_per_round * total_eval_epochs * self.itrs_for_current_epoch
+                    print("CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%d/%.3fsec, TimerRemain:%.3fhrs"
+                          % (ei + 1, total_eval_epochs,
+                             iter + 1, self.itrs_for_current_epoch,
+                             local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 3600))
+
                     print(self.print_separater)
+
+
 
             full_mse = full_mse / len(data_provider.train_iterator.true_style.data_list)
             full_vn = full_vn / len(data_provider.train_iterator.true_style.data_list)
