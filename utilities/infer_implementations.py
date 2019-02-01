@@ -148,8 +148,7 @@ def get_revelant_data(targeted_input_txt,
         data_list = list()
 
         for ii in range(len(file_list_txt)):
-            if ii ==4:
-                a=1
+
 
             file_handle = open(file_list_txt[ii], 'r')
             lines = file_handle.readlines()
@@ -163,6 +162,9 @@ def get_revelant_data(targeted_input_txt,
                     curt_data = curt_data[1:]
                 curt_data_path = os.path.join(file_data_dir[ii], curt_data)
                 data_list.append(curt_data_path)
+                # if 'TmpChars' in curt_data:
+                #     a=1
+                # print(curt_data)
             file_handle.close()
 
         # find corresponding char img data
@@ -186,7 +188,22 @@ def get_revelant_data(targeted_input_txt,
                     print("Fails! Didnt find %s in Dataset" % unicode(actual_char_list[target_counter]))
                     return -1, -1, False
                 else:
-                    index_found = current_label0_on_current_label1.index(ii)
+                    # index_found = current_label0_on_current_label1.index(ii)
+                    indices_found = [kk for kk in range(len(current_label0_on_current_label1)) if current_label0_on_current_label1[kk]==ii]
+                    tmp_counter = 0
+                    for index_curt in indices_found:
+                        if 'TmpChar' in current_data_on_current_label1[index_curt]:
+                            tmp_counter+=1
+                    if not tmp_counter == len(indices_found):
+                        new_found_indices = list()
+                        for index_curt in indices_found:
+                            if not 'TmpChar' in current_data_on_current_label1[index_curt]:
+                                new_found_indices.append(index_curt)
+                        indices_found = new_found_indices
+                    index_found = indices_found[np.random.randint(low=0,high=len(indices_found))]
+
+
+
                     char_img = misc.imread(current_data_on_current_label1[index_found])
                     # print("%d %d" % (label1_counter,target_counter))
                     if char_img.ndim == 3:

@@ -352,7 +352,7 @@ class WNet(object):
                                         img_width=self.img2img_width,
                                         img_filters=self.input_output_img_filter_num,
                                         info='ContentPrototype')
-        true_style_reference, true_style_label1_vec, valid_mark, _, _ = \
+        true_style_reference, true_style_label1_vec, valid_mark, _, true_style_char_label0_list = \
             inf_tools.get_revelant_data(targeted_input_txt=self.targeted_content_input_txt,
                                         level1_charlist=charset_level1,
                                         level2_charlist=charset_level2,
@@ -363,8 +363,7 @@ class WNet(object):
                                         img_width=self.img2img_width,
                                         img_filters=self.input_output_img_filter_num,
                                         info='True StyleReference')
-
-        input_style_reference, input_style_label1_vec, valid_mark, style_char_list, style_char_label0_list = \
+        input_style_reference, input_style_label1_vec, valid_mark, style_char_list, input_style_char_label0_list = \
             inf_tools.get_revelant_data(targeted_input_txt=self.targeted_style_input_txt,
                                         level1_charlist=charset_level1,
                                         level2_charlist=charset_level2,
@@ -482,7 +481,7 @@ class WNet(object):
             for round_counter in range(round_num_per_style):
 
                 current_style_char = style_char_list[round_counter * self.style_input_number:(round_counter + 1) * self.style_input_number]
-                current_style_char_label0 = style_char_label0_list[round_counter * self.style_input_number:(round_counter + 1) * self.style_input_number]
+                current_style_char_label0 = input_style_char_label0_list[round_counter * self.style_input_number:(round_counter + 1) * self.style_input_number]
                 dir_name_str = '_'
                 for tmp in current_style_char_label0:
                     dir_name_str = dir_name_str + tmp
