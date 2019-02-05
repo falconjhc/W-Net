@@ -14,7 +14,7 @@ eps = 1e-9
 
 
 
-data_path_root = '/home/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
 content_known_unknown='Known'
@@ -37,10 +37,10 @@ evaluation_resule_save_dir = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/Ev
 #     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-NonAdaIN_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
 
 # Adobe-Net
-# evaluating_generator_dir=\
-#     'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 evaluating_generator_dir=\
-    'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+    'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 
 # Emd-Net
 # evaluating_generator_dir=\
@@ -96,7 +96,7 @@ if content_known_unknown == 'Known':
 else:
     known_style_file_list.append('../TrainTestFileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1_Test.txt')
 known_fixed_style_file_list=list()
-known_fixed_style_file_list.append('../EvaluationScripts/EvaluateDataFileLists/PrintedData/StyleChar_Paintings_Font_0_49_GB2312L1.txt')
+known_fixed_style_file_list.append('../EvaluationDataFileLists/PrintedData/StyleChar_Paintings_Font_0_49_GB2312L1.txt')
 
 
 ## unknown style
@@ -106,7 +106,7 @@ if content_known_unknown == 'Known':
 else:
     unknown_style_file_list.append('../TrainTestFileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1_Test.txt')
 unknown_fixed_style_file_list=list()
-unknown_fixed_style_file_list.append('../EvaluationScripts/EvaluateDataFileLists/PrintedData/StyleChar_Paintings_Font_50_79_GB2312L1.txt')
+unknown_fixed_style_file_list.append('../EvaluationDataFileLists/PrintedData/StyleChar_Paintings_Font_50_79_GB2312L1.txt')
 
 
 

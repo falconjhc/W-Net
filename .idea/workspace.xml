@@ -5,9 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/W-Net.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/W-Net.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/wnet_forInferEval.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet_forInferEval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/infer_implementations.py" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/infer_implementations.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DebugScripts/evaluate_debug.py" beforeDir="false" afterPath="$PROJECT_DIR$/DebugScripts/evaluate_debug.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_InferEval_Script.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Hw50_SingleContent_InferEval_Script.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_InferEval_Script.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Pf50_SingleContent_InferEval_Script.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/wnet_forEvaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet_forEvaluation.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,224 +22,54 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/W_Net$StylePf144_ResidualMixer_ContentPf64.coverage" NAME="StylePf144-ResidualMixer_ContentPf64 Coverage Results" MODIFIED="1548773449370" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_WNet/More" />
-    <SUITE FILE_PATH="coverage/W_Net$Pf50_MultiContent_Eval_Script.coverage" NAME="Pf50_MultiContent_Eval_Script Coverage Results" MODIFIED="1548944661482" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$rename__1_.coverage" NAME="rename (1) Coverage Results" MODIFIED="1547904839941" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/W_Net$Infer_StylePf80_ContentPf32.coverage" NAME="Infer_StylePf80_ContentPf32 Coverage Results" MODIFIED="1548435337342" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/StyleInferScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$Infer_StylePf80_ContentPf64.coverage" NAME="Infer_StylePf80_ContentPf64 Coverage Results" MODIFIED="1549010351854" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/StyleInferScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$extranet_scripots_debug.coverage" NAME="extranet_scripots_debug Coverage Results" MODIFIED="1538554041623" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
     <SUITE FILE_PATH="coverage/W_Net$Infer_StyleHw50_ContentHw32Pf32.coverage" NAME="Infer_StyleHw50_ContentHw32Pf32 Coverage Results" MODIFIED="1549006718937" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/StyleInferScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$StylePf50_ContentPfStd1.coverage" NAME="StylePf50_ContentPfStd1 Coverage Results" MODIFIED="1548766439145" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_WNet/StylePf" />
-    <SUITE FILE_PATH="coverage/W_Net$generate_trainval_from_different_sets.coverage" NAME="generate_trainval_from_different_sets Coverage Results" MODIFIED="1547736101681" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ToolScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$Pf50_SingleContent_Eval_Script.coverage" NAME="Pf50_SingleContent_Eval_Script Coverage Results" MODIFIED="1549011679125" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$Generate_FileList_Scripts.coverage" NAME="Generate_FileList_Scripts Coverage Results" MODIFIED="1548825403460" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing" />
-    <SUITE FILE_PATH="coverage/W_Net$debug_infer.coverage" NAME="debug_infer Coverage Results" MODIFIED="1541760090040" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$StylePf50_Adobe_ContentPf32_Style1.coverage" NAME="StylePf50-Adobe_ContentPf32-Style1 Coverage Results" MODIFIED="1548227887767" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_AdobeNet/StylePf" />
-    <SUITE FILE_PATH="coverage/W_Net$StylePf144_DenseMixer_ContentPf64.coverage" NAME="StylePf144-DenseMixer_ContentPf64 Coverage Results" MODIFIED="1548773429715" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_WNet/More" />
-    <SUITE FILE_PATH="coverage/W_Net$Hw50_MultiContent_Eval_Script.coverage" NAME="Hw50_MultiContent_Eval_Script Coverage Results" MODIFIED="1548943352059" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$Script_ScanFontFiles.coverage" NAME="Script_ScanFontFiles Coverage Results" MODIFIED="1547778332480" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing/Print_Chinese_Charfacter" />
-    <SUITE FILE_PATH="coverage/W_Net$wnet.coverage" NAME="wnet Coverage Results" MODIFIED="1548236441215" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
-    <SUITE FILE_PATH="coverage/W_Net$StylePf80_ContentPf64.coverage" NAME="StylePf80_ContentPf64 Coverage Results" MODIFIED="1548435376872" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_WithFlip/StylePf" />
-    <SUITE FILE_PATH="coverage/W_Net$Hw50_SingleContent_InferEval_Script.coverage" NAME="Hw50_SingleContent_InferEval_Script Coverage Results" MODIFIED="1549047781130" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$inferEval_debug.coverage" NAME="inferEval_debug Coverage Results" MODIFIED="1549051619432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$StylePf50_ResEmd_ContentPf32_Style1.coverage" NAME="StylePf50-ResEmd_ContentPf32-Style1 Coverage Results" MODIFIED="1547822161162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf" />
-    <SUITE FILE_PATH="coverage/W_Net$Find_Related_DataList_Script.coverage" NAME="Find_Related_DataList_Script Coverage Results" MODIFIED="1549028530022" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ResEmd_ContentPf32_Hw32_Style1.coverage" NAME="StyleHw50-ResEmd_ContentPf32+Hw32-Style1 Coverage Results" MODIFIED="1547822061679" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw" />
-    <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ResEmd_ContentPf32_Hw32_Style4.coverage" NAME="StyleHw50-ResEmd_ContentPf32+Hw32-Style4 Coverage Results" MODIFIED="1547822149746" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw" />
-    <SUITE FILE_PATH="coverage/W_Net$wnet_forEvaluation.coverage" NAME="wnet_forEvaluation Coverage Results" MODIFIED="1548852446716" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
-    <SUITE FILE_PATH="coverage/W_Net$Pf50_SingleContent_InferEval_Script.coverage" NAME="Pf50_SingleContent_InferEval_Script Coverage Results" MODIFIED="1549046351324" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$Infer_StylePf50_ContentStd1.coverage" NAME="Infer_StylePf50_ContentStd1 Coverage Results" MODIFIED="1548431887436" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/StyleInferScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$StylePf50_ResEmd_ContentPf32_Style4.coverage" NAME="StylePf50-ResEmd_ContentPf32-Style4 Coverage Results" MODIFIED="1547822180477" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf" />
-    <SUITE FILE_PATH="coverage/W_Net$wnet_debug.coverage" NAME="wnet_debug Coverage Results" MODIFIED="1548871091432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$rename.coverage" NAME="rename Coverage Results" MODIFIED="1547902992634" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utilities" />
-    <SUITE FILE_PATH="coverage/W_Net$Infer_StylePf50_ContentPf32.coverage" NAME="Infer_StylePf50_ContentPf32 Coverage Results" MODIFIED="1548432761552" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/StyleInferScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$evaluate_debug.coverage" NAME="evaluate_debug Coverage Results" MODIFIED="1549040008842" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$gnt_to_png.coverage" NAME="gnt_to_png Coverage Results" MODIFIED="1539063667636" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing/Handwriting_Chinese_Character" />
-    <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ResEmd_NN_ContentPf32_Hw32_Style1.coverage" NAME="StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style1 Coverage Results" MODIFIED="1548136699566" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw" />
     <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ResMixer_5_SimpleMixer_ContentPf32_Hw32_Style1.coverage" NAME="StyleHw50-ResMixer-5-SimpleMixer_ContentPf32+Hw32-Style1 Coverage Results" MODIFIED="1548164611941" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StyleHw" />
-    <SUITE FILE_PATH="coverage/W_Net$Tmp.coverage" NAME="Tmp Coverage Results" MODIFIED="1549044881243" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$train_debug.coverage" NAME="train_debug Coverage Results" MODIFIED="1548931239883" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
-    <SUITE FILE_PATH="coverage/W_Net$Find_Style_Reference_Dataset.coverage" NAME="Find_Style_Reference_Dataset Coverage Results" MODIFIED="1548832532913" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Evaluation" />
+    <SUITE FILE_PATH="coverage/W_Net$evaluate_debug.coverage" NAME="evaluate_debug Coverage Results" MODIFIED="1549341563057" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
     <SUITE FILE_PATH="coverage/W_Net$extranet_scripts_debug.coverage" NAME="extranet_scripts_debug Coverage Results" MODIFIED="1547010754026" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
     <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ResMixer_5_DenseMixer_ContentPf32_Hw32_Style1.coverage" NAME="StyleHw50-ResMixer-5-DenseMixer_ContentPf32+Hw32-Style1 Coverage Results" MODIFIED="1548164586725" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_ResMixerNet/StyleHw" />
     <SUITE FILE_PATH="coverage/W_Net$Script_GeneratePrinted.coverage" NAME="Script_GeneratePrinted Coverage Results" MODIFIED="1547894066699" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing/Print_Chinese_Character" />
-    <SUITE FILE_PATH="coverage/W_Net$script_full.coverage" NAME="script_full Coverage Results" MODIFIED="1547734653619" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing/Print_Chinese_Charfacter" />
+    <SUITE FILE_PATH="coverage/W_Net$Tmp.coverage" NAME="Tmp Coverage Results" MODIFIED="1549044881243" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$inferEval_debug.coverage" NAME="inferEval_debug Coverage Results" MODIFIED="1549051619432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$train_debug.coverage" NAME="train_debug Coverage Results" MODIFIED="1548931239883" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$Pf50_SingleContent_Eval_Script.coverage" NAME="Pf50_SingleContent_Eval_Script Coverage Results" MODIFIED="1549011679125" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$Infer_StylePf80_ContentPf32.coverage" NAME="Infer_StylePf80_ContentPf32 Coverage Results" MODIFIED="1548435337342" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/StyleInferScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$StylePf50_ContentPf32.coverage" NAME="StylePf50_ContentPf32 Coverage Results" MODIFIED="1548765896052" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_WNet/StylePf" />
+    <SUITE FILE_PATH="coverage/W_Net$Script_ScanFontFiles.coverage" NAME="Script_ScanFontFiles Coverage Results" MODIFIED="1547778332480" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing/Print_Chinese_Charfacter" />
     <SUITE FILE_PATH="coverage/W_Net$Split_Train_Test_Group.coverage" NAME="Split_Train_Test_Group Coverage Results" MODIFIED="1548751689309" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing" />
     <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ContentPf32_Hw32.coverage" NAME="StyleHw50_ContentPf32+Hw32 Coverage Results" MODIFIED="1548424557848" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_WithFlip/StyleHw" />
-    <SUITE FILE_PATH="coverage/W_Net$StylePf50_ContentPf32.coverage" NAME="StylePf50_ContentPf32 Coverage Results" MODIFIED="1548765896052" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_WNet/StylePf" />
-  </component>
-  <component name="DockManager">
-    <window id="4">
-      <content type="file-editors">
-        <state>
-          <splitter split-orientation="horizontal" split-proportion="0.6671875">
-            <split-first>
-              <leaf>
-                <file pinned="false" current-in-tab="true">
-                  <entry file="file://$PROJECT_DIR$/model/wnet_forInferEval.py">
-                    <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="714">
-                        <caret line="375" column="68" selection-start-line="365" selection-start-column="8" selection-end-line="375" selection-end-column="68" />
-                        <folding>
-                          <element signature="e#24#62#0" expanded="true" />
-                        </folding>
-                      </state>
-                    </provider>
-                  </entry>
-                </file>
-              </leaf>
-            </split-first>
-            <split-second>
-              <leaf>
-                <file pinned="false" current-in-tab="true">
-                  <entry file="file://$PROJECT_DIR$/utilities/infer_implementations.py">
-                    <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="576">
-                        <caret line="201" column="57" selection-start-line="201" selection-start-column="57" selection-end-line="201" selection-end-column="57" />
-                      </state>
-                    </provider>
-                  </entry>
-                </file>
-                <file pinned="false" current-in-tab="false">
-                  <entry file="file://$PROJECT_DIR$/model/wnet_forEvaluation.py">
-                    <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="1115">
-                        <caret line="927" column="129" selection-start-line="927" selection-start-column="129" selection-end-line="927" selection-end-column="129" />
-                      </state>
-                    </provider>
-                  </entry>
-                </file>
-                <file pinned="false" current-in-tab="false">
-                  <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
-                    <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="802">
-                        <caret line="647" column="50" lean-forward="true" selection-start-line="620" selection-start-column="4" selection-end-line="647" selection-end-column="50" />
-                        <folding>
-                          <element signature="e#0#18#0" expanded="true" />
-                          <marker date="1549027872607" expanded="true" signature="34232:34239" ph="..." />
-                        </folding>
-                      </state>
-                    </provider>
-                  </entry>
-                </file>
-              </leaf>
-            </split-second>
-          </splitter>
-        </state>
-      </content>
-    </window>
-  </component>
-  <component name="FUSProjectUsageTrigger">
-    <session id="-207592693">
-      <usages-collector id="statistics.lifecycle.project">
-        <counts>
-          <entry key="project.closed" value="52" />
-          <entry key="project.open.time.0" value="1" />
-          <entry key="project.open.time.1" value="3" />
-          <entry key="project.open.time.10" value="1" />
-          <entry key="project.open.time.2" value="1" />
-          <entry key="project.open.time.3" value="2" />
-          <entry key="project.open.time.4" value="2" />
-          <entry key="project.open.time.5" value="16" />
-          <entry key="project.open.time.6" value="21" />
-          <entry key="project.open.time.7" value="20" />
-          <entry key="project.open.time.8" value="8" />
-          <entry key="project.open.time.9" value="5" />
-          <entry key="project.opened" value="80" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.open">
-        <counts>
-          <entry key="Split_Train_Test_Group" value="8" />
-          <entry key="py" value="1054" />
-          <entry key="txt" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.open">
-        <counts>
-          <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="1062" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.edit">
-        <counts>
-          <entry key="Pf50_SingleContent_Eval_Script" value="2" />
-          <entry key="Python Console" value="6353" />
-          <entry key="Script_GeneratePrinted" value="1" />
-          <entry key="Split_Train_Test_Group" value="1128" />
-          <entry key="py" value="49055" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.edit">
-        <counts>
-          <entry key="Python" value="56539" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.vcs.git.usages" />
-      <usages-collector id="statistics.js.language.service.starts" />
-    </session>
-    <session id="24027722">
-      <usages-collector id="statistics.lifecycle.project">
-        <counts>
-          <entry key="project.closed" value="10" />
-          <entry key="project.open.time.11" value="1" />
-          <entry key="project.open.time.13" value="1" />
-          <entry key="project.open.time.18" value="1" />
-          <entry key="project.open.time.2" value="2" />
-          <entry key="project.open.time.20" value="1" />
-          <entry key="project.open.time.8" value="1" />
-          <entry key="project.open.time.9" value="3" />
-          <entry key="project.opened" value="10" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.open">
-        <counts>
-          <entry key="jpeg" value="2" />
-          <entry key="py" value="17" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.open">
-        <counts>
-          <entry key="Image" value="2" />
-          <entry key="Python" value="17" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.edit">
-        <counts>
-          <entry key="Python Console" value="1566" />
-          <entry key="py" value="2751" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.edit">
-        <counts>
-          <entry key="Python" value="4317" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.vcs.git.usages" />
-      <usages-collector id="statistics.js.language.service.starts" />
-    </session>
+    <SUITE FILE_PATH="coverage/W_Net$StylePf50_ContentPfStd1.coverage" NAME="StylePf50_ContentPfStd1 Coverage Results" MODIFIED="1548766439145" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_WNet/StylePf" />
+    <SUITE FILE_PATH="coverage/W_Net$Infer_StylePf80_ContentPf64.coverage" NAME="Infer_StylePf80_ContentPf64 Coverage Results" MODIFIED="1549010351854" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/StyleInferScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$wnet_forEvaluation.coverage" NAME="wnet_forEvaluation Coverage Results" MODIFIED="1548852446716" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/W_Net$rename.coverage" NAME="rename Coverage Results" MODIFIED="1547902992634" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utilities" />
+    <SUITE FILE_PATH="coverage/W_Net$StylePf50_Adobe_ContentPf32_Style1.coverage" NAME="StylePf50-Adobe_ContentPf32-Style1 Coverage Results" MODIFIED="1548227887767" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_AdobeNet/StylePf" />
+    <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ResEmd_NN_ContentPf32_Hw32_Style1.coverage" NAME="StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style1 Coverage Results" MODIFIED="1548136699566" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw" />
+    <SUITE FILE_PATH="coverage/W_Net$Infer_StylePf50_ContentPf32.coverage" NAME="Infer_StylePf50_ContentPf32 Coverage Results" MODIFIED="1548432761552" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/StyleInferScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$wnet.coverage" NAME="wnet Coverage Results" MODIFIED="1548236441215" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/W_Net$Pf50_MultiContent_Eval_Script.coverage" NAME="Pf50_MultiContent_Eval_Script Coverage Results" MODIFIED="1548944661482" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ResEmd_ContentPf32_Hw32_Style1.coverage" NAME="StyleHw50-ResEmd_ContentPf32+Hw32-Style1 Coverage Results" MODIFIED="1547822061679" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw" />
+    <SUITE FILE_PATH="coverage/W_Net$StylePf144_DenseMixer_ContentPf64.coverage" NAME="StylePf144-DenseMixer_ContentPf64 Coverage Results" MODIFIED="1548773429715" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_WNet/More" />
+    <SUITE FILE_PATH="coverage/W_Net$wnet_debug.coverage" NAME="wnet_debug Coverage Results" MODIFIED="1548871091432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$Find_Related_DataList_Script.coverage" NAME="Find_Related_DataList_Script Coverage Results" MODIFIED="1549028530022" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$Find_Style_Reference_Dataset.coverage" NAME="Find_Style_Reference_Dataset Coverage Results" MODIFIED="1548832532913" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Evaluation" />
+    <SUITE FILE_PATH="coverage/W_Net$rename__1_.coverage" NAME="rename (1) Coverage Results" MODIFIED="1547904839941" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/W_Net$Hw50_MultiContent_Eval_Script.coverage" NAME="Hw50_MultiContent_Eval_Script Coverage Results" MODIFIED="1548943352059" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$gnt_to_png.coverage" NAME="gnt_to_png Coverage Results" MODIFIED="1539063667636" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing/Handwriting_Chinese_Character" />
+    <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ResEmd_ContentPf32_Hw32_Style4.coverage" NAME="StyleHw50-ResEmd_ContentPf32+Hw32-Style4 Coverage Results" MODIFIED="1547822149746" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw" />
+    <SUITE FILE_PATH="coverage/W_Net$StylePf80_ContentPf64.coverage" NAME="StylePf80_ContentPf64 Coverage Results" MODIFIED="1548435376872" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_WithFlip/StylePf" />
+    <SUITE FILE_PATH="coverage/W_Net$debug_infer.coverage" NAME="debug_infer Coverage Results" MODIFIED="1541760090040" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$script_full.coverage" NAME="script_full Coverage Results" MODIFIED="1547734653619" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing/Print_Chinese_Charfacter" />
+    <SUITE FILE_PATH="coverage/W_Net$Pf50_SingleContent_InferEval_Script.coverage" NAME="Pf50_SingleContent_InferEval_Script Coverage Results" MODIFIED="1549046351324" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$extranet_scripots_debug.coverage" NAME="extranet_scripots_debug Coverage Results" MODIFIED="1538554041623" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$StylePf144_ResidualMixer_ContentPf64.coverage" NAME="StylePf144-ResidualMixer_ContentPf64 Coverage Results" MODIFIED="1548773449370" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_WNet/More" />
+    <SUITE FILE_PATH="coverage/W_Net$Infer_StylePf50_ContentStd1.coverage" NAME="Infer_StylePf50_ContentStd1 Coverage Results" MODIFIED="1548431887436" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/StyleInferScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$Generate_FileList_Scripts.coverage" NAME="Generate_FileList_Scripts Coverage Results" MODIFIED="1548825403460" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing" />
+    <SUITE FILE_PATH="coverage/W_Net$StylePf50_ResEmd_ContentPf32_Style4.coverage" NAME="StylePf50-ResEmd_ContentPf32-Style4 Coverage Results" MODIFIED="1547822180477" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf" />
+    <SUITE FILE_PATH="coverage/W_Net$Hw50_SingleContent_InferEval_Script.coverage" NAME="Hw50_SingleContent_InferEval_Script Coverage Results" MODIFIED="1549047781130" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$generate_trainval_from_different_sets.coverage" NAME="generate_trainval_from_different_sets Coverage Results" MODIFIED="1547736101681" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ToolScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$StylePf50_ResEmd_ContentPf32_Style1.coverage" NAME="StylePf50-ResEmd_ContentPf32-Style1 Coverage Results" MODIFIED="1547822161162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DebugScripts/inferEval_debug.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1026">
-              <caret line="63" column="36" selection-start-line="63" selection-start-column="36" selection-end-line="63" selection-end-column="36" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/utilities/infer_implementations.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="122">
-              <caret line="201" column="57" selection-start-line="201" selection-start-column="57" selection-end-line="201" selection-end-column="57" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -265,7 +101,6 @@
       <find>tile</find>
       <find>repeat</find>
       <find>_feed</find>
-      <find>batch_size</find>
       <find>adobe</find>
       <find>generate_from_single_font_file</find>
       <find>file_list_txt_true_style</find>
@@ -274,6 +109,7 @@
       <find>style_char_label0_list</find>
       <find>elimina</find>
       <find>EvaluateDataFileLists</find>
+      <find>batch_size</find>
     </findStrings>
     <replaceStrings>
       <replace>Batch_StyleFeature_Discrimination_Penalty</replace>
@@ -334,30 +170,24 @@
         <option value="$PROJECT_DIR$/model/wnet_forInferring.py" />
         <option value="$PROJECT_DIR$/model/wnet.py" />
         <option value="$PROJECT_DIR$/dataset/dataset.py" />
-        <option value="$PROJECT_DIR$/DebugScripts/evaluate_debug.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/Find_Related_DataList_Script.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/Tmp.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/Pf50_SingleContent_InferEval_Script.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/Hw50_SingleContent_InferEval_Script.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_InferEval_Script.py" />
-        <option value="$PROJECT_DIR$/model/wnet_forEvaluation.py" />
         <option value="$PROJECT_DIR$/DebugScripts/inferEval_debug.py" />
         <option value="$PROJECT_DIR$/utilities/infer_implementations.py" />
         <option value="$PROJECT_DIR$/model/wnet_forInferEval.py" />
+        <option value="$PROJECT_DIR$/DebugScripts/evaluate_debug.py" />
+        <option value="$PROJECT_DIR$/model/wnet_forEvaluation.py" />
       </list>
     </option>
   </component>
-  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsGulpfileManager">
-    <detection-done>true</detection-done>
-    <sorting>DEFINITION_ORDER</sorting>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="51" />
-    <option name="y" value="25" />
-    <option name="width" value="1229" />
-    <option name="height" value="999" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="45" />
+    <option name="y" value="23" />
+    <option name="width" value="1635" />
+    <option name="height" value="1027" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -384,7 +214,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -426,6 +255,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -448,11 +278,14 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.inferEval_debug">
+  <component name="RunManager" selected="Python.evaluate_debug">
     <configuration name="Hw50_SingleContent_InferEval_Script" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/EvaluationScripts" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -472,6 +305,9 @@
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/EvaluationScripts" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -584,11 +420,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.evaluate_debug" />
         <item itemvalue="Python.inferEval_debug" />
         <item itemvalue="Python.Hw50_SingleContent_InferEval_Script" />
         <item itemvalue="Python.Pf50_SingleContent_InferEval_Script" />
         <item itemvalue="Python.Tmp" />
-        <item itemvalue="Python.evaluate_debug" />
       </list>
     </recent_temporary>
   </component>
@@ -602,8 +438,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1538386222709</updated>
+      <workItem from="1549342006719" duration="714000" />
     </task>
     <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="714000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -615,16 +455,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="51" y="25" width="1229" height="999" extended-state="6" />
-    <editor active="true" />
+    <frame x="45" y="23" width="1635" height="1027" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76680386" visible="true" weight="0.37278107" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76680386" weight="0.3772756" />
       <window_info id="Structure" order="1" sideWeight="0.23319615" side_tool="true" weight="0.18512256" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.29976302" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.41113743" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.32785088" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32938388" />
@@ -632,15 +471,15 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="11" weight="0.28554502" />
+      <window_info anchor="bottom" id="Python Console" order="11" weight="1.0" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="12" weight="0.32938388" />
       <window_info anchor="bottom" id="Terminal" order="13" weight="0.32938388" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" x="1891" y="159" width="803" height="731" id="SciView" order="3" sideWeight="0.79569894" visible="true" weight="0.4666103" />
+      <window_info anchor="right" x="1891" y="159" width="803" height="731" id="SciView" order="3" sideWeight="0.79569894" weight="0.46641555" />
       <window_info anchor="right" id="Database" order="4" />
-      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.20430107" side_tool="true" weight="0.465765" />
+      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.20430107" side_tool="true" visible="true" weight="0.46516007" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76680386" visible="true" weight="0.098719314" />
@@ -671,9 +510,6 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
-  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -694,7 +530,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/utilities/infer_implementations.py</url>
-          <line>592</line>
+          <line>608</line>
           <option name="timeStamp" value="157" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -749,12 +585,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/wnet_forInferring.py</url>
-          <line>349</line>
+          <line>350</line>
           <option name="timeStamp" value="518" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/wnet_forInferring.py</url>
-          <line>378</line>
+          <line>379</line>
           <option name="timeStamp" value="522" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -778,23 +614,13 @@
           <option name="timeStamp" value="734" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/wnet_forEvaluation.py</url>
-          <line>1010</line>
-          <option name="timeStamp" value="756" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script.py</url>
           <line>285</line>
           <option name="timeStamp" value="759" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/wnet_forEvaluation.py</url>
-          <line>858</line>
-          <option name="timeStamp" value="776" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/StyleInferScripts/Infer_StyleHw50_ContentHw32Pf32.py</url>
-          <line>121</line>
+          <line>100</line>
           <option name="timeStamp" value="780" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -809,7 +635,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/utilities/infer_implementations.py</url>
-          <line>165</line>
+          <line>163</line>
           <option name="timeStamp" value="880" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -831,6 +657,11 @@
           <url>file://$PROJECT_DIR$/model/wnet_forInferEval.py</url>
           <line>365</line>
           <option name="timeStamp" value="893" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/wnet_forEvaluation.py</url>
+          <line>909</line>
+          <option name="timeStamp" value="916" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -1018,13 +849,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DebugScripts/evaluate_debug.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="248" column="69" selection-start-line="242" selection-start-column="4" selection-end-line="248" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
@@ -1042,20 +866,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/EvaluationScripts/Tmp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="900">
-          <caret line="56" column="32" selection-start-line="56" selection-start-column="32" selection-end-line="56" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/platform/app.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="817">
-          <caret line="124" selection-start-line="124" selection-end-line="124" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/EvaluationScripts/Tmp.py" />
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/platform/app.py" />
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Hw50_SingleContent_Eval_Script.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="594">
@@ -1096,27 +908,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/wnet_forEvaluation.py">
+    <entry file="file://$PROJECT_DIR$/model/wnet_forInferEval.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1115">
-          <caret line="927" column="129" selection-start-line="927" selection-start-column="129" selection-end-line="927" selection-end-column="129" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DebugScripts/inferEval_debug.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1026">
-          <caret line="63" column="36" selection-start-line="63" selection-start-column="36" selection-end-line="63" selection-end-column="36" />
+        <state relative-caret-position="682">
+          <caret line="375" column="68" selection-start-line="365" selection-start-column="8" selection-end-line="375" selection-end-column="68" />
+          <folding>
+            <element signature="e#24#62#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="802">
-          <caret line="647" column="50" lean-forward="true" selection-start-line="620" selection-start-column="4" selection-end-line="647" selection-end-column="50" />
+        <state relative-caret-position="10215">
+          <caret line="685" lean-forward="true" selection-start-line="685" selection-end-line="685" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <marker date="1549027872607" expanded="true" signature="34232:34239" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1124,17 +931,28 @@
     <entry file="file://$PROJECT_DIR$/utilities/infer_implementations.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="122">
-          <caret line="201" column="57" selection-start-line="201" selection-start-column="57" selection-end-line="201" selection-end-column="57" />
+          <caret line="217" selection-start-line="217" selection-end-line="217" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/wnet_forInferEval.py">
+    <entry file="file://$PROJECT_DIR$/DebugScripts/inferEval_debug.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="714">
-          <caret line="375" column="68" selection-start-line="365" selection-start-column="8" selection-end-line="375" selection-end-column="68" />
-          <folding>
-            <element signature="e#24#62#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="835">
+          <caret line="63" column="36" selection-start-line="63" selection-start-column="36" selection-end-line="63" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/wnet_forEvaluation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="538">
+          <caret line="47" column="16" selection-start-line="47" selection-start-column="16" selection-end-line="47" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DebugScripts/evaluate_debug.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="24" column="33" selection-start-line="24" selection-start-column="33" selection-end-line="24" selection-end-column="33" />
         </state>
       </provider>
     </entry>

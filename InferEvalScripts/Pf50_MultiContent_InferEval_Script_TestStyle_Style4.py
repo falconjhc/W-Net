@@ -17,21 +17,55 @@ data_root = '/home/harric/ChineseCharacterExp/'
 
 
 # W-Net
+#evaluating_generator_dir=\
+#    'tfModels2019_WNet/checkpoint/Exp20190129-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-DenseMixer-AdaIN-Single_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-DenseMixer-NonAdaIN_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-AdaIN-Multi_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-AdaIN-Single_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-NonAdaIN_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
+
+# Adobe-Net
+# evaluating_generator_dir=\
+#     'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 evaluating_generator_dir=\
-    'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-NonAdaIN_StylePf50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
+    'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+
+# Emd-Net
+# evaluating_generator_dir=\
+#     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-NN-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-NN-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+
+# ResMixer-Net
+# evaluating_generator_dir=\
+#     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-DenseMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-DenseMixer-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-SimpleMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-SimpleMixer-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 
 
 
 style_input_number=4
-save_path = '/Data_HDD/Harric/ChineseCharacterExp/GeneratedResult/Generated_201901/'
+save_path = '/Data_HDD/Harric/ChineseCharacterExp/GeneratedResult/Generated_201901/TestStyle/'
 
 # content prototype setting
 content_data_dir=list()
-content_data_dir.append('CASIA_Dataset/StandardChars/GB2312_L1/')
-content_data_dir.append('CASIA_Dataset/StandardChars/GB2312_L1/')
+content_data_dir.append('CASIA_Dataset/PrintedData/')
 file_list_txt_content=list()
-file_list_txt_content.append('../TrainTestFileList/StandardChars/Char_0_3754_GB2312L1_Train.txt')
-file_list_txt_content.append('../TrainTestFileList/StandardChars/Char_0_3754_GB2312L1_Test.txt')
+file_list_txt_content.append('../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt')
 
 
 # content to be generated setting
@@ -40,18 +74,15 @@ targeted_content_input_txt='../ContentTxt/ContentChars_BlancaPython_32.txt'
 # style data setting
 style_data_dir=list()
 style_data_dir.append('CASIA_Dataset/PrintedData/GB2312_L1/')
-style_data_dir.append('CASIA_Dataset/PrintedData/GB2312_L1/')
 
 # true style setting
 file_list_txt_true_style=list()
-file_list_txt_true_style.append('./EvaluateDataFileLists/PrintedData/ContentChar_BlancaPython_Font_0_49_GB2312L1.txt')
-file_list_txt_true_style.append('./EvaluateDataFileLists/PrintedData/ContentChar_BlancaPython_Font_50_79_GB2312L1.txt')
+file_list_txt_true_style.append('../EvaluationDataFileLists/PrintedData/ContentChar_BlancaPython_Font_50_79_GB2312L1.txt')
 
 # input style setting
 targeted_style_input_txt='../ContentTxt/StyleChars_Paintings_20.txt'
 file_list_txt_input_style=list()
-file_list_txt_input_style.append('./EvaluateDataFileLists/PrintedData/StyleChar_Paintings_Font_0_49_GB2312L1.txt')
-file_list_txt_input_style.append('./EvaluateDataFileLists/PrintedData/StyleChar_Paintings_Font_50_79_GB2312L1.txt')
+file_list_txt_input_style.append('../EvaluationDataFileLists/PrintedData/StyleChar_Paintings_Font_50_79_GB2312L1.txt')
 
 
 

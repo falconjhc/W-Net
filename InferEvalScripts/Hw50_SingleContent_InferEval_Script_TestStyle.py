@@ -24,7 +24,7 @@ evaluating_generator_dir=\
 
 
 style_input_number=4
-save_path = '/Data_HDD/Harric/ChineseCharacterExp/GeneratedResult/Generated_201901/'
+save_path = '/Data_HDD/Harric/ChineseCharacterExp/GeneratedResult/Generated_201901/TestStyle/'
 
 # content prototype setting
 content_data_dir=list()
@@ -42,23 +42,17 @@ targeted_content_input_txt='../ContentTxt/ContentChars_BlancaPython_32.txt'
 style_data_dir=list()
 style_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/')
 style_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/')
-style_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/')
-style_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/')
 
 # true style setting
 file_list_txt_true_style=list()
-file_list_txt_true_style.append('./EvaluateDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1101_1150_Cursive.txt')
-file_list_txt_true_style.append('./EvaluateDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1101_1150_Isolated.txt')
-file_list_txt_true_style.append('./EvaluateDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1151_1200_Cursive.txt')
-file_list_txt_true_style.append('./EvaluateDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1151_1200_Isolated.txt')
+file_list_txt_true_style.append('../EvaluationDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1151_1200_Cursive.txt')
+file_list_txt_true_style.append('../EvaluationDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1151_1200_Isolated.txt')
 
 # input style setting
 targeted_style_input_txt='../ContentTxt/StyleChars_Paintings_20.txt'
 file_list_txt_input_style=list()
-file_list_txt_input_style.append('./EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
-file_list_txt_input_style.append('./EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
-file_list_txt_input_style.append('./EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Cursive.txt')
-file_list_txt_input_style.append('./EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Isolated.txt')
+file_list_txt_input_style.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Cursive.txt')
+file_list_txt_input_style.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Isolated.txt')
 
 
 

@@ -45,7 +45,7 @@ import math
 import utilities.infer_implementations as inf_tools
 
 STANDARD_GRAYSCALE_THRESHOLD_VALUE = 240
-
+EVAL_ROUNDS = 32
 
 # Auxiliary wrapper classes
 # Used to save handles(important nodes in computation graph) for later evaluation
@@ -402,8 +402,34 @@ class WNet(object):
 
 
         l1_1, mse_1, pdar_1 = calculas(generated, true_style)
-        l1_2, mse_2, pdar_2 = calculas(generated, random_content)
-        l1_3, mse_3, pdar_3 = calculas(generated, random_style)
+        l1_1 = tf.reshape(l1_1,shape=[1,1])
+        mse_1 = tf.reshape(mse_1, shape=[1, 1])
+        pdar_1 = tf.reshape(pdar_1, shape=[1, 1])
+        for ii in range(EVAL_ROUNDS):
+            curt_l1_2, curt_mse_2, curt_pdar_2 = calculas(generated, tf.expand_dims(random_content[:,:,:,ii], axis=3))
+            curt_l1_3, curt_mse_3, curt_pdar_3 = calculas(generated, tf.expand_dims(random_style[:,:,:,ii], axis=3))
+            if ii == 0:
+                l1_2 = tf.reshape(curt_l1_2,shape=[1,1])
+                l1_3 = tf.reshape(curt_l1_3,shape=[1,1])
+                mse_2 = tf.reshape(curt_mse_2,shape=[1,1])
+                mse_3 = tf.reshape(curt_mse_3,shape=[1,1])
+                pdar_2 = tf.reshape(curt_pdar_2, shape=[1,1])
+                pdar_3 = tf.reshape(curt_pdar_3, shape=[1,1])
+            else:
+                l1_2 = tf.concat([l1_2, tf.reshape(curt_l1_2,shape=[1,1])], axis=1)
+                l1_3 = tf.concat([l1_3, tf.reshape(curt_l1_3,shape=[1,1])], axis=1)
+                mse_2 = tf.concat([mse_2, tf.reshape(curt_mse_2,shape=[1,1])], axis=1)
+                mse_3 = tf.concat([mse_3, tf.reshape(curt_mse_3,shape=[1,1])], axis=1)
+                pdar_2 = tf.concat([pdar_2, tf.reshape(curt_pdar_2, shape=[1,1])], axis=1)
+                pdar_3 = tf.concat([pdar_3, tf.reshape(curt_pdar_3, shape=[1,1])], axis=1)
+
+        l1_2 = tf.reshape(tf.reduce_mean(l1_2,axis=1), shape=[1,1])
+        l1_3 = tf.reshape(tf.reduce_mean(l1_3, axis=1), shape=[1, 1])
+        mse_2 = tf.reshape(tf.reduce_mean(mse_2, axis=1), shape=[1, 1])
+        mse_3 = tf.reshape(tf.reduce_mean(mse_3, axis=1), shape=[1, 1])
+        pdar_2 = tf.reshape(tf.reduce_mean(pdar_2, axis=1), shape=[1, 1])
+        pdar_3 = tf.reshape(tf.reduce_mean(pdar_3, axis=1), shape=[1, 1])
+
 
         result = tf.concat([tf.reshape(tf.reduce_mean(l1_1),shape=[1,1]),
                             tf.reshape(tf.reduce_mean(mse_1), shape=[1, 1]),
@@ -530,15 +556,38 @@ class WNet(object):
 
         # content prototype
         content_prototype = data_provider.train_iterator.output_tensor_list[1]
-        selected_index = tf.random_uniform(shape=[], minval=0, maxval=int(content_prototype.shape[3]), dtype=tf.int64)
-        selected_content_prototype = tf.expand_dims(content_prototype[:, :, :, selected_index], axis=3)
-
-        content_prototype_feature_mse_loss_random, content_prototype_feature_vn_loss_random, network_info = \
-            build_feature_extractor(input_true_img=selected_content_prototype,
-                                    input_generated_img=input_generated_img,
-                                    extractor_usage='ContentPrototype_FeatureExtractor',
-                                    output_high_level_features=[1, 2, 3, 4, 5, 6, 7],
-                                    reuse=False)
+        for ii in range(EVAL_ROUNDS):
+            current_selected_index = tf.random_uniform(shape=[],
+                                                       minval=0,
+                                                       maxval=int(content_prototype.shape[3]), dtype=tf.int64)
+            current_selected_content_prototype = tf.expand_dims(content_prototype[:, :, :, current_selected_index], axis=3)
+            if ii ==0:
+                this_reuse = False
+            else:
+                this_reuse = True
+            current_content_prototype_feature_mse_loss_random, \
+            current_content_prototype_feature_vn_loss_random, network_info = \
+                build_feature_extractor(input_true_img=current_selected_content_prototype,
+                                        input_generated_img=input_generated_img,
+                                        extractor_usage='ContentPrototype_FeatureExtractor',
+                                        output_high_level_features=[1, 2, 3, 4, 5, 6, 7],
+                                        reuse=this_reuse)
+            if ii == 0:
+                content_prototype_feature_mse_loss_random = current_content_prototype_feature_mse_loss_random
+                content_prototype_feature_vn_loss_random = current_content_prototype_feature_vn_loss_random
+                selected_content_prototype = current_selected_content_prototype
+            else:
+                content_prototype_feature_mse_loss_random = tf.concat([content_prototype_feature_mse_loss_random,
+                                                                        current_content_prototype_feature_mse_loss_random],
+                                                                       axis=0)
+                content_prototype_feature_vn_loss_random = tf.concat([content_prototype_feature_vn_loss_random,
+                                                                      current_content_prototype_feature_vn_loss_random],
+                                                                     axis=0)
+                selected_content_prototype = tf.concat([selected_content_prototype,
+                                                        current_selected_content_prototype],
+                                                       axis=3)
+        content_prototype_feature_mse_loss_random = tf.reshape(tf.reduce_mean(content_prototype_feature_mse_loss_random, axis=0),[1, 7])
+        content_prototype_feature_vn_loss_random = tf.reshape(tf.reduce_mean(content_prototype_feature_vn_loss_random, axis=0), [1, 5])
         content_prototype_feature_mse_loss_same, content_prototype_feature_vn_loss_same, network_info = \
             build_feature_extractor(input_true_img=data_provider.train_iterator.output_tensor_list[0],
                                     input_generated_img=input_generated_img,
@@ -564,15 +613,36 @@ class WNet(object):
 
         # style reference
         style_reference = data_provider.train_iterator.output_tensor_list[2]
-        selected_index = tf.random_uniform(shape=[], minval=0, maxval=int(style_reference.shape[3]), dtype=tf.int64)
-        selected_style_reference = tf.expand_dims(style_reference[:, :, :, selected_index], axis=3)
+        for ii in range(EVAL_ROUNDS):
+            current_selected_index = tf.random_uniform(shape=[], minval=0, maxval=int(style_reference.shape[3]), dtype=tf.int64)
+            current_selected_style_reference = tf.expand_dims(style_reference[:, :, :, current_selected_index], axis=3)
+            if ii == 0:
+                this_reuse = False
+            else:
+                this_reuse = True
+            current_style_reference_feature_mse_loss_random, \
+            current_style_reference_feature_vn_loss_random, network_info = \
+                build_feature_extractor(input_true_img=current_selected_style_reference,
+                                        input_generated_img=input_generated_img,
+                                        extractor_usage='StyleReference_FeatureExtractor',
+                                        output_high_level_features=[1, 2, 3, 4, 5, 6, 7],
+                                        reuse=this_reuse)
+            if ii == 0:
+                style_reference_feature_mse_loss_random = current_style_reference_feature_mse_loss_random
+                style_reference_feature_vn_loss_random = current_style_reference_feature_vn_loss_random
+                selected_style_reference = current_selected_style_reference
+            else:
+                style_reference_feature_mse_loss_random = tf.concat([style_reference_feature_mse_loss_random,
+                                                                     current_style_reference_feature_mse_loss_random],
+                                                                    axis=0)
+                style_reference_feature_vn_loss_random = tf.concat([style_reference_feature_vn_loss_random,
+                                                                    current_style_reference_feature_vn_loss_random],
+                                                                   axis=0)
+                selected_style_reference = tf.concat([selected_style_reference,current_selected_style_reference],
+                                                     axis=3)
 
-        style_reference_feature_mse_loss_random, style_reference_feature_vn_loss_random, network_info = \
-            build_feature_extractor(input_true_img=selected_style_reference,
-                                    input_generated_img=input_generated_img,
-                                    extractor_usage='StyleReference_FeatureExtractor',
-                                    output_high_level_features=[1, 2, 3, 4, 5, 6, 7],
-                                    reuse=False)
+        style_reference_feature_mse_loss_random = tf.reshape(tf.reduce_mean(style_reference_feature_mse_loss_random, axis=0), [1, 7])
+        style_reference_feature_vn_loss_random = tf.reshape(tf.reduce_mean(style_reference_feature_vn_loss_random, axis=0), [1, 5])
         style_reference_feature_mse_loss_same, style_reference_feature_vn_loss_same, network_info = \
             build_feature_extractor(input_true_img=data_provider.train_iterator.output_tensor_list[0],
                                     input_generated_img=input_generated_img,

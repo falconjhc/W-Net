@@ -31,10 +31,10 @@ data_root = '/home/harric/ChineseCharacterExp/'
 #     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
 
 # Adobe-Net
-# evaluating_generator_dir=\
-#     'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
 evaluating_generator_dir=\
-    'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style4_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
+    'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style4_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
 
 # Emd-Net
 # evaluating_generator_dir=\
@@ -80,23 +80,17 @@ targeted_content_input_txt='../ContentTxt/ContentChars_BlancaPython_32.txt'
 style_data_dir=list()
 style_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/')
 style_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/')
-style_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB2.1/')
-style_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/')
 
 # true style setting
 file_list_txt_true_style=list()
-file_list_txt_true_style.append('./EvaluateDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1101_1150_Cursive.txt')
-file_list_txt_true_style.append('./EvaluateDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1101_1150_Isolated.txt')
-file_list_txt_true_style.append('./EvaluateDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1151_1200_Cursive.txt')
-file_list_txt_true_style.append('./EvaluateDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1151_1200_Isolated.txt')
+file_list_txt_true_style.append('../EvaluationDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1101_1150_Cursive.txt')
+file_list_txt_true_style.append('../EvaluationDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1101_1150_Isolated.txt')
 
 # input style setting
 targeted_style_input_txt='../ContentTxt/StyleChars_Paintings_20.txt'
 file_list_txt_input_style=list()
-file_list_txt_input_style.append('./EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
-file_list_txt_input_style.append('./EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
-file_list_txt_input_style.append('./EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Cursive.txt')
-file_list_txt_input_style.append('./EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Isolated.txt')
+file_list_txt_input_style.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
+file_list_txt_input_style.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
 
 
 

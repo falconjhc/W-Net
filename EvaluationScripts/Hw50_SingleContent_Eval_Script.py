@@ -14,7 +14,7 @@ eps = 1e-9
 
 
 
-data_path_root = '/home/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
 content_known_unknown='Known'
@@ -63,8 +63,8 @@ else:
     known_style_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated_Test.txt')
     known_style_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive_Test.txt')
 known_fixed_style_file_list=list()
-known_fixed_style_file_list.append('../EvaluationScripts/EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
-known_fixed_style_file_list.append('../EvaluationScripts/EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
+known_fixed_style_file_list.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
+known_fixed_style_file_list.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
 
 
 ## unknown style
@@ -76,8 +76,8 @@ else:
     unknown_style_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated_Test.txt')
     unknown_style_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive_Test.txt')
 unknown_fixed_style_file_list=list()
-unknown_fixed_style_file_list.append('../EvaluationScripts/EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Isolated.txt')
-unknown_fixed_style_file_list.append('../EvaluationScripts/EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Cursive.txt')
+unknown_fixed_style_file_list.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Isolated.txt')
+unknown_fixed_style_file_list.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Cursive.txt')
 
 
 input_args = [
