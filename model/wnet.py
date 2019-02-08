@@ -990,7 +990,7 @@ class WNet(object):
             selected_content_prototype = -1
 
         if self.extractor_style_reference_enabled:
-            style_reference = data_provider.train_iterator.output_tensor_list[2]
+            style_reference = data_provider.train_iterator.output_tensor_list[10]
             selected_index = tf.random_uniform(shape=[], minval=0, maxval=int(style_reference.shape[3]), dtype=tf.int64)
             selected_style_reference = tf.expand_dims(style_reference[:, :, :, selected_index], axis=3)
             style_reference_infer_list, style_reference_feature_mse_loss, style_reference_feature_vn_loss, network_info = \
@@ -1726,6 +1726,7 @@ class WNet(object):
                                          augment_train_data=self.train_data_augment,
                                          augment_train_data_flip=self.train_data_augment_flip,
                                          style_input_num=self.style_input_number,
+                                         max_style_reference_loss_num=16,
                                          content_data_dir=self.content_data_dir,
                                          style_train_data_dir=self.style_train_data_dir,
                                          style_validation_data_dir=self.style_validation_data_dir,
@@ -1939,12 +1940,12 @@ class WNet(object):
 
             info=""
 
-            batch_true_style_train,\
-            batch_train_prototype, batch_train_reference, \
-            batch_train_label0_onehot, batch_train_label1_onehot,\
-            batch_train_label0_dense, batch_train_label1_dense, \
-            true_style_threshold_train, content_threshold_train, style_threshold_train= \
-                data_provider.train_iterator.get_next_batch(sess=self.sess)
+            # batch_true_style_train,\
+            # batch_train_prototype, batch_train_reference, \
+            # batch_train_label0_onehot, batch_train_label1_onehot,\
+            # batch_train_label0_dense, batch_train_label1_dense, \
+            # true_style_threshold_train, content_threshold_train, style_threshold_train= \
+            #     data_provider.train_iterator.get_next_batch(sess=self.sess)
             #
             # batch_true_style_val, \
             # batch_val_prototype, batch_val_reference, \

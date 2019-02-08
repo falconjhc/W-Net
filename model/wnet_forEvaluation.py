@@ -816,7 +816,8 @@ class WNet(object):
                                          fixed_style_reference_dir=self.fixed_style_reference_dir,
                                          fixed_file_list_txt_style_reference=self.fixed_file_list_txt_style_reference,
                                          dataset_mode='Eval',
-                                         fixed_char_list_txt=self.fixed_char_list_txt)
+                                         fixed_char_list_txt=self.fixed_char_list_txt,
+                                         max_style_reference_loss_num=128)
 
             self.involved_label0_list, self.involved_label1_list = data_provider.get_involved_label_list()
             self.content_input_num = data_provider.content_input_num
@@ -935,12 +936,12 @@ class WNet(object):
                 for ii in range(len(style_reference_train_list)):
                     feed_dict.update({style_reference_train_list[ii]:current_style_reference_feed_list[ii]})
 
-                tmp_generated, tmp_true, tmp_content, tmp_style_input, tmp_style_loss = \
-                    self.sess.run([generated_batch, data_provider.train_iterator.output_tensor_list[0],
-                                   data_provider.train_iterator.output_tensor_list[1],
-                                   data_provider.train_iterator.output_tensor_list[2],
-                                   data_provider.train_iterator.output_tensor_list[10]],
-                                  feed_dict=feed_dict)
+                # tmp_generated, tmp_true, tmp_content, tmp_style_input, tmp_style_loss = \
+                #     self.sess.run([generated_batch, data_provider.train_iterator.output_tensor_list[0],
+                #                    data_provider.train_iterator.output_tensor_list[1],
+                #                    data_provider.train_iterator.output_tensor_list[2],
+                #                    data_provider.train_iterator.output_tensor_list[10]],
+                #                   feed_dict=feed_dict)
 
                 calculated_mse, calculated_vn, calculated_pixel, label0, label1 = \
                     self.sess.run([mse_difference, vn_difference,pixel_diff,
@@ -970,10 +971,24 @@ class WNet(object):
                     local_time_elapsed = time.time() - local_timer_start
                     avg_elaped_per_round = time_elapsed / (ei * self.itrs_for_current_epoch + iter + 1)
                     time_estimated_remain = avg_elaped_per_round * total_eval_epochs * self.itrs_for_current_epoch - time_elapsed
-                    print("CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%d/%.3fsec, TimerRemain:%.3fhrs"
+                    if time_estimated_remain > 86400:
+                        print("CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%d/%.3fsec, TimerRemain:%.3fdays"
                           % (ei + 1, total_eval_epochs,
                              iter + 1, self.itrs_for_current_epoch,
-                             local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 3600))
+                             local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 86400))
+                    elif time_estimated_remain > 3600:
+                        print(
+                            "CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%d/%.3fsec, TimerRemain:%.3fhrs"
+                            % (ei + 1, total_eval_epochs,
+                               iter + 1, self.itrs_for_current_epoch,
+                               local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 3600))
+                    else:
+                        print(
+                            "CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%d/%.3fsec, TimerRemain:%.3fmins"
+                            % (ei + 1, total_eval_epochs,
+                               iter + 1, self.itrs_for_current_epoch,
+                               local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 60))
+
                     print("------------------------------------------------------------------------")
                     print("FeatureDiffMSE:")
                     print("------------------------------------------------------------------------")

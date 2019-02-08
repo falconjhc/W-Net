@@ -20,7 +20,6 @@ import scipy.misc as misc
 STANDARD_GRAYSCALE_THRESHOLD_VALUE = 240
 ALTERNATE_GRAYSCALE_LOW=170
 ALTERNATE_GRAYSCALE_HGH=250
-MAX_STYLE_REFERENCE_NUM = 16
 
 GRAYSCALE_AVG = 127.5
 class Dataset(object):
@@ -76,7 +75,7 @@ class Dataset_Iterator(object):
                  input_width, input_channel,
                  true_style,
                  style_reference_list,content_prototype_list,loss_style_reference_list,
-                 info_print_interval,print_marks,content_input_number_actual,
+                 info_print_interval,print_marks,content_input_number_actual,max_style_reference_loss_num,
                  augment=False,augment_flip=False,train_iterator_mark=False,
                  label0_vec=-1,label1_vec=-1,debug_mode=False,
                  ):
@@ -86,6 +85,7 @@ class Dataset_Iterator(object):
         self.true_style = true_style
         self.style_reference_list = style_reference_list
         self.loss_style_reference_list = loss_style_reference_list
+        self.max_style_reference_loss_num=max_style_reference_loss_num
 
         self.thread_num = thread_num
         self.augment = augment
@@ -469,7 +469,7 @@ class Dataset_Iterator(object):
 
 
         # for loss style references
-        if len(self.loss_style_reference_list)==MAX_STYLE_REFERENCE_NUM:
+        if len(self.loss_style_reference_list)==self.max_style_reference_loss_num:
             loss_reference_iterator_list = list()
             loss_reference_data_list_input_op_list = list()
             loss_reference_label0_list_input_op_list = list()
@@ -518,7 +518,7 @@ class Dataset_Iterator(object):
         if self.augment:
             # image random translation
             img_all = tf.concat([true_style_img_tensor, all_prototype_tensor, all_reference_tensor], axis=3)
-            if len(self.loss_style_reference_list) == MAX_STYLE_REFERENCE_NUM:
+            if len(self.loss_style_reference_list) == self.max_style_reference_loss_num:
                 img_all = tf.concat([img_all,all_loss_reference_tensor], axis=3)
             img_all_shape = img_all.shape
             for ii in range(self.batch_size):
@@ -556,7 +556,7 @@ class Dataset_Iterator(object):
             if len(self.loss_style_reference_list) == 0:
                 all_reference_tensor = img_all[:,:,:,int(all_prototype_tensor.shape[3])+1:]
                 all_loss_reference_tensor = -1
-            elif len(self.loss_style_reference_list) == MAX_STYLE_REFERENCE_NUM:
+            elif len(self.loss_style_reference_list) == self.max_style_reference_loss_num:
                 all_reference_tensor = img_all[:, :, :,
                                        int(all_prototype_tensor.shape[3]) + 1:
                                        int(all_prototype_tensor.shape[3]) + self.style_input_num + 1 ]
@@ -612,6 +612,7 @@ class DataProvider(object):
                  info_print_interval,
                  file_list_txt_content, file_list_txt_style_train, file_list_txt_style_validation,
                  content_data_dir, style_train_data_dir,style_validation_data_dir,content_input_number_actual=0,
+                 max_style_reference_loss_num=-1,
                  augment_train_data=False,
                  augment_train_data_flip=False,
                  debug_mode=False,
@@ -634,6 +635,7 @@ class DataProvider(object):
         self.input_filters = input_filters
         self.style_input_num=style_input_num
         self.content_input_number_actual=content_input_number_actual
+        self.max_style_reference_loss_num=max_style_reference_loss_num
         self.dataset_iterator_create(content_data_dir=content_data_dir,
                                      file_list_txt_content=file_list_txt_content,
                                      style_train_data_dir=style_train_data_dir,
@@ -859,27 +861,27 @@ class DataProvider(object):
                                           info_print_interval=info_print_interval)
             train_style_reference_list.append(train_style_dataset)
 
-        if dataset_mode=='Eval':
-            loss_style_reference_list = list()
-            for ii in range(MAX_STYLE_REFERENCE_NUM):
-                loss_style_dataset = Dataset(data_list=cpy.deepcopy(train_style_data_path_list),
-                                              label0_list=cpy.deepcopy(train_style_label0_list),
-                                              label1_list=cpy.deepcopy(train_style_label1_list),
-                                              sorted_by_label0=False,
-                                              print_marks='ForStyleReferenceTrainData_Loss&Evaluation:',
-                                              info_print_interval=info_print_interval)
-                loss_style_reference_list.append(loss_style_dataset)
-        else:
-            loss_style_reference_list = []
-        # loss_style_reference_list = list()
-        # for ii in range(MAX_STYLE_REFERENCE_NUM):
-        #     loss_style_dataset = Dataset(data_list=cpy.deepcopy(train_style_data_path_list),
-        #                                  label0_list=cpy.deepcopy(train_style_label0_list),
-        #                                  label1_list=cpy.deepcopy(train_style_label1_list),
-        #                                  sorted_by_label0=False,
-        #                                  print_marks='ForStyleReferenceTrainData_Loss&Evaluation:',
-        #                                  info_print_interval=info_print_interval)
-        #     loss_style_reference_list.append(loss_style_dataset)
+        # if dataset_mode=='Eval':
+        #     loss_style_reference_list = list()
+        #     for ii in range(self.max_style_reference_loss_num):
+        #         loss_style_dataset = Dataset(data_list=cpy.deepcopy(train_style_data_path_list),
+        #                                       label0_list=cpy.deepcopy(train_style_label0_list),
+        #                                       label1_list=cpy.deepcopy(train_style_label1_list),
+        #                                       sorted_by_label0=False,
+        #                                       print_marks='ForStyleReferenceTrainData_Loss&Evaluation:',
+        #                                       info_print_interval=info_print_interval)
+        #         loss_style_reference_list.append(loss_style_dataset)
+        # else:
+        #     loss_style_reference_list = []
+        loss_style_reference_list = list()
+        for ii in range(self.max_style_reference_loss_num):
+            loss_style_dataset = Dataset(data_list=cpy.deepcopy(train_style_data_path_list),
+                                         label0_list=cpy.deepcopy(train_style_label0_list),
+                                         label1_list=cpy.deepcopy(train_style_label1_list),
+                                         sorted_by_label0=False,
+                                         print_marks='ForStyleReferenceTrainData_Loss&Evaluation:',
+                                         info_print_interval=info_print_interval)
+            loss_style_reference_list.append(loss_style_dataset)
 
         # building for true style data set for train
         train_true_style_dataset = Dataset(data_list=cpy.deepcopy(train_style_data_path_list),
@@ -898,6 +900,7 @@ class DataProvider(object):
                                                style_reference_list=cpy.deepcopy(train_style_reference_list),
                                                content_prototype_list=cpy.deepcopy(content_prototype_list),
                                                loss_style_reference_list=cpy.deepcopy(loss_style_reference_list),
+                                               max_style_reference_loss_num =  self.max_style_reference_loss_num,
                                                augment=self.augment_train_data,
                                                augment_flip=self.augment_train_data_flip,
                                                style_input_num=self.style_input_num,
@@ -945,7 +948,8 @@ class DataProvider(object):
                                                       true_style=validation_true_style_dataset,
                                                       style_reference_list=cpy.deepcopy(validation_style_reference_list),
                                                       content_prototype_list=cpy.deepcopy(content_prototype_list),
-                                                      loss_style_reference_list=cpy.deepcopy(loss_style_reference_list),
+                                                      loss_style_reference_list=list(),
+                                                      max_style_reference_loss_num=-1,
                                                       augment=False,
                                                       augment_flip=False,
                                                       style_input_num=self.style_input_num,

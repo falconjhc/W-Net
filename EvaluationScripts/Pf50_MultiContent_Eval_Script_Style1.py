@@ -14,7 +14,7 @@ eps = 1e-9
 
 
 
-data_path_root = '/DataA/Harric/ChineseCharacterExp/'
+data_path_root = '/home/harric/ChineseCharacterExp/'
 model_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
 content_known_unknown='Known'
@@ -39,28 +39,18 @@ evaluation_resule_save_dir = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/Ev
 # Adobe-Net
 evaluating_generator_dir=\
     'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
-# evaluating_generator_dir=\
-#     'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 
 # Emd-Net
 # evaluating_generator_dir=\
 #     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-NN-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
-#     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-NN-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
-# evaluating_generator_dir=\
 #     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
-# evaluating_generator_dir=\
-#     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 
 # ResMixer-Net
 # evaluating_generator_dir=\
 #     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-DenseMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
-#     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-DenseMixer-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
-# evaluating_generator_dir=\
 #     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-SimpleMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
-# evaluating_generator_dir=\
-#     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-SimpleMixer-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 
 
 
