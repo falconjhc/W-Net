@@ -118,7 +118,7 @@ input_args = [
     '--feature_extractor_device','/device:GPU:0',
 
     '--fixed_char_list_txt',
-    '../ContentTxt/StyleChars_Paintings.txt',
+    '../ContentTxt/StyleChars_Paintings_20.txt',
 
 
     # generator

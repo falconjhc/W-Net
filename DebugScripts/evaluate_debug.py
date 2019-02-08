@@ -61,16 +61,16 @@ unknown_content_file_list.append('../TrainTestFileList/PrintedData/Char_0_3754_W
 known_style_file_list=list()
 known_style_file_list.append('../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt')
 known_fixed_style_file_list=list()
-known_fixed_style_file_list.append('../EvaluationScripts/EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
-known_fixed_style_file_list.append('../EvaluationScripts/EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
+known_fixed_style_file_list.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
+known_fixed_style_file_list.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
 
 
 ## unknown style
 unknown_style_file_list=list()
 unknown_style_file_list.append('../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt')
 unknown_fixed_style_file_list=list()
-unknown_fixed_style_file_list.append('../EvaluationScripts/EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
-unknown_fixed_style_file_list.append('../EvaluationScripts/EvaluateDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
+unknown_fixed_style_file_list.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
+unknown_fixed_style_file_list.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
 
 
 

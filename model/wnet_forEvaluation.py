@@ -423,24 +423,39 @@ class WNet(object):
                 pdar_2 = tf.concat([pdar_2, tf.reshape(curt_pdar_2, shape=[1,1])], axis=1)
                 pdar_3 = tf.concat([pdar_3, tf.reshape(curt_pdar_3, shape=[1,1])], axis=1)
 
-        l1_2 = tf.reshape(tf.reduce_mean(l1_2,axis=1), shape=[1,1])
-        l1_3 = tf.reshape(tf.reduce_mean(l1_3, axis=1), shape=[1, 1])
-        mse_2 = tf.reshape(tf.reduce_mean(mse_2, axis=1), shape=[1, 1])
-        mse_3 = tf.reshape(tf.reduce_mean(mse_3, axis=1), shape=[1, 1])
-        pdar_2 = tf.reshape(tf.reduce_mean(pdar_2, axis=1), shape=[1, 1])
-        pdar_3 = tf.reshape(tf.reduce_mean(pdar_3, axis=1), shape=[1, 1])
+        # l1_2 = tf.reduce_mean(l1_2,axis=1)
+        # l1_3 = tf.reduce_mean(l1_3, axis=1)
+        # mse_2 = tf.reduce_mean(mse_2, axis=1)
+        # mse_3 = tf.reduce_mean(mse_3, axis=1)
+        # pdar_2 =tf.reduce_mean(pdar_2, axis=1)
+        # pdar_3 = tf.reduce_mean(pdar_3, axis=1)
+
+        l1_2_mean, l1_2_var = tf.nn.moments(l1_2,axes=[1])
+        l1_3_mean, l1_3_var = tf.nn.moments(l1_3, axes=[1])
+        mse_2_mean, mse_2_var = tf.nn.moments(mse_2, axes=[1])
+        mse_3_mean, mse_3_var = tf.nn.moments(mse_3, axes=[1])
+        pdar_2_mean, pdar_2_var = tf.nn.moments(pdar_2, axes=[1])
+        pdar_3_mean, pdar_3_var = tf.nn.moments(pdar_3, axes=[1])
+
+        l1_2_mean=tf.reshape(l1_2_mean,shape=[1,1])
+        l1_2_var = tf.reshape(tf.sqrt(l1_2_var+eps), shape=[1, 1])
+        l1_3_mean = tf.reshape(l1_3_mean, shape=[1, 1])
+        l1_3_var = tf.reshape(tf.sqrt(l1_3_var+eps), shape=[1, 1])
+        mse_2_mean = tf.reshape(mse_2_mean, shape=[1, 1])
+        mse_2_var = tf.reshape(tf.sqrt(mse_2_var+eps), shape=[1, 1])
+        mse_3_mean = tf.reshape(mse_3_mean, shape=[1, 1])
+        mse_3_var = tf.reshape(tf.sqrt(mse_3_var+eps), shape=[1, 1])
+        pdar_2_mean = tf.reshape(pdar_2_mean, shape=[1, 1])
+        pdar_2_var = tf.reshape(tf.sqrt(pdar_2_var+eps), shape=[1, 1])
+        pdar_3_mean = tf.reshape(pdar_3_mean, shape=[1, 1])
+        pdar_3_var = tf.reshape(tf.sqrt(pdar_3_var+eps), shape=[1, 1])
 
 
-        result = tf.concat([tf.reshape(tf.reduce_mean(l1_1),shape=[1,1]),
-                            tf.reshape(tf.reduce_mean(mse_1), shape=[1, 1]),
-                            tf.reshape(tf.reduce_mean(pdar_2), shape=[1, 1]),
-                            tf.reshape(tf.reduce_mean(l1_2), shape=[1, 1]),
-                            tf.reshape(tf.reduce_mean(mse_2), shape=[1, 1]),
-                            tf.reshape(tf.reduce_mean(pdar_2), shape=[1, 1]),
-                            tf.reshape(tf.reduce_mean(l1_3), shape=[1, 1]),
-                            tf.reshape(tf.reduce_mean(mse_3), shape=[1, 1]),
-                            tf.reshape(tf.reduce_mean(pdar_3), shape=[1, 1])],
-                           axis=1)
+        result = tf.concat([tf.concat([l1_1, tf.zeros(shape=[1,1],dtype=tf.float32),
+                                       mse_1, tf.zeros(shape=[1,1],dtype=tf.float32),
+                                       pdar_1, tf.zeros(shape=[1,1],dtype=tf.float32)], axis=1),
+                           tf.concat([l1_2_mean, l1_2_var, mse_2_mean, mse_2_var, pdar_2_mean, pdar_2_var], axis=1),
+                           tf.concat([l1_3_mean, l1_3_var, mse_3_mean, mse_3_var, pdar_3_mean, pdar_3_var], axis=1)], axis=0)
 
 
 
@@ -496,8 +511,6 @@ class WNet(object):
                         feature_vn_diff = vn_loss
                     else:
                         feature_vn_diff = tf.concat([feature_vn_diff, vn_loss], axis=1)
-
-
 
             return feature_mse_diff, feature_vn_diff
 
@@ -586,18 +599,27 @@ class WNet(object):
                 selected_content_prototype = tf.concat([selected_content_prototype,
                                                         current_selected_content_prototype],
                                                        axis=3)
-        content_prototype_feature_mse_loss_random = tf.reshape(tf.reduce_mean(content_prototype_feature_mse_loss_random, axis=0),[1, 7])
-        content_prototype_feature_vn_loss_random = tf.reshape(tf.reduce_mean(content_prototype_feature_vn_loss_random, axis=0), [1, 5])
+        #content_prototype_feature_mse_loss_random_mean = tf.reshape(tf.reduce_mean(content_prototype_feature_mse_loss_random, axis=0),[1, 7])
+        #content_prototype_feature_vn_loss_random_mean = tf.reshape(tf.reduce_mean(content_prototype_feature_vn_loss_random, axis=0), [1, 5])
+        content_prototype_feature_mse_loss_random_mean, \
+        content_prototype_feature_mse_loss_random_var = \
+            tf.nn.moments(content_prototype_feature_mse_loss_random, axes=[0])
+        content_prototype_feature_vn_loss_random_mean, \
+        content_prototype_feature_vn_loss_random_var = \
+            tf.nn.moments(content_prototype_feature_vn_loss_random, axes=[0])
+        content_prototype_feature_mse_loss_random_mean = tf.reshape(content_prototype_feature_mse_loss_random_mean, shape=[1,7])
+        content_prototype_feature_mse_loss_random_var = tf.reshape(tf.sqrt(content_prototype_feature_mse_loss_random_var+eps), shape=[1, 7])
+        content_prototype_feature_vn_loss_random_mean = tf.reshape(content_prototype_feature_vn_loss_random_mean, shape=[1, 5])
+        content_prototype_feature_vn_loss_random_var = tf.reshape(tf.sqrt(content_prototype_feature_vn_loss_random_var+eps), shape=[1, 5])
         content_prototype_feature_mse_loss_same, content_prototype_feature_vn_loss_same, network_info = \
             build_feature_extractor(input_true_img=data_provider.train_iterator.output_tensor_list[0],
                                     input_generated_img=input_generated_img,
                                     extractor_usage='ContentPrototype_FeatureExtractor',
                                     output_high_level_features=[1, 2, 3, 4, 5, 6, 7],
                                     reuse=True)
-
-        mse_difference = tf.concat([mse_difference,content_prototype_feature_mse_loss_random],axis=0)
+        mse_difference = tf.concat([mse_difference, content_prototype_feature_mse_loss_random_mean, content_prototype_feature_mse_loss_random_var],axis=0)
         mse_difference = tf.concat([mse_difference, content_prototype_feature_mse_loss_same], axis=0)
-        vn_difference = tf.concat([vn_difference, content_prototype_feature_vn_loss_random], axis=0)
+        vn_difference = tf.concat([vn_difference, content_prototype_feature_vn_loss_random_mean, content_prototype_feature_vn_loss_random_var], axis=0)
         vn_difference = tf.concat([vn_difference, content_prototype_feature_vn_loss_same], axis=0)
 
 
@@ -641,8 +663,18 @@ class WNet(object):
                 selected_style_reference = tf.concat([selected_style_reference,current_selected_style_reference],
                                                      axis=3)
 
-        style_reference_feature_mse_loss_random = tf.reshape(tf.reduce_mean(style_reference_feature_mse_loss_random, axis=0), [1, 7])
-        style_reference_feature_vn_loss_random = tf.reshape(tf.reduce_mean(style_reference_feature_vn_loss_random, axis=0), [1, 5])
+        # style_reference_feature_mse_loss_random = tf.reshape(tf.reduce_mean(style_reference_feature_mse_loss_random, axis=0), [1, 7])
+        # style_reference_feature_vn_loss_random = tf.reshape(tf.reduce_mean(style_reference_feature_vn_loss_random, axis=0), [1, 5])
+        style_reference_feature_mse_loss_random_mean, \
+        style_reference_feature_mse_loss_random_var = \
+            tf.nn.moments(style_reference_feature_mse_loss_random, axes=[0])
+        style_reference_feature_vn_loss_random_mean, \
+        style_reference_feature_vn_loss_random_var = \
+            tf.nn.moments(style_reference_feature_vn_loss_random, axes=[0])
+        style_reference_feature_mse_loss_random_mean = tf.reshape(style_reference_feature_mse_loss_random_mean, shape=[1, 7])
+        style_reference_feature_mse_loss_random_var = tf.reshape(tf.sqrt(style_reference_feature_mse_loss_random_var+eps), shape=[1, 7])
+        style_reference_feature_vn_loss_random_mean = tf.reshape(style_reference_feature_vn_loss_random_mean, shape=[1, 5])
+        style_reference_feature_vn_loss_random_var = tf.reshape(tf.sqrt(style_reference_feature_vn_loss_random_var+eps), shape=[1, 5])
         style_reference_feature_mse_loss_same, style_reference_feature_vn_loss_same, network_info = \
             build_feature_extractor(input_true_img=data_provider.train_iterator.output_tensor_list[0],
                                     input_generated_img=input_generated_img,
@@ -650,9 +682,9 @@ class WNet(object):
                                     output_high_level_features=[1, 2, 3, 4, 5, 6, 7],
                                     reuse=True)
 
-        mse_difference = tf.concat([mse_difference, style_reference_feature_mse_loss_random], axis=0)
+        mse_difference = tf.concat([mse_difference, style_reference_feature_mse_loss_random_mean, style_reference_feature_mse_loss_random_var], axis=0)
         mse_difference = tf.concat([mse_difference, style_reference_feature_mse_loss_same], axis=0)
-        vn_difference = tf.concat([vn_difference, style_reference_feature_vn_loss_random], axis=0)
+        vn_difference = tf.concat([vn_difference, style_reference_feature_vn_loss_random_mean, style_reference_feature_vn_loss_random_var], axis=0)
         vn_difference = tf.concat([vn_difference, style_reference_feature_vn_loss_same], axis=0)
 
         extr_vars_style_reference = [var for var in tf.trainable_variables() if
@@ -850,8 +882,7 @@ class WNet(object):
             raw_input("Press enter to continue")
         print(self.print_separater)
 
-
-
+        #total_eval_epochs=3
         for ei in range(total_eval_epochs):
             current_fixed_style_reference_img_list = \
                 data_provider.train_iterator.fixed_style_reference_image_list[ei*self.style_input_number:(ei+1)*self.style_input_number]
@@ -866,6 +897,7 @@ class WNet(object):
 
 
             added_num = 0
+            #self.itrs_for_current_epoch=2
             for iter in range(self.itrs_for_current_epoch):
                 local_timer_start = time.time()
                 if not iter == self.itrs_for_current_epoch-1:
@@ -878,6 +910,8 @@ class WNet(object):
                         added_num = self.batch_size-len(current_batch_label1)
                         current_batch_label1_added = data_provider.train_iterator.true_style.label1_list[0:added_num]
                         current_batch_label1.extend(current_batch_label1_added)
+                # current_batch_label1 = data_provider.train_iterator.true_style.label1_list[iter * self.batch_size:
+                #                                                                            (iter + 1) * self.batch_size]
 
 
                 current_style_reference_feed_list = list()
@@ -907,6 +941,10 @@ class WNet(object):
                 #     self.sess.run([generated_batch, true_style,random_selected_content, random_selected_style],
                 #                   feed_dict=feed_dict)
 
+                # tmp_style_output, tmp_content_out, tmp_l1_2_out, tmp_l1_3_out\
+                #     = self.sess.run([tmp_style, tmp_content, tmp_l1_2, tmp_l1_3],
+                #                                                   feed_dict=feed_dict)
+
                 calculated_mse, calculated_vn, calculated_pixel, label0, label1 = \
                     self.sess.run([mse_difference, vn_difference,pixel_diff,
                                    data_provider.train_iterator.output_tensor_list[5],
@@ -925,72 +963,11 @@ class WNet(object):
                 else:
                     full_mse = full_mse + calculated_mse
                     full_vn = full_vn + calculated_vn
-                    full_pixel = full_pixel + calculated_pixel
+                    full_pixel =  full_pixel + calculated_pixel
 
 
                 if time.time()-info_timer_start>self.print_info_seconds:
                     info_timer_start=time.time()
-
-
-
-                    current_epoch_str = "Epoch:%d/%d, Iteration:%d/%d for Style Reference Chars: " % (ei+1, total_eval_epochs,
-                                                                                                      iter + 1, self.itrs_for_current_epoch)
-                    # for char in current_fixed_style_reference_char_list:
-                    #     current_epoch_str = current_epoch_str + char
-                    # current_epoch_str=current_epoch_str+":"
-                    print(current_epoch_str)
-                    print("FeatureDiffMSE:")
-                    print("------------------------------------------------------------------------")
-                    for ii in range(full_mse.shape[0]):
-                        for jj in range(full_mse.shape[1]):
-                            if jj == 0:
-                                if ii == 0:
-                                    prefix = "TrueFake     :"
-                                elif ii == 1:
-                                    prefix = 'ContentRandom:'
-                                elif ii == 2:
-                                    prefix = 'ContentSame  :'
-                                elif ii == 3:
-                                    prefix = 'StyleRandom  :'
-                                elif ii == 4:
-                                    prefix = 'StyleSame    :'
-                                print_str_line = prefix+"|%3.5f|" % (full_mse[ii][jj]/((iter+1)*self.batch_size))
-                            else:
-                                print_str_line = print_str_line + "%3.5f|" % (full_mse[ii][jj]/((iter+1)*self.batch_size))
-                        print(print_str_line)
-                    print("------------------------------------------------------------------------")
-                    print("FeatureDiffVN:")
-                    print("------------------------------------------------------------------------")
-                    for ii in range(full_vn.shape[0]):
-                        for jj in range(full_vn.shape[1]):
-                            if jj == 0:
-                                if ii == 0:
-                                    prefix = "TrueFake     :"
-                                elif ii == 1:
-                                    prefix = 'ContentRandom:'
-                                elif ii == 2:
-                                    prefix = 'ContentSame  :'
-                                elif ii == 3:
-                                    prefix = 'StyleRandom  :'
-                                elif ii == 4:
-                                    prefix = 'StyleSame    :'
-                                print_str_line = prefix+"|%3.5f|" % (full_vn[ii][jj]/((iter+1)*self.batch_size))
-                            else:
-                                print_str_line = print_str_line + "%3.5f|" % (full_vn[ii][jj]/((iter+1)*self.batch_size))
-                        print(print_str_line)
-                    print("------------------------------------------------------------------------")
-                    print("PixelDiff:")
-                    print("----------------------------------------------------------------------------------------------------------------")
-                    print("||   L1-Sm   |  MSE-Sm   |  PDAR-Sm  | L1-RdmCtn | MSE-RdmCtn|PDAR-RdmCtn| L1-RdmSty | MSE-RdmSty|PDAR-RdmSty||")
-                    print("----------------------------------------------------------------------------------------------------------------")
-                    print_str_line = '||'
-                    for ii in range(full_pixel.shape[1]):
-                        if ii == full_pixel.shape[1]-1:
-                            print_str_line = print_str_line + "  %.5f  ||" % (full_pixel[0][ii]/((iter+1)*self.batch_size))
-                        else:
-                            print_str_line = print_str_line + "  %.5f  |" % (full_pixel[0][ii]/((iter+1)*self.batch_size))
-                    print(print_str_line)
-                    print("----------------------------------------------------------------------------------------------------------------")
 
                     time_elapsed = time.time() - timer_start
                     local_time_elapsed = time.time() - local_timer_start
@@ -1000,6 +977,78 @@ class WNet(object):
                           % (ei + 1, total_eval_epochs,
                              iter + 1, self.itrs_for_current_epoch,
                              local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 3600))
+                    print("------------------------------------------------------------------------")
+                    print("FeatureDiffMSE:")
+                    print("------------------------------------------------------------------------")
+                    for ii in range(full_mse.shape[0]):
+                        for jj in range(full_mse.shape[1]):
+                            if jj == 0:
+                                if ii == 0:
+                                    prefix = "TrueFake        :"
+                                elif ii == 1:
+                                    prefix = 'ContentRandomAvg:'
+                                elif ii == 2:
+                                    prefix = 'ContentRandomVar:'
+                                elif ii == 3:
+                                    prefix = 'ContentSame     :'
+                                elif ii == 4:
+                                    prefix = 'StyleRandomAvg  :'
+                                elif ii == 5:
+                                    prefix = 'StyleRandomVar  :'
+                                elif ii == 6:
+                                    prefix = 'StyleSame       :'
+                                print_str_line = prefix+"|%3.5f|" % (full_mse[ii][jj]/((iter+1)*self.batch_size))
+                            else:
+                                print_str_line = print_str_line + "%3.5f|" % (full_mse[ii][jj]/((iter+1)*self.batch_size))
+                        print(print_str_line)
+                    print("------------------------------------------------------------------------")
+                    print("------------------------------------------------------------------------")
+                    print("FeatureDiffVN:")
+                    print("------------------------------------------------------------------------")
+                    for ii in range(full_vn.shape[0]):
+                        for jj in range(full_vn.shape[1]):
+                            if jj == 0:
+                                if ii == 0:
+                                    prefix = "TrueFake        :"
+                                elif ii == 1:
+                                    prefix = 'ContentRandomAvg:'
+                                elif ii == 2:
+                                    prefix = 'ContentRandomVar:'
+                                elif ii == 3:
+                                    prefix = 'ContentSame     :'
+                                elif ii == 4:
+                                    prefix = 'StyleRandomAvg  :'
+                                elif ii == 5:
+                                    prefix = 'StyleRandomVar  :'
+                                elif ii == 6:
+                                    prefix = 'StyleSame       :'
+                                print_str_line = prefix+"|%3.5f|" % (full_vn[ii][jj]/((iter+1)*self.batch_size))
+                            else:
+                                print_str_line = print_str_line + "%3.5f|" % (full_vn[ii][jj]/((iter+1)*self.batch_size))
+                        print(print_str_line)
+                    print("------------------------------------------------------------------------")
+                    print("------------------------------------------------------------------------")
+                    print("PixelDiff:")
+                    print("----------------------------------------------------------------------------------------------------------------")
+                    print("                 ||     L1 (Avg+/-Var)    |     MSE (Avg+/-Var)   |    PDAR (Avg+/-Var)   ||")
+                    # print("----------------------------------------------------------------------------------------------------------------")
+
+                    for jj in range(full_pixel.shape[0]):
+                        if jj ==0:
+                            print_str_line = 'SameContentStyle:||'
+                        elif jj==1:
+                            print_str_line = 'RandomContent:   ||'
+                        elif jj == 2:
+                            print_str_line = 'RandomStyle:     ||'
+                        for ii in range(full_pixel.shape[1]):
+                            print_value = full_pixel[jj][ii] / ((iter + 1) * self.batch_size)
+                            if ii == full_pixel.shape[1] - 1:
+                                print_str_line = print_str_line + "  %.5f  ||" % print_value
+                            else:
+                                print_str_line = print_str_line + "  %.5f  |" % print_value
+                        print(print_str_line)
+                    print("----------------------------------------------------------------------------------------------------------------")
+                    print( "----------------------------------------------------------------------------------------------------------------")
 
                     print(self.print_separater)
 
@@ -1007,32 +1056,33 @@ class WNet(object):
 
             full_mse = full_mse / len(data_provider.train_iterator.true_style.data_list)
             full_vn = full_vn / len(data_provider.train_iterator.true_style.data_list)
-            full_pixel = full_pixel / len(data_provider.train_iterator.true_style.data_list)
+            full_pixel= full_pixel / len(data_provider.train_iterator.true_style.data_list)
 
 
             print(self.print_separater)
             print(self.print_separater)
             current_epoch_str = "Epoch:%d/%d Completed for Style Reference Chars: " % (ei + 1, total_eval_epochs)
-            # for char in current_fixed_style_reference_char_list:
-            #     current_epoch_str = current_epoch_str + char
-            # current_epoch_str = current_epoch_str + ":"
             print(current_epoch_str)
             print("FeatureDiffMSE:")
             print("------------------------------------------------------------------------")
             for ii in range(full_mse.shape[0]):
                 for jj in range(full_mse.shape[1]):
-                    if jj == 0:
-                        if ii ==0:
-                            prefix = "TrueFake     :"
-                        elif ii ==1:
-                            prefix = 'ContentRandom:'
-                        elif ii ==2:
-                            prefix = 'ContentSame  :'
+                    if jj ==0:
+                        if ii == 0:
+                            prefix = "TrueFake        :"
+                        elif ii == 1:
+                            prefix = 'ContentRandomAvg:'
+                        elif ii == 2:
+                            prefix = 'ContentRandomVar:'
                         elif ii == 3:
-                            prefix = 'StyleRandom  :'
+                            prefix = 'ContentSame     :'
                         elif ii == 4:
-                            prefix = 'StyleSame    :'
-                        print_str_line = prefix+"|%3.5f|" % (full_mse[ii][jj])
+                            prefix = 'StyleRandomAvg  :'
+                        elif ii == 5:
+                            prefix = 'StyleRandomVar  :'
+                        elif ii == 6:
+                            prefix = 'StyleSame       :'
+                        print_str_line = prefix + "|%3.5f|" % (full_mse[ii][jj])
                     else:
                         print_str_line = print_str_line + "%3.5f|" % (full_mse[ii][jj])
                 print(print_str_line)
@@ -1041,52 +1091,77 @@ class WNet(object):
             print("------------------------------------------------------------------------")
             for ii in range(full_vn.shape[0]):
                 for jj in range(full_vn.shape[1]):
-                    if jj == 0:
+                    if jj ==0:
                         if ii == 0:
-                            prefix = "TrueFake     :"
+                            prefix = "TrueFake        :"
                         elif ii == 1:
-                            prefix = 'ContentRandom:'
+                            prefix = 'ContentRandomAvg:'
                         elif ii == 2:
-                            prefix = 'ContentSame  :'
+                            prefix = 'ContentRandomVar:'
                         elif ii == 3:
-                            prefix = 'StyleRandom  :'
+                            prefix = 'ContentSame     :'
                         elif ii == 4:
-                            prefix = 'StyleSame    :'
+                            prefix = 'StyleRandomAvg  :'
+                        elif ii == 5:
+                            prefix = 'StyleRandomVar  :'
+                        elif ii == 6:
+                            prefix = 'StyleSame       :'
                         print_str_line = prefix+"|%3.5f|" % (full_vn[ii][jj])
                     else:
                         print_str_line = print_str_line + "%3.5f|" % (full_vn[ii][jj])
                 print(print_str_line)
             print("------------------------------------------------------------------------")
             print("PixelDiff:")
+            print(
+                "----------------------------------------------------------------------------------------------------------------")
+            print("                 ||     L1 (Avg+/-Var)    |     MSE (Avg+/-Var)   |    PDAR (Avg+/-Var)   ||")
+            # print("----------------------------------------------------------------------------------------------------------------")
+
+            for jj in range(full_pixel.shape[0]):
+                if jj == 0:
+                    print_str_line = 'SameContentStyle:||'
+                elif jj == 1:
+                    print_str_line = 'RandomContent:   ||'
+                elif jj == 2:
+                    print_str_line = 'RandomStyle:     ||'
+                for ii in range(full_pixel.shape[1]):
+                    print_value = full_pixel[jj][ii]
+                    if ii == full_pixel.shape[1] - 1:
+                        print_str_line = print_str_line + "  %.5f  ||" % print_value
+                    else:
+                        print_str_line = print_str_line + "  %.5f  |" % print_value
+                print(print_str_line)
             print("----------------------------------------------------------------------------------------------------------------")
-            print("||   L1-Sm   |  MSE-Sm   |  PDAR-Sm  | L1-RdmCtn | MSE-RdmCtn|PDAR-RdmCtn| L1-RdmSty | MSE-RdmSty|PDAR-RdmSty||")
-            print("----------------------------------------------------------------------------------------------------------------")
-            print_str_line = '||'
-            for ii in range(full_pixel.shape[1]):
-                if ii == full_pixel.shape[1] - 1:
-                    print_str_line = print_str_line + "  %.5f  ||" % (full_pixel[0][ii])
-                else:
-                    print_str_line = print_str_line + "  %.5f  |" % (full_pixel[0][ii])
-            print(print_str_line)
             print("----------------------------------------------------------------------------------------------------------------")
             print(self.print_separater)
             print(self.print_separater)
 
             if ei==0:
-                mse = full_mse
-                vn = full_vn
-                pixel = full_pixel
+                mse = np.expand_dims(full_mse,axis=0)
+                vn = np.expand_dims(full_vn,axis=0)
+                pixel=np.expand_dims(full_pixel,axis=0)
+
             else:
-                mse += full_mse
-                vn += full_vn
-                pixel += full_pixel
-        mse = mse / total_eval_epochs
-        vn = vn / total_eval_epochs
-        pixel = pixel / total_eval_epochs
+                mse = np.concatenate([mse,np.expand_dims(full_mse,axis=0)],axis=0)
+                vn = np.concatenate([vn,np.expand_dims(full_vn,axis=0)],axis=0)
+                pixel = np.concatenate([pixel, np.expand_dims(full_pixel, axis=0)], axis=0)
+
+        mse_avg = np.mean(mse,axis=0)
+        vn_avg = np.mean(vn, axis=0)
+        pixel_avg = np.mean(pixel, axis=0)
+        mse_std = np.std(mse, axis=0)
+        vn_std = np.std(vn, axis=0)
+        pixel_std = np.std(pixel, axis=0)
+
 
         evaluation_resule_save_dir = os.path.join(self.evaluation_resule_save_dir,self.experiment_id)
         if not os.path.exists(evaluation_resule_save_dir):
             os.makedirs(evaluation_resule_save_dir)
-        np.savetxt(os.path.join(evaluation_resule_save_dir,'MSE.csv'), mse, delimiter=',')
-        np.savetxt(os.path.join(evaluation_resule_save_dir, 'VN.csv'), vn, delimiter=',')
-        np.savetxt(os.path.join(evaluation_resule_save_dir, 'PIXEL.csv'), pixel, delimiter=',')
+        np.savetxt(os.path.join(evaluation_resule_save_dir,'Avg_FeatureMSE.csv'), mse_avg, delimiter=',')
+        np.savetxt(os.path.join(evaluation_resule_save_dir, 'Avg_FeatureVN.csv'), vn_avg, delimiter=',')
+        np.savetxt(os.path.join(evaluation_resule_save_dir, 'Avg_PixelDiff.csv'), pixel_avg, delimiter=',')
+        np.savetxt(os.path.join(evaluation_resule_save_dir, 'Std_FeatureMSE.csv'), mse_std, delimiter=',')
+        np.savetxt(os.path.join(evaluation_resule_save_dir, 'Std_FeatureVN.csv'), vn_std, delimiter=',')
+        np.savetxt(os.path.join(evaluation_resule_save_dir, 'Std_PixelDiff.csv'), pixel_std, delimiter=',')
+        print("Evaluation result saved in:")
+        print(evaluation_resule_save_dir)

@@ -59,7 +59,7 @@ evaluating_generator_dir=\
 
 
 style_input_number=4
-save_path = '/Data_HDD/Harric/ChineseCharacterExp/GeneratedResult/Generated_201901/'
+save_path = '/Data_HDD/Harric/ChineseCharacterExp/GeneratedResult/Generated_201901/TrainStyle/'
 
 # content prototype setting
 content_data_dir=list()

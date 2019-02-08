@@ -88,7 +88,7 @@ input_args = [
 
 
     '--fixed_char_list_txt',
-    '../ContentTxt/StyleChars_Paintings.txt',
+    '../ContentTxt/StyleChars_Paintings_20.txt',
 
 
     # generator

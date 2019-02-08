@@ -330,8 +330,6 @@ class Dataset_Iterator(object):
                               fixed_mask=True)
 
 
-        # output_img_tensor = true_style_img_tensor
-
         self.true_style_iterator = true_style_iterator
         self.true_style_data_list_input_op = true_style_data_list_input_op
         self.true_style_label0_list_input_op = true_style_label0_list_input_op
@@ -626,7 +624,7 @@ class DataProvider(object):
         output_label1_list = list()
         tmp_counter = 0
         for label1 in np.unique(label1_list).tolist():
-            print(label1)
+            #print(label1)
             related_indices = [ii for ii in range(len(label1_list)) if label1_list[ii]==label1]
             for jj in related_indices:
                 current_data = data_list[jj]
