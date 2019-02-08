@@ -14,9 +14,10 @@ eps = 1e-9
 
 
 
-data_path_root = '/DataA/Harric/ChineseCharacterExp/'
-model_log_path_root = '/DataA/Harric/ChineseCharacterExp/'
-
+# data_path_root = '/DataA/Harric/ChineseCharacterExp/'
+# model_log_path_root = '/DataA/Harric/ChineseCharacterExp/'
+data_path_root = '/Users/harric/ChineseCharacterExp/'
+model_log_path_root = '/Users/harric/ChineseCharacterExp/'
 
 # OPTIONS SPECIFICATION
 # resume_training = 0: training from stratch
@@ -27,7 +28,7 @@ input_args = [
     # '--content_input_number_actual','3', # how many actual content inputs
     '--init_training_epochs','1',
     '--final_training_epochs','25',
-    '--adain_use','1-Multi',
+    '--adain_use','0',
 
     '--generator_device','/device:GPU:0',
     '--discriminator_device', '/device:GPU:0',
@@ -40,13 +41,13 @@ input_args = [
     # '--experiment_id','DEBUG-WNet-NonAdaIN-ResidualMixer',# experiment name prefix
     # '--experiment_id','DEBUG-WNet-AdaIN-ResidualMixer',# experiment name prefix
     # '--experiment_id','DEBUG-WNet-NonAdaIN-DenseMixer',# experiment name prefix
-    '--experiment_id','DEBUG-WNet-AdaIN-Multi-DenseMixer',# experiment name prefix
+    # '--experiment_id','DEBUG-WNet-AdaIN-Multi-DenseMixer',# experiment name prefix
     # '--experiment_id','DEBUG-WNet-AdaIN-Single-DenseMixer',# experiment name prefix
     # '--experiment_id','DEBUG-EmdNet-Style4',# experiment name prefix
     # '--experiment_id','DEBUG-EmdNet-Style4-AdaIN',
     # '--experiment_id','DEBUG-ResEmdNet-Style4',
     # '--experiment_id','DEBUG-ResEmdNet-NN-Style4',
-    # '--experiment_id','DEBUG-AdobeNet-Style4',
+    '--experiment_id','DEBUG-AdobeNet-Style4',
     # '--experiment_id','DEBUG-ResMixer-5-SimpleMixer',
     # '--experiment_id','DEBUG-ResMixer-5-DenseMixer',
 
@@ -56,8 +57,7 @@ input_args = [
     '--print_info_seconds','3',
 
     '--content_data_dir', # standard data location
-    'CASIA_Dataset/StandardChars/GB2312_L1/,'
-    'CASIA_Dataset/StandardChars/GB2312_L2/,'
+    'CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/,'
     'CASIA_Dataset/PrintedData_80Fonts/',
 
     '--style_train_data_dir', # training data location
@@ -67,9 +67,8 @@ input_args = [
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
     '--file_list_txt_content', # file list of the standard data
-    '../FileList/StandardChars/Char_0_3754_GB2312L1.txt,'
-    '../FileList/StandardChars/Char_3755_6762_GB2312L2.txt,'
-    '../FileList/PrintedData/Char_0_3754_Font_Selected15_Printed_Fonts_GB2312L1.txt',
+    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt,'
+    '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
 
     '--file_list_txt_style_train', # file list of the training data
     '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt',
@@ -110,11 +109,11 @@ input_args = [
 
     # feature extractor parametrers
     '--true_fake_target_extractor_dir',
-    'TrainedModels_Vgg16/Exp20181226_FeatureExtractor_ContentStyle_HW300Pf80_vgg16net/variables/',
+    'TrainedModels_Vgg16/Exp20190119_FeatureExtractor_ContentStyle_HW300Pf144_vgg16net/',
     '--content_prototype_extractor_dir',
-    'TrainedModels_Vgg16/Exp20181231_FeatureExtractor_Content_PF32HW32_vgg16net/variables/',
+    'TrainedModels_Vgg16/Exp20190119_FeatureExtractor_Content_HW300Pf144_vgg16net/',
     '--style_reference_extractor_dir',
-    'TrainedModels_Vgg16/Exp20181226_FeatureExtractor_Style_HW300Pf80_vgg16net/variables/',
+    'TrainedModels_Vgg16/Exp20190119_FeatureExtractor_Style_HW300Pf144_vgg16net/',
 
     '--Feature_Penalty_True_Fake_Target', '1',
     '--Feature_Penalty_Style_Reference','1',

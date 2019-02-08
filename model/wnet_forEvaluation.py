@@ -599,8 +599,6 @@ class WNet(object):
                 selected_content_prototype = tf.concat([selected_content_prototype,
                                                         current_selected_content_prototype],
                                                        axis=3)
-        #content_prototype_feature_mse_loss_random_mean = tf.reshape(tf.reduce_mean(content_prototype_feature_mse_loss_random, axis=0),[1, 7])
-        #content_prototype_feature_vn_loss_random_mean = tf.reshape(tf.reduce_mean(content_prototype_feature_vn_loss_random, axis=0), [1, 5])
         content_prototype_feature_mse_loss_random_mean, \
         content_prototype_feature_mse_loss_random_var = \
             tf.nn.moments(content_prototype_feature_mse_loss_random, axes=[0])
@@ -634,7 +632,7 @@ class WNet(object):
 
 
         # style reference
-        style_reference = data_provider.train_iterator.output_tensor_list[2]
+        style_reference = data_provider.train_iterator.output_tensor_list[10]
         for ii in range(EVAL_ROUNDS):
             current_selected_index = tf.random_uniform(shape=[], minval=0, maxval=int(style_reference.shape[3]), dtype=tf.int64)
             current_selected_style_reference = tf.expand_dims(style_reference[:, :, :, current_selected_index], axis=3)
@@ -937,13 +935,12 @@ class WNet(object):
                 for ii in range(len(style_reference_train_list)):
                     feed_dict.update({style_reference_train_list[ii]:current_style_reference_feed_list[ii]})
 
-                # tmp0, tmp1, tmp2, tmp3 = \
-                #     self.sess.run([generated_batch, true_style,random_selected_content, random_selected_style],
-                #                   feed_dict=feed_dict)
-
-                # tmp_style_output, tmp_content_out, tmp_l1_2_out, tmp_l1_3_out\
-                #     = self.sess.run([tmp_style, tmp_content, tmp_l1_2, tmp_l1_3],
-                #                                                   feed_dict=feed_dict)
+                tmp_generated, tmp_true, tmp_content, tmp_style_input, tmp_style_loss = \
+                    self.sess.run([generated_batch, data_provider.train_iterator.output_tensor_list[0],
+                                   data_provider.train_iterator.output_tensor_list[1],
+                                   data_provider.train_iterator.output_tensor_list[2],
+                                   data_provider.train_iterator.output_tensor_list[10]],
+                                  feed_dict=feed_dict)
 
                 calculated_mse, calculated_vn, calculated_pixel, label0, label1 = \
                     self.sess.run([mse_difference, vn_difference,pixel_diff,
