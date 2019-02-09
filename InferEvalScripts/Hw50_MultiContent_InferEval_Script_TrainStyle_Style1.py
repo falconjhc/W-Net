@@ -12,10 +12,10 @@ import time
 
 from model.wnet_forInferEval import WNet as WNET
 
-# model_root = '/Data_HDD/Harric/ChineseCharacterExp/'
-# data_root = '/home/harric/ChineseCharacterExp/'
-model_root = '/Users/harric/ChineseCharacterExp/'
-data_root = '/Users/harric/ChineseCharacterExp/'
+model_root = '/Data_HDD/Harric/ChineseCharacterExp/'
+data_root = '/home/harric/ChineseCharacterExp/'
+# model_root = '/Users/harric/ChineseCharacterExp/'
+# data_root = '/Users/harric/ChineseCharacterExp/'
 
 
 # W-Net

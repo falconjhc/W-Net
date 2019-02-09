@@ -259,8 +259,8 @@ class WNet(object):
         self.save_path=save_path
         if os.path.exists(self.save_path) and not (self.save_path == './'):
             shutil.rmtree(self.save_path)
-        # if not self.save_path == './':
-        #     os.makedirs(self.save_path)
+        if not self.save_path == './':
+            os.makedirs(self.save_path)
 
         # for styleadd infer only
         self.targeted_content_input_txt=targeted_content_input_txt
