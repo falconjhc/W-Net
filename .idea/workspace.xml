@@ -4,10 +4,7 @@
     <bookmark url="file://$PROJECT_DIR$/model/generators.py" line="30" mnemonic="9" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/InferEvalScripts/Hw50_MultiContent_InferEval_Script_TrainStyle_Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/InferEvalScripts/Hw50_MultiContent_InferEval_Script_TrainStyle_Style1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/wnet_forInferEval.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet_forInferEval.py" afterDir="false" />
-    </list>
+    <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +63,7 @@
     <splitter split-orientation="horizontal" split-proportion="0.37602007">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/InferEvalScripts/Hw50_MultiContent_InferEval_Script_TrainStyle_Style1.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="150">
@@ -75,10 +72,10 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/model/wnet_forInferEval.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="518">
+                <state relative-caret-position="562">
                   <caret line="262" column="39" lean-forward="true" selection-start-line="261" selection-start-column="8" selection-end-line="262" selection-end-column="39" />
                   <folding>
                     <element signature="e#24#62#0" expanded="true" />
@@ -94,8 +91,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/model/generators.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="382">
-                  <caret line="213" selection-start-line="213" selection-end-line="213" />
+                <state relative-caret-position="202">
+                  <caret line="201" column="38" lean-forward="true" selection-start-line="201" selection-start-column="38" selection-end-line="201" selection-end-column="38" />
                   <folding>
                     <element signature="e#1#24#0" expanded="true" />
                   </folding>
@@ -439,12 +436,12 @@
       <workItem from="1549618146323" duration="1270000" />
       <workItem from="1549621172095" duration="1370000" />
       <workItem from="1549636445931" duration="1586000" />
-      <workItem from="1549687739147" duration="1861000" />
+      <workItem from="1549687739147" duration="2165000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32657000" />
+    <option name="totallyTimeSpent" value="32961000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -465,7 +462,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.29976302" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3475877" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3475877" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32938388" />
@@ -873,19 +870,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/generators.py">
+    <entry file="file://$PROJECT_DIR$/InferEvalScripts/Hw50_MultiContent_InferEval_Script_TrainStyle_Style1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="382">
-          <caret line="213" selection-start-line="213" selection-end-line="213" />
-          <folding>
-            <element signature="e#1#24#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="150">
+          <caret line="16" selection-start-line="16" selection-start-column="2" selection-end-line="17" selection-end-column="50" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model/wnet_forInferEval.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="518">
+        <state relative-caret-position="562">
           <caret line="262" column="39" lean-forward="true" selection-start-line="261" selection-start-column="8" selection-end-line="262" selection-end-column="39" />
           <folding>
             <element signature="e#24#62#0" expanded="true" />
@@ -893,10 +887,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/InferEvalScripts/Hw50_MultiContent_InferEval_Script_TrainStyle_Style1.py">
+    <entry file="file://$PROJECT_DIR$/model/generators.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="16" selection-start-line="16" selection-start-column="2" selection-end-line="17" selection-end-column="50" />
+        <state relative-caret-position="202">
+          <caret line="201" column="38" lean-forward="true" selection-start-line="201" selection-start-column="38" selection-end-line="201" selection-end-column="38" />
+          <folding>
+            <element signature="e#1#24#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
