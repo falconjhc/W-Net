@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style4.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style4.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/wnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/wnet_forEvaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet_forEvaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/InferEvalScripts/Hw50_MultiContent_InferEval_Script_TrainStyle_Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/InferEvalScripts/Hw50_MultiContent_InferEval_Script_TrainStyle_Style1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/mixers.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/mixers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/wnet_forInferEval.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet_forInferEval.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -54,6 +52,7 @@
     <SUITE FILE_PATH="coverage/W_Net$StyleHw50_ResEmd_ContentPf32_Hw32_Style4.coverage" NAME="StyleHw50-ResEmd_ContentPf32+Hw32-Style4 Coverage Results" MODIFIED="1547822149746" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw" />
     <SUITE FILE_PATH="coverage/W_Net$StylePf80_ContentPf64.coverage" NAME="StylePf80_ContentPf64 Coverage Results" MODIFIED="1548435376872" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_WithFlip/StylePf" />
     <SUITE FILE_PATH="coverage/W_Net$debug_infer.coverage" NAME="debug_infer Coverage Results" MODIFIED="1541760090040" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
+    <SUITE FILE_PATH="coverage/W_Net$Hw50_MultiContent_InferEval_Script_TrainStyle_Style1.coverage" NAME="Hw50_MultiContent_InferEval_Script_TrainStyle_Style1 Coverage Results" MODIFIED="1549689325339" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/InferEvalScripts" />
     <SUITE FILE_PATH="coverage/W_Net$script_full.coverage" NAME="script_full Coverage Results" MODIFIED="1547734653619" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataPreProcessing/Print_Chinese_Charfacter" />
     <SUITE FILE_PATH="coverage/W_Net$Pf50_SingleContent_InferEval_Script.coverage" NAME="Pf50_SingleContent_InferEval_Script Coverage Results" MODIFIED="1549046351324" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EvaluationScripts" />
     <SUITE FILE_PATH="coverage/W_Net$extranet_scripots_debug.coverage" NAME="extranet_scripots_debug Coverage Results" MODIFIED="1538554041623" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DebugScripts" />
@@ -66,27 +65,23 @@
     <SUITE FILE_PATH="coverage/W_Net$StylePf50_ResEmd_ContentPf32_Style1.coverage" NAME="StylePf50-ResEmd_ContentPf32-Style1 Coverage Results" MODIFIED="1547822161162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.3074884">
+    <splitter split-orientation="horizontal" split-proportion="0.37602007">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/DebugScripts/evaluate_debug.py">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/InferEvalScripts/Hw50_MultiContent_InferEval_Script_TrainStyle_Style1.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="303">
-                  <caret line="97" column="31" lean-forward="true" selection-start-line="97" selection-start-column="31" selection-end-line="97" selection-end-column="31" />
+                <state relative-caret-position="-1431">
+                  <caret line="31" column="28" lean-forward="true" selection-start-line="31" selection-start-column="28" selection-end-line="31" selection-end-column="28" />
                 </state>
               </provider>
             </entry>
           </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/model/wnet.py">
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/model/wnet_forInferEval.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="168">
-                  <caret line="2021" column="38" selection-start-line="2021" selection-start-column="26" selection-end-line="2021" selection-end-column="50" />
+                <state relative-caret-position="107">
+                  <caret line="407" column="41" selection-start-line="407" selection-start-column="41" selection-end-line="407" selection-end-column="41" />
                   <folding>
                     <element signature="e#24#62#0" expanded="true" />
                   </folding>
@@ -94,23 +89,27 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/model/wnet_forEvaluation.py">
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/model/generators.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="540">
-                  <caret line="985" column="91" selection-start-line="985" selection-start-column="91" selection-end-line="985" selection-end-column="91" />
+                <state relative-caret-position="420">
+                  <caret line="208" column="30" lean-forward="true" selection-start-line="208" selection-start-column="30" selection-end-line="208" selection-end-column="30" />
+                  <folding>
+                    <element signature="e#1#24#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/model/mixers.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="143">
-                  <caret line="674" selection-start-line="674" selection-end-line="674" />
-                  <folding>
-                    <element signature="e#0#18#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="134">
+                  <caret line="228" column="20" selection-start-line="228" selection-start-column="20" selection-end-line="228" selection-end-column="20" />
                 </state>
               </provider>
             </entry>
@@ -128,7 +127,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>adobe</find>
       <find>generate_from_single_font_file</find>
       <find>file_list_txt_true_style</find>
       <find>read_from_dir</find>
@@ -158,6 +156,7 @@
       <find>DataPro</find>
       <find>class DataProvider</find>
       <find>feature_extractor_build</find>
+      <find>emdnet_mixer_non_adain</find>
     </findStrings>
     <replaceStrings>
       <replace>Batch_StyleFeature_Discrimination_Penalty</replace>
@@ -177,7 +176,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/DataPreProcessing/Print_Chinese_Charfacter/Script_ScanFontFiles.py" />
         <option value="$PROJECT_DIR$/model/discriminators.py" />
         <option value="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf/StylePf50-ResEmd_ContentPf32-Style4.py" />
         <option value="$PROJECT_DIR$/DataPreProcessing/Print_Chinese_Character/Script_GeneratePrinted.py" />
@@ -197,7 +195,6 @@
         <option value="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentPf32.py" />
         <option value="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentStd1.py" />
         <option value="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf80_ContentPf32.py" />
-        <option value="$PROJECT_DIR$/model/mixers.py" />
         <option value="$PROJECT_DIR$/TrainingScripts_WNet/StylePf/StylePf50_ContentPf32.py" />
         <option value="$PROJECT_DIR$/DataPreProcessing/Split_Train_Test_Group" />
         <option value="$PROJECT_DIR$/DataPreProcessing/Generate_FileList_Scripts.py" />
@@ -205,7 +202,6 @@
         <option value="$PROJECT_DIR$/DebugScripts/wnet_debug.py" />
         <option value="$PROJECT_DIR$/Evaluation/Find_Related_DataList_Script.py" />
         <option value="$PROJECT_DIR$/model/feature_extractor_training.py" />
-        <option value="$PROJECT_DIR$/model/generators.py" />
         <option value="$PROJECT_DIR$/model/vggs.py" />
         <option value="$PROJECT_DIR$/DataPreProcessing/Split_Train_Test_Group.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script.py" />
@@ -222,12 +218,15 @@
         <option value="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_InferEval_Script.py" />
         <option value="$PROJECT_DIR$/DebugScripts/inferEval_debug.py" />
         <option value="$PROJECT_DIR$/utilities/infer_implementations.py" />
-        <option value="$PROJECT_DIR$/model/wnet_forInferEval.py" />
         <option value="$PROJECT_DIR$/DebugScripts/evaluate_debug.py" />
         <option value="$PROJECT_DIR$/DebugScripts/train_debug.py" />
         <option value="$PROJECT_DIR$/model/wnet.py" />
         <option value="$PROJECT_DIR$/dataset/dataset.py" />
         <option value="$PROJECT_DIR$/model/wnet_forEvaluation.py" />
+        <option value="$PROJECT_DIR$/InferEvalScripts/Hw50_MultiContent_InferEval_Script_TrainStyle_Style1.py" />
+        <option value="$PROJECT_DIR$/model/wnet_forInferEval.py" />
+        <option value="$PROJECT_DIR$/model/generators.py" />
+        <option value="$PROJECT_DIR$/model/mixers.py" />
       </list>
     </option>
   </component>
@@ -283,6 +282,11 @@
             <path>
               <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
               <item name="W-Net" type="462c0819:PsiDirectoryNode" />
+              <item name="InferEvalScripts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net" type="462c0819:PsiDirectoryNode" />
               <item name="model" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -317,7 +321,29 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.evaluate_debug">
+  <component name="RunManager" selected="Python.Hw50_MultiContent_InferEval_Script_TrainStyle_Style1">
+    <configuration name="Hw50_MultiContent_InferEval_Script_TrainStyle_Style1" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="W-Net" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/InferEvalScripts" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/InferEvalScripts/Hw50_MultiContent_InferEval_Script_TrainStyle_Style1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -387,9 +413,11 @@
     <list>
       <item itemvalue="Python.evaluate_debug" />
       <item itemvalue="Python.train_debug" />
+      <item itemvalue="Python.Hw50_MultiContent_InferEval_Script_TrainStyle_Style1" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Hw50_MultiContent_InferEval_Script_TrainStyle_Style1" />
         <item itemvalue="Python.evaluate_debug" />
         <item itemvalue="Python.train_debug" />
       </list>
@@ -413,11 +441,12 @@
       <workItem from="1549618146323" duration="1270000" />
       <workItem from="1549621172095" duration="1370000" />
       <workItem from="1549636445931" duration="1586000" />
+      <workItem from="1549687739147" duration="1512000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30796000" />
+    <option name="totallyTimeSpent" value="32308000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -438,7 +467,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.29976302" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.2236842" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3475877" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32938388" />
@@ -454,7 +483,7 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" x="1891" y="159" width="803" height="731" id="SciView" order="3" sideWeight="0.79569894" weight="0.36597615" />
       <window_info anchor="right" id="Database" order="4" />
-      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.20430107" side_tool="true" visible="true" weight="0.0527307" />
+      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.20430107" side_tool="true" weight="0.0527307" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76680386" visible="true" weight="0.098719314" />
@@ -589,31 +618,6 @@
           <option name="timeStamp" value="861" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/utilities/infer_implementations.py</url>
-          <line>163</line>
-          <option name="timeStamp" value="880" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/wnet_forInferEval.py</url>
-          <line>379</line>
-          <option name="timeStamp" value="881" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/wnet_forInferEval.py</url>
-          <line>342</line>
-          <option name="timeStamp" value="891" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/wnet_forInferEval.py</url>
-          <line>354</line>
-          <option name="timeStamp" value="892" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/wnet_forInferEval.py</url>
-          <line>365</line>
-          <option name="timeStamp" value="893" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/wnet_forEvaluation.py</url>
           <line>1159</line>
           <option name="timeStamp" value="907" />
@@ -628,24 +632,35 @@
           <line>967</line>
           <option name="timeStamp" value="949" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/generators.py</url>
+          <line>206</line>
+          <option name="timeStamp" value="951" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/generators.py</url>
+          <line>172</line>
+          <option name="timeStamp" value="954" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/generators.py</url>
+          <line>192</line>
+          <option name="timeStamp" value="955" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/mixers.py</url>
+          <line>222</line>
+          <option name="timeStamp" value="956" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/mixers.py</url>
+          <line>237</line>
+          <option name="timeStamp" value="957" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/DataPreProcessing/Handwriting_Chinese_Character/script_full_hw.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="302" column="65" selection-start-line="302" selection-start-column="51" selection-end-line="302" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/mixers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="35" column="4" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TrainingScripts_WNet/StylePf/StylePf50_ContentPf32.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="265">
@@ -790,16 +805,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Find_Related_DataList_Script.py" />
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script.py" />
-    <entry file="file://$PROJECT_DIR$/model/generators.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="361" column="38" selection-start-line="361" selection-start-column="23" selection-end-line="361" selection-end-column="38" />
-          <folding>
-            <element signature="e#1#24#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Tmp.py" />
     <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/platform/app.py" />
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Hw50_SingleContent_Eval_Script.py">
@@ -814,23 +819,6 @@
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Hw50_SingleContent_InferEval_Script.py" />
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_InferEval_Script.py" />
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script.py" />
-    <entry file="file://$PROJECT_DIR$/model/wnet_forInferEval.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="682">
-          <caret line="375" column="68" selection-start-line="365" selection-start-column="8" selection-end-line="375" selection-end-column="68" />
-          <folding>
-            <element signature="e#24#62#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utilities/infer_implementations.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="217" selection-start-line="217" selection-end-line="217" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DebugScripts/inferEval_debug.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="835">
@@ -852,16 +840,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/wnet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="2021" column="38" selection-start-line="2021" selection-start-column="26" selection-end-line="2021" selection-end-column="50" />
-          <folding>
-            <element signature="e#24#62#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DebugScripts/train_debug.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="835">
@@ -871,7 +849,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
+        <state relative-caret-position="10050">
           <caret line="674" selection-start-line="674" selection-end-line="674" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
@@ -886,10 +864,61 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/model/wnet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="2021" column="38" selection-start-line="2021" selection-start-column="26" selection-end-line="2021" selection-end-column="50" />
+          <folding>
+            <element signature="e#24#62#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/DebugScripts/evaluate_debug.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="303">
-          <caret line="97" column="31" lean-forward="true" selection-start-line="97" selection-start-column="31" selection-end-line="97" selection-end-column="31" />
+          <caret line="97" column="31" selection-start-line="97" selection-start-column="31" selection-end-line="97" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utilities/infer_implementations.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="401" column="25" lean-forward="true" selection-start-line="401" selection-start-column="25" selection-end-line="401" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/generators.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="208" column="30" lean-forward="true" selection-start-line="208" selection-start-column="30" selection-end-line="208" selection-end-column="30" />
+          <folding>
+            <element signature="e#1#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/InferEvalScripts/Hw50_MultiContent_InferEval_Script_TrainStyle_Style1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1431">
+          <caret line="31" column="28" lean-forward="true" selection-start-line="31" selection-start-column="28" selection-end-line="31" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/wnet_forInferEval.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="107">
+          <caret line="407" column="41" selection-start-line="407" selection-start-column="41" selection-end-line="407" selection-end-column="41" />
+          <folding>
+            <element signature="e#24#62#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/mixers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="134">
+          <caret line="228" column="20" selection-start-line="228" selection-start-column="20" selection-end-line="228" selection-end-column="20" />
         </state>
       </provider>
     </entry>

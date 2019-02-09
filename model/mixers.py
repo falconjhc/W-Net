@@ -222,6 +222,11 @@ def emdnet_mixer_non_adain(generator_device,reuse,scope,initializer,
 
                 encoded_content_final_squeeze = tf.squeeze(encoded_content_final)
                 encoded_style_final_squeeze = tf.squeeze(encoded_style_final)
+                if len(encoded_content_final_squeeze.shape.as_list())==1:
+                    encoded_content_final_squeeze = tf.expand_dims(encoded_content_final_squeeze, axis=0)
+                if len(encoded_style_final_squeeze.shape.as_list())==1:
+                    encoded_style_final_squeeze = tf.expand_dims(encoded_style_final_squeeze, axis=0)
+
                 encoded_content_fc = lrelu(fc(x=encoded_content_final_squeeze,
                                               output_size=generator_dim,
                                               scope="emd_mixer/content_fc",
