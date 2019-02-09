@@ -786,7 +786,6 @@ class WNet(object):
 
     def evaluate_process(self):
 
-        timer_start = time.time()
         info_timer_start = time.time()
         if self.debug_mode == 1:
             self.print_info_seconds = 5
@@ -881,6 +880,8 @@ class WNet(object):
             raw_input("Press enter to continue")
         print(self.print_separater)
 
+        
+        timer_start = time.time()
         #total_eval_epochs=3
         for ei in range(total_eval_epochs):
             current_fixed_style_reference_img_list = \
@@ -963,28 +964,26 @@ class WNet(object):
                     full_vn = full_vn + calculated_vn
                     full_pixel =  full_pixel + calculated_pixel
 
-
+                local_time_elapsed = time.time() - local_timer_start
                 if time.time()-info_timer_start>self.print_info_seconds:
                     info_timer_start=time.time()
-
                     time_elapsed = time.time() - timer_start
-                    local_time_elapsed = time.time() - local_timer_start
                     avg_elaped_per_round = time_elapsed / (ei * self.itrs_for_current_epoch + iter + 1)
                     time_estimated_remain = avg_elaped_per_round * total_eval_epochs * self.itrs_for_current_epoch - time_elapsed
                     if time_estimated_remain > 86400:
-                        print("CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%d/%.3fsec, TimerRemain:%.3fdays"
+                        print("CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%.3f/%.3fsec, TimerRemain:%.3fdays"
                           % (ei + 1, total_eval_epochs,
                              iter + 1, self.itrs_for_current_epoch,
                              local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 86400))
                     elif time_estimated_remain > 3600:
                         print(
-                            "CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%d/%.3fsec, TimerRemain:%.3fhrs"
+                            "CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%.3f/%.3fsec, TimerRemain:%.3fhrs"
                             % (ei + 1, total_eval_epochs,
                                iter + 1, self.itrs_for_current_epoch,
                                local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 3600))
                     else:
                         print(
-                            "CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%d/%.3fsec, TimerRemain:%.3fmins"
+                            "CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%.3f/%.3fsec, TimerRemain:%.3fmins"
                             % (ei + 1, total_eval_epochs,
                                iter + 1, self.itrs_for_current_epoch,
                                local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 60))

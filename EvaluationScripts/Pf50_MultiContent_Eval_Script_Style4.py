@@ -37,21 +37,24 @@ evaluation_resule_save_dir = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/Ev
 #     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-NonAdaIN_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
 
 # Adobe-Net
-evaluating_generator_dir=\
-    'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 
 # Emd-Net
 # evaluating_generator_dir=\
-#     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-NN-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+#     'tfModels2019_EmdNet/checkpoint/Exp20190129-ResEmdNet-NN-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
-#     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+#     'tfModels2019_EmdNet/checkpoint/Exp20190129-ResEmdNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+evaluating_generator_dir=\
+    'tfModels2019_EmdNet/checkpoint/Exp20190129-EmdNet-Style4-AdaIN_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_EmdNet/checkpoint/Exp20190129-EmdNet-Style4-NonAdaIN_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 
 # ResMixer-Net
 # evaluating_generator_dir=\
-#     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-DenseMixer-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+#     'tfModels2019_ResMixerNet/checkpoint/Exp20190129-ResMixer-5-DenseMixer-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
-#     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-SimpleMixer-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
-
+#     'tfModels2019_ResMixerNet/checkpoint/Exp20190129-ResMixer-5-SimpleMixer-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 
 
 ## content

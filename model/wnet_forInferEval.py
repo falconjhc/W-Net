@@ -561,7 +561,7 @@ class WNet(object):
             avg_elaped_per_style = time_elapsed / (style_counter+1)
 
             time_estimated_remain = avg_elaped_per_style * styles_number_to_be_generated - time_elapsed
-            print("CurrentProcess: Style:%d/%d(%s), CurrentStyle/Avg:%d/%.3fsecs, TimerRemain:%.3fmins"
+            print("CurrentProcess: Style:%d/%d(%s), CurrentStyle/Avg:%.3f/%.3fsecs, TimerRemain:%.3fmins"
                   %(style_counter+1, styles_number_to_be_generated, input_style_label1_vec[style_counter],
                     local_time_elapsed, avg_elaped_per_style, time_estimated_remain/60))
 

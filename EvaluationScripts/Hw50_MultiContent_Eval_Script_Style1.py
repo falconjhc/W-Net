@@ -19,7 +19,7 @@ model_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
 content_known_unknown='Known'
 style_known_unknown='Known'
-style_input_number=4
+style_input_number=1
 evaluation_resule_save_dir = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201901/'
 
 
@@ -38,20 +38,25 @@ evaluation_resule_save_dir = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/Ev
 #     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
 
 # Adobe-Net
-evaluating_generator_dir=\
-    'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
 
 # Emd-Net
 # evaluating_generator_dir=\
-#     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-NN-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
+#     'tfModels2019_EmdNet/checkpoint/Exp20190129-ResEmdNet-NN-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
-#     'TrainedModels_EmdNet/Exp20190129-ResEmdNet-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
+#     'tfModels2019_EmdNet/checkpoint/Exp20190129-ResEmdNet-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
+evaluating_generator_dir=\
+    'tfModels2019_EmdNet/checkpoint/Exp20190129-EmdNet-Style1-AdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_EmdNet/checkpoint/Exp20190129-EmdNet-Style1-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
+
 
 # ResMixer-Net
 # evaluating_generator_dir=\
-#     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-DenseMixer-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
+#     'tfModels2019_ResMixerNet/checkpoint/Exp20190129-ResMixer-5-DenseMixer-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
-#     'TrainedModels_ResMixerNet/Exp20190129-ResMixer-5-SimpleMixer-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
+#     'tfModels2019_ResMixerNet/checkpoint/Exp20190129-ResMixer-5-SimpleMixer-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
 
 ## content dir
 content_data_dir=list()

@@ -2079,8 +2079,7 @@ class WNet(object):
 
                     percentage_completed = float(global_step.eval(session=self.sess)) / float((self.epoch - ei_start) * self.itrs_for_current_epoch) * 100
                     percentage_to_be_fulfilled = 100 - percentage_completed
-                    hrs_estimated_remaining = (float(passed_full) / (
-                            percentage_completed + eps)) * percentage_to_be_fulfilled / 3600
+                    hrs_estimated_remaining = (float(passed_full) / (percentage_completed + eps)) * percentage_to_be_fulfilled / 3600
                     print("CompletePctg:%.2f,TimeRemainingEstm:%.2fhrs(%.2fdays)" % (
                         percentage_completed, hrs_estimated_remaining,
                         hrs_estimated_remaining / 24))
