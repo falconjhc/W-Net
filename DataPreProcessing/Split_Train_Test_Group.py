@@ -57,6 +57,8 @@ def train_test_split(label0_split_train_test_label,
             test_label0_list.append(current_label0)
             test_label1_list.append(current_label1)
             test_data_list.append(current_data)
+        # if label0_id>3754:
+        #     a=1
     return train_label0_list,train_label1_list,train_data_list,test_label0_list,test_label1_list,test_data_list
 
 

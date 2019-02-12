@@ -970,23 +970,17 @@ class WNet(object):
                     time_elapsed = time.time() - timer_start
                     avg_elaped_per_round = time_elapsed / (ei * self.itrs_for_current_epoch + iter + 1)
                     time_estimated_remain = avg_elaped_per_round * total_eval_epochs * self.itrs_for_current_epoch - time_elapsed
+                    print("CurrentProcess: Epoch:%d/%d, Iter:%d/%d:" % (ei + 1, total_eval_epochs, iter + 1, self.itrs_for_current_epoch))
                     if time_estimated_remain > 86400:
-                        print("CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%.3f/%.3fsec, TimerRemain:%.3fdays"
-                          % (ei + 1, total_eval_epochs,
-                             iter + 1, self.itrs_for_current_epoch,
-                             local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 86400))
+                        print("CurrentRound/Avg: %.3f/%.3fsec, TimerRemain:%.3fdays;"
+                          % (local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 86400))
                     elif time_estimated_remain > 3600:
-                        print(
-                            "CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%.3f/%.3fsec, TimerRemain:%.3fhrs"
-                            % (ei + 1, total_eval_epochs,
-                               iter + 1, self.itrs_for_current_epoch,
-                               local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 3600))
+                        print("CurrentRound/Avg:% .3f/%.3fsec, TimerRemain:%.3fhrs;"
+                            % (local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 3600))
                     else:
-                        print(
-                            "CurrentProcess: Epoch:%d/%d, Iter:%d/%d, CurrentRound/Avg:%.3f/%.3fsec, TimerRemain:%.3fmins"
-                            % (ei + 1, total_eval_epochs,
-                               iter + 1, self.itrs_for_current_epoch,
-                               local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 60))
+                        print("CurrentRound/Avg: %.3f/%.3fsec, TimerRemain:%.3fmins;"
+                            % (local_time_elapsed, avg_elaped_per_round, time_estimated_remain / 60))
+                    print(self.experiment_id)
 
                     print("------------------------------------------------------------------------")
                     print("FeatureDiffMSE:")
@@ -999,13 +993,13 @@ class WNet(object):
                                 elif ii == 1:
                                     prefix = 'ContentRandomAvg:'
                                 elif ii == 2:
-                                    prefix = 'ContentRandomVar:'
+                                    prefix = 'ContentRandomStd:'
                                 elif ii == 3:
                                     prefix = 'ContentSame     :'
                                 elif ii == 4:
                                     prefix = 'StyleRandomAvg  :'
                                 elif ii == 5:
-                                    prefix = 'StyleRandomVar  :'
+                                    prefix = 'StyleRandomStd  :'
                                 elif ii == 6:
                                     prefix = 'StyleSame       :'
                                 print_str_line = prefix+"|%3.5f|" % (full_mse[ii][jj]/((iter+1)*self.batch_size))
@@ -1024,13 +1018,13 @@ class WNet(object):
                                 elif ii == 1:
                                     prefix = 'ContentRandomAvg:'
                                 elif ii == 2:
-                                    prefix = 'ContentRandomVar:'
+                                    prefix = 'ContentRandomStd:'
                                 elif ii == 3:
                                     prefix = 'ContentSame     :'
                                 elif ii == 4:
                                     prefix = 'StyleRandomAvg  :'
                                 elif ii == 5:
-                                    prefix = 'StyleRandomVar  :'
+                                    prefix = 'StyleRandomStd  :'
                                 elif ii == 6:
                                     prefix = 'StyleSame       :'
                                 print_str_line = prefix+"|%3.5f|" % (full_vn[ii][jj]/((iter+1)*self.batch_size))
@@ -1040,10 +1034,8 @@ class WNet(object):
                     print("------------------------------------------------------------------------")
                     print("------------------------------------------------------------------------")
                     print("PixelDiff:")
-                    print("----------------------------------------------------------------------------------------------------------------")
-                    print("                 ||     L1 (Avg+/-Var)    |     MSE (Avg+/-Var)   |    PDAR (Avg+/-Var)   ||")
-                    # print("----------------------------------------------------------------------------------------------------------------")
-
+                    print("--------------------------------------------------------------------------------------------")
+                    print("                 ||     L1 (Avg+/-Std)    |     MSE (Avg+/-Std)   |    PDAR (Avg+/-Std)   ||")
                     for jj in range(full_pixel.shape[0]):
                         if jj ==0:
                             print_str_line = 'SameContentStyle:||'
@@ -1058,21 +1050,18 @@ class WNet(object):
                             else:
                                 print_str_line = print_str_line + "  %.5f  |" % print_value
                         print(print_str_line)
-                    print("----------------------------------------------------------------------------------------------------------------")
-                    print( "----------------------------------------------------------------------------------------------------------------")
-
+                    print("--------------------------------------------------------------------------------------------")
+                    print("--------------------------------------------------------------------------------------------")
                     print(self.print_separater)
-
-
 
             full_mse = full_mse / len(data_provider.train_iterator.true_style.data_list)
             full_vn = full_vn / len(data_provider.train_iterator.true_style.data_list)
             full_pixel= full_pixel / len(data_provider.train_iterator.true_style.data_list)
 
-
             print(self.print_separater)
             print(self.print_separater)
             current_epoch_str = "Epoch:%d/%d Completed for Style Reference Chars: " % (ei + 1, total_eval_epochs)
+            print(self.experiment_id)
             print(current_epoch_str)
             print("FeatureDiffMSE:")
             print("------------------------------------------------------------------------")
@@ -1084,13 +1073,13 @@ class WNet(object):
                         elif ii == 1:
                             prefix = 'ContentRandomAvg:'
                         elif ii == 2:
-                            prefix = 'ContentRandomVar:'
+                            prefix = 'ContentRandomStd:'
                         elif ii == 3:
                             prefix = 'ContentSame     :'
                         elif ii == 4:
                             prefix = 'StyleRandomAvg  :'
                         elif ii == 5:
-                            prefix = 'StyleRandomVar  :'
+                            prefix = 'StyleRandomStd  :'
                         elif ii == 6:
                             prefix = 'StyleSame       :'
                         print_str_line = prefix + "|%3.5f|" % (full_mse[ii][jj])
@@ -1108,13 +1097,13 @@ class WNet(object):
                         elif ii == 1:
                             prefix = 'ContentRandomAvg:'
                         elif ii == 2:
-                            prefix = 'ContentRandomVar:'
+                            prefix = 'ContentRandomStd:'
                         elif ii == 3:
                             prefix = 'ContentSame     :'
                         elif ii == 4:
                             prefix = 'StyleRandomAvg  :'
                         elif ii == 5:
-                            prefix = 'StyleRandomVar  :'
+                            prefix = 'StyleRandomStd  :'
                         elif ii == 6:
                             prefix = 'StyleSame       :'
                         print_str_line = prefix+"|%3.5f|" % (full_vn[ii][jj])
@@ -1123,11 +1112,8 @@ class WNet(object):
                 print(print_str_line)
             print("------------------------------------------------------------------------")
             print("PixelDiff:")
-            print(
-                "----------------------------------------------------------------------------------------------------------------")
-            print("                 ||     L1 (Avg+/-Var)    |     MSE (Avg+/-Var)   |    PDAR (Avg+/-Var)   ||")
-            # print("----------------------------------------------------------------------------------------------------------------")
-
+            print("--------------------------------------------------------------------------------------------")
+            print("                 ||     L1 (Avg+/-Std)    |     MSE (Avg+/-Std)   |    PDAR (Avg+/-Std)   ||")
             for jj in range(full_pixel.shape[0]):
                 if jj == 0:
                     print_str_line = 'SameContentStyle:||'
@@ -1142,8 +1128,8 @@ class WNet(object):
                     else:
                         print_str_line = print_str_line + "  %.5f  |" % print_value
                 print(print_str_line)
-            print("----------------------------------------------------------------------------------------------------------------")
-            print("----------------------------------------------------------------------------------------------------------------")
+            print("--------------------------------------------------------------------------------------------")
+            print("--------------------------------------------------------------------------------------------")
             print(self.print_separater)
             print(self.print_separater)
 
@@ -1163,7 +1149,6 @@ class WNet(object):
         mse_std = np.std(mse, axis=0)
         vn_std = np.std(vn, axis=0)
         pixel_std = np.std(pixel, axis=0)
-
 
         evaluation_resule_save_dir = os.path.join(self.evaluation_resule_save_dir,self.experiment_id)
         if not os.path.exists(evaluation_resule_save_dir):
