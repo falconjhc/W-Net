@@ -4,13 +4,7 @@
     <bookmark url="file://$PROJECT_DIR$/model/generators.py" line="30" mnemonic="9" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/DataPreProcessing/Split_Train_Test_Group.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataPreProcessing/Split_Train_Test_Group.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style4.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style4.py" afterDir="false" />
-    </list>
+    <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -437,12 +431,12 @@
       <workItem from="1549706126221" duration="632000" />
       <workItem from="1549945942111" duration="2444000" />
       <workItem from="1549952286301" duration="124000" />
-      <workItem from="1550045804198" duration="53000" />
+      <workItem from="1550045804198" duration="198000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36214000" />
+    <option name="totallyTimeSpent" value="36359000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -455,7 +449,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="45" y="23" width="1635" height="1027" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.76680386" visible="true" weight="0.3772756" />
       <window_info id="Structure" order="1" sideWeight="0.23319615" side_tool="true" weight="0.18512256" />
@@ -471,7 +464,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="11" weight="0.37828946" />
+      <window_info anchor="bottom" id="Python Console" order="11" visible="true" weight="0.37828946" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="12" weight="0.32938388" />
       <window_info anchor="bottom" id="Terminal" order="13" weight="0.32938388" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
