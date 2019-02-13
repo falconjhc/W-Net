@@ -17,8 +17,8 @@ eps = 1e-9
 data_path_root = '/home/harric/ChineseCharacterExp/'
 model_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
-content_known_unknown='Known'
-style_known_unknown='Known'
+content_known_unknown='UnKnown'
+style_known_unknown='UnKnown'
 style_input_number=4
 evaluation_resule_save_dir = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201901/'
 
@@ -46,10 +46,10 @@ evaluation_resule_save_dir = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/Ev
 #     'tfModels2019_EmdNet/checkpoint/Exp20190129-ResEmdNet-NN-Style4_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
 #     'tfModels2019_EmdNet/checkpoint/Exp20190129-ResEmdNet-Style4_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
-evaluating_generator_dir=\
-    'tfModels2019_EmdNet/checkpoint/Exp20190129-EmdNet-Style4-AdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
 # evaluating_generator_dir=\
-#     'tfModels2019_EmdNet/checkpoint/Exp20190129-EmdNet-Style4-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
+#     'tfModels2019_EmdNet/checkpoint/Exp20190129-EmdNet-Style4-AdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
+evaluating_generator_dir=\
+    'tfModels2019_EmdNet/checkpoint/Exp20190129-EmdNet-Style4-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/generator/'
 
 
 # ResMixer-Net

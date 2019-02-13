@@ -5,17 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataPreProcessing/Generate_FileList_Scripts.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataPreProcessing/Generate_FileList_Scripts.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataPreProcessing/Split_Train_Test_Group.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataPreProcessing/Split_Train_Test_Group.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive.txt" beforeDir="false" afterPath="$PROJECT_DIR$/FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated.txt" beforeDir="false" afterPath="$PROJECT_DIR$/FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive_Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive_Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive_Train.txt" beforeDir="false" afterPath="$PROJECT_DIR$/TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive_Train.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated_Test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated_Test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated_Train.txt" beforeDir="false" afterPath="$PROJECT_DIR$/TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated_Train.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrainingScripts_WNet/More/StylePf144-ResidualMixer_ContentPf64.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_WNet/More/StylePf144-ResidualMixer_ContentPf64.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/wnet_forEvaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet_forEvaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style1.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style4.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style4.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -76,10 +70,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/model/wnet_forEvaluation.py">
+        <entry file="file://$PROJECT_DIR$/DataPreProcessing/Split_Train_Test_Group.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="485">
-              <caret line="982" column="45" selection-start-line="982" selection-start-column="45" selection-end-line="982" selection-end-column="45" />
+            <state relative-caret-position="60">
+              <caret line="5" column="46" selection-start-line="5" selection-start-column="46" selection-end-line="5" selection-end-column="46" />
             </state>
           </provider>
         </entry>
@@ -191,10 +185,10 @@
         <option value="$PROJECT_DIR$/model/wnet_forInferEval.py" />
         <option value="$PROJECT_DIR$/InferEvalScripts/Hw50_MultiContent_InferEval_Script_TrainStyle_Style1.py" />
         <option value="$PROJECT_DIR$/DataPreProcessing/Generate_FileList_Scripts.py" />
-        <option value="$PROJECT_DIR$/DataPreProcessing/Split_Train_Test_Group.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style1.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style1.py" />
         <option value="$PROJECT_DIR$/model/wnet_forEvaluation.py" />
+        <option value="$PROJECT_DIR$/DataPreProcessing/Split_Train_Test_Group.py" />
       </list>
     </option>
   </component>
@@ -240,7 +234,7 @@
             <path>
               <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
               <item name="W-Net" type="462c0819:PsiDirectoryNode" />
-              <item name="model" type="462c0819:PsiDirectoryNode" />
+              <item name="DataPreProcessing" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
@@ -274,7 +268,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Pf50_MultiContent_Eval_Script_Style1">
+  <component name="RunManager" selected="Python.Split_Train_Test_Group">
     <configuration name="Generate_FileList_Scripts" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -367,9 +361,6 @@
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/DataPreProcessing" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -416,9 +407,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Split_Train_Test_Group" />
         <item itemvalue="Python.Pf50_MultiContent_Eval_Script_Style1" />
         <item itemvalue="Python.Hw50_MultiContent_Eval_Script_Style1" />
-        <item itemvalue="Python.Split_Train_Test_Group" />
         <item itemvalue="Python.Generate_FileList_Scripts" />
         <item itemvalue="Python.Hw50_MultiContent_InferEval_Script_TrainStyle_Style1" />
       </list>
@@ -446,11 +437,12 @@
       <workItem from="1549706126221" duration="632000" />
       <workItem from="1549945942111" duration="2444000" />
       <workItem from="1549952286301" duration="124000" />
+      <workItem from="1550045804198" duration="53000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36161000" />
+    <option name="totallyTimeSpent" value="36214000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -465,7 +457,7 @@
     <frame x="45" y="23" width="1635" height="1027" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76680386" weight="0.3772756" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.76680386" visible="true" weight="0.3772756" />
       <window_info id="Structure" order="1" sideWeight="0.23319615" side_tool="true" weight="0.18512256" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -857,13 +849,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DataPreProcessing/Split_Train_Test_Group.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="5" column="62" selection-start-line="5" selection-start-column="62" selection-end-line="5" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style1.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
@@ -892,6 +877,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="485">
           <caret line="982" column="45" selection-start-line="982" selection-start-column="45" selection-end-line="982" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DataPreProcessing/Split_Train_Test_Group.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="5" column="46" selection-start-line="5" selection-start-column="46" selection-end-line="5" selection-end-column="46" />
         </state>
       </provider>
     </entry>
