@@ -33,8 +33,8 @@ input_args = [
     '--adain_use','0',
 
     '--generator_device','/device:GPU:0',
-    '--discriminator_device', '/device:GPU:0',
-    '--feature_extractor_device','/device:GPU:0',
+    '--discriminator_device', '/device:GPU:1',
+    '--feature_extractor_device','/device:GPU:1',
 
 
     '--train_data_augment','1', # translation? rotation?

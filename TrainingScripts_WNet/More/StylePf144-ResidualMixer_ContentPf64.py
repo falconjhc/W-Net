@@ -105,8 +105,8 @@ input_args = [
     'tfModels_FeatureExtractor/checkpoint/Exp20190119_FeatureExtractor_Style_HW300Pf144_vgg16net/variables/',
 
     '--Feature_Penalty_True_Fake_Target', '800',
-    '--Feature_Penalty_Style_Reference','5',
-    '--Feature_Penalty_Content_Prototype','5']
+    '--Feature_Penalty_Style_Reference','1',
+    '--Feature_Penalty_Content_Prototype','1']
 
 
 
