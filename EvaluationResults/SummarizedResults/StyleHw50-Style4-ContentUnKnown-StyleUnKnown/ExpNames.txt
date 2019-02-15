@@ -1,0 +1,4 @@
+Exp:1  | AdobeNet-Style4_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown
+Exp:2  | EmdNet-Style4-AdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown
+Exp:3  | EmdNet-Style4-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown
+Exp:4  | ResMixer-5-DenseMixer-Style4_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown

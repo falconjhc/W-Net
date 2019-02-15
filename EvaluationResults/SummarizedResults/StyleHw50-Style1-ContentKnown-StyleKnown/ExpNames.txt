@@ -1,0 +1,3 @@
+Exp:1  | AdobeNet-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentKnown-StyleKnown
+Exp:2  | EmdNet-Style1-AdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentKnown-StyleKnown
+Exp:3  | ResMixer-5-DenseMixer-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentKnown-StyleKnown

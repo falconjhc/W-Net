@@ -4,8 +4,7 @@ import pandas as pd
 import xlrd
 import os
 
-
-
+MAX_EXP_NUM = 24
 
 def read_excel(file, sheet_index=0):
 
@@ -16,25 +15,41 @@ def read_excel(file, sheet_index=0):
         data.append(sheet.row_values(i))
     return data
 
-def read_and_draw_excel_mse_vn(mark):
-    for sheet_counter in range(8):
+def read_and_draw_excel_mse_vn(mark, color_full):
+    for sheet_counter in range(16):
 
         if sheet_counter==0:
-            sheet_name = 'Style1-ContentKnown-StyleKnown'
+            sheet_name = 'StylePf50-Style1-ContentKnown-StyleKnown'
         elif sheet_counter==1:
-            sheet_name = 'Style1-ContentUnKnown-StyleKnown'
+            sheet_name = 'StylePf50-Style1-ContentUnKnown-StyleKnown'
         elif sheet_counter == 2:
-            sheet_name = 'Style1-ContentKnown-StyleUnKnown'
+            sheet_name = 'StylePf50-Style1-ContentKnown-StyleUnKnown'
         elif sheet_counter == 3:
-            sheet_name = 'Style1-ContentUnKnown-StyleUnKnown'
+            sheet_name = 'StylePf50-Style1-ContentUnKnown-StyleUnKnown'
         elif sheet_counter==4:
-            sheet_name = 'Style4-ContentKnown-StyleKnown'
+            sheet_name = 'StylePf50-Style4-ContentKnown-StyleKnown'
         elif sheet_counter==5:
-            sheet_name = 'Style4-ContentUnKnown-StyleKnown'
+            sheet_name = 'StylePf50-Style4-ContentUnKnown-StyleKnown'
         elif sheet_counter == 6:
-            sheet_name = 'Style4-ContentKnown-StyleUnKnown'
+            sheet_name = 'StylePf50-Style4-ContentKnown-StyleUnKnown'
         elif sheet_counter == 7:
-            sheet_name = 'Style4-ContentUnKnown-StyleUnKnown'
+            sheet_name = 'StylePf50-Style4-ContentUnKnown-StyleUnKnown'
+        elif sheet_counter==8:
+            sheet_name = 'StyleHw50-Style1-ContentKnown-StyleKnown'
+        elif sheet_counter==9:
+            sheet_name = 'StyleHw50-Style1-ContentUnKnown-StyleKnown'
+        elif sheet_counter == 10:
+            sheet_name = 'StyleHw50-Style1-ContentKnown-StyleUnKnown'
+        elif sheet_counter == 11:
+            sheet_name = 'StyleHw50-Style1-ContentUnKnown-StyleUnKnown'
+        elif sheet_counter==12:
+            sheet_name = 'StyleHw50-Style4-ContentKnown-StyleKnown'
+        elif sheet_counter==13:
+            sheet_name = 'StyleHw50-Style4-ContentUnKnown-StyleKnown'
+        elif sheet_counter == 14:
+            sheet_name = 'StyleHw50-Style4-ContentKnown-StyleUnKnown'
+        elif sheet_counter == 15:
+            sheet_name = 'StyleHw50-Style4-ContentUnKnown-StyleUnKnown'
 
 
         if mark == 'MSE':
@@ -45,6 +60,8 @@ def read_and_draw_excel_mse_vn(mark):
             layer_num = 5
 
         exp_num = len(excel_content)-2
+        if exp_num<1:
+            continue
         avg_matrix = np.zeros(shape=[exp_num, layer_num * 5], dtype=np.float64)
         std_matrix = np.zeros(shape=[exp_num, layer_num * 5], dtype=np.float64)
         std_avg_matrix = np.zeros(shape=[exp_num, layer_num * 5], dtype=np.float64)
@@ -80,26 +97,22 @@ def read_and_draw_excel_mse_vn(mark):
         width = total_width / n
         x_series = x_series - (total_width - width) / 2
 
-        color_full = np.zeros(shape=[len(exp_name_list), 3],
-                              dtype=np.float32)
         exp_list = list()
-        for color_counter in range(len(exp_name_list)):
-            current_random_color = np.random.uniform(low=0.5, high=1.0, size=[1, 3])
-            color_full[color_counter, :] = current_random_color
-            exp_list.append("Exp:%d" % (color_counter + 1))
+        for exp_counter in range(len(exp_name_list)):
+            exp_list.append("Exp:%d" % (exp_counter + 1))
 
         for layer_counter in range(layer_num):
             for measurement_count in range(5):
                 if measurement_count == 0:
-                    measurement_name = 'Feature-TrueFake'
+                    measurement_name = 'TrueFake'
                 elif measurement_count == 1:
-                    measurement_name = 'Feature-RandomContent'
+                    measurement_name = 'RandomContent'
                 elif measurement_count == 2:
-                    measurement_name = 'Feature-SameContent'
+                    measurement_name = 'SameContent'
                 elif measurement_count == 3:
-                    measurement_name = 'Feature-RandomStyle'
+                    measurement_name = 'RandomStyle'
                 elif measurement_count == 4:
-                    measurement_name = 'Feature-SameStyle'
+                    measurement_name = 'SameStyle'
 
 
                 fig = plt.figure()
@@ -107,9 +120,9 @@ def read_and_draw_excel_mse_vn(mark):
                 current_std = std_matrix[:, layer_counter*5+measurement_count]
                 current_std_avg = std_avg_matrix[:, layer_counter*5+measurement_count]
                 plt.bar(x_series - width / 2, current_avg, yerr=current_std, align='center', alpha=0.5, width=width,
-                        color=color_full)
+                        color=color_full[0:len(exp_list),:])
                 plt.bar(x_series + width / 2, current_avg, yerr=current_std_avg, align='center', alpha=0.5, width=width,
-                        color=color_full)
+                        color=color_full[0:len(exp_list),:])
                 max_shift = np.max(np.concatenate([current_std, current_std_avg], axis=0))
                 max_value = np.max(current_avg)
                 for x, y in zip(x_series, current_avg):
@@ -126,36 +139,58 @@ def read_and_draw_excel_mse_vn(mark):
                 saving_path = os.path.join(saving_path,'Layer%d' % (layer_counter+1))
                 if not os.path.exists(saving_path):
                     os.makedirs(saving_path)
-                plt.savefig(os.path.join(saving_path, measurement_name + '.eps'))
+                curent_layer_measurement_name = 'VggLayer%d'  % (layer_counter+1)
+                curent_layer_measurement_name = curent_layer_measurement_name + '-' + measurement_name
+                plt.savefig(os.path.join(saving_path, curent_layer_measurement_name + '.eps'))
                 plt.close('all')
-        print("%s: %s (%d/%d) completed;" % (mark,sheet_name,sheet_counter+1,8))
+        print("%s: %s (%d/%d) completed;" % (mark,sheet_name,sheet_counter+1,16))
 
 
-def read_and_draw_excel_pixel():
-    for sheet_counter in range(8):
+def read_and_draw_excel_pixel(color_full):
+    for sheet_counter in range(16):
 
-        if sheet_counter==0:
-            sheet_name = 'Style1-ContentKnown-StyleKnown'
-        elif sheet_counter==1:
-            sheet_name = 'Style1-ContentUnKnown-StyleKnown'
+        if sheet_counter == 0:
+            sheet_name = 'StylePf50-Style1-ContentKnown-StyleKnown'
+        elif sheet_counter == 1:
+            sheet_name = 'StylePf50-Style1-ContentUnKnown-StyleKnown'
         elif sheet_counter == 2:
-            sheet_name = 'Style1-ContentKnown-StyleUnKnown'
+            sheet_name = 'StylePf50-Style1-ContentKnown-StyleUnKnown'
         elif sheet_counter == 3:
-            sheet_name = 'Style1-ContentUnKnown-StyleUnKnown'
-        elif sheet_counter==4:
-            sheet_name = 'Style4-ContentKnown-StyleKnown'
-        elif sheet_counter==5:
-            sheet_name = 'Style4-ContentUnKnown-StyleKnown'
+            sheet_name = 'StylePf50-Style1-ContentUnKnown-StyleUnKnown'
+        elif sheet_counter == 4:
+            sheet_name = 'StylePf50-Style4-ContentKnown-StyleKnown'
+        elif sheet_counter == 5:
+            sheet_name = 'StylePf50-Style4-ContentUnKnown-StyleKnown'
         elif sheet_counter == 6:
-            sheet_name = 'Style4-ContentKnown-StyleUnKnown'
+            sheet_name = 'StylePf50-Style4-ContentKnown-StyleUnKnown'
         elif sheet_counter == 7:
-            sheet_name = 'Style4-ContentUnKnown-StyleUnKnown'
+            sheet_name = 'StylePf50-Style4-ContentUnKnown-StyleUnKnown'
+        elif sheet_counter == 8:
+            sheet_name = 'StyleHw50-Style1-ContentKnown-StyleKnown'
+        elif sheet_counter == 9:
+            sheet_name = 'StyleHw50-Style1-ContentUnKnown-StyleKnown'
+        elif sheet_counter == 10:
+            sheet_name = 'StyleHw50-Style1-ContentKnown-StyleUnKnown'
+        elif sheet_counter == 11:
+            sheet_name = 'StyleHw50-Style1-ContentUnKnown-StyleUnKnown'
+        elif sheet_counter == 12:
+            sheet_name = 'StyleHw50-Style4-ContentKnown-StyleKnown'
+        elif sheet_counter == 13:
+            sheet_name = 'StyleHw50-Style4-ContentUnKnown-StyleKnown'
+        elif sheet_counter == 14:
+            sheet_name = 'StyleHw50-Style4-ContentKnown-StyleUnKnown'
+        elif sheet_counter == 15:
+            sheet_name = 'StyleHw50-Style4-ContentUnKnown-StyleUnKnown'
+
+
         saving_path = os.path.join('../EvaluationResults/SummarizedResults', sheet_name)
         if not os.path.exists(saving_path):
             os.makedirs(saving_path)
 
         excel_content = read_excel('../EvaluationResults/SummarizedResults/Pixel.xls', sheet_index=sheet_counter)
         exp_num = len(excel_content)-2
+        if exp_num<1:
+            continue
         avg_matrix = np.zeros(shape=[exp_num, 9], dtype=np.float64)
         std_matrix = np.zeros(shape=[exp_num, 9], dtype=np.float64)
         std_avg_matrix = np.zeros(shape=[exp_num, 9], dtype=np.float64)
@@ -203,7 +238,6 @@ def read_and_draw_excel_pixel():
 
         # write experiment names
         file_handle = open(os.path.join(saving_path,'ExpNames.txt'),'w')
-        length = len(exp_name_list)
         len_counter = 0
         for curt_name in exp_name_list:
             write_info = 'Exp:%d  | %s' % (len_counter+1, curt_name)
@@ -220,13 +254,9 @@ def read_and_draw_excel_pixel():
         width = total_width / n
         x_series = x_series - (total_width - width) / 2
 
-        color_full = np.zeros(shape=[len(exp_name_list), 3],
-                              dtype=np.float32)
         exp_list = list()
-        for color_counter in range(len(exp_name_list)):
-            current_random_color = np.random.uniform(low=0.5, high=1.0, size=[1, 3])
-            color_full[color_counter, :] = current_random_color
-            exp_list.append("Exp:%d" % (color_counter + 1))
+        for exp_counter in range(len(exp_name_list)):
+            exp_list.append("Exp:%d" % (exp_counter + 1))
 
         for measurement_count in range(9):
             if measurement_count == 0:
@@ -253,9 +283,9 @@ def read_and_draw_excel_pixel():
             current_std = std_matrix[:, measurement_count]
             current_std_avg = std_avg_matrix[:, measurement_count]
             plt.bar(x_series - width / 2, current_avg, yerr=current_std, align='center', alpha=0.5, width=width,
-                    color=color_full)
+                    color=color_full[0:len(exp_list),:])
             plt.bar(x_series + width / 2, current_avg, yerr=current_std_avg, align='center', alpha=0.5, width=width,
-                    color=color_full)
+                    color=color_full[0:len(exp_list),:])
             max_shift = np.max(np.concatenate([current_std, current_std_avg], axis=0))
             max_value = np.max(current_avg)
             for x, y in zip(x_series, current_avg):
@@ -274,12 +304,19 @@ def read_and_draw_excel_pixel():
                 os.makedirs(current_saving_path)
             plt.savefig(os.path.join(current_saving_path, measurement_name + '.eps'))
             plt.close('all')
-        print("%s: %s (%d/%d) completed;" % ('Pixel', sheet_name, sheet_counter + 1, 8))
+        print("%s: %s (%d/%d) completed;" % ('Pixel', sheet_name, sheet_counter + 1, 16))
 
 def main():
-    read_and_draw_excel_pixel()
-    read_and_draw_excel_mse_vn(mark='VN')
-    read_and_draw_excel_mse_vn(mark='MSE')
+
+    #random colors
+    color_full = np.zeros(shape=[MAX_EXP_NUM, 3],
+                          dtype=np.float32)
+    for color_counter in range(MAX_EXP_NUM):
+        current_random_color = np.random.uniform(low=0.5, high=1.0, size=[1, 3])
+        color_full[color_counter, :] = current_random_color
+    read_and_draw_excel_pixel(color_full=color_full)
+    read_and_draw_excel_mse_vn(mark='VN', color_full=color_full)
+    read_and_draw_excel_mse_vn(mark='MSE', color_full=color_full)
     print("Complete All !")
 
 

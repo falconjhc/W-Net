@@ -28,24 +28,40 @@ def list_sub_dir(path):
         return list
 
 def create_excel_mse_vn_table_head(mark):
-    w = Workbook()  
-    for case in range(8):
+    w = Workbook()
+    for case in range(16):
         if case == 0:
-            sheet_name = 'Style1-ContentKN-StyleKN'
+            sheet_name = 'Pf50-Sty1-CntKN-StyKN'
         elif case == 1:
-            sheet_name = 'Style1-ContentUnKN-StyleKN'
+            sheet_name = 'Pf50-Sty1-CntUnKN-StyKN'
         elif case == 2:
-            sheet_name = 'Style1-ContentKN-StyleUnKN'
+            sheet_name = 'Pf50-Sty1-CntKN-StyUnKN'
         elif case == 3:
-            sheet_name = 'Style1-ContentUnKN-StyleUnKN'
+            sheet_name = 'Pf50-Sty1-CntUnKN-StyUnKN'
         elif case == 4:
-            sheet_name = 'Style4-ContentKN-StyleKN'
+            sheet_name = 'Pf50-Sty4-CntKN-StyKN'
         elif case == 5:
-            sheet_name = 'Style4-ContentUnKN-StyleKN'
+            sheet_name = 'Pf50-Sty4-CntUnKN-StyKN'
         elif case == 6:
-            sheet_name = 'Style4-ContentKN-StyleUnKN'
+            sheet_name = 'Pf50-Sty4-CntKN-StyUnKN'
         elif case == 7:
-            sheet_name = 'Style4-ContentUnKN-StyleUnKN'
+            sheet_name = 'Pf50-Sty4-CntUnKN-StyUnKN'
+        elif case == 8:
+            sheet_name = 'Hw50-Sty1-CntKN-StyKN'
+        elif case == 9:
+            sheet_name = 'Hw50-Sty1-CntUnKN-StyKN'
+        elif case == 10:
+            sheet_name = 'Hw50-Sty1-CntKN-StyUnKN'
+        elif case == 11:
+            sheet_name = 'Hw50-Sty1-CntUnKN-StyUnKN'
+        elif case == 12:
+            sheet_name = 'Hw50-Sty4-CntKN-StyKN'
+        elif case == 13:
+            sheet_name = 'Hw50-Sty4-CntUnKN-StyKN'
+        elif case == 14:
+            sheet_name = 'Hw50-Sty4-CntKN-StyUnKN'
+        elif case == 15:
+            sheet_name = 'Hw50-Sty4-CntUnKN-StyUnKN'
 
         w_style1 = w.add_sheet(sheet_name)  #
         w_style1.write(0, 0,'')
@@ -87,23 +103,39 @@ def create_excel_mse_vn_table_head(mark):
 
 def create_excel_pixel_table_head():
     w = Workbook()
-    for case in range(8):
+    for case in range(16):
         if case == 0:
-            sheet_name = 'Style1-ContentKN-StyleKN'
+            sheet_name = 'Pf50-Sty1-CntKN-StyKN'
         elif case == 1:
-            sheet_name = 'Style1-ContentUnKN-StyleKN'
+            sheet_name = 'Pf50-Sty1-CntUnKN-StyKN'
         elif case == 2:
-            sheet_name = 'Style1-ContentKN-StyleUnKN'
+            sheet_name = 'Pf50-Sty1-CntKN-StyUnKN'
         elif case == 3:
-            sheet_name = 'Style1-ContentUnKN-StyleUnKN'
+            sheet_name = 'Pf50-Sty1-CntUnKN-StyUnKN'
         elif case == 4:
-            sheet_name = 'Style4-ContentKN-StyleKN'
+            sheet_name = 'Pf50-Sty4-CntKN-StyKN'
         elif case == 5:
-            sheet_name = 'Style4-ContentUnKN-StyleKN'
+            sheet_name = 'Pf50-Sty4-CntUnKN-StyKN'
         elif case == 6:
-            sheet_name = 'Style4-ContentKN-StyleUnKN'
+            sheet_name = 'Pf50-Sty4-CntKN-StyUnKN'
         elif case == 7:
-            sheet_name = 'Style4-ContentUnKN-StyleUnKN'
+            sheet_name = 'Pf50-Sty4-CntUnKN-StyUnKN'
+        elif case == 8:
+            sheet_name = 'Hw50-Sty1-CntKN-StyKN'
+        elif case == 9:
+            sheet_name = 'Hw50-Sty1-CntUnKN-StyKN'
+        elif case == 10:
+            sheet_name = 'Hw50-Sty1-CntKN-StyUnKN'
+        elif case == 11:
+            sheet_name = 'Hw50-Sty1-CntUnKN-StyUnKN'
+        elif case == 12:
+            sheet_name = 'Hw50-Sty4-CntKN-StyKN'
+        elif case == 13:
+            sheet_name = 'Hw50-Sty4-CntUnKN-StyKN'
+        elif case == 14:
+            sheet_name = 'Hw50-Sty4-CntKN-StyUnKN'
+        elif case == 15:
+            sheet_name = 'Hw50-Sty4-CntUnKN-StyUnKN'
 
         work_sheet = w.add_sheet(sheet_name)  #
         work_sheet.write(0, 0,'')
@@ -172,24 +204,44 @@ def fillin_excel_table_mse_vn(current_result_read_path, mark):
     mse_avg = np.loadtxt(os.path.join(current_result_read_path,'Avg_Feature'+mark+'.csv'), dtype=np.str, delimiter=",")
     mse_std = np.loadtxt(os.path.join(current_result_read_path, 'Std_Feature'+mark+'.csv'), dtype=np.str, delimiter=",")
 
-    if sheet_name == 'Style1':
-        if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-            sheet_id = 0
-        elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-            sheet_id = 1
-        elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-            sheet_id = 2
-        elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-            sheet_id = 3
-    elif sheet_name == 'Style4':
-        if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-            sheet_id = 4
-        elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-            sheet_id = 5
-        elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-            sheet_id = 6
-        elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-            sheet_id = 7
+    if not exp_name.find('StylePf50') == -1:
+        if sheet_name == 'Style1':
+            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 0
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 1
+            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 2
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 3
+        elif sheet_name == 'Style4':
+            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 4
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 5
+            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 6
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 7
+    elif not exp_name.find('StyleHw50') == -1:
+        if sheet_name == 'Style1':
+            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 8
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 9
+            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 10
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 11
+        elif sheet_name == 'Style4':
+            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 12
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 13
+            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 14
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 15
 
     rexcel = open_workbook(os.path.join(saving_path,mark+'.xls'))
     rows = rexcel.sheets()[sheet_id].nrows
@@ -262,24 +314,44 @@ def fillin_excel_table_pixel(current_result_read_path):
     avg = np.loadtxt(os.path.join(current_result_read_path,'Avg_PixelDiff.csv'), dtype=np.str, delimiter=",")
     std = np.loadtxt(os.path.join(current_result_read_path, 'Std_PixelDiff.csv'), dtype=np.str, delimiter=",")
 
-    if sheet_name == 'Style1':
-        if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-            sheet_id = 0
-        elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-            sheet_id = 1
-        elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-            sheet_id = 2
-        elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-            sheet_id = 3
-    elif sheet_name == 'Style4':
-        if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-            sheet_id = 4
-        elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-            sheet_id = 5
-        elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-            sheet_id = 6
-        elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-            sheet_id = 7
+    if not exp_name.find('StylePf50') == -1:
+        if sheet_name == 'Style1':
+            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 0
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 1
+            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 2
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 3
+        elif sheet_name == 'Style4':
+            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 4
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 5
+            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 6
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 7
+    elif not exp_name.find('StyleHw50') == -1:
+        if sheet_name == 'Style1':
+            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 8
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 9
+            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 10
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 11
+        elif sheet_name == 'Style4':
+            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 12
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                sheet_id = 13
+            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 14
+            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                sheet_id = 15
 
     rexcel = open_workbook(os.path.join(saving_path,'Pixel.xls'))
     rows = rexcel.sheets()[sheet_id].nrows
@@ -350,6 +422,7 @@ def fillin_excel_table_pixel(current_result_read_path):
 def main():
 
     exp_list  = list_sub_dir(path=reading_result_path)
+    exp_list.sort()
     create_excel_pixel_table_head()
     create_excel_mse_vn_table_head(mark='MSE')
     create_excel_mse_vn_table_head(mark='VN')

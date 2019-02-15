@@ -1,8 +1,0 @@
-Exp:1  | EmdNet-Style1-NonAdaIN_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown
-Exp:2  | AdobeNet-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown
-Exp:3  | ResMixer-5-DenseMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown
-Exp:4  | AdobeNet-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown
-Exp:5  | ResMixer-5-DenseMixer-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown
-Exp:6  | EmdNet-Style1-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown
-Exp:7  | EmdNet-Style1-AdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown
-Exp:8  | EmdNet-Style1-AdaIN_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown
