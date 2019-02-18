@@ -5,6 +5,8 @@ import xlrd
 import os
 
 MAX_EXP_NUM = 24
+excel_path = '../EvaluationResults/EvaluationResult_201901/'
+bar_saving_path = '../EvaluationResults/Bars_EvaluationResult_201901/'
 
 def read_excel(file, sheet_index=0):
 
@@ -53,10 +55,10 @@ def read_and_draw_excel_mse_vn(mark, color_full):
 
 
         if mark == 'MSE':
-            excel_content = read_excel('../EvaluationResults/SummarizedResults/MSE.xls', sheet_index=sheet_counter)
+            excel_content = read_excel(os.path.join(excel_path,'MSE.xls'), sheet_index=sheet_counter)
             layer_num = 7
         elif mark=='VN':
-            excel_content = read_excel('../EvaluationResults/SummarizedResults/VN.xls', sheet_index=sheet_counter)
+            excel_content = read_excel(os.path.join(excel_path,'VN.xls'), sheet_index=sheet_counter)
             layer_num = 5
 
         exp_num = len(excel_content)-2
@@ -134,7 +136,7 @@ def read_and_draw_excel_mse_vn(mark, color_full):
 
                 plt.legend()
                 plt.xticks(x_series, exp_list, rotation='vertical')
-                saving_path = os.path.join('../EvaluationResults/SummarizedResults', sheet_name)
+                saving_path = os.path.join(bar_saving_path, sheet_name)
                 saving_path = os.path.join(saving_path, 'Bar-VggDeepFeatures-'+mark)
                 saving_path = os.path.join(saving_path,'Layer%d' % (layer_counter+1))
                 if not os.path.exists(saving_path):
@@ -183,11 +185,11 @@ def read_and_draw_excel_pixel(color_full):
             sheet_name = 'StyleHw50-Style4-ContentUnKnown-StyleUnKnown'
 
 
-        saving_path = os.path.join('../EvaluationResults/SummarizedResults', sheet_name)
+        saving_path = os.path.join(bar_saving_path, sheet_name)
         if not os.path.exists(saving_path):
             os.makedirs(saving_path)
 
-        excel_content = read_excel('../EvaluationResults/SummarizedResults/Pixel.xls', sheet_index=sheet_counter)
+        excel_content = read_excel(os.path.join(excel_path,'Pixel.xls'), sheet_index=sheet_counter)
         exp_num = len(excel_content)-2
         if exp_num<1:
             continue

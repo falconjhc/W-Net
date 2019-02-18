@@ -12,8 +12,10 @@ import numpy as np
 from xlrd import open_workbook
 from xlutils.copy import copy
 
-reading_result_path = '../EvaluationResults/OriginalResults/EvaluationResult_201901/'
-saving_path = '../EvaluationResults/SummarizedResults/'
+reading_result_path = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201901/'
+saving_path = '../EvaluationResults/EvaluationResult_201901/'
+if not os.path.exists(saving_path):
+    os.makedirs(saving_path)
 
 def list_sub_dir(path):
     list = []

@@ -1,0 +1,5 @@
+Exp:1  | AdobeNet-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentKnown-StyleUnKnown
+Exp:2  | EmdNet-Style1-AdaIN_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentKnown-StyleUnKnown
+Exp:3  | EmdNet-Style1-NonAdaIN_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentKnown-StyleUnKnown
+Exp:4  | ResMixer-5-DenseMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentKnown-StyleUnKnown
+Exp:5  | ResMixer-5-SimpleMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentKnown-StyleUnKnown
