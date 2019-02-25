@@ -2,3 +2,4 @@ Exp:1  | AdobeNet-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentUnK
 Exp:2  | EmdNet-Style1-AdaIN_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleKnown
 Exp:3  | EmdNet-Style1-NonAdaIN_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleKnown
 Exp:4  | ResMixer-5-DenseMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleKnown
+Exp:5  | ResMixer-5-SimpleMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleKnown
