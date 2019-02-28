@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/EvaluationScripts/EvaluationMetric.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/EvaluationMetric.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EvaluationScripts/Pixel-Discrepancy.eps" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_WNet/StyleHw/StyleHw50-DenseMixer_ContentPfStd1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_WNet/StyleHw/StyleHw50-DenseMixer_ContentPfStd1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrainingScripts_WNet/StylePf/StylePf50-DenseMixer_ContentPfStd1.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrainingScripts_WNet/StylePf/StylePf50-DenseMixer_ContentPfStd1.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -80,69 +83,38 @@
     <expand />
     <select />
   </component>
-  <component name="DockManager">
-    <window id="1">
-      <content type="file-editors">
-        <state>
-          <leaf>
-            <file pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/EvaluationScripts/EvaluationMetric.py">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="734">
-                    <caret line="961" column="63" selection-start-line="961" selection-start-column="63" selection-end-line="961" selection-end-column="63" />
-                    <folding>
-                      <element signature="e#2#20#0" expanded="true" />
-                    </folding>
-                  </state>
-                </provider>
-              </entry>
-            </file>
-            <file pinned="false" current-in-tab="false">
-              <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="380">
-                    <caret line="1067" selection-start-line="1067" selection-end-line="1067" />
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
-  </component>
   <component name="FUSProjectUsageTrigger">
     <session id="-207592693">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="2" />
+          <entry key="project.closed" value="3" />
           <entry key="project.open.time.4" value="1" />
-          <entry key="project.open.time.5" value="1" />
+          <entry key="project.open.time.5" value="2" />
           <entry key="project.open.time.6" value="2" />
           <entry key="project.open.time.7" value="1" />
           <entry key="project.open.time.8" value="1" />
-          <entry key="project.opened" value="6" />
+          <entry key="project.opened" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="50" />
+          <entry key="py" value="53" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="50" />
+          <entry key="Python" value="53" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="914" />
-          <entry key="py" value="7817" />
+          <entry key="py" value="7885" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="8731" />
+          <entry key="Python" value="8799" />
         </counts>
       </usages-collector>
     </session>
@@ -151,12 +123,24 @@
     <favorites_list name="W-Net" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/matplotlib/colors.py">
+        <entry file="file://$PROJECT_DIR$/model/wnet_forTraining.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="211" selection-start-line="211" selection-end-line="211" />
+            <state relative-caret-position="446">
+              <caret line="1952" column="61" selection-start-line="1952" selection-start-column="61" selection-end-line="1952" selection-end-column="61" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model/generators.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-391">
+              <caret line="30" selection-start-line="30" selection-end-line="30" />
+              <folding>
+                <element signature="e#1#24#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -172,10 +156,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>pdar</find>
-      <find>where</find>
-      <find>copy</find>
-      <find>build_vgg_model</find>
       <find>find_norm_avg_var</find>
       <find>interval</find>
       <find>rotate</find>
@@ -202,6 +182,10 @@
       <find>MAX_EXP_NUM</find>
       <find>lightgoldenrodyelow</find>
       <find>parlturquoise</find>
+      <find>training</find>
+      <find>def W</find>
+      <find>g_iters</find>
+      <find>W_GAN</find>
     </findStrings>
     <replaceStrings>
       <replace>Batch_StyleFeature_Discrimination_Penalty</replace>
@@ -233,7 +217,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style4.py" />
         <option value="$PROJECT_DIR$/TrainingScripts_EmdNet/StyleHw/StyleHw50-ResEmd-NN_ContentPf32+Hw32-Style1.py" />
         <option value="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf/StylePf50-ResEmd-NN_ContentPf32-Style4.py" />
         <option value="$PROJECT_DIR$/TrainingScripts_EmdNet/StylePf/StylePf50-ResEmd-NN_ContentPf32-Style1.py" />
@@ -284,6 +267,7 @@
         <option value="$PROJECT_DIR$/EvaluationScripts/BarDraw.py" />
         <option value="$PROJECT_DIR$/model/wnet.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/EvaluationMetric.py" />
+        <option value="$PROJECT_DIR$/model/wnet_forTraining.py" />
       </list>
     </option>
   </component>
@@ -294,9 +278,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="13" />
+    <option name="x" value="119" />
     <option name="y" value="27" />
-    <option name="width" value="1199" />
+    <option name="width" value="1189" />
     <option name="height" value="747" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -324,7 +308,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -356,6 +339,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -428,6 +412,9 @@
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/EvaluationScripts" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -572,7 +559,7 @@
     <frame x="51" y="25" width="1229" height="999" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76226413" weight="0.33136094" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76226413" weight="0.33084312" />
       <window_info id="Structure" order="1" sideWeight="0.23319615" side_tool="true" weight="0.18512256" />
       <window_info id="Favorites" order="2" sideWeight="0.23773585" side_tool="true" weight="0.0092983935" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -586,15 +573,15 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="11" visible="true" weight="0.7334123" />
+      <window_info anchor="bottom" id="Python Console" order="11" visible="true" weight="0.09597156" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="12" weight="0.32938388" />
       <window_info anchor="bottom" id="Terminal" order="13" weight="0.32938388" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" x="1891" y="159" width="803" height="731" id="SciView" order="3" sideWeight="0.7595156" visible="true" weight="1.0" />
+      <window_info anchor="right" x="1891" y="159" width="803" height="731" id="SciView" order="3" sideWeight="0.75570035" weight="0.4226254" />
       <window_info anchor="right" id="Database" order="4" weight="0.32956687" />
-      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.24048443" side_tool="true" weight="0.72020286" />
+      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.24429968" side_tool="true" weight="0.4226254" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -745,7 +732,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/EvaluationScripts/Pf50_SingleContent_InferEval_Script.py" />
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Hw50_SingleContent_InferEval_Script.py" />
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_InferEval_Script.py" />
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script.py" />
@@ -769,16 +755,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="292">
           <caret line="271" selection-start-line="271" selection-end-line="271" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/generators.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="41">
-          <caret line="193" column="18" selection-start-line="193" selection-start-column="18" selection-end-line="193" selection-end-column="18" />
-          <folding>
-            <element signature="e#1#24#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -981,16 +957,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/wnet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="674">
-          <caret line="1507" lean-forward="true" selection-start-line="1507" selection-end-line="1507" />
-          <folding>
-            <element signature="e#24#62#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/discriminators.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
@@ -1012,6 +978,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/EvaluationScripts/EvaluationMetric.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-112">
+          <caret line="923" column="127" lean-forward="true" selection-start-line="923" selection-start-column="127" selection-end-line="923" selection-end-column="128" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/matplotlib/colors.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
@@ -1019,13 +992,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/EvaluationScripts/EvaluationMetric.py">
+    <entry file="file://$PROJECT_DIR$/model/wnet.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="734">
-          <caret line="961" column="63" selection-start-line="961" selection-start-column="63" selection-end-line="961" selection-end-column="63" />
+        <state relative-caret-position="674">
+          <caret line="1507" lean-forward="true" selection-start-line="1507" selection-end-line="1507" />
           <folding>
-            <element signature="e#2#20#0" expanded="true" />
+            <element signature="e#24#62#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/generators.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-391">
+          <caret line="30" selection-start-line="30" selection-end-line="30" />
+          <folding>
+            <element signature="e#1#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/wnet_forTraining.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="446">
+          <caret line="1952" column="61" selection-start-line="1952" selection-start-column="61" selection-end-line="1952" selection-end-column="61" />
         </state>
       </provider>
     </entry>

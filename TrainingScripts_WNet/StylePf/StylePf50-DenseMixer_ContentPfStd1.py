@@ -9,11 +9,11 @@ import sys
 import os
 sys.path.append('../../')
 
-from model.wnet import WNet as WNET
+from model.wnet_forTraining import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/home/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
@@ -33,8 +33,8 @@ input_args = [
     '--adain_use','0',
 
     '--generator_device','/device:GPU:0',
-    '--discriminator_device', '/device:GPU:1',
-    '--feature_extractor_device','/device:GPU:1',
+    '--discriminator_device', '/device:GPU:0',
+    '--feature_extractor_device','/device:GPU:0',
 
 
     '--train_data_augment','1', # translation? rotation?

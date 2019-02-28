@@ -9,7 +9,7 @@ import sys
 import os
 sys.path.append('../../')
 
-from model.wnet import WNet as WNET
+from model.wnet_forTraining import WNet as WNET
 eps = 1e-9
 
 
