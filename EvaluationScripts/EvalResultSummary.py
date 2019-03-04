@@ -432,10 +432,8 @@ def main():
     for current_exp in exp_list:
         print("%d/%d: %s" % (exp_counter+1, len(exp_list), current_exp))
         fillin_excel_table_pixel(current_result_read_path=os.path.join(reading_result_path,current_exp))
-        fillin_excel_table_mse_vn(current_result_read_path=os.path.join(reading_result_path,current_exp),
-                               mark='MSE')
-        fillin_excel_table_mse_vn(current_result_read_path=os.path.join(reading_result_path, current_exp),
-                               mark='VN')
+        fillin_excel_table_mse_vn(current_result_read_path=os.path.join(reading_result_path,current_exp), mark='MSE')
+        fillin_excel_table_mse_vn(current_result_read_path=os.path.join(reading_result_path, current_exp), mark='VN')
 
         exp_counter+=1
 

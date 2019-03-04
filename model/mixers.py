@@ -570,10 +570,10 @@ def residual_block_implementation(input_list,
                     residual_output_list.append(residual_output)
 
 
-    if (not reuse) and adain_use and (not debug_mode):
-        print(print_separater)
-        raw_input("Press enter to continue")
-    print(print_separater)
+    # if (not reuse) and adain_use and (not debug_mode):
+    #     print(print_separater)
+    #     raw_input("Press enter to continue")
+    # print(print_separater)
 
     return residual_output_list, return_str
 

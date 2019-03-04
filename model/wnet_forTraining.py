@@ -1948,9 +1948,9 @@ class WNet(object):
 
             if dis_vars_train \
                     or global_step.eval(session=self.sess) == global_step_start:
-                _ = self.sess.run(optimizer_d, feed_dict={learning_rate: current_lr_real * 0.35,
+                _ = self.sess.run(optimizer_d, feed_dict={learning_rate: current_lr_real * 3.5,
                                                           discriminator_handle.current_critic_logit_penalty: current_critic_logit_penalty_value})
-                info=info+"LR@D:%f" % (current_lr_real * 0.35)
+                info=info+"LR@D:%f" % (current_lr_real * 3.5)
 
             if gen_vars_train:
                 _ = self.sess.run(optimizer_g, feed_dict={learning_rate: current_lr_real})

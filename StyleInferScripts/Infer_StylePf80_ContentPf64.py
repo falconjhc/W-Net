@@ -22,14 +22,14 @@ print_separater = "#############################################################
 
 input_args = [
     '--targeted_content_input_txt',
-    '../ContentTxt/滚滚长江东逝水_简体_有替代_64.txt',
-    '--save_mode','8:8',
+    '../ContentTxt/StyleChars_Paintings_20.txt',
+    '--save_mode','2:10',
 
 
     '--known_style_img_path',
-    '../StyleExamples/Brush1.png',         # input a image with multiple written chars
+    # '../StyleExamples/Brush1.png',         # input a image with multiple written chars
     # '../FontFiles/DroidSansFallback.ttf', # input a ttf / otf file to generate printed chars
-    #'../StyleExamples/BrushCharacters', # input a image directory with multiple single chars
+    '../StyleExamples/PrintedSamples', # input a image directory with multiple single chars
 
     ####################################################################
     ####################################################################
@@ -45,8 +45,8 @@ input_args = [
     '--style_input_number','4',
 
     '--content_data_dir', # standard data location
-    'CASIA_Dataset/Sources/PrintedSources/64_FoundContentPrototypeTtfOtfs/Simplified/',
-    # 'CASIA_Dataset/PrintedData_64Fonts/Simplified/GB2312_L1/',
+    # 'CASIA_Dataset/Sources/PrintedSources/64_FoundContentPrototypeTtfOtfs/Simplified/',
+    'CASIA_Dataset/PrintedData_64Fonts/Simplified/GB2312_L1/',
 
     '--file_list_txt_content',  # file list of the standard data
     '../FileList/PrintedData/Char_0_3754_64PrintedFonts_GB2312L1_Simplified.txt',

@@ -358,7 +358,7 @@ def get_revelant_data(targeted_input_txt,
                 label1_counter * img_filters:(label1_counter + 1) * img_filters] \
                     = char_img
 
-        return corresponding_char_img,label1_vec
+        return corresponding_char_img,label1_vec, targeted_chars_list, targeted_character_label0_list
 
 
     dir_img = False
@@ -406,7 +406,8 @@ def get_revelant_data(targeted_input_txt,
                 file_data_dir_new.extend(files)
             file_data_dir = file_data_dir_new
             file_data_dir.sort()
-        corresponding_char_img, label1_vec = generate_from_single_font_file(files=file_data_dir)
+        corresponding_char_img, label1_vec, char_list, char_label0_list  = \
+            generate_from_single_font_file(files=file_data_dir)
 
     corresponding_char_img[np.where(corresponding_char_img < 240)] = 0
     corresponding_char_img[np.where(corresponding_char_img >= 240)] = 255

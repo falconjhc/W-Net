@@ -357,7 +357,7 @@ class WNet(object):
         #         img_filters=self.input_output_img_filter_num)
 
         print(self.print_separater)
-        content_prototype, content_label1_vec, valid_mark = \
+        content_prototype, content_label1_vec, valid_mark, _,_ = \
             inf_tools.get_revelant_data(targeted_input_txt=self.targeted_content_input_txt,
                                         level1_charlist=charset_level1,
                                         level2_charlist=charset_level2,
@@ -366,7 +366,8 @@ class WNet(object):
                                         file_list_txt=self.file_list_txt_content,
                                         file_data_dir=self.content_data_dir,
                                         img_width=self.img2img_width,
-                                        img_filters=self.input_output_img_filter_num)
+                                        img_filters=self.input_output_img_filter_num,
+                                        info='ContentPrototypes')
 
 
 

@@ -1,5 +1,7 @@
 Exp:1  | AdobeNet-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleKnown
 Exp:2  | EmdNet-Style1-AdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleKnown
 Exp:3  | EmdNet-Style1-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleKnown
-Exp:4  | ResMixer-5-DenseMixer-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleKnown
-Exp:5  | ResMixer-5-SimpleMixer-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleKnown
+Exp:4  | ResEmdNet-NN-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleKnown
+Exp:5  | ResEmdNet-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleKnown
+Exp:6  | ResMixer-5-DenseMixer-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleKnown
+Exp:7  | ResMixer-5-SimpleMixer-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleKnown
