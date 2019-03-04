@@ -92,7 +92,7 @@ input_args = [
     '--Pixel_Reconstruction_Penalty','850',
     '--Lconst_content_Penalty','3',
     '--Lconst_style_Penalty','5',
-    '--Discriminative_Penalty', '100',
+    '--Discriminative_Penalty', '75',
 
     '--Discriminator_Categorical_Penalty', '50',
     '--Discriminator_Gradient_Penalty', '10',
