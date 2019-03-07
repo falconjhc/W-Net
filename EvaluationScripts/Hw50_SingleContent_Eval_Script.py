@@ -23,8 +23,10 @@ style_input_number=4
 evaluation_resule_save_dir = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201901/'
 
 # W-Net
+# evaluating_generator_dir=\
+#     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-NonAdaIN_StyleHw50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
 evaluating_generator_dir=\
-    'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-NonAdaIN_StyleHw50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
+    'tfModels2019_WNet/checkpoint/Exp20190213-WNet-DenseMixer-NonAdaIN_StyleHw50_ContentPfStd1_GenEncDec6-Des5@Lyr3_DisMdy6conv/generator/'
 
 
 

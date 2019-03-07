@@ -14,7 +14,7 @@ eps = 1e-9
 
 
 
-data_path_root = '/home/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
 content_known_unknown='Known'
@@ -23,16 +23,43 @@ style_input_number=4
 evaluation_resule_save_dir = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201901/'
 
 # W-Net
-# evaluating_generator_dir=\
-#     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-NonAdaIN_StylePf50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
 evaluating_generator_dir=\
-    'tfModels2019_WNet/checkpoint/Exp20190213-WNet-DenseMixer-NonAdaIN_StylePf50_ContentPfStd1_GenEncDec6-Des5@Lyr3_DisMdy6conv/generator/'
+   'tfModels2019_WNet/checkpoint/Exp20190129-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-DenseMixer-AdaIN-Single_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-DenseMixer-NonAdaIN_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-AdaIN-Multi_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-AdaIN-Single_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-NonAdaIN_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
+
+# Adobe-Net
+# evaluating_generator_dir=\
+#     'tfModels2019_AdobeNet/checkpoint/Exp20190129-AdobeNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+
+# Emd-Net
+# evaluating_generator_dir=\
+#     'tfModels2019_EmdNet/checkpoint/Exp20190129-ResEmdNet-NN-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_EmdNet/checkpoint/Exp20190129-ResEmdNet-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_EmdNet/checkpoint/Exp20190129-EmdNet-Style4-AdaIN_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_EmdNet/checkpoint/Exp20190129-EmdNet-Style4-NonAdaIN_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+
+# ResMixer-Net
+# evaluating_generator_dir=\
+#     'tfModels2019_ResMixerNet/checkpoint/Exp20190129-ResMixer-5-DenseMixer-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_ResMixerNet/checkpoint/Exp20190129-ResMixer-5-SimpleMixer-Style4_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv/generator/'
 
 
-
-## content dir
+## content
 content_data_dir=list()
-content_data_dir.append('CASIA_Dataset/StandardChars/GB2312_L1/')
+content_data_dir.append('CASIA_Dataset/PrintedData/')
 
 # style dir
 style_train_data_dir=list()
@@ -45,14 +72,13 @@ fixed_style_data_dir.append('CASIA_Dataset/PrintedData/GB2312_L1/')
 
 
 
-
 ## known content
 known_content_file_list=list()
-known_content_file_list.append('../TrainTestFileList/StandardChars/Char_0_3754_GB2312L1_Train.txt')
+known_content_file_list.append('../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Train.txt')
 
 ## unknown content
 unknown_content_file_list=list()
-unknown_content_file_list.append('../TrainTestFileList/StandardChars/Char_0_3754_GB2312L1_Test.txt')
+unknown_content_file_list.append('../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Test.txt')
 
 
 
@@ -74,6 +100,7 @@ else:
     unknown_style_file_list.append('../TrainTestFileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1_Test.txt')
 unknown_fixed_style_file_list=list()
 unknown_fixed_style_file_list.append('../EvaluationDataFileLists/PrintedData/StyleChar_Paintings_Font_50_79_GB2312L1.txt')
+
 
 
 

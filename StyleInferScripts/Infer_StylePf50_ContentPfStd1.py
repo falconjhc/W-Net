@@ -29,7 +29,7 @@ input_args = [
     '--known_style_img_path',
     # '../StyleExamples/Brush1.png',         # input a image with multiple written chars
     # '../FontFiles/DroidSansFallback.ttf', # input a ttf / otf file to generate printed chars
-    '../StyleExamples/PrintedSamples', # input a image directory with multiple single chars
+    '../StyleExamples/PrintedSamples/PF037/', # input a image directory with multiple single chars
 
     ####################################################################
     ####################################################################
@@ -45,23 +45,22 @@ input_args = [
     '--style_input_number','4',
 
     '--content_data_dir', # standard data location
-    # 'CASIA_Dataset/Sources/PrintedSources/64_FoundContentPrototypeTtfOtfs/Simplified/',
-    'CASIA_Dataset/PrintedData_64Fonts/Simplified/GB2312_L1/',
+    'CASIA_Dataset/StandardChars/GB2312_L1/',
 
     '--file_list_txt_content',  # file list of the standard data
-    '../FileList/PrintedData/Char_0_3754_64PrintedFonts_GB2312L1_Simplified.txt',
+    '../FileList/StandardChars/Char_0_3754_GB2312L1.txt',
 
 
 
     '--generator_residual_at_layer','3',
-    '--generator_residual_blocks','7',
+    '--generator_residual_blocks','5',
 
     '--generator_device','/device:GPU:0',
 
     '--model_dir',
-    'TrainedModels_WNet/Exp20190129-WNet-ResidualMixer-NonAdaIN_StylePf144_ContentPf64_GenEncDec6-Res7@Lyr3_DisMdy6conv/',
+    'TrainedModels_WNet/Exp20190213-WNet-DenseMixer-NonAdaIN_StylePf50_ContentPfStd1_GenEncDec6-Des5@Lyr3_DisMdy6conv/',
 
-    ]
+]
 
 parser = argparse.ArgumentParser(description='Train')
 parser.add_argument('--style_input_number', dest='style_input_number', type=int,required=True)

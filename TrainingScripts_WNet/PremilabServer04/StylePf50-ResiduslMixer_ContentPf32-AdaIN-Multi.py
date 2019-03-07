@@ -13,7 +13,7 @@ from model.wnet_forTraining import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/DataA/Harric/ChineseCharacterExp/'
+data_path_root = '/home/harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
@@ -23,11 +23,14 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
+    #'--training_from_model_dir',
+    #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20190108-WNet-AdaIN-Multi_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
+
     '--debug_mode','0',
     '--style_input_number','4', # how many style inputs
     '--init_training_epochs','1',
     '--final_training_epochs','1500',
-    '--adain_use','0',
+    '--adain_use','1-Multi',
 
     '--generator_device','/device:GPU:0',
     '--discriminator_device', '/device:GPU:0',
@@ -36,9 +39,9 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','20190129-ResEmdNet-Style4_StylePf50_ContentPf32',# experiment name prefix
-    '--experiment_dir','tfModels2019_EmdNet/', # model saving location
-    '--log_dir','tfLogs2019_EmdNet_Pf50/',# log file saving location
+    '--experiment_id','20190129-WNet-ResidualMixer-AdaIN-Multi_StylePf50_ContentPf32',# experiment name prefix
+    '--experiment_dir','tfModels2019_WNet/', # model saving location
+    '--log_dir','tfLogs2019_WNet_Pf50/',# log file saving location
     '--print_info_seconds','750',
 
     '--content_data_dir', # standard data location
@@ -84,7 +87,7 @@ input_args = [
     '--Pixel_Reconstruction_Penalty','750',
     '--Lconst_content_Penalty','3',
     '--Lconst_style_Penalty','5',
-    '--Discriminative_Penalty', '50',
+    '--Discriminative_Penalty', '125',
     '--Discriminator_Categorical_Penalty', '50',
     '--Discriminator_Gradient_Penalty', '10',
     '--Batch_StyleFeature_Discrimination_Penalty','0',
@@ -99,8 +102,8 @@ input_args = [
     'tfModels_FeatureExtractor/checkpoint/Exp20190119_FeatureExtractor_Style_HW300Pf144_vgg16net/variables/',
 
     '--Feature_Penalty_True_Fake_Target', '800',
-    '--Feature_Penalty_Style_Reference','15',
-    '--Feature_Penalty_Content_Prototype','15']
+    '--Feature_Penalty_Style_Reference','5',
+    '--Feature_Penalty_Content_Prototype','5']
 
 
 

@@ -9,7 +9,7 @@ import sys
 import os
 sys.path.append('../../')
 
-from model.wnet import WNet as WNET
+from model.wnet_forTraining import WNet as WNET
 eps = 1e-9
 
 
@@ -22,10 +22,12 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 # resume_training = 0: training from stratch
 #                   1: training from a based model
 input_args = [
+    #'--training_from_model_dir',
+   # '/Data_HDD/Harric/ChineseCharacterExp/tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-NonAdaIN_StyleHw50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
     '--debug_mode','0',
-    '--style_input_number','1', # how many style inputs
+    '--style_input_number','4', # how many style inputs
     '--init_training_epochs','1',
-    '--final_training_epochs','1500',
+    '--final_training_epochs','500',
     '--adain_use','0',
 
     '--generator_device','/device:GPU:0',
@@ -35,15 +37,13 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','20190129-ResMixer-5-DenseMixer-Style1_StyleHw50_ContentPf32+Hw32',# experiment name prefix
-    '--experiment_dir','tfModels2019_ResMixerNet/', # model saving location
-    '--log_dir','tfLogs2019_ResMixerNet_Hw50/',# log file saving location
+    '--experiment_id','20190213-WNet-DenseMixer-NonAdaIN_StyleHw50_ContentPfStd1',# experiment name prefix
+    '--experiment_dir','tfModels2019_WNet/', # model saving location
+    '--log_dir','tfLogs2019_WNet_Hw50/',# log file saving location
     '--print_info_seconds','750',
 
     '--content_data_dir', # standard data location
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/,'
-    'CASIA_Dataset/PrintedData/',
+    'CASIA_Dataset/StandardChars/GB2312_L1/',
 
     '--style_train_data_dir', # training data location
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
@@ -53,9 +53,7 @@ input_args = [
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
     '--file_list_txt_content', # file list of the standard data
-    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated_Train.txt,'
-    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive_Train.txt,'
-    '../../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Train.txt',
+    '../../TrainTestFileList/StandardChars/Char_0_3754_GB2312L1_Train.txt',
 
     '--file_list_txt_style_train', # file list of the training data
     '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated_Train.txt,'
@@ -86,10 +84,10 @@ input_args = [
     # penalties
     '--generator_weight_decay_penalty','0.0001',
     '--discriminator_weight_decay_penalty','0.0003',
-    '--Pixel_Reconstruction_Penalty','750',
+    '--Pixel_Reconstruction_Penalty','850',
     '--Lconst_content_Penalty','3',
     '--Lconst_style_Penalty','5',
-    '--Discriminative_Penalty', '150',
+    '--Discriminative_Penalty', '125',
 
     '--Discriminator_Categorical_Penalty', '75',
     '--Discriminator_Gradient_Penalty', '10',
@@ -104,9 +102,9 @@ input_args = [
     '--style_reference_extractor_dir',
     'tfModels_FeatureExtractor/checkpoint/Exp20190119_FeatureExtractor_Style_HW300Pf144_vgg16net/variables/',
 
-    '--Feature_Penalty_True_Fake_Target', '550',
+    '--Feature_Penalty_True_Fake_Target', '750',
     '--Feature_Penalty_Style_Reference','5',
-    '--Feature_Penalty_Content_Prototype','2']
+    '--Feature_Penalty_Content_Prototype','5']
 
 
 

@@ -13,8 +13,9 @@ from model.wnet_forTraining import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/DataA/Harric/ChineseCharacterExp/'
+data_path_root = '/home/harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
+
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
 
@@ -23,11 +24,12 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 #                   1: training from a based model
 input_args = [
     #'--training_from_model_dir',
-   # '/Data_HDD/Harric/ChineseCharacterExp/tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-NonAdaIN_StyleHw50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
+    #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20190108-WNet-NonAdaIN_StylePf50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
+
     '--debug_mode','0',
     '--style_input_number','4', # how many style inputs
     '--init_training_epochs','1',
-    '--final_training_epochs','500',
+    '--final_training_epochs','1500',
     '--adain_use','0',
 
     '--generator_device','/device:GPU:0',
@@ -37,30 +39,28 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','20190213-WNet-DenseMixer-NonAdaIN_StyleHw50_ContentPfStd1',# experiment name prefix
+    '--experiment_id','20190129-WNet-ResidualMixer-NonAdaIN_StylePf50_ContentPfStd1',# experiment name prefix
     '--experiment_dir','tfModels2019_WNet/', # model saving location
-    '--log_dir','tfLogs2019_WNet_Hw50/',# log file saving location
+    '--log_dir','tfLogs2019_WNet_Pf50/',# log file saving location
     '--print_info_seconds','750',
 
     '--content_data_dir', # standard data location
     'CASIA_Dataset/StandardChars/GB2312_L1/',
 
     '--style_train_data_dir', # training data location
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
+    'CASIA_Dataset/PrintedData/GB2312_L1/',
 
     '--style_validation_data_dir',# validation data location
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
+    'CASIA_Dataset/PrintedData/GB2312_L1/',
 
     '--file_list_txt_content', # file list of the standard data
     '../../TrainTestFileList/StandardChars/Char_0_3754_GB2312L1_Train.txt',
 
     '--file_list_txt_style_train', # file list of the training data
-    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated_Train.txt,'
-    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive_Train.txt',
+    '../../TrainTestFileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1_Train.txt',
 
     '--file_list_txt_style_validation', # file list of the validation data
-    '../../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
+    '../../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt',
 
 
     # generator && discriminator
@@ -84,12 +84,11 @@ input_args = [
     # penalties
     '--generator_weight_decay_penalty','0.0001',
     '--discriminator_weight_decay_penalty','0.0003',
-    '--Pixel_Reconstruction_Penalty','850',
+    '--Pixel_Reconstruction_Penalty','750',
     '--Lconst_content_Penalty','3',
     '--Lconst_style_Penalty','5',
     '--Discriminative_Penalty', '125',
-
-    '--Discriminator_Categorical_Penalty', '75',
+    '--Discriminator_Categorical_Penalty', '50',
     '--Discriminator_Gradient_Penalty', '10',
     '--Batch_StyleFeature_Discrimination_Penalty','0',
 

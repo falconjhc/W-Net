@@ -7,13 +7,13 @@ from tensorflow.python.client import device_lib
 import argparse
 import sys
 import os
-sys.path.append('../../')
+sys.path.append('../')
 
-from model.wnet import WNet as WNET
+from model.wnet_forTraining import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/home/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
@@ -27,7 +27,7 @@ input_args = [
     '--style_input_number','4', # how many style inputs
     '--init_training_epochs','1',
     '--final_training_epochs','1500',
-    '--adain_use','1',
+    '--adain_use','0',
 
     '--generator_device','/device:GPU:0',
     '--discriminator_device', '/device:GPU:0',
@@ -36,7 +36,7 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','20190129-EmdNet-Style4-AdaIN_StylePf50_ContentPf32',# experiment name prefix
+    '--experiment_id','20190129-ResEmdNet-NN-Style4_StylePf50_ContentPf32',# experiment name prefix
     '--experiment_dir','tfModels2019_EmdNet/', # model saving location
     '--log_dir','tfLogs2019_EmdNet_Pf50/',# log file saving location
     '--print_info_seconds','750',
@@ -51,13 +51,13 @@ input_args = [
     'CASIA_Dataset/PrintedData/GB2312_L1/',
 
     '--file_list_txt_content', # file list of the standard data
-    '../../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Train.txt',
+    '../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Train.txt',
 
     '--file_list_txt_style_train', # file list of the training data
-    '../../TrainTestFileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1_Train.txt',
+    '../TrainTestFileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1_Train.txt',
 
     '--file_list_txt_style_validation', # file list of the validation data
-    '../../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt',
+    '../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt',
 
 
     # generator && discriminator

@@ -7,14 +7,15 @@ from tensorflow.python.client import device_lib
 import argparse
 import sys
 import os
-sys.path.append('../../')
+sys.path.append('../')
 
-from model.wnet import WNet as WNET
+from model.wnet_forTraining import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/home/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
+
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
 
@@ -26,7 +27,7 @@ input_args = [
     '--style_input_number','1', # how many style inputs
     '--init_training_epochs','1',
     '--final_training_epochs','1500',
-    '--adain_use','1',
+    '--adain_use','0',
 
     '--generator_device','/device:GPU:0',
     '--discriminator_device', '/device:GPU:0',
@@ -35,34 +36,28 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','20190129-EmdNet-Style1-AdaIN_StyleHw50_ContentPf32+Hw32',# experiment name prefix
+    '--experiment_id','20190129-ResEmdNet-NN-Style1_StylePf50_ContentPf32',# experiment name prefix
     '--experiment_dir','tfModels2019_EmdNet/', # model saving location
-    '--log_dir','tfLogs2019_EmdNet_Hw50/',# log file saving location
+    '--log_dir','tfLogs2019_EmdNet_Pf50/',# log file saving location
     '--print_info_seconds','750',
 
     '--content_data_dir', # standard data location
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/,'
     'CASIA_Dataset/PrintedData/',
 
     '--style_train_data_dir', # training data location
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
+    'CASIA_Dataset/PrintedData/GB2312_L1/',
 
     '--style_validation_data_dir',# validation data location
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
+    'CASIA_Dataset/PrintedData/GB2312_L1/',
 
     '--file_list_txt_content', # file list of the standard data
-    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated_Train.txt,'
-    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive_Train.txt,'
-    '../../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Train.txt',
+    '../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Train.txt',
 
     '--file_list_txt_style_train', # file list of the training data
-    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated_Train.txt,'
-    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive_Train.txt',
+    '../TrainTestFileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1_Train.txt',
 
     '--file_list_txt_style_validation', # file list of the validation data
-    '../../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
+    '../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt',
 
 
     # generator && discriminator
@@ -89,9 +84,8 @@ input_args = [
     '--Pixel_Reconstruction_Penalty','750',
     '--Lconst_content_Penalty','3',
     '--Lconst_style_Penalty','5',
-    '--Discriminative_Penalty', '150',
-
-    '--Discriminator_Categorical_Penalty', '75',
+    '--Discriminative_Penalty', '50',
+    '--Discriminator_Categorical_Penalty', '50',
     '--Discriminator_Gradient_Penalty', '10',
     '--Batch_StyleFeature_Discrimination_Penalty','0',
 
@@ -104,9 +98,9 @@ input_args = [
     '--style_reference_extractor_dir',
     'tfModels_FeatureExtractor/checkpoint/Exp20190119_FeatureExtractor_Style_HW300Pf144_vgg16net/variables/',
 
-    '--Feature_Penalty_True_Fake_Target', '550',
-    '--Feature_Penalty_Style_Reference','5',
-    '--Feature_Penalty_Content_Prototype','2']
+    '--Feature_Penalty_True_Fake_Target', '800',
+    '--Feature_Penalty_Style_Reference','15',
+    '--Feature_Penalty_Content_Prototype','15']
 
 
 
