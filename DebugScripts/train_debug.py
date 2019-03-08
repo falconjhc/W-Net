@@ -9,15 +9,15 @@ import sys
 import os
 sys.path.append('..')
 
-from model.wnet import WNet as WNET
+from model.wnet_forTraining import WNet as WNET
 eps = 1e-9
 
 
 
-# data_path_root = '/DataA/Harric/ChineseCharacterExp/'
-# model_log_path_root = '/DataA/Harric/ChineseCharacterExp/'
-data_path_root = '/Users/harric/ChineseCharacterExp/'
-model_log_path_root = '/Users/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
+model_log_path_root = '/DataA/Harric/ChineseCharacterExp/'
+# data_path_root = '/Users/harric/ChineseCharacterExp/'
+# model_log_path_root = '/Users/harric/ChineseCharacterExp/'
 
 # OPTIONS SPECIFICATION
 # resume_training = 0: training from stratch
@@ -58,7 +58,7 @@ input_args = [
 
     '--content_data_dir', # standard data location
     'CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/,'
-    'CASIA_Dataset/PrintedData_80Fonts/',
+    'CASIA_Dataset/PrintedData/',
 
     '--style_train_data_dir', # training data location
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/',

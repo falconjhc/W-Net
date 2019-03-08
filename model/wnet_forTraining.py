@@ -47,7 +47,7 @@ import utilities.infer_implementations as inf_tools
 
 # Auxiliary wrapper classes
 # Used to save handles(important nodes in computation graph) for later evaluation
-SummaryHandle = namedtuple("SummaryHandle", ["d_merged", "g_merged",
+SummaryHandle = namedtuple("SummaryHandle", ["d_merged", "g_merged","var_loss_summary",
                                              "check_validate_image_summary", "check_train_image_summary",
                                              "check_validate_image", "check_train_image",
                                              "learning_rate",
@@ -765,6 +765,7 @@ class WNet(object):
     def summary_finalization(self,
                              g_loss_summary,
                              d_loss_summary,
+                             var_loss_summary,
                              trn_real_dis_extr_summaries, val_real_dis_extr_summaries,
                              trn_fake_dis_extr_summaries, val_fake_dis_extr_summaries,
                              learning_rate):
@@ -791,6 +792,7 @@ class WNet(object):
 
         summary_handle = SummaryHandle(d_merged=d_loss_summary,
                                        g_merged=g_loss_summary,
+                                       var_loss_summary=var_loss_summary,
                                        check_validate_image_summary=check_validate_image_summary,
                                        check_train_image_summary=check_train_image_summary,
                                        check_validate_image=check_validate_image,
@@ -834,7 +836,7 @@ class WNet(object):
 
 
 
-    def feature_extractor_build(self, g_loss, g_merged_summary,data_provider):
+    def feature_extractor_build(self, g_loss, g_merged_summary,var_merged_summary,data_provider):
 
         def feature_linear_norm(feature):
             min_v= tf.reduce_min(feature)
@@ -872,9 +874,9 @@ class WNet(object):
 
             return final_loss_mse, final_loss_vn
 
-        def build_feature_extractor(input_true_img,
+        def build_feature_extractor(input_true_img,input_fake_img,reuse,
                                     extractor_usage,output_high_level_features):
-            generator_handle = getattr(self,'generator_handle')
+
             output_logit_list = list()
 
 
@@ -886,13 +888,13 @@ class WNet(object):
                         feature_extractor_network(image=input_true_img,
                                                   batch_size=self.batch_size,
                                                   device=self.feature_extractor_device,
-                                                  reuse=False,
+                                                  reuse=reuse,
                                                   keep_prob=1,
                                                   initializer=self.initializer,
                                                   network_usage=extractor_usage,
                                                   output_high_level_features=output_high_level_features)
                     fake_features, _ = \
-                        feature_extractor_network(image=generator_handle.generated_target_train,
+                        feature_extractor_network(image=input_fake_img,
                                                   batch_size=self.batch_size,
                                                   device=self.feature_extractor_device,
                                                   reuse=True,
@@ -914,6 +916,8 @@ class WNet(object):
         extr_val_fake_merged = []
         saver_list = list()
 
+        generator_handle = getattr(self, 'generator_handle')
+
         input_target_infer = tf.placeholder(tf.float32,
                                             [self.batch_size,
                                              self.source_img_width,
@@ -926,8 +930,10 @@ class WNet(object):
         if self.extractor_true_fake_enabled:
             true_fake_infer_list, true_fake_feature_loss_mse, true_fake_feature_loss_vn, network_info = \
                 build_feature_extractor(input_true_img=data_provider.train_iterator.output_tensor_list[0],
+                                        input_fake_img=generator_handle.generated_target_train,
                                         extractor_usage='TrueFake_FeatureExtractor',
-                                        output_high_level_features=[1,2,3,4,5])
+                                        output_high_level_features=[1,2,3,4,5],
+                                        reuse=False)
             g_loss += true_fake_feature_loss_mse * self.Feature_Penalty_True_Fake_Target
             feature_true_fake_loss_l2_summary = tf.summary.scalar("Loss_Reconstruction/TrueFake_L2",
                                                                   tf.abs(true_fake_feature_loss_mse))
@@ -943,6 +949,17 @@ class WNet(object):
             extr_vars_true_fake = self.find_norm_avg_var(extr_vars_true_fake)
             extr_vars_true_fake = self.variable_dict(var_input=extr_vars_true_fake, delete_name_from_character='/')
             saver_extractor_true_fake = tf.train.Saver(max_to_keep=1, var_list=extr_vars_true_fake)
+
+            _,true_fake_feature_loss_mse_var, true_fake_feature_loss_vn_var, _ = \
+                build_feature_extractor(input_true_img=data_provider.validate_iterator.output_tensor_list[0],
+                                        input_fake_img=generator_handle.generated_target_infer,
+                                        extractor_usage='TrueFake_FeatureExtractor',
+                                        output_high_level_features=[1,2,3,4,5],
+                                        reuse=True)
+
+            deep_mse_var_summary = tf.summary.scalar("ValidationCheck/Feature_MSE", tf.abs(true_fake_feature_loss_mse_var))
+            deep_vn_var_summary = tf.summary.scalar("ValidationCheck/Feature_VN", tf.abs(true_fake_feature_loss_vn_var))
+            var_merged_summary= tf.summary.merge([var_merged_summary, deep_mse_var_summary, deep_vn_var_summary])
 
 
             print("TrueFakeExtractor @ %s with %s;" % (self.feature_extractor_device, network_info))
@@ -962,8 +979,10 @@ class WNet(object):
             selected_content_prototype = tf.expand_dims(content_prototype[:,:,:,selected_index], axis=3)
             content_prototype_infer_list,content_prototype_feature_mse_loss, content_prototype_feature_vn_loss, network_info = \
                 build_feature_extractor(input_true_img=selected_content_prototype,
+                                        input_fake_img=generator_handle.generated_target_train,
                                         extractor_usage='ContentPrototype_FeatureExtractor',
-                                        output_high_level_features=[3,4,5])
+                                        output_high_level_features=[3,4,5],
+                                        reuse=False)
             g_loss += content_prototype_feature_mse_loss * self.Feature_Penalty_Content_Prototype
             feature_content_prototype_mse_loss_summary = tf.summary.scalar("Loss_Reconstruction/ContentPrototype_L2",
                                                                            tf.abs(content_prototype_feature_mse_loss))
@@ -995,8 +1014,10 @@ class WNet(object):
             selected_style_reference = tf.expand_dims(style_reference[:, :, :, selected_index], axis=3)
             style_reference_infer_list, style_reference_feature_mse_loss, style_reference_feature_vn_loss, network_info = \
                 build_feature_extractor(input_true_img = selected_style_reference,
+                                        input_fake_img=generator_handle.generated_target_train,
                                         extractor_usage='StyleReference_FeatureExtractor',
-                                        output_high_level_features=[3,4,5])
+                                        output_high_level_features=[3,4,5],
+                                        reuse=False)
             g_loss += style_reference_feature_mse_loss * self.Feature_Penalty_Style_Reference
             feature_style_reference_mse_loss_summary = tf.summary.scalar("Loss_Reconstruction/StyleReference_L2",
                                                                          tf.abs(style_reference_feature_mse_loss))
@@ -1035,6 +1056,7 @@ class WNet(object):
 
 
         return g_loss, g_merged_summary,saver_list, \
+               var_merged_summary, \
                extr_trn_real_merged,extr_trn_fake_merged,extr_val_real_merged,extr_val_fake_merged
 
 
@@ -1153,6 +1175,7 @@ class WNet(object):
         # loss build
         g_loss=0
         g_merged_summary = []
+        var_merged_summary = []
 
         # batch discrimination loss on style encoder
         if self.Batch_StyleFeature_Discrimination_Penalty > eps * 10:
@@ -1213,6 +1236,11 @@ class WNet(object):
             g_loss+=l1_loss
             g_merged_summary = tf.summary.merge([g_merged_summary, l1_loss_summary])
 
+            l1_loss_var = tf.abs(generated_target_infer - true_style_train)
+            l1_loss_var = tf.reduce_mean(l1_loss_var)
+            l1_loss_var_summary = tf.summary.scalar("ValidationCheck/Pixel_L1",tf.abs(l1_loss_var))
+            var_merged_summary = tf.summary.merge([var_merged_summary, l1_loss_var_summary])
+
 
         gen_vars_train = [var for var in tf.trainable_variables() if 'generator' in var.name]
         gen_vars_save = self.find_norm_avg_var(gen_vars_train)
@@ -1222,7 +1250,7 @@ class WNet(object):
         print(
             "Generator @%s with %s;" % (self.generator_devices, network_info))
         return generated_target_infer, generated_target_train, \
-               g_loss, g_merged_summary, \
+               g_loss, g_merged_summary, var_merged_summary,\
                gen_vars_train, saver_generator
 
 
@@ -1796,15 +1824,17 @@ class WNet(object):
 
             # for generator building
             generated_batch_infer, generated_batch_train, \
-            g_loss, g_merged_summary, \
+            g_loss, g_merged_summary,var_merged_summary, \
             gen_vars_train, saver_generator \
                 = self.generator_build(data_provider=data_provider)
 
             # for feature extractor
             g_loss, g_merged_summary, feature_extractor_saver_list, \
+            var_merged_summary,\
             extr_trn_real_merged, extr_trn_fake_merged, extr_val_real_merged, extr_val_fake_merged= \
                 self.feature_extractor_build(g_loss=g_loss,
                                              g_merged_summary=g_merged_summary,
+                                             var_merged_summary=var_merged_summary,
                                              data_provider=data_provider)
 
             # for discriminator building
@@ -1837,6 +1867,7 @@ class WNet(object):
             # summaries
             self.summary_finalization(g_loss_summary=g_merged_summary,
                                       d_loss_summary=d_merged_summary,
+                                      var_loss_summary=var_merged_summary,
                                       trn_real_dis_extr_summaries=trn_real_dis_extr_summary_merged,
                                       val_real_dis_extr_summaries=val_real_dis_extr_summary_merged,
                                       trn_fake_dis_extr_summaries=trn_fake_dis_extr_summary_merged,
@@ -2075,6 +2106,10 @@ class WNet(object):
                                                         self.Discriminative_Penalty))
 
                     print("TrainingInfo:%s" % info)
+
+                    var_loss_summary = self.sess.run(summary_handle.var_loss_summary)
+                    summary_writer.add_summary(var_loss_summary, global_step.eval(session=self.sess))
+                    summary_writer.flush()
                     print(self.print_separater)
 
                 if time.time()-record_start>record_seconds or global_step.eval(session=self.sess)==global_step_start+1:

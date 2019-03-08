@@ -53,6 +53,7 @@ input_args = [
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
     '--style_validation_data_dir',# validation data location
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
     '--file_list_txt_content', # file list of the standard data
@@ -65,7 +66,8 @@ input_args = [
     '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive_Train.txt',
 
     '--file_list_txt_style_validation', # file list of the validation data
-    '../../FileList/HandWritingData/Char_0_3754_Writer_1296_1300_Cursive.txt',
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated.txt,'
+    '../../FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive.txt',
 
 
     # generator && discriminator
