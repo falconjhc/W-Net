@@ -954,7 +954,7 @@ class WNet(object):
                 build_feature_extractor(input_true_img=data_provider.validate_iterator.output_tensor_list[0],
                                         input_fake_img=generator_handle.generated_target_infer,
                                         extractor_usage='TrueFake_FeatureExtractor',
-                                        output_high_level_features=[1,2,3,4,5],
+                                        output_high_level_features=[3,4,5],
                                         reuse=True)
 
             deep_mse_var_summary = tf.summary.scalar("ValidationCheck/Feature_MSE", tf.abs(true_fake_feature_loss_mse_var))
@@ -1077,6 +1077,7 @@ class WNet(object):
                     style_reference_train_list.append(style_reference_train)
 
                 true_style_train = data_provider.train_iterator.output_tensor_list[0]
+                true_style_infer = data_provider.validate_iterator.output_tensor_list[0]
 
                 # build the generator
                 generated_target_train, encoded_content_prototype_train, encoded_style_reference_train, network_info, \
@@ -1236,7 +1237,7 @@ class WNet(object):
             g_loss+=l1_loss
             g_merged_summary = tf.summary.merge([g_merged_summary, l1_loss_summary])
 
-            l1_loss_var = tf.abs(generated_target_infer - true_style_train)
+            l1_loss_var = tf.abs(generated_target_infer - true_style_infer)
             l1_loss_var = tf.reduce_mean(l1_loss_var)
             l1_loss_var_summary = tf.summary.scalar("ValidationCheck/Pixel_L1",tf.abs(l1_loss_var))
             var_merged_summary = tf.summary.merge([var_merged_summary, l1_loss_var_summary])
