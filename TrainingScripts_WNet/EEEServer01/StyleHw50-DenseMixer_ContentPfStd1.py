@@ -61,8 +61,8 @@ input_args = [
     '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive_Train.txt',
 
     '--file_list_txt_style_validation', # file list of the validation data
-    '../../FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated.txt,'
-    '../../FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive.txt',
+    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated_Test.txt,'
+    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive_Test.txt',
 
 
     # generator && discriminator
