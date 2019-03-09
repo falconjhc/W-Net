@@ -57,7 +57,7 @@ input_args = [
     '../TrainTestFileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1_Train.txt',
 
     '--file_list_txt_style_validation', # file list of the validation data
-    '../TrainTestFileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1_Test.txt',
+    '../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt',
 
 
     # generator && discriminator

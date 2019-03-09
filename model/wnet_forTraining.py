@@ -2023,9 +2023,9 @@ class WNet(object):
         print(data_provider.content_label1_vec)
 
 
-        if self.debug_mode == 0:
-            raw_input("Press enter to continue")
-        print(self.print_separater)
+        # if self.debug_mode == 0:
+        #     raw_input("Press enter to continue")
+        # print(self.print_separater)
 
 
         self.found_new_record_on_the_previous_epoch = True

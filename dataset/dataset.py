@@ -196,7 +196,6 @@ class Dataset_Iterator(object):
 
 
     def reproduce_dataset_lists(self, info, shuffle,info_print_interval):
-
         if shuffle:
             old_content_prototype_list = cpy.deepcopy(self.content_prototype_list)
             old_true_style_data_list = self.true_style.data_list
@@ -251,8 +250,6 @@ class Dataset_Iterator(object):
                     label1_vec) or label1_counter == 1:
                 time_start = time.time()
                 print('%s:DatasetReInitialization@CurrentLabel1:%d/%d(Label1:%s);' % (info, label1_counter, len(label1_vec), label1))
-
-
 
 
 
@@ -862,18 +859,6 @@ class DataProvider(object):
                                           info_print_interval=info_print_interval)
             train_style_reference_list.append(train_style_dataset)
 
-        # if dataset_mode=='Eval':
-        #     loss_style_reference_list = list()
-        #     for ii in range(self.max_style_reference_loss_num):
-        #         loss_style_dataset = Dataset(data_list=cpy.deepcopy(train_style_data_path_list),
-        #                                       label0_list=cpy.deepcopy(train_style_label0_list),
-        #                                       label1_list=cpy.deepcopy(train_style_label1_list),
-        #                                       sorted_by_label0=False,
-        #                                       print_marks='ForStyleReferenceTrainData_Loss&Evaluation:',
-        #                                       info_print_interval=info_print_interval)
-        #         loss_style_reference_list.append(loss_style_dataset)
-        # else:
-        #     loss_style_reference_list = []
         loss_style_reference_list = list()
         for ii in range(self.max_style_reference_loss_num):
             loss_style_dataset = Dataset(data_list=cpy.deepcopy(train_style_data_path_list),
@@ -901,7 +886,7 @@ class DataProvider(object):
                                                style_reference_list=cpy.deepcopy(train_style_reference_list),
                                                content_prototype_list=cpy.deepcopy(content_prototype_list),
                                                loss_style_reference_list=cpy.deepcopy(loss_style_reference_list),
-                                               max_style_reference_loss_num =  self.max_style_reference_loss_num,
+                                               max_style_reference_loss_num=self.max_style_reference_loss_num,
                                                augment=self.augment_train_data,
                                                augment_flip=self.augment_train_data_flip,
                                                style_input_num=self.style_input_num,
@@ -932,6 +917,16 @@ class DataProvider(object):
                                                    print_marks='ForStyleReferenceValidationData:',
                                                    info_print_interval=info_print_interval)
                 validation_style_reference_list.append(validation_style_dataset)
+
+            # var_loss_style_reference_list = list()
+            # for ii in range(self.max_style_reference_loss_num):
+            #     loss_style_dataset = Dataset(data_list=cpy.deepcopy(validation_style_data_path_list),
+            #                                  label0_list=cpy.deepcopy(validation_style_label0_list),
+            #                                  label1_list=cpy.deepcopy(validation_style_label1_list),
+            #                                  sorted_by_label0=False,
+            #                                  print_marks='ForStyleReferenceValData_Loss&Evaluation:',
+            #                                  info_print_interval=info_print_interval)
+            #     var_loss_style_reference_list.append(loss_style_dataset)
 
             # building for true style data set for validation
             validation_true_style_dataset = Dataset(data_list=cpy.deepcopy(validation_style_data_path_list),

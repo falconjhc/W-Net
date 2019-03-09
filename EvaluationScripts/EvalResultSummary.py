@@ -201,7 +201,12 @@ def fillin_excel_table_mse_vn(current_result_read_path, mark):
 
     exp_name = current_result_read_path.split('/')[-1]
     exp_name = exp_name[12:]
-    sheet_name = exp_name[exp_name.find('Style'):exp_name.find('Style')+6]
+    keyword_find = [ii for ii in range(len(exp_name)) if exp_name.startswith('Style', ii)]
+    for keyword in keyword_find:
+        keyword_str = exp_name[keyword:keyword + 6]
+        if keyword_str[-1].isdigit():
+            sheet_name = keyword_str
+            break
 
     mse_avg = np.loadtxt(os.path.join(current_result_read_path,'Avg_Feature'+mark+'.csv'), dtype=np.str, delimiter=",")
     mse_std = np.loadtxt(os.path.join(current_result_read_path, 'Std_Feature'+mark+'.csv'), dtype=np.str, delimiter=",")
@@ -311,7 +316,14 @@ def fillin_excel_table_pixel(current_result_read_path):
 
     exp_name = current_result_read_path.split('/')[-1]
     exp_name = exp_name[12:]
-    sheet_name = exp_name[exp_name.find('Style'):exp_name.find('Style')+6]
+    keyword_find = [ii for ii in range(len(exp_name)) if exp_name.startswith('Style', ii)]
+    for keyword in keyword_find:
+        keyword_str = exp_name[keyword:keyword+6]
+        if keyword_str[-1].isdigit():
+            sheet_name = keyword_str
+            break
+
+
 
     avg = np.loadtxt(os.path.join(current_result_read_path,'Avg_PixelDiff.csv'), dtype=np.str, delimiter=",")
     std = np.loadtxt(os.path.join(current_result_read_path, 'Std_PixelDiff.csv'), dtype=np.str, delimiter=",")
@@ -430,6 +442,7 @@ def main():
     create_excel_mse_vn_table_head(mark='VN')
     exp_counter = 0
     for current_exp in exp_list:
+        #current_exp = exp_list[96]
         print("%d/%d: %s" % (exp_counter+1, len(exp_list), current_exp))
         fillin_excel_table_pixel(current_result_read_path=os.path.join(reading_result_path,current_exp))
         fillin_excel_table_mse_vn(current_result_read_path=os.path.join(reading_result_path,current_exp), mark='MSE')

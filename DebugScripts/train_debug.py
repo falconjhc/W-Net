@@ -64,7 +64,7 @@ input_args = [
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/',
 
     '--style_validation_data_dir',# validation data location
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
+    'CASIA_Dataset/PrintedData/GB2312_L1/',
 
     '--file_list_txt_content', # file list of the standard data
     '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt,'
@@ -74,7 +74,7 @@ input_args = [
     '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt',
 
     '--file_list_txt_style_validation', # file list of the validation data
-    '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Cursive.txt',
+    '../TrainTestFileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1_Test.txt',
 
 
 
