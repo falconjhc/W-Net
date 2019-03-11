@@ -28,7 +28,7 @@ input_args = [
     # '--content_input_number_actual','3', # how many actual content inputs
     '--init_training_epochs','1',
     '--final_training_epochs','25',
-    '--adain_use','0',
+    '--adain_use','1-Single',
 
     '--generator_device','/device:GPU:0',
     '--discriminator_device', '/device:GPU:0',
@@ -42,12 +42,12 @@ input_args = [
     # '--experiment_id','DEBUG-WNet-AdaIN-ResidualMixer',# experiment name prefix
     # '--experiment_id','DEBUG-WNet-NonAdaIN-DenseMixer',# experiment name prefix
     # '--experiment_id','DEBUG-WNet-AdaIN-Multi-DenseMixer',# experiment name prefix
-    # '--experiment_id','DEBUG-WNet-AdaIN-Single-DenseMixer',# experiment name prefix
+    '--experiment_id','DEBUG-WNet-AdaIN-Single-DenseMixer',# experiment name prefix
     # '--experiment_id','DEBUG-EmdNet-Style4',# experiment name prefix
     # '--experiment_id','DEBUG-EmdNet-Style4-AdaIN',
     # '--experiment_id','DEBUG-ResEmdNet-Style4',
     # '--experiment_id','DEBUG-ResEmdNet-NN-Style4',
-    '--experiment_id','DEBUG-AdobeNet-Style4',
+    # '--experiment_id','DEBUG-AdobeNet-Style4',
     # '--experiment_id','DEBUG-ResMixer-5-SimpleMixer',
     # '--experiment_id','DEBUG-ResMixer-5-DenseMixer',
 

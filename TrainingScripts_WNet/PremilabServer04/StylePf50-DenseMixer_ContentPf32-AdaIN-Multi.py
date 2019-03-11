@@ -45,6 +45,7 @@ input_args = [
     '--print_info_seconds','750',
 
     '--content_data_dir', # standard data location
+    'CASIA_Dataset/PrintedData/,'
     'CASIA_Dataset/PrintedData/',
 
     '--style_train_data_dir', # training data location
@@ -54,13 +55,14 @@ input_args = [
     'CASIA_Dataset/PrintedData/GB2312_L1/',
 
     '--file_list_txt_content', # file list of the standard data
-    '../../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Train.txt',
-
+    '../../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Train.txt,'
+    '../../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Test.txt',
+    
     '--file_list_txt_style_train', # file list of the training data
     '../../TrainTestFileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1_Train.txt',
 
     '--file_list_txt_style_validation', # file list of the validation data
-    '../../FileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1.txt',
+    '../../TrainTestFileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1_Test.txt',
 
 
     # generator && discriminator

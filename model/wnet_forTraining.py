@@ -639,8 +639,8 @@ class WNet(object):
 
         summary_fake_output = self.sess.run(merged_fake_dis_extr_summaries,
                                             feed_dict={feature_extractor_handle.infer_input_img: generated_batch,
-                                                       feature_extractor_handle.true_label0: label0_onehot,
-                                                       feature_extractor_handle.true_label1: label1_onehot,
+                                                       #feature_extractor_handle.true_label0: label0_onehot,
+                                                       #feature_extractor_handle.true_label1: label1_onehot,
                                                        discriminator_handle.infer_label1: label1_onehot,
                                                        discriminator_handle.infer_content_prototype: selected_content,
                                                        discriminator_handle.infer_style_reference: selected_style,
@@ -649,8 +649,8 @@ class WNet(object):
 
         summary_real_output = self.sess.run(merged_real_dis_extr_summaries,
                                             feed_dict={feature_extractor_handle.infer_input_img:true_style,
-                                                       feature_extractor_handle.true_label0: label0_onehot,
-                                                       feature_extractor_handle.true_label1: label1_onehot,
+                                                       #feature_extractor_handle.true_label0: label0_onehot,
+                                                       #feature_extractor_handle.true_label1: label1_onehot,
                                                        discriminator_handle.infer_label1:label1_onehot,
                                                        discriminator_handle.infer_content_prototype:selected_content,
                                                        discriminator_handle.infer_style_reference:selected_style,

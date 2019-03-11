@@ -76,7 +76,7 @@ class Dataset_Iterator(object):
                  true_style,
                  style_reference_list,content_prototype_list,loss_style_reference_list,
                  info_print_interval,print_marks,content_input_number_actual,max_style_reference_loss_num,
-                 augment=False,augment_flip=False,train_iterator_mark=False,
+                 augment=False,augment_flip=False,
                  label0_vec=-1,label1_vec=-1,debug_mode=False,
                  ):
         self.batch_size = batch_size
@@ -94,23 +94,17 @@ class Dataset_Iterator(object):
         self.content_input_num = len(content_prototype_list)
         self.content_input_number_actual=content_input_number_actual
 
-        if train_iterator_mark:
-            self.label0_vec = np.unique(self.true_style.label0_list)
-            self.label1_vec = np.unique(self.true_style.label1_list)
-            if debug_mode:
-                self.label0_vec = np.concatenate([range(176161, 176191),
-                                                  range(0,3725)],axis=0)
-                self.label1_vec = range(1001, 1051)
-                self.label0_vec = map(str, self.label0_vec)
-                self.label1_vec = map(str, self.label1_vec)
-            else:
-                self.label0_vec = self.label0_vec.tolist()
-                self.label1_vec = self.label1_vec.tolist()
-
+        self.label0_vec = np.unique(self.true_style.label0_list)
+        self.label1_vec = np.unique(self.true_style.label1_list)
+        if debug_mode:
+            self.label0_vec = np.concatenate([range(176161, 176191),
+                                              range(0, 3725)], axis=0)
+            self.label1_vec = range(1001, 1051)
+            self.label0_vec = map(str, self.label0_vec)
+            self.label1_vec = map(str, self.label1_vec)
         else:
-            self.label0_vec = label0_vec
-            self.label1_vec = label1_vec
-
+            self.label0_vec = self.label0_vec.tolist()
+            self.label1_vec = self.label1_vec.tolist()
 
         self.content_data_list_alignment_with_true_style_data(content_prototype_list=content_prototype_list,
                                                               print_marks=print_marks,
@@ -277,7 +271,7 @@ class Dataset_Iterator(object):
                                     ii].label1_list})
 
 
-    def create_dataset_op(self):
+    def create_dataset_op(self, discrminator_label1_vec):
         def _get_tensor_slice():
             data_list_placeholder = tf.placeholder(dtype=tf.string, shape=[None])
             label0_list_placeholder = tf.placeholder(dtype=tf.string, shape=[None])
@@ -461,7 +455,7 @@ class Dataset_Iterator(object):
         true_style_label0_tensor_onehot =_convert_label_to_one_hot(dense_label=true_style_label0_tensor_dense,
                                                                    voc=self.label0_vec)
         true_style_label1_tensor_onehot =_convert_label_to_one_hot(dense_label=true_style_label1_tensor_dense,
-                                                                   voc=self.label1_vec)
+                                                                   voc=discrminator_label1_vec)
 
 
 
@@ -892,12 +886,11 @@ class DataProvider(object):
                                                style_input_num=self.style_input_num,
                                                info_print_interval=info_print_interval,
                                                print_marks='ForTrainIterator:',
-                                               train_iterator_mark=True,
                                                debug_mode=debug_mode,
                                                content_input_number_actual=self.content_input_number_actual)
         self.style_label0_vec = np.unique(self.train_iterator.label0_vec).tolist()
         self.style_label1_vec = np.unique(self.train_iterator.label1_vec).tolist()
-        self.train_iterator.create_dataset_op()
+        self.train_iterator.create_dataset_op(discrminator_label1_vec=self.train_iterator.label1_vec)
 
 
 
@@ -951,12 +944,11 @@ class DataProvider(object):
                                                       style_input_num=self.style_input_num,
                                                       info_print_interval=info_print_interval,
                                                       print_marks='ForValidationIterator:',
-                                                      train_iterator_mark=False,
-                                                      label0_vec=self.train_iterator.label0_vec,
-                                                      label1_vec=self.train_iterator.label1_vec,
+                                                      #label0_vec=self.train_iterator.label0_vec,
+                                                      #label1_vec=self.train_iterator.label1_vec,
                                                       debug_mode=debug_mode,
                                                       content_input_number_actual=self.content_input_number_actual)
-            self.validate_iterator.create_dataset_op()
+            self.validate_iterator.create_dataset_op(discrminator_label1_vec=self.train_iterator.label1_vec)
 
         print(print_separator)
 

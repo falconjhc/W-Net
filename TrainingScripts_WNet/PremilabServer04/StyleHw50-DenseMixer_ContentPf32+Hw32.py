@@ -46,6 +46,9 @@ input_args = [
     '--content_data_dir', # standard data location
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/,'
+    'CASIA_Dataset/PrintedData/,'
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/,'
     'CASIA_Dataset/PrintedData/',
 
     '--style_train_data_dir', # training data location
@@ -59,15 +62,18 @@ input_args = [
     '--file_list_txt_content', # file list of the standard data
     '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated_Train.txt,'
     '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive_Train.txt,'
-    '../../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Train.txt',
+    '../../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Train.txt,'
+    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated_Test.txt,'
+    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive_Test.txt,'
+    '../../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Test.txt',
 
     '--file_list_txt_style_train', # file list of the training data
     '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated_Train.txt,'
     '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive_Train.txt',
 
     '--file_list_txt_style_validation', # file list of the validation data
-    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated_Test.txt,'
-    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive_Test.txt',
+    '../../TrainTestFileList/HandWritingData/ForTrain_Char_0_3754_Writer_1151_1200_Isolated_Test.txt,'
+    '../../TrainTestFileList/HandWritingData/ForTrain_Char_0_3754_Writer_1151_1200_Cursive_Test.txt',
 
 
     # generator && discriminator

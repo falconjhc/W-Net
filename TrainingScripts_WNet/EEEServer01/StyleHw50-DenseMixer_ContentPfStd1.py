@@ -43,6 +43,7 @@ input_args = [
     '--print_info_seconds','750',
 
     '--content_data_dir', # standard data location
+    'CASIA_Dataset/StandardChars/GB2312_L1/,'
     'CASIA_Dataset/StandardChars/GB2312_L1/',
 
     '--style_train_data_dir', # training data location
@@ -54,15 +55,16 @@ input_args = [
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
     '--file_list_txt_content', # file list of the standard data
-    '../../TrainTestFileList/StandardChars/Char_0_3754_GB2312L1_Train.txt',
-
+    '../../TrainTestFileList/StandardChars/Char_0_3754_GB2312L1_Train.txt,'
+    '../../TrainTestFileList/StandardChars/Char_0_3754_GB2312L1_Test.txt',
+    
     '--file_list_txt_style_train', # file list of the training data
     '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated_Train.txt,'
     '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive_Train.txt',
 
     '--file_list_txt_style_validation', # file list of the validation data
-    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated_Test.txt,'
-    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive_Test.txt',
+    '../../TrainTestFileList/HandWritingData/ForTrain_Char_0_3754_Writer_1151_1200_Isolated_Test.txt,'
+    '../../TrainTestFileList/HandWritingData/ForTrain_Char_0_3754_Writer_1151_1200_Cursive_Test.txt',
 
 
     # generator && discriminator
