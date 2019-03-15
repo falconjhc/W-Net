@@ -3,3 +3,6 @@ Exp:2  | EmdNet-Style1-AdaIN_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-Conten
 Exp:3  | EmdNet-Style1-NonAdaIN_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentKnown-StyleUnKnown
 Exp:4  | ResMixer-5-DenseMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentKnown-StyleUnKnown
 Exp:5  | ResMixer-5-SimpleMixer-Style1_StylePf50_ContentPf32_GenEncDec6_DisMdy6conv-ContentKnown-StyleUnKnown
+Exp:6  | WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv-ContentKnown-StyleUnKnown-Style1
+Exp:7  | WNet-ResidualMixer-AdaIN-Multi_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv-ContentKnown-StyleUnKnown-Style1
+Exp:8  | WNet-DenseMixer-NonAdaIN_StylePf50_ContentPfStd1_GenEncDec6-Des5@Lyr3_DisMdy6conv-ContentKnown-StyleUnKnown-Style1
