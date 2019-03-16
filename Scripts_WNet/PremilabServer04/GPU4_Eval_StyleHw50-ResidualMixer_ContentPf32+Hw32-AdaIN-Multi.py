@@ -7,14 +7,14 @@ from tensorflow.python.client import device_lib
 import argparse
 import sys
 import os
-sys.path.append('..')
+sys.path.append('../../')
 
 from model.wnet_forEvaluation import WNet as WNET
 eps = 1e-9
 
 
 
-data_path_root = '/DataA/Harric/ChineseCharacterExp/'
+data_path_root = '/home/harric/ChineseCharacterExp/'
 model_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
 content_known_unknown='Known'
@@ -80,15 +80,15 @@ fixed_style_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HW
 
 ## known content
 known_content_file_list=list()
-known_content_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated_Train.txt')
-known_content_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive_Train.txt')
-known_content_file_list.append('../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Train.txt')
+known_content_file_list.append('../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated_Train.txt')
+known_content_file_list.append('../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive_Train.txt')
+known_content_file_list.append('../../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Train.txt')
 
 ## unknown content
 unknown_content_file_list=list()
-unknown_content_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated_Test.txt')
-unknown_content_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive_Test.txt')
-unknown_content_file_list.append('../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Test.txt')
+unknown_content_file_list.append('../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated_Test.txt')
+unknown_content_file_list.append('../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1001_1032_Cursive_Test.txt')
+unknown_content_file_list.append('../../TrainTestFileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1_Test.txt')
 
 
 
@@ -97,26 +97,26 @@ unknown_content_file_list.append('../TrainTestFileList/PrintedData/Char_0_3754_W
 ## known style
 known_style_file_list=list()
 if content_known_unknown == 'Known':
-    known_style_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated_Train.txt')
-    known_style_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive_Train.txt')
+    known_style_file_list.append('../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated_Train.txt')
+    known_style_file_list.append('../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive_Train.txt')
 else:
-    known_style_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated_Test.txt')
-    known_style_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive_Test.txt')
+    known_style_file_list.append('../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated_Test.txt')
+    known_style_file_list.append('../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive_Test.txt')
 known_fixed_style_file_list=list()
-known_fixed_style_file_list.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
-known_fixed_style_file_list.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
+known_fixed_style_file_list.append('../../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
+known_fixed_style_file_list.append('../../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
 
 ## unknown style
 unknown_style_file_list=list()
 if content_known_unknown == 'Known':
-    unknown_style_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated_Train.txt')
-    unknown_style_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive_Train.txt')
+    unknown_style_file_list.append('../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated_Train.txt')
+    unknown_style_file_list.append('../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive_Train.txt')
 else:
-    unknown_style_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated_Test.txt')
-    unknown_style_file_list.append('../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive_Test.txt')
+    unknown_style_file_list.append('../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated_Test.txt')
+    unknown_style_file_list.append('../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive_Test.txt')
 unknown_fixed_style_file_list=list()
-unknown_fixed_style_file_list.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Isolated.txt')
-unknown_fixed_style_file_list.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Cursive.txt')
+unknown_fixed_style_file_list.append('../../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Isolated.txt')
+unknown_fixed_style_file_list.append('../../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Cursive.txt')
 
 
 
@@ -127,7 +127,7 @@ input_args = [
     '--feature_extractor_device','/device:GPU:0',
 
     '--fixed_char_list_txt',
-    '../ContentTxt/StyleChars_Paintings_20.txt',
+    '../../ContentTxt/StyleChars_Paintings_20.txt',
 
 
     # generator

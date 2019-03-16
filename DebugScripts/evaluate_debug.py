@@ -14,20 +14,20 @@ eps = 1e-9
 
 
 
-# data_path_root = '/DataA/Harric/ChineseCharacterExp/'
-# model_path_root = '/DataA/Harric/ChineseCharacterExp/'
-data_path_root = '/Users/harric/ChineseCharacterExp/'
-model_path_root = '/Users/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
+model_path_root = '/DataA/Harric/ChineseCharacterExp/'
+# data_path_root = '/Users/harric/ChineseCharacterExp/'
+# model_path_root = '/Users/harric/ChineseCharacterExp/'
 
 content_known_unknown='Known'
 style_known_unknown='Known'
 style_input_number=4
 evaluation_resule_save_dir = '../../EvaluationResult_201901/'
 
-# evaluating_generator_dir=\
-#     'TrainedModels_WNet/Exp20190129-AdobeNet-Style4_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/'
 evaluating_generator_dir=\
-    'TrainedModels_WNet/Exp20190129-AdobeNet-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/'
+    'TrainedModels_WNet/Exp20190129-AdobeNet-Style4_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/'
+# evaluating_generator_dir=\
+#     'TrainedModels_WNet/Exp20190129-AdobeNet-Style1_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv/'
 
 # content dir
 content_data_dir=list()

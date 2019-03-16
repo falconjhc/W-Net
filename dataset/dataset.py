@@ -335,7 +335,7 @@ class Dataset_Iterator(object):
 
         true_style_dataset = \
             true_style_dataset.map(map_func=_parser_func,
-                                   num_parallel_calls=self.thread_num).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
+                                   num_parallel_calls=self.thread_num-1).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
         true_style_iterator = true_style_dataset.make_initializable_iterator()
         true_style_img_tensor, true_style_label0_tensor_dense, true_style_label1_tensor_dense = \
             true_style_iterator.get_next()
@@ -364,7 +364,7 @@ class Dataset_Iterator(object):
                 _get_tensor_slice()
             prototype_dataset = \
                 prototype_dataset.map(map_func=_parser_func,
-                                      num_parallel_calls=self.thread_num).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
+                                      num_parallel_calls=self.thread_num-1).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
             prototype_iterator = prototype_dataset.make_initializable_iterator()
             prototype_img_tensor, prototype_label0_tensor, prototype_label1_tensor = prototype_iterator.get_next()
 
@@ -424,7 +424,7 @@ class Dataset_Iterator(object):
                 _get_tensor_slice()
 
             reference_dataset = reference_dataset.map(map_func=_parser_func,
-                                                      num_parallel_calls=self.thread_num).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
+                                                      num_parallel_calls=self.thread_num-1).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
             reference_iterator = reference_dataset.make_initializable_iterator()
             reference_img_tensor, reference_label0_tensor, reference_label1_tensor = reference_iterator.get_next()
 
@@ -473,7 +473,7 @@ class Dataset_Iterator(object):
                     _get_tensor_slice()
 
                 loss_reference_dataset = loss_reference_dataset.map(map_func=_parser_func,
-                                                                    num_parallel_calls=self.thread_num).apply(
+                                                                    num_parallel_calls=self.thread_num-1).apply(
                     tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
                 loss_reference_iterator = loss_reference_dataset.make_initializable_iterator()
                 loss_reference_img_tensor, loss_reference_label0_tensor, loss_reference_label1_tensor = loss_reference_iterator.get_next()

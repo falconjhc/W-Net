@@ -14,11 +14,11 @@ eps = 1e-9
 
 
 
-data_path_root = '/home/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
-content_known_unknown='UnKnown'
-style_known_unknown='UnKnown'
+content_known_unknown='Known'
+style_known_unknown='Known'
 style_input_number=1
 evaluation_resule_save_dir = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201901/'
 

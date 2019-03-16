@@ -157,7 +157,7 @@ def find_real_exp_num(exp_list):
             continue
         keyword_find = [ii for ii in range(len(exp_name)) if exp_name.startswith('Style', ii)]
         for keyword in keyword_find:
-            keyword_str = exp_name[keyword:keyword + 6]
+            keyword_str = exp_name[keyword:keyword + 7]
             if keyword_str[-1].isdigit():
                 style_info = keyword_str
                 break
@@ -201,7 +201,7 @@ def line_graph_data_collect(exp_list):
         exp_name = each_exp.split('/')[-1]
         keyword_find = [ii for ii in range(len(exp_name)) if exp_name.startswith('Style', ii)]
         for keyword in keyword_find:
-            keyword_str = exp_name[keyword:keyword + 6]
+            keyword_str = exp_name[keyword:keyword + 7]
             if keyword_str[-1].isdigit():
                 sheet_name = keyword_str
                 break
@@ -263,7 +263,8 @@ def draw_line_func_for_pixel(draw_y, style_num, exp_name_list, y_axis_name, fig_
     counter=0
     for y,x, exp_label in zip(draw_y, style_num, exp_name_list):
         current_exp_label = exp_label[0]
-        plt.plot(x, y, color=color_list[counter], label='Exp%02d' % (counter+1))
+        x_sorted, y_sorted = zip(*sorted(zip(x,y)))
+        plt.plot(x_sorted, y_sorted, color=color_list[counter], label='Exp%02d' % (counter+1))
         counter+=1
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)
@@ -290,7 +291,8 @@ def draw_line_func_for_deep_feature(draw_y, style_num, exp_name_list, y_axis_nam
     counter = 0
     for y, x, exp_label in zip(actual_draw_y_list, style_num, exp_name_list):
         current_exp_label = exp_label[0]
-        plt.plot(x, y, color=color_list[counter], label='Exp%02d' % (counter + 1))
+        x_sorted, y_sorted = zip(*sorted(zip(x, y)))
+        plt.plot(x_sorted, y_sorted, color=color_list[counter], label='Exp%02d' % (counter + 1))
         counter += 1
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)

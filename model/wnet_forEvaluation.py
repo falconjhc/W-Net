@@ -864,7 +864,8 @@ class WNet(object):
         print("ContentLabel0_Vec:%d, ContentLabel1_Vec:%d" % (len(data_provider.content_label0_vec),len(data_provider.content_label1_vec)))
         print("InvolvedLabel0:%d, InvolvedLabel1:%d" % (len(self.involved_label0_list),
                                                         len(self.involved_label1_list)))
-        total_eval_epochs=int(self.fixed_style_reference_num/self.style_input_number)
+
+        total_eval_epochs=int(self.fixed_style_reference_num/self.style_input_number)+1
         print("StyleReferenceNum:%d, FixedStyleReferenceNum:%d, EvaluatlionEpoch:%d"
               % (self.style_input_number, self.fixed_style_reference_num,total_eval_epochs))
         print(self.print_separater)
@@ -884,12 +885,31 @@ class WNet(object):
         timer_start = time.time()
         #total_eval_epochs=3
         for ei in range(total_eval_epochs):
-            current_fixed_style_reference_img_list = \
-                data_provider.train_iterator.fixed_style_reference_image_list[ei*self.style_input_number:(ei+1)*self.style_input_number]
-            current_fixed_style_reference_char_list= \
-                data_provider.train_iterator.fixed_style_reference_char_list[ei*self.style_input_number:(ei+1)*self.style_input_number]
-            current_fixed_style_reference_data_path_list = \
-                data_provider.train_iterator.fixed_style_reference_data_path_list[ei * self.style_input_number:(ei + 1) * self.style_input_number]
+
+            if not ei == total_eval_epochs-1:
+                current_fixed_style_reference_img_list = \
+                    data_provider.train_iterator.fixed_style_reference_image_list[ei*self.style_input_number:(ei+1)*self.style_input_number]
+                current_fixed_style_reference_char_list= \
+                    data_provider.train_iterator.fixed_style_reference_char_list[ei*self.style_input_number:(ei+1)*self.style_input_number]
+                current_fixed_style_reference_data_path_list = \
+                    data_provider.train_iterator.fixed_style_reference_data_path_list[ei * self.style_input_number:(ei + 1) * self.style_input_number]
+            else:
+                current_fixed_style_reference_img_list1 = data_provider.train_iterator.fixed_style_reference_image_list[ei * self.style_input_number:]
+                current_fixed_style_reference_char_list1 = data_provider.train_iterator.fixed_style_reference_char_list[ei * self.style_input_number:]
+                current_fixed_style_reference_data_path_list1 = data_provider.train_iterator.fixed_style_reference_data_path_list[ei * self.style_input_number:]
+                remaining_number = self.style_input_number - len(current_fixed_style_reference_img_list1)
+                if not remaining_number==0:
+                    current_fixed_style_reference_img_list2 = data_provider.train_iterator.fixed_style_reference_image_list[0:remaining_number]
+                    current_fixed_style_reference_char_list2 = data_provider.train_iterator.fixed_style_reference_char_list[0:remaining_number]
+                    current_fixed_style_reference_data_path_list2 = data_provider.train_iterator.fixed_style_reference_data_path_list[0:remaining_number]
+                    current_fixed_style_reference_img_list1.extend(current_fixed_style_reference_img_list2)
+                    current_fixed_style_reference_char_list1.extend(current_fixed_style_reference_char_list2)
+                    current_fixed_style_reference_data_path_list1.extend(current_fixed_style_reference_data_path_list2)
+                current_fixed_style_reference_img_list=current_fixed_style_reference_img_list1
+                current_fixed_style_reference_char_list = current_fixed_style_reference_char_list1
+                current_fixed_style_reference_data_path_list = current_fixed_style_reference_data_path_list1
+
+
 
             self.itrs_for_current_epoch = data_provider.compute_total_batch_num()
             data_provider.dataset_reinitialization(sess=self.sess, init_for_val=False,
