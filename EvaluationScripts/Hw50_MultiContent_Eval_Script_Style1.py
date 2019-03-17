@@ -224,7 +224,8 @@ def main(_):
         generator_device = args.generator_device
         feature_extractor_device = args.feature_extractor_device
     selected_device_list.append(generator_device)
-
+    selected_device_list.append(feature_extractor_device)
+    
     experiment_id_list = evaluating_generator_dir.split('/')
     for experiment_id in experiment_id_list:
         if 'Exp' in experiment_id:

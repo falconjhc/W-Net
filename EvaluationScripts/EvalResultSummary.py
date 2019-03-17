@@ -198,237 +198,253 @@ def create_excel_pixel_table_head():
 
 
 def fillin_excel_table_mse_vn(current_result_read_path, mark):
-
+    sheet_name = '-1'
     exp_name = current_result_read_path.split('/')[-1]
     exp_name = exp_name[12:]
     keyword_find = [ii for ii in range(len(exp_name)) if exp_name.startswith('Style', ii)]
     for keyword in keyword_find:
-        keyword_str = exp_name[keyword:keyword + 6]
-        if keyword_str[-1].isdigit():
-            sheet_name = keyword_str
-            break
+        keyword_str = exp_name[keyword:keyword + 7]
+        str_len = len(keyword_str)
+        if (not keyword_str[str_len - 1].isdigit()) and (keyword_str[str_len - 2].isdigit()) or len(keyword_str) == 6:
+            if not len(keyword_str) == 6:
+                sheet_name_tmp = keyword_str[0:str_len - 1]
+                if sheet_name_tmp == 'Style1' or sheet_name_tmp == 'Style4':
+                    sheet_name = sheet_name_tmp
+                    break
+            elif keyword_str == 'Style1' or keyword_str == 'Style4':
+                sheet_name = keyword_str
+                break
+    if not sheet_name == '-1':
+        mse_avg = np.loadtxt(os.path.join(current_result_read_path, 'Avg_Feature' + mark + '.csv'), dtype=np.str,
+                             delimiter=",")
+        mse_std = np.loadtxt(os.path.join(current_result_read_path, 'Std_Feature' + mark + '.csv'), dtype=np.str,
+                             delimiter=",")
 
-    mse_avg = np.loadtxt(os.path.join(current_result_read_path,'Avg_Feature'+mark+'.csv'), dtype=np.str, delimiter=",")
-    mse_std = np.loadtxt(os.path.join(current_result_read_path, 'Std_Feature'+mark+'.csv'), dtype=np.str, delimiter=",")
+        if not exp_name.find('StylePf50') == -1:
+            if sheet_name == 'Style1':
+                if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 0
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 1
+                elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 2
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 3
+            elif sheet_name == 'Style4':
+                if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 4
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 5
+                elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 6
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 7
+        elif not exp_name.find('StyleHw50') == -1:
+            if sheet_name == 'Style1':
+                if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 8
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 9
+                elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 10
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 11
+            elif sheet_name == 'Style4':
+                if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 12
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 13
+                elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 14
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 15
 
-    if not exp_name.find('StylePf50') == -1:
-        if sheet_name == 'Style1':
-            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 0
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 1
-            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 2
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 3
-        elif sheet_name == 'Style4':
-            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 4
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 5
-            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 6
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 7
-    elif not exp_name.find('StyleHw50') == -1:
-        if sheet_name == 'Style1':
-            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 8
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 9
-            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 10
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 11
-        elif sheet_name == 'Style4':
-            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 12
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 13
-            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 14
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 15
+        rexcel = open_workbook(os.path.join(saving_path, mark + '.xls'))
+        rows = rexcel.sheets()[sheet_id].nrows
+        excel = copy(rexcel)
+        table = excel.get_sheet(sheet_id)
+        table.write(rows, 0, exp_name)
 
-    rexcel = open_workbook(os.path.join(saving_path,mark+'.xls'))
-    rows = rexcel.sheets()[sheet_id].nrows
-    excel = copy(rexcel)
-    table = excel.get_sheet(sheet_id)
-    table.write(rows,0,exp_name)
+        if mark == 'MSE':
+            layer_num = 7
+        elif mark == 'VN':
+            layer_num = 5
+        for layer in range(layer_num):
+            true_fake_avg = mse_avg[0, layer]
+            true_fake_std = mse_std[0, layer]
+            true_fake_avg = "%.3f" % float(true_fake_avg)
+            true_fake_std = "+/-%.5f" % float(true_fake_std)
 
-    if mark == 'MSE':
-        layer_num = 7
-    elif mark == 'VN':
-        layer_num = 5
-    for layer in range(layer_num):
-        true_fake_avg = mse_avg[0, layer]
-        true_fake_std = mse_std[0, layer]
-        true_fake_avg = "%.3f" % float(true_fake_avg)
-        true_fake_std = "+/-%.5f" % float(true_fake_std)
+            random_content_avg = mse_avg[1, layer]
+            random_content_std = mse_std[1, layer]
+            random_content_std_avg = mse_avg[2, layer]
+            random_content_avg = "%.3f" % float(random_content_avg)
+            random_content_std = "+/-%.5f" % float(random_content_std)
+            random_content_std_avg = "+/-%.5f" % float(random_content_std_avg)
 
-        random_content_avg = mse_avg[1, layer]
-        random_content_std = mse_std[1, layer]
-        random_content_std_avg = mse_avg[2, layer]
-        random_content_avg = "%.3f" % float(random_content_avg)
-        random_content_std = "+/-%.5f" % float(random_content_std)
-        random_content_std_avg = "+/-%.5f" % float(random_content_std_avg)
+            same_content_avg = mse_avg[3, layer]
+            same_content_std = mse_std[3, layer]
+            same_content_avg = "%.3f" % float(same_content_avg)
+            same_content_std = "+/-%.5f" % float(same_content_std)
 
-        same_content_avg = mse_avg[3, layer]
-        same_content_std = mse_std[3, layer]
-        same_content_avg = "%.3f" % float(same_content_avg)
-        same_content_std = "+/-%.5f" % float(same_content_std)
+            random_style_avg = mse_avg[4, layer]
+            random_style_std = mse_std[4, layer]
+            random_style_std_avg = mse_avg[5, layer]
+            random_style_avg = "%.3f" % float(random_style_avg)
+            random_style_std = "+/-%.5f" % float(random_style_std)
+            random_style_std_avg = "+/-%.5f" % float(random_style_std_avg)
 
-        random_style_avg = mse_avg[4, layer]
-        random_style_std = mse_std[4, layer]
-        random_style_std_avg = mse_avg[5, layer]
-        random_style_avg = "%.3f" % float(random_style_avg)
-        random_style_std = "+/-%.5f" % float(random_style_std)
-        random_style_std_avg = "+/-%.5f" % float(random_style_std_avg)
+            same_style_avg = mse_avg[6, layer]
+            same_style_std = mse_std[6, layer]
+            same_style_avg = "%.3f" % float(same_style_avg)
+            same_style_std = "+/-%.5f" % float(same_style_std)
 
-        same_style_avg = mse_avg[6, layer]
-        same_style_std = mse_std[6, layer]
-        same_style_avg = "%.3f" % float(same_style_avg)
-        same_style_std = "+/-%.5f" % float(same_style_std)
+            table.write(rows, 1 + 12 * layer, true_fake_avg)
+            table.write(rows, 2 + 12 * layer, true_fake_std)
 
+            table.write(rows, 3 + 12 * layer, random_content_avg)
+            table.write(rows, 4 + 12 * layer, random_content_std)
+            table.write(rows, 5 + 12 * layer, random_content_std_avg)
 
-        table.write(rows, 1 + 12 * layer, true_fake_avg)
-        table.write(rows, 2 + 12 * layer, true_fake_std)
+            table.write(rows, 6 + 12 * layer, same_content_avg)
+            table.write(rows, 7 + 12 * layer, same_content_std)
 
-        table.write(rows, 3 + 12 * layer, random_content_avg)
-        table.write(rows, 4 + 12 * layer, random_content_std)
-        table.write(rows, 5 + 12 * layer, random_content_std_avg)
+            table.write(rows, 8 + 12 * layer, random_style_avg)
+            table.write(rows, 9 + 12 * layer, random_style_std)
+            table.write(rows, 10 + 12 * layer, random_style_std_avg)
 
-        table.write(rows, 6 + 12 * layer, same_content_avg)
-        table.write(rows, 7 + 12 * layer, same_content_std)
+            table.write(rows, 11 + 12 * layer, same_style_avg)
+            table.write(rows, 12 + 12 * layer, same_style_std)
 
-        table.write(rows, 8 + 12 * layer, random_style_avg)
-        table.write(rows, 9 + 12 * layer, random_style_std)
-        table.write(rows, 10 + 12 * layer, random_style_std_avg)
-
-        table.write(rows, 11 + 12 * layer, same_style_avg)
-        table.write(rows, 12 + 12 * layer, same_style_std)
-
-    excel.save(os.path.join(saving_path,mark+'.xls'))
+        excel.save(os.path.join(saving_path, mark + '.xls'))
 
 
 
 def fillin_excel_table_pixel(current_result_read_path):
 
+    sheet_name='-1'
     exp_name = current_result_read_path.split('/')[-1]
     exp_name = exp_name[12:]
     keyword_find = [ii for ii in range(len(exp_name)) if exp_name.startswith('Style', ii)]
     for keyword in keyword_find:
-        keyword_str = exp_name[keyword:keyword+6]
-        if keyword_str[-1].isdigit():
-            sheet_name = keyword_str
-            break
+        keyword_str = exp_name[keyword:keyword+7]
+        str_len = len(keyword_str)
+        if (not keyword_str[str_len-1].isdigit()) and (keyword_str[str_len-2].isdigit()) or len(keyword_str)==6:
+            if not len(keyword_str)==6:
+                sheet_name_tmp = keyword_str[0:str_len - 1]
+                if sheet_name_tmp == 'Style1' or sheet_name_tmp == 'Style4':
+                    sheet_name = sheet_name_tmp
+                    break
+            elif keyword_str == 'Style1' or keyword_str == 'Style4':
+                sheet_name = keyword_str
+                break
 
 
 
-    avg = np.loadtxt(os.path.join(current_result_read_path,'Avg_PixelDiff.csv'), dtype=np.str, delimiter=",")
-    std = np.loadtxt(os.path.join(current_result_read_path, 'Std_PixelDiff.csv'), dtype=np.str, delimiter=",")
+    if not sheet_name == '-1':
+        avg = np.loadtxt(os.path.join(current_result_read_path, 'Avg_PixelDiff.csv'), dtype=np.str, delimiter=",")
+        std = np.loadtxt(os.path.join(current_result_read_path, 'Std_PixelDiff.csv'), dtype=np.str, delimiter=",")
 
-    if not exp_name.find('StylePf50') == -1:
-        if sheet_name == 'Style1':
-            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 0
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 1
-            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 2
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 3
-        elif sheet_name == 'Style4':
-            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 4
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 5
-            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 6
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 7
-    elif not exp_name.find('StyleHw50') == -1:
-        if sheet_name == 'Style1':
-            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 8
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 9
-            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 10
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 11
-        elif sheet_name == 'Style4':
-            if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 12
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
-                sheet_id = 13
-            elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 14
-            elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
-                sheet_id = 15
+        if not exp_name.find('StylePf50') == -1:
+            if sheet_name == 'Style1':
+                if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 0
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 1
+                elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 2
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 3
+            elif sheet_name == 'Style4':
+                if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 4
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 5
+                elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 6
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 7
+        elif not exp_name.find('StyleHw50') == -1:
+            if sheet_name == 'Style1':
+                if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 8
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 9
+                elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 10
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 11
+            elif sheet_name == 'Style4':
+                if (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 12
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleKnown') == -1):
+                    sheet_id = 13
+                elif (not exp_name.find('ContentKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 14
+                elif (not exp_name.find('ContentUnKnown') == -1) and (not exp_name.find('StyleUnKnown') == -1):
+                    sheet_id = 15
 
-    rexcel = open_workbook(os.path.join(saving_path,'Pixel.xls'))
-    rows = rexcel.sheets()[sheet_id].nrows
-    excel = copy(rexcel)
-    table = excel.get_sheet(sheet_id)
-    table.write(rows,0,exp_name)
+        rexcel = open_workbook(os.path.join(saving_path, 'Pixel.xls'))
+        rows = rexcel.sheets()[sheet_id].nrows
+        excel = copy(rexcel)
+        table = excel.get_sheet(sheet_id)
+        table.write(rows, 0, exp_name)
 
+        same_l1_avg = '%.3f' % float(avg[0, 0])
+        same_l1_std = '%.5f' % float(std[0, 0])
+        same_mse_avg = '%.3f' % float(avg[0, 2])
+        same_mse_std = '%.5f' % float(std[0, 2])
+        same_pdar_avg = '%.3f' % float(avg[0, 4])
+        same_pdar_std = '%.5f' % float(std[0, 4])
 
-    same_l1_avg = '%.3f' % float(avg[0,0])
-    same_l1_std = '%.5f'% float(std[0,0])
-    same_mse_avg = '%.3f' % float(avg[0,2])
-    same_mse_std = '%.5f'% float(std[0,2])
-    same_pdar_avg = '%.3f' % float(avg[0,4])
-    same_pdar_std = '%.5f'%  float(std[0,4])
+        random_content_l1_avg = '%.3f' % float(avg[1, 0])
+        random_content_l1_std = '%.5f' % float(std[1, 0])
+        random_content_l1_std_avg = '%.5f' % float(avg[1, 1])
+        random_content_mse_avg = '%.3f' % float(avg[1, 2])
+        random_content_mse_std = '%.5f' % float(std[1, 2])
+        random_content_mse_std_avg = '%.5f' % float(avg[1, 3])
+        random_content_pdar_avg = '%.3f' % float(avg[1, 4])
+        random_content_pdar_std = '%.5f' % float(std[1, 4])
+        random_content_pdar_std_avg = '%.5f' % float(avg[1, 5])
 
-    random_content_l1_avg = '%.3f' % float(avg[1,0])
-    random_content_l1_std = '%.5f'% float(std[1,0])
-    random_content_l1_std_avg = '%.5f'% float(avg[1,1])
-    random_content_mse_avg = '%.3f' % float(avg[1, 2])
-    random_content_mse_std = '%.5f' % float(std[1, 2])
-    random_content_mse_std_avg = '%.5f' % float(avg[1, 3])
-    random_content_pdar_avg = '%.3f' % float(avg[1, 4])
-    random_content_pdar_std = '%.5f' % float(std[1, 4])
-    random_content_pdar_std_avg = '%.5f' % float(avg[1, 5])
+        random_style_l1_avg = '%.3f' % float(avg[2, 0])
+        random_style_l1_std = '%.5f' % float(std[2, 0])
+        random_style_l1_std_avg = '%.5f' % float(avg[2, 1])
+        random_style_mse_avg = '%.3f' % float(avg[2, 2])
+        random_style_mse_std = '%.5f' % float(std[2, 2])
+        random_style_mse_std_avg = '%.5f' % float(avg[2, 3])
+        random_style_pdar_avg = '%.3f' % float(avg[2, 4])
+        random_style_pdar_std = '%.5f' % float(std[2, 4])
+        random_style_pdar_std_avg = '%.5f' % float(avg[2, 5])
 
-    random_style_l1_avg = '%.3f' % float(avg[2, 0])
-    random_style_l1_std = '%.5f' % float(std[2, 0])
-    random_style_l1_std_avg = '%.5f' % float(avg[2, 1])
-    random_style_mse_avg = '%.3f' % float(avg[2, 2])
-    random_style_mse_std = '%.5f' % float(std[2, 2])
-    random_style_mse_std_avg = '%.5f' % float(avg[2, 3])
-    random_style_pdar_avg = '%.3f' % float(avg[2, 4])
-    random_style_pdar_std = '%.5f' % float(std[2, 4])
-    random_style_pdar_std_avg = '%.5f' % float(avg[2, 5])
+        table.write(rows, 1, same_l1_avg)
+        table.write(rows, 2, same_l1_std)
+        table.write(rows, 3, same_mse_avg)
+        table.write(rows, 4, same_mse_std)
+        table.write(rows, 5, same_pdar_avg)
+        table.write(rows, 6, same_pdar_std)
 
-    table.write(rows, 1, same_l1_avg)
-    table.write(rows, 2, same_l1_std)
-    table.write(rows, 3, same_mse_avg)
-    table.write(rows, 4, same_mse_std)
-    table.write(rows, 5, same_pdar_avg)
-    table.write(rows, 6, same_pdar_std)
+        table.write(rows, 7, random_content_l1_avg)
+        table.write(rows, 8, random_content_l1_std)
+        table.write(rows, 9, random_content_l1_std_avg)
+        table.write(rows, 10, random_content_mse_avg)
+        table.write(rows, 11, random_content_mse_std)
+        table.write(rows, 12, random_content_mse_std_avg)
+        table.write(rows, 13, random_content_pdar_avg)
+        table.write(rows, 14, random_content_pdar_std)
+        table.write(rows, 15, random_content_pdar_std_avg)
 
-    table.write(rows, 7, random_content_l1_avg)
-    table.write(rows, 8, random_content_l1_std)
-    table.write(rows, 9, random_content_l1_std_avg)
-    table.write(rows, 10, random_content_mse_avg)
-    table.write(rows, 11, random_content_mse_std)
-    table.write(rows, 12, random_content_mse_std_avg)
-    table.write(rows, 13, random_content_pdar_avg)
-    table.write(rows, 14, random_content_pdar_std)
-    table.write(rows, 15, random_content_pdar_std_avg)
+        table.write(rows, 16, random_style_l1_avg)
+        table.write(rows, 17, random_style_l1_std)
+        table.write(rows, 18, random_style_l1_std_avg)
+        table.write(rows, 19, random_style_mse_avg)
+        table.write(rows, 20, random_style_mse_std)
+        table.write(rows, 21, random_style_mse_std_avg)
+        table.write(rows, 22, random_style_pdar_avg)
+        table.write(rows, 23, random_style_pdar_std)
+        table.write(rows, 24, random_style_pdar_std_avg)
 
-    table.write(rows, 16, random_style_l1_avg)
-    table.write(rows, 17, random_style_l1_std)
-    table.write(rows, 18, random_style_l1_std_avg)
-    table.write(rows, 19, random_style_mse_avg)
-    table.write(rows, 20, random_style_mse_std)
-    table.write(rows, 21, random_style_mse_std_avg)
-    table.write(rows, 22, random_style_pdar_avg)
-    table.write(rows, 23, random_style_pdar_std)
-    table.write(rows, 24, random_style_pdar_std_avg)
-
-    excel.save(os.path.join(os.path.join(saving_path,'Pixel.xls')))
+        excel.save(os.path.join(os.path.join(saving_path, 'Pixel.xls')))
 
 
 
@@ -442,7 +458,7 @@ def main():
     create_excel_mse_vn_table_head(mark='VN')
     exp_counter = 0
     for current_exp in exp_list:
-        #current_exp = exp_list[96]
+        #current_exp = exp_list[106]
         print("%d/%d: %s" % (exp_counter+1, len(exp_list), current_exp))
         fillin_excel_table_pixel(current_result_read_path=os.path.join(reading_result_path,current_exp))
         fillin_excel_table_mse_vn(current_result_read_path=os.path.join(reading_result_path,current_exp), mark='MSE')
