@@ -5,3 +5,9 @@ Exp:4  | ResEmdNet-NN-Style4_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-C
 Exp:5  | ResEmdNet-Style4_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown
 Exp:6  | ResMixer-5-DenseMixer-Style4_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown
 Exp:7  | ResMixer-5-SimpleMixer-Style4_StyleHw50_ContentPf32+Hw32_GenEncDec6_DisMdy6conv-ContentUnKnown-StyleUnKnown
+Exp:8  | WNet-DenseMixer-AdaIN-Multi_StyleHw50_ContentPf32+Hw32_GenEncDec6-Des5@Lyr3_DisMdy6conv-ContentUnKnown-StyleUnKnown-Style4
+Exp:9  | WNet-DenseMixer-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6-Des5@Lyr3_DisMdy6conv-ContentUnKnown-StyleUnKnown-Style4
+Exp:10  | WNet-ResidualMixer-AdaIN-Multi_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv-ContentUnKnown-StyleUnKnown-Style4
+Exp:11  | WNet-ResidualMixer-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv-ContentUnKnown-StyleUnKnown-Style4
+Exp:12  | WNet-ResidualMixer-NonAdaIN_StyleHw50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv-ContentUnKnown-StyleUnKnown-Style4
+Exp:13  | WNet-DenseMixer-NonAdaIN_StyleHw50_ContentPfStd1_GenEncDec6-Des5@Lyr3_DisMdy6conv-ContentUnKnown-StyleUnKnown-Style4

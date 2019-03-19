@@ -21,6 +21,10 @@ STANDARD_GRAYSCALE_THRESHOLD_VALUE = 240
 ALTERNATE_GRAYSCALE_LOW=170
 ALTERNATE_GRAYSCALE_HGH=250
 
+# data_reading_mode = 'Full'
+data_reading_mode = 'Partial'
+
+
 GRAYSCALE_AVG = 127.5
 class Dataset(object):
     def __init__(self,
@@ -333,9 +337,13 @@ class Dataset_Iterator(object):
         true_style_label0_list_input_op, true_style_label1_list_input_op = \
             _get_tensor_slice()
 
+        if data_reading_mode == 'Full':
+            reading_num_parallel_calls = self.thread_num - 1
+        elif data_reading_mode == 'Partial':
+            reading_num_parallel_calls = 4
         true_style_dataset = \
             true_style_dataset.map(map_func=_parser_func,
-                                   num_parallel_calls=self.thread_num-1).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
+                                   num_parallel_calls=reading_num_parallel_calls).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
         true_style_iterator = true_style_dataset.make_initializable_iterator()
         true_style_img_tensor, true_style_label0_tensor_dense, true_style_label1_tensor_dense = \
             true_style_iterator.get_next()
@@ -364,7 +372,7 @@ class Dataset_Iterator(object):
                 _get_tensor_slice()
             prototype_dataset = \
                 prototype_dataset.map(map_func=_parser_func,
-                                      num_parallel_calls=self.thread_num-1).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
+                                      num_parallel_calls=reading_num_parallel_calls).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
             prototype_iterator = prototype_dataset.make_initializable_iterator()
             prototype_img_tensor, prototype_label0_tensor, prototype_label1_tensor = prototype_iterator.get_next()
 
@@ -424,7 +432,7 @@ class Dataset_Iterator(object):
                 _get_tensor_slice()
 
             reference_dataset = reference_dataset.map(map_func=_parser_func,
-                                                      num_parallel_calls=self.thread_num-1).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
+                                                      num_parallel_calls=reading_num_parallel_calls).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
             reference_iterator = reference_dataset.make_initializable_iterator()
             reference_img_tensor, reference_label0_tensor, reference_label1_tensor = reference_iterator.get_next()
 
@@ -473,7 +481,7 @@ class Dataset_Iterator(object):
                     _get_tensor_slice()
 
                 loss_reference_dataset = loss_reference_dataset.map(map_func=_parser_func,
-                                                                    num_parallel_calls=self.thread_num-1).apply(
+                                                                    num_parallel_calls=reading_num_parallel_calls).apply(
                     tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
                 loss_reference_iterator = loss_reference_dataset.make_initializable_iterator()
                 loss_reference_img_tensor, loss_reference_label0_tensor, loss_reference_label1_tensor = loss_reference_iterator.get_next()
