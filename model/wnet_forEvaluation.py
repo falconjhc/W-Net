@@ -865,7 +865,12 @@ class WNet(object):
         print("InvolvedLabel0:%d, InvolvedLabel1:%d" % (len(self.involved_label0_list),
                                                         len(self.involved_label1_list)))
 
-        total_eval_epochs=int(self.fixed_style_reference_num/self.style_input_number)+1
+
+        if not self.fixed_style_reference_num%self.style_input_number ==0:
+            total_eval_epochs=int(self.fixed_style_reference_num/self.style_input_number) + 1
+        else:
+            total_eval_epochs = int(self.fixed_style_reference_num / self.style_input_number)
+
         print("StyleReferenceNum:%d, FixedStyleReferenceNum:%d, EvaluatlionEpoch:%d"
               % (self.style_input_number, self.fixed_style_reference_num,total_eval_epochs))
         print(self.print_separater)
