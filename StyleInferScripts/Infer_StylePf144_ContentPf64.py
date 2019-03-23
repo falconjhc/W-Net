@@ -22,8 +22,8 @@ print_separater = "#############################################################
 
 input_args = [
     '--targeted_content_input_txt',
-    '../ContentTxt/StyleChars_Paintings_20.txt',
-    '--save_mode','1:20',
+    '../ContentTxt/滚滚长江东逝水_简体_有替代_64.txt',
+    '--save_mode','8:8',
 
 
     '--known_style_img_path',
@@ -45,21 +45,20 @@ input_args = [
     '--style_input_number','4',
 
     '--content_data_dir', # standard data location
-    # 'CASIA_Dataset/Sources/PrintedSources/64_FoundContentPrototypeTtfOtfs/Simplified/',
-    'CASIA_Dataset/PrintedData_64Fonts/Simplified/GB2312_L1/',
+    'CASIA_Dataset/PrintedData/',
 
     '--file_list_txt_content',  # file list of the standard data
-    '../FileList/PrintedData/Char_0_3754_64PrintedFonts_GB2312L1_Simplified.txt',
-
-
+    '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
 
     '--generator_residual_at_layer','3',
-    '--generator_residual_blocks','7',
+    '--generator_residual_blocks','6',
 
     '--generator_device','/device:GPU:0',
 
     '--model_dir',
-    'TrainedModels_WNet/Exp20181225-WNet-NonAdaIN_StylePf80_ContentPf32_GenEncDec6-Res6@Lyr3_DisMdy6conv/',
+'TrainedModels_WNet/Exp20181225-WNet-ResidualMixer-NonAdaIN_StylePf80_ContentPf32_GenEncDec6-Res6@Lyr3_DisMdy6conv/',
+#'TrainedModels_WNet/Exp20181220-WNet-ResidualMixer-NonAdaIN_StylePf80_ContentPf32_GenEncDec6-Res6@Lyr3_DisMdy6conv/',
+#'TrainedModels_WNet/Exp20181207-WNet-ResidualMixer-NonAdaIN_StylePf80_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
 
     ]
 

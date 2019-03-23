@@ -101,7 +101,8 @@ def WNet_Generator(content_prototype,
 
     encoded_layer_list, style_shortcut_batch_diff, style_residual_batch_diff,encoded_style_final = \
         wnet_feature_mixer_framework(generator_device=generator_device,
-                                     scope=scope+'/mixer',
+                                     #scope=scope+'/mixer',
+                                     scope=scope,
                                      is_training=is_training,
                                      reuse=reuse,
                                      initializer=initializer,
