@@ -15,7 +15,7 @@ reading_result_path = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/Evaluatio
 saving_path = '../EvaluationResults/EvaluationLineGraphs_201901/'
 
 
-checking_dataset = 'StylePf50'
+checking_dataset = 'StyleHw50'
 checking_mode = 'ContentUnKnown-StyleUnKnown'
 
 saving_path = os.path.join(saving_path,checking_dataset)
@@ -384,6 +384,8 @@ def main():
 
     write_to_txt(exp_name_list=valid_exp_name_list,
                  txt_name=checking_dataset + '-' + checking_mode)
+
+    # draw pixel curves
     draw_line_func_for_pixel(draw_y=pixel_same_l1_list,
                              style_num=style_num_list,
                              exp_name_list=exp_full_list_structured,
@@ -401,7 +403,7 @@ def main():
                              fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
 
 
-
+    # draw deep mse curves
     draw_line_func_for_deep_feature(draw_y=mse_true_fake_avg_list,
                                     style_num=style_num_list,
                                     exp_name_list=exp_full_list_structured,
@@ -428,6 +430,110 @@ def main():
                                     y_axis_name='SameCharacter-DeepFeature-Layer1-MSE',
                                     fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
 
+    draw_line_func_for_deep_feature(draw_y=mse_random_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomContent-DeepFeature-Layer5-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_random_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomContent-DeepFeature-Layer4-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_random_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomContent-DeepFeature-Layer3-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_random_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomContent-DeepFeature-Layer2-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_random_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomContent-DeepFeature-Layer1-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_same_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameContent-DeepFeature-Layer5-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_same_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameContent-DeepFeature-Layer4-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_same_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameContent-DeepFeature-Layer3-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_same_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameContent-DeepFeature-Layer2-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_same_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameContent-DeepFeature-Layer1-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+
+    draw_line_func_for_deep_feature(draw_y=mse_random_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomStyle-DeepFeature-Layer5-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_random_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomStyle-DeepFeature-Layer4-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_random_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomStyle-DeepFeature-Layer3-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_random_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomStyle-DeepFeature-Layer2-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_random_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomStyle-DeepFeature-Layer1-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+
+    draw_line_func_for_deep_feature(draw_y=mse_same_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameStyle-DeepFeature-Layer5-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_same_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameStyle-DeepFeature-Layer4-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_same_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameStyle-DeepFeature-Layer3-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_same_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameStyle-DeepFeature-Layer2-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=mse_same_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameStyle-DeepFeature-Layer1-MSE',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+
+    # draw deep vn curves
     draw_line_func_for_deep_feature(draw_y=vn_true_fake_avg_list,
                                     style_num=style_num_list,
                                     exp_name_list=exp_full_list_structured,
@@ -452,6 +558,109 @@ def main():
                                     style_num=style_num_list,
                                     exp_name_list=exp_full_list_structured,
                                     y_axis_name='SameCharacter-DeepFeature-Layer1-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+
+    draw_line_func_for_deep_feature(draw_y=vn_random_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomContent-DeepFeature-Layer5-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_random_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomContent-DeepFeature-Layer4-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_random_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomContent-DeepFeature-Layer3-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_random_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomContent-DeepFeature-Layer2-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_random_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomContent-DeepFeature-Layer1-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_same_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameContent-DeepFeature-Layer5-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_same_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameContent-DeepFeature-Layer4-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_same_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameContent-DeepFeature-Layer3-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_same_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameContent-DeepFeature-Layer2-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_same_content_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameContent-DeepFeature-Layer1-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+
+    draw_line_func_for_deep_feature(draw_y=vn_random_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomStyle-DeepFeature-Layer5-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_random_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomStyle-DeepFeature-Layer4-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_random_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomStyle-DeepFeature-Layer3-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_random_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomStyle-DeepFeature-Layer2-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_random_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='RandomStyle-DeepFeature-Layer1-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+
+    draw_line_func_for_deep_feature(draw_y=vn_same_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameStyle-DeepFeature-Layer5-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_same_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameStyle-DeepFeature-Layer4-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_same_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameStyle-DeepFeature-Layer3-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_same_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameStyle-DeepFeature-Layer2-VN',
+                                    fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
+    draw_line_func_for_deep_feature(draw_y=vn_same_style_avg_list,
+                                    style_num=style_num_list,
+                                    exp_name_list=exp_full_list_structured,
+                                    y_axis_name='SameStyle-DeepFeature-Layer1-VN',
                                     fig_saving_info='W-Net' + '-' + checking_dataset + '-' + checking_mode)
 
 

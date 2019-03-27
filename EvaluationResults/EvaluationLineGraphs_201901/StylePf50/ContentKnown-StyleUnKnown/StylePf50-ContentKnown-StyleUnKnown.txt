@@ -1,3 +1,0 @@
-Exp:1  | Exp20190129-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv-ContentKnown-StyleUnKnown-
-Exp:2  | Exp20190129-WNet-ResidualMixer-AdaIN-Multi_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv-ContentKnown-StyleUnKnown-
-Exp:3  | Exp20190213-WNet-DenseMixer-NonAdaIN_StylePf50_ContentPfStd1_GenEncDec6-Des5@Lyr3_DisMdy6conv-ContentKnown-StyleUnKnown-
