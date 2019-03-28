@@ -19,6 +19,8 @@ data_root = '/home/harric/ChineseCharacterExp/'
 # W-Net
 evaluating_generator_dir=\
     'tfModels2019_WNet/checkpoint/Exp20190129-WNet-ResidualMixer-NonAdaIN_StylePf50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv/generator/'
+# evaluating_generator_dir=\
+#     'tfModels2019_WNet/checkpoint/Exp20190213-WNet-DenseMixer-NonAdaIN_StylePf50_ContentPfStd1_GenEncDec6-Des5@Lyr3_DisMdy6conv/generator/'
 
 
 
