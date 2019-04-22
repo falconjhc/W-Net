@@ -18,6 +18,7 @@ import time
 from collections import namedtuple
 from dataset.dataset import DataProvider
 import re
+import platform
 
 from utilities.utils import scale_back_for_img, scale_back_for_dif, merge, correct_ckpt_path
 from model.discriminators import discriminator_mdy_6_convs
@@ -72,15 +73,15 @@ FeatureExtractorHandle = namedtuple("FeatureExtractor",
 discriminator_dict = {"DisMdy6conv": discriminator_mdy_6_convs}
 generator_dict = {"WNet": wnet_generator,
                   "EmdNet": emdnet_generator,
-                  "ResEmdNet": resemdnet_generator,
+                  "GenEmdNet": resemdnet_generator,
                   "AdobeNet": adobenet_generator,
-                  "ResMixerNet": resmixernet_generator
+                  "BCNet": resmixernet_generator
                   }
 
 encoder_dict = {"Normal": encoder_implementation,
-                "ResEmdNet": encoder_ResEmd_framework,
+                "GenEmdNet": encoder_ResEmd_framework,
                 "AdobeNet": encoder_Adobe_framework,
-                "ResMixerNet": encoder_resmixernet_framework}
+                "BCNet": encoder_resmixernet_framework}
 
 eps = 1e-9
 
@@ -173,22 +174,23 @@ class WNet(object):
         else:
             self.adain_preparation_model = None
 
-        if ('NonAdaIN' in experiment_id) and self.adain_use:
+        if ('BN' in experiment_id) and (self.adain_use or (not self.adain_preparation_model==None)):
             print(self.print_separater)
             print(self.print_separater)
             print(self.print_separater)
             print(self.print_separater)
             print(self.print_separater)
-            print("Error: AdaIN Comflicts in ExperimentID and AdaIN Marks")
+            print("Error: AdaIN Conflicts in ExperimentID and AdaIN Marks")
             print(self.print_separater)
             print(self.print_separater)
             print(self.print_separater)
             print(self.print_separater)
             print(self.print_separater)
+            return
 
         if ('AdaIN' in experiment_id and (not self.adain_use)) or \
-            ((not 'AdaIN' in experiment_id) and self.adain_use):
-            if not 'NonAdaIN' in experiment_id:
+                ((not 'AdaIN' in experiment_id) and (self.adain_use or (not self.adain_preparation_model==None))):
+            if not 'BN' in experiment_id:
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
@@ -201,24 +203,23 @@ class WNet(object):
                 print(self.print_separater)
                 print(self.print_separater)
                 return
-        if ('AdaIN' in experiment_id or self.adain_use) and (('Res' in experiment_id and 'Emd' in experiment_id)
-                                                             or 'Adobe' in experiment_id
-                                                             or 'ResMixer' in experiment_id):
+        if ('AdaIN' in experiment_id or self.adain_use) and (('Gen' in experiment_id and 'Emd' in experiment_id)
+                                                             or 'AdobeNet' in experiment_id
+                                                             or 'BCNet' in experiment_id):
+            if ('Gen' in experiment_id and 'Emd' in experiment_id):
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print("Error: No AdaIN mode in GenEmdNet")
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
+                print(self.print_separater)
 
-            if ('Res' in experiment_id and 'Emd' in experiment_id):
-                print(self.print_separater)
-                print(self.print_separater)
-                print(self.print_separater)
-                print(self.print_separater)
-                print(self.print_separater)
-                print("Error: No AdaIN mode in ResEmdNet")
-                print(self.print_separater)
-                print(self.print_separater)
-                print(self.print_separater)
-                print(self.print_separater)
-                print(self.print_separater)
-
-            if 'Adobe' in experiment_id:
+            if 'AdobeNet' in experiment_id:
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
@@ -231,13 +232,13 @@ class WNet(object):
                 print(self.print_separater)
                 print(self.print_separater)
 
-            if 'ResMixer' in experiment_id:
+            if 'BCNet' in experiment_id:
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
-                print("Error: No AdaIN in ResMixerNet")
+                print("Error: No AdaIN in BCNet")
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
@@ -249,11 +250,13 @@ class WNet(object):
         self.generator_residual_at_layer = -1
         self.generator_residual_blocks = -1
         if 'Emd' in experiment_id:
-            if 'Res' in experiment_id:
-                self.generator_implementation=generator_dict['ResEmdNet']
-                self.encoder_implementation = encoder_dict['ResEmdNet']
+            if 'Gen' in experiment_id:
+                self.generator_implementation=generator_dict['GenEmdNet']
+                self.encoder_implementation = encoder_dict['GenEmdNet']
                 if 'NN' in experiment_id:
                     self.other_info = 'NN'
+                elif 'Stride' in experiment_id:
+                    self.other_info = 'Stride'
             else:
                 self.generator_implementation = generator_dict['EmdNet']
                 self.encoder_implementation = encoder_dict['Normal']
@@ -269,16 +272,16 @@ class WNet(object):
         elif 'Adobe' in experiment_id:
             self.generator_implementation = generator_dict['AdobeNet']
             self.encoder_implementation = encoder_dict['AdobeNet']
-        elif 'ResMixer' in experiment_id:
-            self.generator_implementation = generator_dict['ResMixerNet']
-            self.encoder_implementation = encoder_dict['ResMixerNet']
-            if 'SimpleMixer' in experiment_id:
-                other_info_pos = experiment_id.find('SimpleMixer')
+        elif 'BCNet' in experiment_id:
+            self.generator_implementation = generator_dict['BCNet']
+            self.encoder_implementation = encoder_dict['BCNet']
+            if 'ResidualMixer' in experiment_id:
+                other_info_pos = experiment_id.find('ResidualMixer')
                 possible_pos = other_info_pos-10
                 if possible_pos<0:
                     possible_pos=0
                 possible_extracted_info = experiment_id[possible_pos:other_info_pos+11]
-                other_info_pos = possible_extracted_info.find('SimpleMixer')
+                other_info_pos = possible_extracted_info.find('ResidualMixer')
                 self.other_info=possible_extracted_info[other_info_pos-len(re.findall('\d+',possible_extracted_info)[0])-1:]
             elif 'DenseMixer' in experiment_id:
                 other_info_pos = experiment_id.find('DenseMixer')
@@ -477,11 +480,11 @@ class WNet(object):
             model_id = "Exp%s_GenEncDec%d_%s" % (self.experiment_id,
                                                  encoder_decoder_layer_num,
                                                  self.discriminator)
-        elif 'Adobe' in self.experiment_id:
+        elif 'AdobeNet' in self.experiment_id:
             model_id = "Exp%s_GenEncDec%d_%s" % (self.experiment_id,
                                                  encoder_decoder_layer_num,
                                                  self.discriminator)
-        elif 'ResMixer' in self.experiment_id:
+        elif 'BCNet' in self.experiment_id:
             model_id = "Exp%s_GenEncDec%d_%s" % (self.experiment_id,
                                                  encoder_decoder_layer_num,
                                                  self.discriminator)
@@ -957,21 +960,15 @@ class WNet(object):
                                         output_high_level_features=[3,4,5],
                                         reuse=True)
 
-            deep_mse_var_summary = tf.summary.scalar("ValidationCheck/Feature_MSE", tf.abs(true_fake_feature_loss_mse_var))
-            deep_vn_var_summary = tf.summary.scalar("ValidationCheck/Feature_VN", tf.abs(true_fake_feature_loss_vn_var))
+            deep_mse_var_summary = tf.summary.scalar("ValidationCheck/TrueFakeFeature_MSE", tf.abs(true_fake_feature_loss_mse_var))
+            deep_vn_var_summary = tf.summary.scalar("ValidationCheck/TrueFakeFeature_VN", tf.abs(true_fake_feature_loss_vn_var))
             var_merged_summary= tf.summary.merge([var_merged_summary, deep_mse_var_summary, deep_vn_var_summary])
-
-
             print("TrueFakeExtractor @ %s with %s;" % (self.feature_extractor_device, network_info))
-
-
-
         else:
             true_fake_infer_list=list()
             true_fake_infer_list.append(-1)
             true_fake_infer_list.append(-1)
             saver_extractor_true_fake = None
-
 
         if self.extractor_content_prototype_enabled:
             content_prototype = data_provider.train_iterator.output_tensor_list[1]
@@ -1251,13 +1248,13 @@ class WNet(object):
         print(
             "Generator @%s with %s;" % (self.generator_devices, network_info))
         return generated_target_infer, generated_target_train, \
-               g_loss, g_merged_summary, var_merged_summary,\
+               g_loss, g_merged_summary, var_merged_summary, \
                gen_vars_train, saver_generator
 
 
     def discriminator_build(self,
                             g_loss,
-                            g_merged_summary,
+                            g_merged_summary,var_merged_summary,
                             data_provider):
 
 
@@ -1288,9 +1285,9 @@ class WNet(object):
 
         with tf.variable_scope(tf.get_variable_scope()):
             with tf.device(self.discriminator_devices):
+                # for train
                 true_label1_train = data_provider.train_iterator.output_tensor_list[4]
                 true_style_train = data_provider.train_iterator.output_tensor_list[0]
-
                 content_prototype_train_all = data_provider.train_iterator.output_tensor_list[1]
                 style_reference_train_all = data_provider.train_iterator.output_tensor_list[2]
                 content_train_random_index = tf.random_uniform(shape=[], minval=0,maxval=self.content_input_number_actual,dtype=tf.int64)
@@ -1342,6 +1339,46 @@ class WNet(object):
 
 
 
+                # for validate
+                true_style_validate = data_provider.validate_iterator.output_tensor_list[0]
+                fake_style_validate = generator_handle.generated_target_infer
+                content_prototype_validate_all = data_provider.validate_iterator.output_tensor_list[1]
+                style_reference_validate_all = data_provider.validate_iterator.output_tensor_list[2]
+                content_validate_random_index = tf.random_uniform(shape=[], minval=0,
+                                                                  maxval=self.content_input_number_actual, dtype=tf.int64)
+                style_validate_random_index = tf.random_uniform(shape=[], minval=0, maxval=self.style_input_number,
+                                                                dtype=tf.int64)
+                content_prototype_validate = tf.expand_dims(
+                    content_prototype_validate_all[:, :, :, content_validate_random_index], axis=3)
+                style_reference_validate = tf.expand_dims(style_reference_validate_all[:, :, :, style_validate_random_index],
+                                                          axis=3)
+                real_pack_validate = tf.concat([content_prototype_validate, true_style_validate, style_reference_validate], axis=3)
+                fake_pack_validate = tf.concat([content_prototype_validate, fake_style_validate, style_reference_validate], axis=3)
+
+                real_C_logits_validate, real_Discriminator_logits_validate, _ = \
+                    self.discriminator_implementation(image=real_pack_validate,
+                                                      parameter_update_device=self.discriminator_devices,
+                                                      category_logit_num=discriminator_category_logit_length,
+                                                      batch_size=self.batch_size,
+                                                      critic_length=critic_logit_length,
+                                                      reuse=True,
+                                                      initializer=self.initializer,
+                                                      weight_decay=self.weight_decay_discriminator,
+                                                      scope=name_prefix,
+                                                      weight_decay_rate=self.discriminator_weight_decay_penalty)
+
+                fake_C_logits_validate, fake_Discriminator_logits_validate, _ = \
+                    self.discriminator_implementation(image=fake_pack_validate,
+                                                      parameter_update_device=self.discriminator_devices,
+                                                      category_logit_num=discriminator_category_logit_length,
+                                                      batch_size=self.batch_size,
+                                                      critic_length=critic_logit_length,
+                                                      reuse=True,
+                                                      initializer=self.initializer,
+                                                      weight_decay=self.weight_decay_discriminator,
+                                                      scope=name_prefix,
+                                                      weight_decay_rate=self.discriminator_weight_decay_penalty)
+
 
                 # discriminator infer
                 infer_content_prototype = tf.placeholder(tf.float32, [self.batch_size,
@@ -1377,8 +1414,6 @@ class WNet(object):
                                                                 infer_true_fake=infer_true_fake,
                                                                 infer_label1=infer_label1)
                 setattr(self, "discriminator_handle", curt_discriminator_handle)
-
-
 
         # loss build
         d_loss = 0
@@ -1444,6 +1479,7 @@ class WNet(object):
                                                          d_norm_fake_loss / current_critic_logit_penalty)
             d_norm_loss_summary = tf.summary.scalar("Loss_Discriminator/CriticLogit_Norm", d_norm_loss / current_critic_logit_penalty)
 
+
             d_loss += d_norm_loss
             d_merged_summary = tf.summary.merge([d_merged_summary,
                                                  d_norm_real_loss_summary,
@@ -1452,12 +1488,14 @@ class WNet(object):
 
             d_loss_real = tf.reduce_mean(d_loss_real) * self.Discriminative_Penalty
             d_loss_fake = tf.reduce_mean(d_loss_fake) * self.Discriminative_Penalty
-            #d_loss_real_fake_summary = tf.summary.scalar("TrainingProgress_DiscriminatorRealFakeLoss",
-            #                                             tf.reduce_mean(tf.abs(real_Discriminator_logits - fake_Discriminator_logits)) / self.Discriminative_Penalty)
             d_loss_real_fake_summary1 = tf.summary.scalar("TrainingProgress/LogitDifferenceMean",
                                                           tf.reduce_mean(tf.abs(real_Discriminator_logits - fake_Discriminator_logits)) / self.Discriminative_Penalty)
             d_loss_real_fake_summary2 = tf.summary.scalar("TrainingProgress/AdversarialDifference",
                                                           tf.abs(d_loss_real + d_loss_fake) / self.Discriminative_Penalty)
+            d_loss_validate_summary = tf.summary.scalar("ValidateCheck/Adversarial_TrainingProgresses",
+                                                        tf.abs(tf.reduce_mean(real_C_logits_validate)-tf.reduce_mean(fake_C_logits_validate)))
+            var_merged_summary = tf.summary.merge([var_merged_summary, d_loss_validate_summary])
+
             if self.Discriminator_Gradient_Penalty > 10 * eps:
                 d_gradient_loss = discriminator_slopes
                 d_gradient_loss = tf.reduce_mean(d_gradient_loss) * self.Discriminator_Gradient_Penalty
@@ -1531,7 +1569,7 @@ class WNet(object):
 
         print("Discriminator @ %s with %s;" % (self.discriminator_devices,network_info))
         return g_merged_summary, d_merged_summary, \
-               g_loss,d_loss, \
+               g_loss,d_loss, var_merged_summary, \
                trn_real_summary, trn_fake_summary, tst_real_summary, tst_fake_summary, \
                dis_vars_train,saver_discriminator
 
@@ -1650,7 +1688,10 @@ class WNet(object):
                     print("No.%d, %s" % (counter, ii))
                     counter += 1
                 if not self.debug_mode == 1:
-                    raw_input("Press enter to continue")
+                    if platform.system()=='Windows':
+                        input("Press enter to continue")
+                    else:
+                        raw_input("Press enter to continue")
 
             current_var_name_list = np.unique(current_var_name_list)
             ignore_var_name_list = list_diff(first=saved_var_name_list,
@@ -1662,7 +1703,10 @@ class WNet(object):
                     print("No.%d, %s" % (counter, ii))
                     counter += 1
                 if not self.debug_mode == 1:
-                    raw_input("Press enter to continue")
+                    if platform.system() == 'Windows':
+                        input("Press enter to continue")
+                    else:
+                        raw_input("Press enter to continue")
 
             saver = tf.train.Saver(max_to_keep=1, var_list=output_var_tensor_list)
             self.restore_model(saver=saver,
@@ -1742,9 +1786,9 @@ class WNet(object):
 
             # tensorflow parameters
             # DO NOT MODIFY!!!
-            config = tf.ConfigProto(allow_soft_placement=True, log_device_placement=False)
-            config.gpu_options.allow_growth = True
-            self.sess = tf.Session(config=config)
+            gpu_options = tf.GPUOptions(allow_growth=True)
+            # config.gpu_options.allow_growth = True
+            self.sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
 
 
             # define the data set
@@ -1831,7 +1875,7 @@ class WNet(object):
 
             # for feature extractor
             g_loss, g_merged_summary, feature_extractor_saver_list, \
-            var_merged_summary,\
+            var_merged_summary, \
             extr_trn_real_merged, extr_trn_fake_merged, extr_val_real_merged, extr_val_fake_merged= \
                 self.feature_extractor_build(g_loss=g_loss,
                                              g_merged_summary=g_merged_summary,
@@ -1840,11 +1884,12 @@ class WNet(object):
 
             # for discriminator building
             g_merged_summary, d_merged_summary, \
-            g_loss, d_loss, \
+            g_loss, d_loss, var_merged_summary, \
             dis_trn_real_summary, dis_trn_fake_summary, dis_val_real_summary, dis_val_fake_summary, \
             dis_vars_train, saver_discriminator = \
                 self.discriminator_build(g_loss=g_loss,
                                          g_merged_summary=g_merged_summary,
+                                         var_merged_summary=var_merged_summary,
                                          data_provider=data_provider)
             evalHandle = EvalHandle(inferring_generated_images=generated_batch_infer,
                                     training_generated_images=generated_batch_train)
@@ -2024,7 +2069,10 @@ class WNet(object):
 
 
         if self.debug_mode == 0:
-            raw_input("Press enter to continue")
+            if platform.system() == 'Windows':
+                input("Press enter to continue")
+            else:
+                raw_input("Press enter to continue")
         print(self.print_separater)
 
 

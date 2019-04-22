@@ -4,9 +4,15 @@ import os
 
 import sys
 sys.path.append('..')
+import platform
 
-reload(sys)
-sys.setdefaultencoding('utf8')
+if platform.system()=='Windows':
+    from importlib import reload
+else:
+    reload(sys)
+    sys.setdefaultencoding('utf8')
+
+
 from utilities.utils import image_show
 import random as rnd
 import time
@@ -15,7 +21,6 @@ print_separator = "#############################################################
 from tensorflow.python.client import device_lib
 import copy as cpy
 import scipy.misc as misc
-
 
 STANDARD_GRAYSCALE_THRESHOLD_VALUE = 240
 ALTERNATE_GRAYSCALE_LOW=170
@@ -83,6 +88,14 @@ class Dataset_Iterator(object):
                  augment=False,augment_flip=False,
                  label0_vec=-1,label1_vec=-1,debug_mode=False,
                  ):
+
+        if "Validation" in print_marks:
+            self.iterator_mode = "validate"
+        elif "Train" in print_marks:
+            self.iterator_mode = "train"
+
+
+        self.debug_mode = debug_mode
         self.batch_size = batch_size
         self.input_width = input_width
         self.input_filters = input_channel
@@ -104,8 +117,8 @@ class Dataset_Iterator(object):
             self.label0_vec = np.concatenate([range(176161, 176191),
                                               range(0, 3725)], axis=0)
             self.label1_vec = range(1001, 1051)
-            self.label0_vec = map(str, self.label0_vec)
-            self.label1_vec = map(str, self.label1_vec)
+            self.label0_vec = list(map(str, self.label0_vec))
+            self.label1_vec = list(map(str, self.label1_vec))
         else:
             self.label0_vec = self.label0_vec.tolist()
             self.label1_vec = self.label1_vec.tolist()
@@ -341,6 +354,11 @@ class Dataset_Iterator(object):
             reading_num_parallel_calls = self.thread_num - 1
         elif data_reading_mode == 'Partial':
             reading_num_parallel_calls = 4
+        if self.debug_mode:
+            reading_num_parallel_calls = 1
+        if self.iterator_mode == "validate":
+            reading_num_parallel_calls = 1
+
         true_style_dataset = \
             true_style_dataset.map(map_func=_parser_func,
                                    num_parallel_calls=reading_num_parallel_calls).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
@@ -373,6 +391,7 @@ class Dataset_Iterator(object):
             prototype_dataset = \
                 prototype_dataset.map(map_func=_parser_func,
                                       num_parallel_calls=reading_num_parallel_calls).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
+
             prototype_iterator = prototype_dataset.make_initializable_iterator()
             prototype_img_tensor, prototype_label0_tensor, prototype_label1_tensor = prototype_iterator.get_next()
 
@@ -481,8 +500,7 @@ class Dataset_Iterator(object):
                     _get_tensor_slice()
 
                 loss_reference_dataset = loss_reference_dataset.map(map_func=_parser_func,
-                                                                    num_parallel_calls=reading_num_parallel_calls).apply(
-                    tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
+                                                                    num_parallel_calls=reading_num_parallel_calls).apply(tf.contrib.data.batch_and_drop_remainder(self.batch_size)).repeat(-1)
                 loss_reference_iterator = loss_reference_dataset.make_initializable_iterator()
                 loss_reference_img_tensor, loss_reference_label0_tensor, loss_reference_label1_tensor = loss_reference_iterator.get_next()
 
@@ -627,6 +645,7 @@ class DataProvider(object):
         else:
             self.thread_num = int(multi_thread.cpu_count() / len(gpu_device))
 
+        self.debug_mode = debug_mode
         self.batch_size = batch_size
         self.augment_train_data=augment_train_data
         self.augment_train_data_flip=augment_train_data_flip
@@ -668,7 +687,11 @@ class DataProvider(object):
             print(print_separator)
             if not debug_mode:
                 print("DataNum:%d" % len(self.train_iterator.true_style.data_list))
-                raw_input("Press any key to continue...")
+                if platform.system()=='Windows':
+                    input("Press any key to continue...")
+                else:
+                    raw_input("Press any key to continue...")
+
 
     def dataset_reinitialization(self, sess, init_for_val, info_interval):
         self.train_iterator.reproduce_dataset_lists(info="TrainData", shuffle=True, info_print_interval=info_interval)

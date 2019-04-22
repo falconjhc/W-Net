@@ -14,8 +14,8 @@ eps = 1e-9
 
 
 
-data_path_root = '/DataA/Harric/ChineseCharacterExp/'
-model_log_path_root = '/DataA/Harric/ChineseCharacterExp/'
+data_path_root = 'D://WNet/'
+model_log_path_root = 'D://WNet/'
 # data_path_root = '/Users/harric/ChineseCharacterExp/'
 # model_log_path_root = '/Users/harric/ChineseCharacterExp/'
 
@@ -28,7 +28,7 @@ input_args = [
     # '--content_input_number_actual','3', # how many actual content inputs
     '--init_training_epochs','1',
     '--final_training_epochs','25',
-    '--adain_use','1-Single',
+    '--adain_use','0',
 
     '--generator_device','/device:GPU:0',
     '--discriminator_device', '/device:GPU:0',
@@ -38,18 +38,19 @@ input_args = [
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
 
-    # '--experiment_id','DEBUG-WNet-NonAdaIN-ResidualMixer',# experiment name prefix
-    # '--experiment_id','DEBUG-WNet-AdaIN-ResidualMixer',# experiment name prefix
-    # '--experiment_id','DEBUG-WNet-NonAdaIN-DenseMixer',# experiment name prefix
+    '--experiment_id','DEBUG-WNet-BN-ResidualMixer',# experiment name prefix
+    # '--experiment_id','DEBUG-WNet-AdaIN-Multi-ResidualMixer',# experiment name prefix
+    # '--experiment_id','DEBUG-WNet-BN-DenseMixer',# experiment name prefix
     # '--experiment_id','DEBUG-WNet-AdaIN-Multi-DenseMixer',# experiment name prefix
-    '--experiment_id','DEBUG-WNet-AdaIN-Single-DenseMixer',# experiment name prefix
-    # '--experiment_id','DEBUG-EmdNet-Style4',# experiment name prefix
-    # '--experiment_id','DEBUG-EmdNet-Style4-AdaIN',
-    # '--experiment_id','DEBUG-ResEmdNet-Style4',
+    # '--experiment_id','DEBUG-WNet-AdaIN-Single-DenseMixer',# experiment name prefix
+
+    # '--experiment_id','DEBUG-EmdNet-TM-Style4',# experiment name prefix
+    # '--experiment_id','DEBUG-EmdNet-AdaIN-Style4',
+    # '--experiment_id','DEBUG-ResEmdNet-Stride-Style4',
     # '--experiment_id','DEBUG-ResEmdNet-NN-Style4',
     # '--experiment_id','DEBUG-AdobeNet-Style4',
-    # '--experiment_id','DEBUG-ResMixer-5-SimpleMixer',
-    # '--experiment_id','DEBUG-ResMixer-5-DenseMixer',
+    # '--experiment_id','DEBUG-BCNet-ResidualMixer',
+    # '--experiment_id','DEBUG-BCNet-DenseMixer',
 
 
     '--experiment_dir','../../DEBUG-Model', # model saving location
@@ -57,8 +58,7 @@ input_args = [
     '--print_info_seconds','3',
 
     '--content_data_dir', # standard data location
-    'CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/,'
-    'CASIA_Dataset/PrintedData/',
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/',
 
     '--style_train_data_dir', # training data location
     'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/',
@@ -67,8 +67,7 @@ input_args = [
     'CASIA_Dataset/PrintedData/GB2312_L1/',
 
     '--file_list_txt_content', # file list of the standard data
-    '../FileList/HandWritingData/Char_0_3754_Writer_1001_1032_Isolated.txt,'
-    '../FileList/PrintedData/Char_0_3754_Writer_Selected32_Printed_Fonts_GB2312L1.txt',
+    '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt',
 
     '--file_list_txt_style_train', # file list of the training data
     '../FileList/HandWritingData/Char_0_29_Writer_1001_1005_Isolated.txt',
@@ -109,11 +108,11 @@ input_args = [
 
     # feature extractor parametrers
     '--true_fake_target_extractor_dir',
-    'TrainedModels_Vgg16/Exp20190119_FeatureExtractor_ContentStyle_HW300Pf144_vgg16net/',
+    'tfModels_FeatureExtractor\checkpoint/Exp20190119_FeatureExtractor_ContentStyle_HW300Pf144_vgg16net/variables/',
     '--content_prototype_extractor_dir',
-    'TrainedModels_Vgg16/Exp20190119_FeatureExtractor_Content_HW300Pf144_vgg16net/',
+    'tfModels_FeatureExtractor\checkpoint/Exp20190119_FeatureExtractor_Content_HW300Pf144_vgg16net/variables/',
     '--style_reference_extractor_dir',
-    'TrainedModels_Vgg16/Exp20190119_FeatureExtractor_Style_HW300Pf144_vgg16net/',
+    'tfModels_FeatureExtractor\checkpoint/Exp20190119_FeatureExtractor_Style_HW300Pf144_vgg16net/variables/',
 
     '--Feature_Penalty_True_Fake_Target', '1',
     '--Feature_Penalty_Style_Reference','1',

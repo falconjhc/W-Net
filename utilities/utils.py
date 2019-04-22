@@ -9,7 +9,6 @@ import imageio
 import scipy.misc as misc
 import numpy as np
 import copy as cp
-from cStringIO import StringIO
 
 import matplotlib.pyplot as plt
 import matplotlib.image as img
@@ -37,8 +36,6 @@ def pad_seq(seq, batch_size):
     return seq
 
 
-def bytes_to_file(bytes_img):
-    return StringIO(bytes_img)
 
 
 def normalize_image(img):

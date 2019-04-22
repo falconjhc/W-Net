@@ -84,7 +84,7 @@ def wnet_decoder_framework(encoded_layer_list,
                 ii=0
                 while not feature_size == output_width:
                     power_times = full_encoder_layer_num-2-ii
-                    output_feature_size = output_width / np.power(2, full_encoder_layer_num - ii - 1)
+                    output_feature_size = int(output_width / np.power(2, full_encoder_layer_num - ii - 1))
                     if ii < full_encoder_layer_num-1:
                         output_filter_num_expansion = np.min([np.power(2,power_times), 8])
                         output_filter_num = generator_dim * output_filter_num_expansion

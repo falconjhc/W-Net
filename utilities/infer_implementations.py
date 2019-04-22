@@ -5,8 +5,8 @@ import cv2
 import utilities.charcut as cc
 
 import sys
-reload(sys)
-sys.setdefaultencoding("utf-8")
+# reload(sys)
+# sys.setdefaultencoding("utf-8")
 
 GRAYSCALE_AVG = 127.5
 

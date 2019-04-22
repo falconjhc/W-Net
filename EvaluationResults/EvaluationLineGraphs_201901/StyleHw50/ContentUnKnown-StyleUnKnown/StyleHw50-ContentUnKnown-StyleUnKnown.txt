@@ -1,6 +1,0 @@
-Exp:1  | Exp20190129-WNet-DenseMixer-AdaIN-Multi_StyleHw50_ContentPf32+Hw32_GenEncDec6-Des5@Lyr3_DisMdy6conv-ContentUnKnown-StyleUnKnown-
-Exp:2  | Exp20190129-WNet-DenseMixer-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6-Des5@Lyr3_DisMdy6conv-ContentUnKnown-StyleUnKnown-
-Exp:3  | Exp20190129-WNet-ResidualMixer-AdaIN-Multi_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv-ContentUnKnown-StyleUnKnown-
-Exp:4  | Exp20190129-WNet-ResidualMixer-NonAdaIN_StyleHw50_ContentPf32+Hw32_GenEncDec6-Res5@Lyr3_DisMdy6conv-ContentUnKnown-StyleUnKnown-
-Exp:5  | Exp20190129-WNet-ResidualMixer-NonAdaIN_StyleHw50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv-ContentUnKnown-StyleUnKnown-
-Exp:6  | Exp20190213-WNet-DenseMixer-NonAdaIN_StyleHw50_ContentPfStd1_GenEncDec6-Des5@Lyr3_DisMdy6conv-ContentUnKnown-StyleUnKnown-
