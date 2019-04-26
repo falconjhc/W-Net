@@ -6,11 +6,11 @@ import sys
 sys.path.append('..')
 import platform
 
-if platform.system()=='Windows':
-    from importlib import reload
-else:
-    reload(sys)
-    sys.setdefaultencoding('utf8')
+# if platform.system()=='Windows':
+#     from importlib import reload
+# else:
+#     reload(sys)
+#     sys.setdefaultencoding('utf8')
 
 
 from utilities.utils import image_show

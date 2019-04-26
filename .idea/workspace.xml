@@ -92,50 +92,36 @@
     <expand />
     <select />
   </component>
-  <component name="FUSProjectUsageTrigger">
-    <session id="-207592693">
-      <usages-collector id="statistics.lifecycle.project">
-        <counts>
-          <entry key="project.closed" value="26" />
-          <entry key="project.open.time.0" value="2" />
-          <entry key="project.open.time.1" value="2" />
-          <entry key="project.open.time.2" value="1" />
-          <entry key="project.open.time.4" value="3" />
-          <entry key="project.open.time.5" value="12" />
-          <entry key="project.open.time.6" value="7" />
-          <entry key="project.open.time.7" value="5" />
-          <entry key="project.open.time.8" value="4" />
-          <entry key="project.opened" value="36" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.open">
-        <counts>
-          <entry key="py" value="180" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.open">
-        <counts>
-          <entry key="Python" value="180" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.edit">
-        <counts>
-          <entry key="Python Console" value="1538" />
-          <entry key="py" value="12625" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.edit">
-        <counts>
-          <entry key="Python" value="14163" />
-        </counts>
-      </usages-collector>
-    </session>
-  </component>
   <component name="FavoritesManager">
     <favorites_list name="W-Net" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-893">
+              <caret line="14" selection-start-line="14" selection-end-line="14" />
+              <folding>
+                <marker date="1556010285512" expanded="true" signature="106:236" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/model/wnet_forTraining.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="459">
+              <caret line="1585" column="82" selection-start-line="1585" selection-start-column="79" selection-end-line="1585" selection-end-column="87" />
+              <folding>
+                <element signature="e#24#62#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -146,8 +132,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>true_style_label1_tensor_onehot</find>
-      <find>raw</find>
       <find>create_dataset_op</find>
       <find>workbook</find>
       <find>Workbook</find>
@@ -176,6 +160,8 @@
       <find>f/mixer</find>
       <find>mixer</find>
       <find>/mixer</find>
+      <find>optimizer_g=</find>
+      <find>optimizer</find>
     </findStrings>
     <replaceStrings>
       <replace>Batch_StyleFeature_Discrimination_Penalty</replace>
@@ -211,8 +197,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf80_ContentPf32.py" />
-        <option value="$PROJECT_DIR$/TrainingScripts_WNet/StylePf/StylePf50_ContentPf32.py" />
         <option value="$PROJECT_DIR$/DataPreProcessing/Split_Train_Test_Group" />
         <option value="$PROJECT_DIR$/Evaluation/Find_Style_Reference_Dataset.py" />
         <option value="$PROJECT_DIR$/DebugScripts/wnet_debug.py" />
@@ -253,7 +237,6 @@
         <option value="$PROJECT_DIR$/EvaluationScripts/Hw50_SingleContent_Eval_Script.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/EvalResultSummary.py" />
         <option value="$PROJECT_DIR$/model/wnet_forEvaluation.py" />
-        <option value="$PROJECT_DIR$/dataset/dataset.py" />
         <option value="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf144_ContentPf64.py" />
         <option value="$PROJECT_DIR$/model/mixers.py" />
         <option value="$PROJECT_DIR$/model/generators.py" />
@@ -262,19 +245,17 @@
         <option value="$PROJECT_DIR$/InferEvalScripts/Hw50_SingleContent_InferEval_Script_TestStyle.py" />
         <option value="$PROJECT_DIR$/InferEvalScripts/Pf50_SingleContent_InferEval_Script_TrainStyle.py" />
         <option value="$PROJECT_DIR$/InferEvalScripts/Pf50_SingleContent_InferEval_Script_TestStyle.py" />
+        <option value="$PROJECT_DIR$/NewTrainScripts/Tencent/Train_StyleHw50-DenseMixer_ContentPf64-AdaIN-Multi.py" />
+        <option value="$PROJECT_DIR$/NewTrainScripts/Tencent/Train_StylePf50-DenseMixer_ContentPf64-AdaIN-Multi.py" />
+        <option value="$PROJECT_DIR$/dataset/dataset.py" />
       </list>
     </option>
   </component>
-  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsGulpfileManager">
-    <detection-done>true</detection-done>
-    <sorting>DEFINITION_ORDER</sorting>
-  </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1877" />
-    <option name="width" value="1219" />
-    <option name="height" value="747" />
+    <option name="x" value="113" />
+    <option name="y" value="301" />
+    <option name="width" value="1394" />
+    <option name="height" value="810" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -301,7 +282,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -312,18 +292,47 @@
             <path>
               <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
               <item name="W-Net" type="462c0819:PsiDirectoryNode" />
-              <item name="InferEvalScripts" type="462c0819:PsiDirectoryNode" />
+              <item name="dataset" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net" type="462c0819:PsiDirectoryNode" />
+              <item name="NewTrainScripts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net" type="462c0819:PsiDirectoryNode" />
+              <item name="NewTrainScripts" type="462c0819:PsiDirectoryNode" />
+              <item name="Tencent" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net" type="462c0819:PsiDirectoryNode" />
+              <item name="NewTrainScripts" type="462c0819:PsiDirectoryNode" />
+              <item name="XJTLU" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net" type="462c0819:PsiDirectoryNode" />
+              <item name="utilities" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///home/harric/Desktop/W-Net/model/wnet.py" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Parallel_Wavenet_Teacher_Students" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="restartRequiresConfirmation" value="false" />
@@ -518,11 +527,15 @@
       <workItem from="1550133583681" duration="14096000" />
       <workItem from="1550159081561" duration="1991000" />
       <workItem from="1550214133968" duration="1006000" />
+      <workItem from="1556000724513" duration="4563000" />
+      <workItem from="1556010247651" duration="83000" />
+      <workItem from="1556071600379" duration="23000" />
+      <workItem from="1556155853170" duration="893000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="64268000" />
+    <option name="totallyTimeSpent" value="69830000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -534,9 +547,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1280" y="-2" width="1920" height="1082" extended-state="6" />
+    <frame x="54" y="-8" width="1874" height="1096" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.82578397" visible="true" weight="0.28121665" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.82578397" visible="true" weight="0.2935022" />
       <window_info id="Structure" order="1" sideWeight="0.17421603" side_tool="true" weight="0.46830094" />
       <window_info id="Favorites" order="2" sideWeight="0.23773585" side_tool="true" weight="0.0092983935" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -550,7 +564,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="11" visible="true" weight="0.100323625" />
+      <window_info anchor="bottom" id="Python Console" order="11" visible="true" weight="0.09968187" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="12" weight="0.32938388" />
       <window_info anchor="bottom" id="Terminal" order="13" weight="0.32938388" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -558,7 +572,7 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" x="1891" y="159" width="803" height="731" id="SciView" order="3" sideWeight="0.75418997" weight="0.42155817" />
       <window_info anchor="right" id="Database" order="4" weight="0.32956687" />
-      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.24581006" side_tool="true" weight="0.21878335" />
+      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.24581006" side_tool="true" visible="true" weight="0.16079295" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76226413" visible="true" weight="0.5224007" />
@@ -588,9 +602,6 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
-  </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -754,32 +765,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/tensorflow/lib/python2.7/site-packages/matplotlib/axes/_axes.py" />
-    <entry file="file://$PROJECT_DIR$/DataPreProcessing/Split_Train_Test_Group.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="75" column="23" selection-start-line="75" selection-start-column="5" selection-end-line="75" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/tensorflow/lib/python2.7/site-packages/numpy/core/fromnumeric.py" />
-    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/numpy/core/_methods.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="42" column="49" lean-forward="true" selection-start-line="42" selection-start-column="49" selection-end-line="42" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dataset/dataset_classification.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="249" column="10" selection-start-line="249" selection-start-column="10" selection-end-line="249" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/feature_extractor_networks.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2870">
@@ -801,13 +786,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/ops/variable_scope.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="505">
-          <caret line="776" column="63" lean-forward="true" selection-start-line="776" selection-start-column="63" selection-end-line="776" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/ops/variable_scope.py" />
     <entry file="file://$PROJECT_DIR$/model/vggs.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -815,48 +794,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/matplotlib/axes/_base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="259" column="68" lean-forward="true" selection-start-line="259" selection-start-column="68" selection-end-line="259" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utilities/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="192" column="9" selection-start-line="192" selection-start-column="9" selection-end-line="192" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/PIL/Image.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
-          <caret line="2334" column="7" lean-forward="true" selection-start-line="2334" selection-start-column="7" selection-end-line="2334" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/client/session.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="571">
-          <caret line="1333" column="14" lean-forward="true" selection-start-line="1333" selection-start-column="14" selection-end-line="1333" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/matplotlib/artist.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="505">
-          <caret line="890" lean-forward="true" selection-start-line="890" selection-end-line="890" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/matplotlib/pyplot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="3816" column="4" selection-start-line="3816" selection-start-column="4" selection-end-line="3816" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/matplotlib/axes/_base.py" />
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/PIL/Image.py" />
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/tensorflow/python/client/session.py" />
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/matplotlib/artist.py" />
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/matplotlib/pyplot.py" />
     <entry file="file://$PROJECT_DIR$/model/discriminators.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
@@ -871,13 +813,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/matplotlib/colors.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="211" selection-start-line="211" selection-end-line="211" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/matplotlib/colors.py" />
     <entry file="file://$PROJECT_DIR$/model/wnet.py" />
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style4.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -904,20 +840,7 @@
     <entry file="file://$PROJECT_DIR$/TrainingScripts_WNet/PremilabServer04/StyleHw50-ResidualMixer_ContentPf32+Hw32.py" />
     <entry file="file://$PROJECT_DIR$/TrainingScripts_WNet/EEEServer01/StylePf50-ResidualMixer_ContentPfStd1.py" />
     <entry file="file://$PROJECT_DIR$/TrainingScripts_WNet/EEEServer01/StylePf50-ResidualMixer_ContentPf32.py" />
-    <entry file="file://$PROJECT_DIR$/model/wnet_forTraining.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="1906" column="102" selection-start-line="1906" selection-start-column="84" selection-end-line="1906" selection-end-column="102" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/pyExcelerator/Workbook.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="115" column="8" selection-start-line="115" selection-start-column="8" selection-end-line="115" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/.conda/envs/tensorflow_py27/lib/python2.7/site-packages/pyExcelerator/Workbook.py" />
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/EvaluationMetric.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="77">
@@ -953,13 +876,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="396">
           <caret line="29" column="67" selection-start-line="29" selection-start-column="67" selection-end-line="29" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="23" column="21" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
         </state>
       </provider>
     </entry>
@@ -999,13 +915,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="441" selection-start-line="441" selection-end-line="441" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utilities/infer_implementations.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="374" selection-start-line="374" selection-end-line="374" />
         </state>
       </provider>
     </entry>
@@ -1066,6 +975,89 @@
     <entry file="file://$PROJECT_DIR$/InferEvalScripts/Pf50_MultiContent_InferEval_Script_TestStyle_Style1.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-162" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NewTrainScripts/Tencent/Train_StyleHw50-DenseMixer_ContentPf64-AdaIN-Multi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="36" column="47" selection-start-line="36" selection-start-column="47" selection-end-line="36" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NewTrainScripts/Tencent/Train_StylePf50-DenseMixer_ContentPf64-AdaIN-Multi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="627">
+          <caret line="36" column="47" selection-start-line="36" selection-start-column="47" selection-end-line="36" selection-end-column="47" />
+          <folding>
+            <element signature="e#71#108#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utilities/ops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+          <folding>
+            <element signature="e#24#62#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utilities/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3648">
+          <caret line="192" lean-forward="true" selection-start-line="192" selection-end-line="192" />
+          <folding>
+            <element signature="e#24#61#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utilities/infer_implementations.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7106">
+          <caret line="374" selection-start-line="374" selection-end-line="374" />
+          <folding>
+            <element signature="e#24#61#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utilities/charcut.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#23#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-893">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+          <folding>
+            <marker date="1556010285512" expanded="true" signature="106:236" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/conda/conda/envs/tensorflow_py27/Lib/site-packages/tensorflow/contrib/optimizer_v2/optimizer_v2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="616">
+          <caret line="657" column="64" lean-forward="true" selection-start-line="656" selection-start-column="26" selection-end-line="657" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/wnet_forTraining.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="1585" column="82" selection-start-line="1585" selection-start-column="79" selection-end-line="1585" selection-end-column="87" />
+          <folding>
+            <element signature="e#24#62#0" expanded="true" />
+          </folding>
+        </state>
       </provider>
     </entry>
   </component>

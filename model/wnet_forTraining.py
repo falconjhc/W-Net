@@ -1492,7 +1492,7 @@ class WNet(object):
                                                           tf.reduce_mean(tf.abs(real_Discriminator_logits - fake_Discriminator_logits)) / self.Discriminative_Penalty)
             d_loss_real_fake_summary2 = tf.summary.scalar("TrainingProgress/AdversarialDifference",
                                                           tf.abs(d_loss_real + d_loss_fake) / self.Discriminative_Penalty)
-            d_loss_validate_summary = tf.summary.scalar("ValidateCheck/Adversarial_TrainingProgresses",
+            d_loss_validate_summary = tf.summary.scalar("ValidationCheck/Adversarial_TrainingProgresses",
                                                         tf.abs(tf.reduce_mean(real_C_logits_validate)-tf.reduce_mean(fake_C_logits_validate)))
             var_merged_summary = tf.summary.merge([var_merged_summary, d_loss_validate_summary])
 
@@ -1687,11 +1687,11 @@ class WNet(object):
                 for ii in ignore_var_tensor_list:
                     print("No.%d, %s" % (counter, ii))
                     counter += 1
-                if not self.debug_mode == 1:
-                    if platform.system()=='Windows':
-                        input("Press enter to continue")
-                    else:
-                        raw_input("Press enter to continue")
+                # if not self.debug_mode == 1:
+                #     if platform.system()=='Windows':
+                #         input("Press enter to continue")
+                #     else:
+                #         raw_input("Press enter to continue")
 
             current_var_name_list = np.unique(current_var_name_list)
             ignore_var_name_list = list_diff(first=saved_var_name_list,
@@ -1702,11 +1702,11 @@ class WNet(object):
                 for ii in ignore_var_name_list:
                     print("No.%d, %s" % (counter, ii))
                     counter += 1
-                if not self.debug_mode == 1:
-                    if platform.system() == 'Windows':
-                        input("Press enter to continue")
-                    else:
-                        raw_input("Press enter to continue")
+                # if not self.debug_mode == 1:
+                #     if platform.system() == 'Windows':
+                #         input("Press enter to continue")
+                #     else:
+                #         raw_input("Press enter to continue")
 
             saver = tf.train.Saver(max_to_keep=1, var_list=output_var_tensor_list)
             self.restore_model(saver=saver,
@@ -2068,12 +2068,12 @@ class WNet(object):
         print(data_provider.content_label1_vec)
 
 
-        if self.debug_mode == 0:
-            if platform.system() == 'Windows':
-                input("Press enter to continue")
-            else:
-                raw_input("Press enter to continue")
-        print(self.print_separater)
+        # if self.debug_mode == 0:
+        #     if platform.system() == 'Windows':
+        #         input("Press enter to continue")
+        #     else:
+        #         raw_input("Press enter to continue")
+        # print(self.print_separater)
 
 
         self.found_new_record_on_the_previous_epoch = True
