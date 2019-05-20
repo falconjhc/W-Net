@@ -13,10 +13,8 @@ sys.path.append('../../')
 from model.wnet_forTraining import WNet as WNET
 eps = 1e-9
 
-
-data_path_root = '/data/harric/WNet/'
-model_log_path_root = '/data/harric/WNet/'
-# exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
+data_path_root = '/home/harric/ChineseCharacterExp/'
+model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 
 
 # OPTIONS SPECIFICATION
@@ -24,7 +22,7 @@ model_log_path_root = '/data/harric/WNet/'
 #                   1: training from a based model
 input_args = [
     #'--training_from_model_dir',
-    #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20190126-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv/',
+    #'/Data_HDD/Harric/ChineseCharacterExp/tfModels2019_WNet/checkpoint/Exp20190129-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf32_GenEncDec6-Des5@Lyr3_DisMdy6conv/',
 
     '--debug_mode','0',
     '--style_input_number','4', # how many style inputs
@@ -39,28 +37,32 @@ input_args = [
 
     '--train_data_augment','1', # translation? rotation?
     '--train_data_augment_flip','1',
-    '--experiment_id','20190423-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf64',# experiment name prefix
+    '--experiment_id','20190423-WNet-DenseMixer-AdaIN-Multi_StyleHw50_ContentPf64',# experiment name prefix
     '--experiment_dir','tfModels2019April_WNet/', # model saving location
-    '--log_dir','tfLogs2019April_WNet_Pf50/',# log file saving location
+    '--log_dir','tfLogs2019April_WNet_Hw50/',# log file saving location
     '--print_info_seconds','1500',
 
     '--content_data_dir', # standard data location
     'CASIA_Dataset/PrintedData_64Fonts/Simplified/GB2312_L1/',
 
     '--style_train_data_dir', # training data location
-    'CASIA_Dataset/PrintedData/GB2312_L1/',
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
     '--style_validation_data_dir',# validation data location
-    'CASIA_Dataset/PrintedData/GB2312_L1/',
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
+    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
 
     '--file_list_txt_content', # file list of the standard data
     '../../FileList/PrintedData/Char_0_3754_64PrintedFonts_GB2312L1_Simplified.txt',
-    
+
     '--file_list_txt_style_train', # file list of the training data
-    '../../TrainTestFileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1_Train.txt',
+    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated_Train.txt,'
+    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive_Train.txt',
 
     '--file_list_txt_style_validation', # file list of the validation data
-    '../../TrainTestFileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1_Test.txt',
+    '../../TrainTestFileList/HandWritingData/ForTrain_Char_0_3754_Writer_1151_1200_Isolated_Test.txt,'
+    '../../TrainTestFileList/HandWritingData/ForTrain_Char_0_3754_Writer_1151_1200_Cursive_Test.txt',
 
 
     # generator && discriminator

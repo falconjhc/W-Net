@@ -13,8 +13,9 @@ from model.wnet_forTraining import WNet as WNET
 eps = 1e-9
 
 
-data_path_root = '/DataA/Harric/ChineseCharacterExp/'
+data_path_root = '/home/harric/ChineseCharacterExp/'
 model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
+
 # exp_root_path = '/Users/harric/Downloads/WNet_Exp/'
 
 
@@ -23,7 +24,8 @@ model_log_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 #                   1: training from a based model
 input_args = [
     #'--training_from_model_dir',
-    #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20190108-WNet-NonAdaIN_StyleHw50_ContentPfStd1_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
+    #'/Data_HDD/Harric/ChineseCharacterExp/tfModels_WNet/checkpoint/Exp20190108-WNet-NonAdaIN_StylePf50_ContentPf32_GenEncDec6-Res5@Lyr3_DisMdy6conv/',
+
     '--debug_mode','0',
     '--style_input_number','4', # how many style inputs
     '--init_training_epochs','1',
@@ -36,35 +38,29 @@ input_args = [
 
 
     '--train_data_augment','1', # translation? rotation?
-    '--train_data_augment_flip','1',
-    '--experiment_id','20190423-WNet-DenseMixer-BN_StyleHw50_ContentPfStd1',# experiment name prefix
+    '--train_data_augment_flip','0',
+    '--experiment_id','20190520-WNet-ResidualMixer-BN_StylePf50_ContentPf64',# experiment name prefix
     '--experiment_dir','tfModels2019April_WNet/', # model saving location
-    '--log_dir','tfLogs2019April_WNet_Hw50/',# log file saving location
+    '--log_dir','tfLogs2019April_WNet_Pf50/',# log file saving location
     '--print_info_seconds','1500',
 
     '--content_data_dir', # standard data location
-    'CASIA_Dataset/StandardChars/GB2312_L1/,'
-    'CASIA_Dataset/StandardChars/GB2312_L1/',
+    'CASIA_Dataset/PrintedData_64Fonts/Simplified/GB2312_L1/',
 
     '--style_train_data_dir', # training data location
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
+    'CASIA_Dataset/PrintedData/GB2312_L1/',
 
     '--style_validation_data_dir',# validation data location
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB1.1/,'
-    'CASIA_Dataset/HandWritingData_OrgGrayScale/CASIA-HWDB2.1/',
+    'CASIA_Dataset/PrintedData/GB2312_L1/',
 
     '--file_list_txt_content', # file list of the standard data
-    '../../TrainTestFileList/StandardChars/Char_0_3754_GB2312L1_Train.txt,'
-    '../../TrainTestFileList/StandardChars/Char_0_3754_GB2312L1_Test.txt',
+    '../../FileList/PrintedData/Char_0_3754_64PrintedFonts_GB2312L1_Simplified.txt',
 
     '--file_list_txt_style_train', # file list of the training data
-    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Isolated_Train.txt,'
-    '../../TrainTestFileList/HandWritingData/Char_0_3754_Writer_1101_1150_Cursive_Train.txt',
+    '../../TrainTestFileList/PrintedData/Char_0_3754_Font_0_49_GB2312L1_Train.txt',
 
     '--file_list_txt_style_validation', # file list of the validation data
-    '../../TrainTestFileList/HandWritingData/ForTrain_Char_0_3754_Writer_1151_1200_Isolated_Test.txt,'
-    '../../TrainTestFileList/HandWritingData/ForTrain_Char_0_3754_Writer_1151_1200_Cursive_Test.txt',
+    '../../TrainTestFileList/PrintedData/Char_0_3754_Font_50_79_GB2312L1_Test.txt',
 
 
     # generator && discriminator
@@ -79,7 +75,7 @@ input_args = [
     # optimizer parameters
     '--init_lr','0.0002',
     '--epoch','5000',
-    '--resume_training','1', # 0: training from scratch; 1: training from a pre-trained point
+    '--resume_training','0', # 0: training from scratch; 1: training from a pre-trained point
 
     '--optimization_method','adam',
     '--final_learning_rate_pctg','0.01',
