@@ -882,8 +882,8 @@ class WNet(object):
         print(self.print_separater)
         print("Initialization completed, and evaluation started right now.")
 
-        if self.debug_mode == 0:
-            raw_input("Press enter to continue")
+        # if self.debug_mode == 0:
+        #     raw_input("Press enter to continue")
         print(self.print_separater)
 
         
@@ -961,13 +961,6 @@ class WNet(object):
                 feed_dict={}
                 for ii in range(len(style_reference_train_list)):
                     feed_dict.update({style_reference_train_list[ii]:current_style_reference_feed_list[ii]})
-
-                # tmp_generated, tmp_true, tmp_content, tmp_style_input, tmp_style_loss = \
-                #     self.sess.run([generated_batch, data_provider.train_iterator.output_tensor_list[0],
-                #                    data_provider.train_iterator.output_tensor_list[1],
-                #                    data_provider.train_iterator.output_tensor_list[2],
-                #                    data_provider.train_iterator.output_tensor_list[10]],
-                #                   feed_dict=feed_dict)
 
                 calculated_mse, calculated_vn, calculated_pixel, label0, label1 = \
                     self.sess.run([mse_difference, vn_difference,pixel_diff,

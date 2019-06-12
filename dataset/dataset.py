@@ -685,12 +685,12 @@ class DataProvider(object):
             self.train_iterator.fixed_style_reference_data_path_list = fixed_style_reference_data_path_list
             self.train_iterator.fixed_style_reference_char_list = char_list
             print(print_separator)
-            if not debug_mode:
-                print("DataNum:%d" % len(self.train_iterator.true_style.data_list))
-                if platform.system()=='Windows':
-                    input("Press any key to continue...")
-                else:
-                    raw_input("Press any key to continue...")
+            # if not debug_mode:
+                # print("DataNum:%d" % len(self.train_iterator.true_style.data_list))
+                # if platform.system()=='Windows':
+                #     input("Press any key to continue...")
+                # else:
+                #     raw_input("Press any key to continue...")
 
 
     def dataset_reinitialization(self, sess, init_for_val, info_interval):

@@ -1,9 +1,9 @@
 import os
 import numpy as np
 
-file_list_txt = '../FileList/StandardChars/Char_0_3754_GB2312L1.txt'
-file_written_dir = '../TrainTestFileList/StandardChars/'
-file_written_file_name = 'Char_0_3754_GB2312L1'
+file_list_txt = '../FileList/PrintedData/Char_0_3754_64PrintedFonts_GB2312L1_Simplified.txt'
+file_written_dir = '../TrainTestFileList/PrintedData/'
+file_written_file_name = 'Char_0_3754_GB2312L1_Printed64_Simplified'
 
 if not os.path.exists(file_written_dir):
     os.makedirs(file_written_dir)
