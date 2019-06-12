@@ -8,13 +8,10 @@
       <change beforePath="$PROJECT_DIR$/.idea/W-Net.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/W-Net.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewTrainScripts/Tencent/Train_StyleHw50-DenseMixer_ContentPf64-AdaIN-Multi.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewTrainScripts/Tencent/Train_StylePf50-DenseMixer_ContentPf64-AdaIN-Multi.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewTrainScripts/XJTLU/StylePf144-ResidualMixer_ContentPf64.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewTrainScripts/XJTLU/Train_StyleHw50-DenseMixer_ContentPfStd1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewTrainScripts/XJTLU/Train_StyleHw50-ResidualMixer_ContentPfStd1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewTrainScripts/XJTLU/Train_StylePf50-DenseMixer_ContentPfStd1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewTrainScripts/XJTLU/Train_StylePf50-ResidualMixer_ContentPfStd1.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NewTrainScripts/WNET/Train_StyleHw50-DenseMixer_ContentPf64.py" beforeDir="false" afterPath="$PROJECT_DIR$/NewTrainScripts/WNET/Train_StyleHw50-DenseMixer_ContentPf64.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NewTrainScripts/WNET/Train_StyleHw50-ResidualMixer_ContentPf64.py" beforeDir="false" afterPath="$PROJECT_DIR$/NewTrainScripts/WNET/Train_StyleHw50-ResidualMixer_ContentPf64.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NewTrainScripts/WNET/Train_StylePf50-DenseMixer_ContentPf64.py" beforeDir="false" afterPath="$PROJECT_DIR$/NewTrainScripts/WNET/Train_StylePf50-DenseMixer_ContentPf64.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NewTrainScripts/WNET/Train_StylePf50-ResidualMixer_ContentPf64.py" beforeDir="false" afterPath="$PROJECT_DIR$/NewTrainScripts/WNET/Train_StylePf50-ResidualMixer_ContentPf64.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -99,12 +96,15 @@
     <favorites_list name="W-Net" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DebugScripts/train_debug.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-68">
-              <caret line="209" selection-start-line="209" selection-end-line="209" />
+            <state relative-caret-position="193">
+              <caret line="43" column="55" selection-start-line="43" selection-start-column="55" selection-end-line="43" selection-end-column="55" />
+              <folding>
+                <element signature="e#24#61#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -270,6 +270,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -300,13 +301,17 @@
             <path>
               <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
               <item name="W-Net" type="462c0819:PsiDirectoryNode" />
+              <item name="StyleInferScripts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
+              <item name="W-Net" type="462c0819:PsiDirectoryNode" />
               <item name="utilities" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -331,7 +336,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.train_debug">
+  <component name="RunManager" selected="Python.Infer_StylePf50_ContentPf32">
     <configuration name="BarDraw" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -376,20 +381,17 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="EvalResultSummary" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="Infer_StyleHw444_ContentHw32Pf32" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/EvaluationScripts" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/StyleInferScripts" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/EvaluationScripts/EvalResultSummary.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/StyleInferScripts/Infer_StyleHw444_ContentHw32Pf32.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -398,20 +400,17 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Infer_StylePf144_ContentPf64" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="Infer_StylePf50_ContentPf32" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/StyleInferScripts" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf144_ContentPf64.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentPf32.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -446,9 +445,6 @@
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/DebugScripts" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -465,19 +461,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.Infer_StylePf144_ContentPf64" />
-      <item itemvalue="Python.EvalResultSummary" />
-      <item itemvalue="Python.EvalLineGraphScript" />
       <item itemvalue="Python.BarDraw" />
+      <item itemvalue="Python.EvalLineGraphScript" />
       <item itemvalue="Python.train_debug" />
+      <item itemvalue="Python.Infer_StyleHw444_ContentHw32Pf32" />
+      <item itemvalue="Python.Infer_StylePf50_ContentPf32" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Infer_StylePf50_ContentPf32" />
+        <item itemvalue="Python.Infer_StyleHw444_ContentHw32Pf32" />
         <item itemvalue="Python.train_debug" />
         <item itemvalue="Python.EvalLineGraphScript" />
         <item itemvalue="Python.BarDraw" />
-        <item itemvalue="Python.EvalResultSummary" />
-        <item itemvalue="Python.Infer_StylePf144_ContentPf64" />
       </list>
     </recent_temporary>
   </component>
@@ -514,11 +510,13 @@
       <workItem from="1556155853170" duration="893000" />
       <workItem from="1558160586698" duration="219000" />
       <workItem from="1558160817188" duration="45000" />
+      <workItem from="1558508929011" duration="14000" />
+      <workItem from="1558682613622" duration="256000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="70094000" />
+    <option name="totallyTimeSpent" value="70364000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -531,9 +529,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="38" y="23" width="1642" height="1027" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.82578397" visible="true" weight="0.300625" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.82578397" visible="true" weight="0.308125" />
       <window_info id="Structure" order="1" sideWeight="0.17421603" side_tool="true" weight="0.46830094" />
       <window_info id="Favorites" order="2" sideWeight="0.23773585" side_tool="true" weight="0.0092983935" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -547,7 +544,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="11" weight="0.098684214" />
+      <window_info anchor="bottom" id="Python Console" order="11" visible="true" weight="0.5131579" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="12" weight="0.32938388" />
       <window_info anchor="bottom" id="Terminal" order="13" weight="0.32938388" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -1019,8 +1016,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DebugScripts/train_debug.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-68">
-          <caret line="209" selection-start-line="209" selection-end-line="209" />
+        <state relative-caret-position="193">
+          <caret line="43" column="55" selection-start-line="43" selection-start-column="55" selection-end-line="43" selection-end-column="55" />
+          <folding>
+            <element signature="e#24#61#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
