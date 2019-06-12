@@ -1,6 +1,15 @@
-python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=4 --evaluating_generator_dir=tfModels2019April_WNet/checkpoint/Exp20190423-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf64_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/
-python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=1 --evaluating_generator_dir=tfModels2019April_WNet/checkpoint/Exp20190423-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf64_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/
-python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=4 --evaluating_generator_dir=tfModels2019April_WNet/checkpoint/Exp20190520-WNet-DenseMixer-BN_StylePf50_ContentPf64_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/
-python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=1 --evaluating_generator_dir=tfModels2019April_WNet/checkpoint/Exp20190520-WNet-DenseMixer-BN_StylePf50_ContentPf64_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/
-python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=4 --evaluating_generator_dir=tfModels2019April_WNet/checkpoint/Exp20190520-WNet-ResidualMixer-BN_StylePf50_ContentPf64_GenEncDec6-Res1@Lyr3_DisMdy6conv/generator/
-python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=1 --evaluating_generator_dir=tfModels2019April_WNet/checkpoint/Exp20190520-WNet-ResidualMixer-BN_StylePf50_ContentPf64_GenEncDec6-Res1@Lyr3_DisMdy6conv/generator/
+python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=4
+python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=1
+python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=2
+python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=3
+python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=5
+python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=6
+python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=7
+python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=8
+python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=9
+# python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=10
+# python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=11
+# python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=12
+# python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=13
+# python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=14
+# python Pf50_MultiContent_Eval_Script.py --content_known_unknown=UnKnown --style_known_unknown=UnKnown --style_input_number=15

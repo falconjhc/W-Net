@@ -16,19 +16,20 @@ eps = 1e-9
 data_path_root = '/home/harric/ChineseCharacterExp/'
 model_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 evaluation_resule_save_dir  = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201904/'
-
+evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190423-WNet-DenseMixer-AdaIN-Multi_StyleHw50_ContentPf64_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/'
+#valuating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190520-WNet-DenseMixer-BN_StyleHw50_ContentPf64_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/'
+#evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190520-WNet-ResidualMixer-BN_StyleHw50_ContentPf64_GenEncDec6-Res1@Lyr3_DisMdy6conv/generator/'
+#evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190606-WNet-ResidualMixer-AdaIN-Multi_StyleHw50_ContentPf64_GenEncDec6-Res1@Lyr3_DisMdy6conv/generator/'
 
 flags = tf.flags
 flags.DEFINE_string("content_known_unknown","Tmp","ContentKnownUnKnown")
 flags.DEFINE_string("style_known_unknown","Tmp","StyleKnownUnKnown")
-flags.DEFINE_string("evaluating_generator_dir","Tmp","ModelPath")
 flags.DEFINE_integer("style_input_number","-1","StyleKnownUnKnown")
 
 FLAGS = flags.FLAGS
 content_known_unknown=FLAGS.content_known_unknown
 style_known_unknown=FLAGS.style_known_unknown
 style_input_number=FLAGS.style_input_number
-evaluation_resule_save_dir = FLAGS.evaluation_resule_save_dir
 
 
 ## content dir
