@@ -102,39 +102,41 @@ class WNet(object):
 
                  ):
 
-        self.print_separater = "#################################################################"
+        self.print_separater = "#############################################################################"
 
         self.initializer = 'XavierInit'
         self.style_input_number=style_input_number
 
         self.experiment_id = experiment_id
+        #self.evaluation_resule_save_dir=evaluation_resule_save_dir
 
-        self.adain_mark = adain_use
-        self.adain_use = ('1' in adain_use)
-        if adain_use and 'Multi' in adain_use:
+        self.adain_use = ('AdaIN' in experiment_id) and (not 'NonAdaIN' in experiment_id)
+        if self.adain_use and 'AdaIN-Multi' in self.experiment_id:
             self.adain_preparation_model = 'Multi'
-        elif adain_use and 'Single' in adain_use:
+            self.adain_mark = '1-Multi'
+        elif self.adain_use and 'AdaIN-Single' in self.experiment_id:
             self.adain_preparation_model = 'Single'
+            self.adain_mark = '1-Single'
         else:
             self.adain_preparation_model = None
+            self.adain_mark = '0'
 
-        if ('BN' in experiment_id) and (self.adain_use or (not self.adain_preparation_model==None)):
+        if ('NonAdaIN' in experiment_id) and self.adain_use:
             print(self.print_separater)
             print(self.print_separater)
             print(self.print_separater)
             print(self.print_separater)
             print(self.print_separater)
-            print("Error: AdaIN Conflicts in ExperimentID and AdaIN Marks")
+            print("Error: AdaIN Comflicts in ExperimentID and AdaIN Marks")
             print(self.print_separater)
             print(self.print_separater)
             print(self.print_separater)
             print(self.print_separater)
             print(self.print_separater)
-            return
 
         if ('AdaIN' in experiment_id and (not self.adain_use)) or \
-                ((not 'AdaIN' in experiment_id) and (self.adain_use or (not self.adain_preparation_model==None))):
-            if not 'BN' in experiment_id:
+                ((not 'AdaIN' in experiment_id) and self.adain_use):
+            if not 'NonAdaIN' in experiment_id:
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
@@ -147,23 +149,24 @@ class WNet(object):
                 print(self.print_separater)
                 print(self.print_separater)
                 return
-        if ('AdaIN' in experiment_id or self.adain_use) and (('Gen' in experiment_id and 'Emd' in experiment_id)
-                                                             or 'AdobeNet' in experiment_id
-                                                             or 'BCNet' in experiment_id):
-            if ('Gen' in experiment_id and 'Emd' in experiment_id):
+        if ('AdaIN' in experiment_id or self.adain_use) and (('Res' in experiment_id and 'Emd' in experiment_id)
+                                                             or 'Adobe' in experiment_id
+                                                             or 'ResMixer' in experiment_id):
+
+            if ('Res' in experiment_id and 'Emd' in experiment_id):
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
-                print("Error: No AdaIN mode in GenEmdNet")
+                print("Error: No AdaIN mode in ResEmdNet")
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
 
-            if 'AdobeNet' in experiment_id:
+            if 'Adobe' in experiment_id:
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
@@ -176,13 +179,13 @@ class WNet(object):
                 print(self.print_separater)
                 print(self.print_separater)
 
-            if 'BCNet' in experiment_id:
+            if 'ResMixer' in experiment_id:
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
-                print("Error: No AdaIN in BCNet")
+                print("Error: No AdaIN in ResMixerNet")
                 print(self.print_separater)
                 print(self.print_separater)
                 print(self.print_separater)
@@ -194,19 +197,14 @@ class WNet(object):
         self.generator_residual_at_layer = -1
         self.generator_residual_blocks = -1
         if 'Emd' in experiment_id:
-            if 'Gen' in experiment_id:
-                self.generator_implementation=generator_dict['GenEmdNet']
-                self.encoder_implementation = encoder_dict['GenEmdNet']
+            if 'Res' in experiment_id:
+                self.generator_implementation=generator_dict['ResEmdNet']
                 if 'NN' in experiment_id:
                     self.other_info = 'NN'
-                elif 'Stride' in experiment_id:
-                    self.other_info = 'Stride'
             else:
                 self.generator_implementation = generator_dict['EmdNet']
-                self.encoder_implementation = encoder_dict['Normal']
         elif 'WNet' in experiment_id:
             self.generator_implementation = generator_dict['WNet']
-            self.encoder_implementation = encoder_dict['Normal']
             self.generator_residual_at_layer = generator_residual_at_layer
             self.generator_residual_blocks = generator_residual_blocks
             if 'DenseMixer' in experiment_id:
@@ -215,17 +213,15 @@ class WNet(object):
                 self.other_info='ResidualMixer'
         elif 'Adobe' in experiment_id:
             self.generator_implementation = generator_dict['AdobeNet']
-            self.encoder_implementation = encoder_dict['AdobeNet']
-        elif 'BCNet' in experiment_id:
-            self.generator_implementation = generator_dict['BCNet']
-            self.encoder_implementation = encoder_dict['BCNet']
-            if 'ResidualMixer' in experiment_id:
-                other_info_pos = experiment_id.find('ResidualMixer')
+        elif 'ResMixer' in experiment_id:
+            self.generator_implementation = generator_dict['ResMixerNet']
+            if 'SimpleMixer' in experiment_id:
+                other_info_pos = experiment_id.find('SimpleMixer')
                 possible_pos = other_info_pos-10
                 if possible_pos<0:
                     possible_pos=0
                 possible_extracted_info = experiment_id[possible_pos:other_info_pos+11]
-                other_info_pos = possible_extracted_info.find('ResidualMixer')
+                other_info_pos = possible_extracted_info.find('SimpleMixer')
                 self.other_info=possible_extracted_info[other_info_pos-len(re.findall('\d+',possible_extracted_info)[0])-1:]
             elif 'DenseMixer' in experiment_id:
                 other_info_pos = experiment_id.find('DenseMixer')

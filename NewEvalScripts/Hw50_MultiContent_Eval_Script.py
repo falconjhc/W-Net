@@ -8,12 +8,15 @@ import tensorflow as tf
 from tensorflow.python.client import device_lib
 import argparse
 import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 import os
 sys.path.append('..')
 
 from model.wnet_forEvaluation import WNet as WNET
 eps = 1e-9
-data_path_root = '/home/harric/ChineseCharacterExp/'
+data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 evaluation_resule_save_dir  = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201904/'
 evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190423-WNet-DenseMixer-AdaIN-Multi_StyleHw50_ContentPf64_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/'

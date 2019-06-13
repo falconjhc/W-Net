@@ -18,8 +18,8 @@ eps = 1e-9
 data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 evaluation_resule_save_dir  = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201904/'
-evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190422-WNet-DenseMixer-BN_StylePf50_ContentPfStd1_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/'
-#evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190422-WNet-Residual-BN_StylePf50_ContentPfStd1_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/'
+#evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190422-WNet-DenseMixer-BN_StylePf50_ContentPfStd1_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/'
+evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190422-WNet-ResidualMixer-BN_StylePf50_ContentPfStd1_GenEncDec6-Res1@Lyr3_DisMdy6conv/generator/'
 #evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190606-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPfStd1_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/'
 #evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190606-WNet-ResidualMixer-AdaIN-Multi_StylePf50_ContentPfStd1_GenEncDec6-Res1@Lyr3_DisMdy6conv/generator/'
 
