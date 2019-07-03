@@ -19,7 +19,7 @@ data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 evaluation_result_save_dir  = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201904/'
 evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190423-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf64_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/'
-3evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190520-WNet-DenseMixer-BN_StylePf50_ContentPf64_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/'
+#evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190520-WNet-DenseMixer-BN_StylePf50_ContentPf64_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/'
 #evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190520-WNet-ResidualMixer-BN_StylePf50_ContentPf64_GenEncDec6-Res1@Lyr3_DisMdy6conv/generator/'
 #evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190606-WNet-ResidualMixer-AdaIN-Multi_StylePf50_ContentPf64_GenEncDec6-Res1@Lyr3_DisMdy6conv/generator/'
 
