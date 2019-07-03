@@ -5,8 +5,8 @@ import xlrd
 import os
 
 MAX_EXP_NUM = 24
-excel_path = '../EvaluationResults/EvaluationResult_201901/'
-bar_saving_path = '../EvaluationResults/Bars_EvaluationResult_201901/'
+excel_path = '/Users/harric/Desktop/Eval_201904/EvaluationResult_201901/'
+bar_saving_path = '/Users/harric/Desktop/Eval_201904/Bars_EvaluationResult_201901/'
 
 def read_excel(file, sheet_index=0):
 

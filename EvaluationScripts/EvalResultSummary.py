@@ -12,8 +12,13 @@ import numpy as np
 from xlrd import open_workbook
 from xlutils.copy import copy
 
-reading_result_path = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201901/'
-saving_path = '../EvaluationResults/EvaluationResult_201901/'
+# reading_result_path = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201901/'
+# saving_path = '../EvaluationResults/EvaluationResult_201901/'
+
+reading_result_path = '/Users/harric/Downloads/Eval_201904/'
+saving_path = '/Users/harric/Desktop/Eval_201904/EvaluationResult_201901/'
+
+
 if not os.path.exists(saving_path):
     os.makedirs(saving_path)
 

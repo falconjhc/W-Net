@@ -12,11 +12,11 @@ sys.path.append('..')
 import os
 import time
 
-from model.wnet_forInferEval import WNet as WNET
+from model.wnet_forInferEval1 import WNet as WNET
 
 model_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 data_root = '/DataA/Harric/ChineseCharacterExp/'
-save_path = '/Data_HDD/Harric/ChineseCharacterExp/GeneratedResult/Generated_201904/TrainStyle/'
+save_path = '/Data_HDD/Harric/ChineseCharacterExp/GeneratedResult/Generated_201904-NewForCheck/'
 
 flags = tf.flags
 flags.DEFINE_integer("style_input_number","-1","StyleReferenceNum")
@@ -29,13 +29,16 @@ evaluating_generator_dir=FLAGS.evaluating_generator_dir
 
 # content prototype setting
 content_data_dir=list()
-content_data_dir.append('CASIA_Dataset/PrintedData_64Fonts/Simplified/GB2312_L1/')
+content_data_dir.append('CASIA_Dataset/StandardChars/GB2312_L1/')
+content_data_dir.append('CASIA_Dataset/StandardChars/GB2312_L1/')
 file_list_txt_content=list()
-file_list_txt_content.append('../FileList/PrintedData/Char_0_3754_64PrintedFonts_GB2312L1_Simplified.txt')
+file_list_txt_content.append('../TrainTestFileList/StandardChars/Char_0_3754_GB2312L1_Train.txt')
+file_list_txt_content.append('../TrainTestFileList/StandardChars/Char_0_3754_GB2312L1_Test.txt')
+
 
 
 # content to be generated setting
-targeted_content_input_txt='../ContentTxt/ContentChars_BlancaPython_32.txt'
+targeted_content_input_txt='../ContentTxt/GB2312_Level_1.txt'
 
 # style data setting
 style_data_dir=list()
@@ -44,15 +47,14 @@ style_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/
 
 # true style setting
 file_list_txt_true_style=list()
-file_list_txt_true_style.append('../EvaluationDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1101_1150_Cursive.txt')
-file_list_txt_true_style.append('../EvaluationDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1101_1150_Isolated.txt')
+file_list_txt_true_style.append('../FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive.txt')
+file_list_txt_true_style.append('../FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated.txt')
 
 # input style setting
 targeted_style_input_txt='../ContentTxt/StyleChars_Paintings_20.txt'
 file_list_txt_input_style=list()
-file_list_txt_input_style.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
-file_list_txt_input_style.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
-
+file_list_txt_input_style.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Cursive.txt')
+file_list_txt_input_style.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Isolated.txt')
 
 
 

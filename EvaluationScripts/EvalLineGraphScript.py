@@ -11,8 +11,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-reading_result_path = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201901/'
-saving_path = '../EvaluationResults/EvaluationLineGraphs_201901/'
+reading_result_path = '/Users/harric/Desktop/Eval_201904/EvaluationResult_201901/'
+saving_path = '/Users/harric/Desktop/Eval_201904/EvaluationLineGraphs_201901/'
 
 
 checking_dataset = 'StyleHw50'

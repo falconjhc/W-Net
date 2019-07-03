@@ -5,14 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="10ef3bca-ee09-4cc5-9f14-060042b0c381" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/NewEvalScripts/Hw50-MultiContent.sh" beforeDir="false" afterPath="$PROJECT_DIR$/NewEvalScripts/Hw50-MultiContent.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewEvalScripts/Hw50-SingleContent.sh" beforeDir="false" afterPath="$PROJECT_DIR$/NewEvalScripts/Hw50-SingleContent.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewEvalScripts/Hw50_MultiContent_Eval_Script.py" beforeDir="false" afterPath="$PROJECT_DIR$/NewEvalScripts/Hw50_MultiContent_Eval_Script.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewEvalScripts/Pf50-MultiContent.sh" beforeDir="false" afterPath="$PROJECT_DIR$/NewEvalScripts/Pf50-MultiContent.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewEvalScripts/Pf50-SingleContent.sh" beforeDir="false" afterPath="$PROJECT_DIR$/NewEvalScripts/Pf50-SingleContent.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewEvalScripts/Pf50_MultiContent_Eval_Script.py" beforeDir="false" afterPath="$PROJECT_DIR$/NewEvalScripts/Pf50_MultiContent_Eval_Script.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewEvalScripts/Pf50_SingleContent_Eval_Script.py" beforeDir="false" afterPath="$PROJECT_DIR$/NewEvalScripts/Pf50_SingleContent_Eval_Script.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/wnet_forInferEval.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/wnet_forInferEval.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EvaluationScripts/BarDraw.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/BarDraw.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EvaluationScripts/EvalLineGraphScript.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/EvalLineGraphScript.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EvaluationScripts/EvalResultSummary.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaluationScripts/EvalResultSummary.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NewEvalInferScripts/Pf50-SingleContent.sh" beforeDir="false" afterPath="$PROJECT_DIR$/NewEvalInferScripts/Pf50-SingleContent.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utilities/infer_implementations.py" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/infer_implementations.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -98,32 +96,14 @@
     <favorites_list name="W-Net" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
+    <splitter split-orientation="horizontal" split-proportion="0.515">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="224">
-                  <caret line="763" column="56" selection-start-line="763" selection-start-column="44" selection-end-line="763" selection-end-column="56" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/NewEvalInferScripts/Pf50_MultiContent_InferEval_Script_TrainStyle.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="221">
-                  <caret line="37" column="26" selection-start-line="37" selection-end-line="37" selection-end-column="26" />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/model/wnet_forInferEval.py">
+            <entry file="file://$PROJECT_DIR$/model/wnet_forInferEval1.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="176">
-                  <caret line="261" column="39" lean-forward="true" selection-start-line="258" selection-start-column="8" selection-end-line="261" selection-end-column="39" />
+                <state relative-caret-position="601">
+                  <caret line="501" lean-forward="true" selection-start-line="501" selection-end-line="501" />
                 </state>
               </provider>
             </entry>
@@ -131,15 +111,24 @@
         </leaf>
       </split-first>
       <split-second>
-        <leaf>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/utilities/infer_implementations.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="248">
-                  <caret line="358" column="30" lean-forward="true" selection-start-line="358" selection-start-column="30" selection-end-line="358" selection-end-column="30" />
+                <state relative-caret-position="608">
+                  <caret line="797" column="68" selection-start-line="797" selection-start-column="68" selection-end-line="797" selection-end-column="68" />
                   <folding>
                     <element signature="e#24#61#0" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/model/wnet_forInferEval.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="7065">
+                  <caret line="472" column="136" selection-start-line="472" selection-start-column="12" selection-end-line="472" selection-end-column="136" />
                 </state>
               </provider>
             </entry>
@@ -157,8 +146,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>create_dataset_op</find>
-      <find>workbook</find>
       <find>Workbook</find>
       <find>line_graph_draw</find>
       <find>not</find>
@@ -187,6 +174,8 @@
       <find>/mixer</find>
       <find>optimizer_g=</find>
       <find>optimizer</find>
+      <find>content_number_to_be_generated</find>
+      <find>save</find>
     </findStrings>
     <replaceStrings>
       <replace>Batch_StyleFeature_Discrimination_Penalty</replace>
@@ -222,7 +211,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/model/feature_extractor_training.py" />
         <option value="$PROJECT_DIR$/model/vggs.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script.py" />
@@ -243,7 +231,6 @@
         <option value="$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style4.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/Hw50_MultiContent_Eval_Script_Style4.py" />
         <option value="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf80_ContentPf64.py" />
-        <option value="$PROJECT_DIR$/utilities/infer_implementations.py" />
         <option value="$PROJECT_DIR$/model/wnet_forInferring.py" />
         <option value="$PROJECT_DIR$/StyleInferScripts/Infer_StylePf50_ContentPf32.py" />
         <option value="$PROJECT_DIR$/EvaluationScripts/EvaluationMetric.py" />
@@ -273,10 +260,12 @@
         <option value="$PROJECT_DIR$/NewEvalScripts/Hw50_MultiContent_Eval_Script_Style1.py" />
         <option value="$PROJECT_DIR$/NewEvalScripts/Pf50_MultiContent_Eval_Script_Style1.py" />
         <option value="$PROJECT_DIR$/model/wnet_forInferEval.py" />
+        <option value="$PROJECT_DIR$/utilities/infer_implementations.py" />
+        <option value="$PROJECT_DIR$/model/wnet_forInferEval1.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds">
     <option name="x" value="38" />
     <option name="y" value="23" />
     <option name="width" value="1642" />
@@ -317,12 +306,7 @@
             <path>
               <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
               <item name="W-Net" type="462c0819:PsiDirectoryNode" />
-              <item name="dataset" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="W-Net" type="b2602c69:ProjectViewProjectNode" />
-              <item name="W-Net" type="462c0819:PsiDirectoryNode" />
-              <item name="NewEvalInferScripts" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -336,6 +320,9 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///home/harric/Desktop/W-Net/model/wnet.py" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="restartRequiresConfirmation" value="false" />
@@ -380,6 +367,9 @@
       <module name="W-Net" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/NewEvalInferScripts" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -467,11 +457,18 @@
       <workItem from="1560334505898" duration="150000" />
       <workItem from="1560335937845" duration="173000" />
       <workItem from="1560409409149" duration="608000" />
+      <workItem from="1560497924556" duration="13000" />
+      <workItem from="1560841397730" duration="24000" />
+      <workItem from="1560841450778" duration="81000" />
+      <workItem from="1560842456087" duration="4000" />
+      <workItem from="1561012050212" duration="166000" />
+      <workItem from="1561366273093" duration="1266000" />
+      <workItem from="1561691880923" duration="6000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="73744000" />
+    <option name="totallyTimeSpent" value="75304000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -483,8 +480,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="38" y="23" width="1642" height="1027" extended-state="6" />
-    <editor active="true" />
+    <frame x="38" y="23" width="1642" height="1027" extended-state="0" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.82578397" weight="0.383125" />
       <window_info id="Structure" order="1" sideWeight="0.17421603" side_tool="true" weight="0.46830094" />
@@ -508,16 +504,16 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" x="1891" y="159" width="803" height="731" id="SciView" order="3" sideWeight="0.75418997" weight="0.42155817" />
       <window_info anchor="right" id="Database" order="4" weight="0.32956687" />
-      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.24581006" side_tool="true" weight="0.21625" />
+      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.24581006" side_tool="true" visible="true" weight="0.21625" />
     </layout>
     <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76226413" visible="true" weight="0.5224007" />
-      <window_info id="Structure" order="1" sideWeight="0.23319615" side_tool="true" weight="0.18512256" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.82578397" weight="0.383125" />
+      <window_info id="Structure" order="1" sideWeight="0.17421603" side_tool="true" weight="0.46830094" />
       <window_info id="Favorites" order="2" sideWeight="0.23773585" side_tool="true" weight="0.0092983935" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.29976302" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.25829384" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.40679824" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32938388" />
@@ -525,15 +521,15 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="11" visible="true" weight="0.73578197" />
+      <window_info anchor="bottom" id="Python Console" order="11" visible="true" weight="0.41995615" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="12" weight="0.32938388" />
       <window_info anchor="bottom" id="Terminal" order="13" weight="0.32938388" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" x="1891" y="159" width="803" height="731" id="SciView" order="3" sideWeight="0.75570035" weight="0.4226254" />
+      <window_info anchor="right" x="1891" y="159" width="803" height="731" id="SciView" order="3" sideWeight="0.75418997" weight="0.42155817" />
       <window_info anchor="right" id="Database" order="4" weight="0.32956687" />
-      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.24429968" side_tool="true" weight="0.26627535" />
+      <window_info anchor="right" x="0" y="0" width="257" height="799" id="Documentation" order="5" sideWeight="0.24581006" side_tool="true" visible="true" weight="0.21625" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -679,7 +675,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/EvaluationScripts/EvalResultSummary.py</url>
-          <line>343</line>
+          <line>348</line>
           <option name="timeStamp" value="1245" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -714,7 +710,6 @@
     <SUITE FILE_PATH="coverage/W_Net$Pf50_MultiContent_Eval_Script_Style1.coverage" NAME="Pf50_MultiContent_Eval_Script_Style1 Coverage Results" MODIFIED="1560332101825" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/NewEvalScripts" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/model/wnet.py" />
     <entry file="file://$PROJECT_DIR$/EvaluationScripts/Pf50_MultiContent_Eval_Script_Style4.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="234">
@@ -801,13 +796,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="441" selection-start-line="441" selection-end-line="441" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/EvaluationScripts/EvalResultSummary.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1418">
-          <caret line="466" column="22" selection-start-line="466" selection-start-column="22" selection-end-line="466" selection-end-column="22" />
         </state>
       </provider>
     </entry>
@@ -959,32 +947,46 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dataset/dataset.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
+        <state relative-caret-position="11385">
           <caret line="763" column="56" selection-start-line="763" selection-start-column="44" selection-end-line="763" selection-end-column="56" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/NewEvalInferScripts/Pf50_MultiContent_InferEval_Script_TrainStyle.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
+        <state relative-caret-position="465">
           <caret line="37" column="26" selection-start-line="37" selection-end-line="37" selection-end-column="26" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/wnet_forInferEval.py">
+    <entry file="file://$PROJECT_DIR$/EvaluationScripts/EvalResultSummary.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="261" column="39" lean-forward="true" selection-start-line="258" selection-start-column="8" selection-end-line="261" selection-end-column="39" />
+        <state relative-caret-position="600">
+          <caret line="40" column="22" selection-start-line="40" selection-start-column="12" selection-end-line="40" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/utilities/infer_implementations.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="358" column="30" lean-forward="true" selection-start-line="358" selection-start-column="30" selection-end-line="358" selection-end-column="30" />
+        <state relative-caret-position="608">
+          <caret line="797" column="68" selection-start-line="797" selection-start-column="68" selection-end-line="797" selection-end-column="68" />
           <folding>
             <element signature="e#24#61#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/wnet_forInferEval.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7065">
+          <caret line="472" column="136" selection-start-line="472" selection-start-column="12" selection-end-line="472" selection-end-column="136" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/wnet_forInferEval1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="601">
+          <caret line="501" lean-forward="true" selection-start-line="501" selection-end-line="501" />
         </state>
       </provider>
     </entry>

@@ -185,7 +185,7 @@ def get_revelant_data(targeted_input_txt,
             target_counter = 0
             for ii in targeted_character_label0_list:
                 if ii not in current_label0_on_current_label1:
-                    print("Fails! Didnt find %s in Dataset" % unicode(actual_char_list[target_counter]))
+                    print("Fails! Didnt find %s in Dataset" % actual_char_list[target_counter].encode('utf-8'))
                     return -1, -1, False
                 else:
                     # index_found = current_label0_on_current_label1.index(ii)
@@ -769,6 +769,22 @@ def find_transfer_targets(data_dir,txt_path,selected_label1,style_input_number,
 
     return full_chars
 
+
+def transform_numpy_to_paper(numpy_image):
+    output_paper = Image.new("RGB", (numpy_image.shape[2],
+                                     numpy_image.shape[1]),
+                             (255, 255, 255))
+
+    numpy_image = np.squeeze(numpy_image)
+    numpy_image = numpy_image - np.min(numpy_image)
+    numpy_image = numpy_image / np.max(numpy_image)
+    numpy_image = numpy_image * 255
+    numpy_image = np.tile(np.reshape(numpy_image,
+                                  [1, numpy_image.shape[0], numpy_image.shape[1], 1]),
+                          [1, 1, 1, 3])
+    pasted = Image.fromarray(np.uint8(np.squeeze(numpy_image)))
+    output_paper.paste(pasted,(0,0))
+    return output_paper
 
 
 

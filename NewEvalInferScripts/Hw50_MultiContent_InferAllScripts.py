@@ -12,20 +12,20 @@ sys.path.append('..')
 import os
 import time
 
-from model.wnet_forInferEval import WNet as WNET
+from model.wnet_forInferEval1 import WNet as WNET
 
 model_root = '/Data_HDD/Harric/ChineseCharacterExp/'
 data_root = '/DataA/Harric/ChineseCharacterExp/'
-save_path = '/Data_HDD/Harric/ChineseCharacterExp/GeneratedResult/Generated_201904/TrainStyle/'
+save_path = '/Data_HDD/Harric/ChineseCharacterExp/GeneratedResult/Generated_201904-NewForCheck/'
 
 flags = tf.flags
 flags.DEFINE_integer("style_input_number","-1","StyleReferenceNum")
 flags.DEFINE_string("evaluating_generator_dir","-1","ModelDirLoad")
 
-
 FLAGS = flags.FLAGS
 style_input_number=FLAGS.style_input_number
 evaluating_generator_dir=FLAGS.evaluating_generator_dir
+
 
 # content prototype setting
 content_data_dir=list()
@@ -35,7 +35,7 @@ file_list_txt_content.append('../FileList/PrintedData/Char_0_3754_64PrintedFonts
 
 
 # content to be generated setting
-targeted_content_input_txt='../ContentTxt/ContentChars_BlancaPython_32.txt'
+targeted_content_input_txt='../ContentTxt/GB2312_Level_1.txt'
 
 # style data setting
 style_data_dir=list()
@@ -44,14 +44,18 @@ style_data_dir.append('CASIA_Dataset/HandWritingData_240Binarized/CASIA-HWDB1.1/
 
 # true style setting
 file_list_txt_true_style=list()
-file_list_txt_true_style.append('../EvaluationDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1101_1150_Cursive.txt')
-file_list_txt_true_style.append('../EvaluationDataFileLists/HandWritingData/ContentChar_BlancaPython_Writer_1101_1150_Isolated.txt')
+file_list_txt_true_style.append('../FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Cursive.txt')
+file_list_txt_true_style.append('../FileList/HandWritingData/Char_0_3754_Writer_1151_1200_Isolated.txt')
 
 # input style setting
 targeted_style_input_txt='../ContentTxt/StyleChars_Paintings_20.txt'
 file_list_txt_input_style=list()
-file_list_txt_input_style.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Cursive.txt')
-file_list_txt_input_style.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1101_1150_Isolated.txt')
+file_list_txt_input_style.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Cursive.txt')
+file_list_txt_input_style.append('../EvaluationDataFileLists/HandWritingData/StyleChars_Paintings_Writer_1151_1200_Isolated.txt')
+
+
+
+
 
 
 
@@ -59,9 +63,11 @@ file_list_txt_input_style.append('../EvaluationDataFileLists/HandWritingData/Sty
 
 
 print_separater = "#################################################################"
+
 input_args = ['--generator_residual_at_layer','3',
               '--generator_residual_blocks','1',
               '--generator_device','/device:GPU:0']
+
 parser = argparse.ArgumentParser(description='Eval')
 
 
@@ -99,6 +105,7 @@ def main(_):
         style_data_dir[ii] = os.path.join(data_root, style_data_dir[ii])
 
 
+    
     global evaluating_generator_dir
     experiment_id_list = evaluating_generator_dir.split('/')
     for experiment_id in experiment_id_list:

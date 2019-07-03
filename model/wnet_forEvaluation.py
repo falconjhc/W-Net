@@ -88,7 +88,7 @@ class WNet(object):
     def __init__(self,
                  debug_mode=-1,
                  style_input_number=-1,
-                 evaluation_resule_save_dir='/tmp/',
+                 evaluation_result_save_dir='/tmp/',
 
                  experiment_id='0',
                  content_data_dir='/tmp/',
@@ -128,7 +128,7 @@ class WNet(object):
         self.style_input_number=style_input_number
 
         self.experiment_id = experiment_id
-        self.evaluation_resule_save_dir=evaluation_resule_save_dir
+        self.evaluation_result_save_dir=evaluation_result_save_dir
 
         self.adain_use = ('AdaIN' in experiment_id) and (not 'NonAdaIN' in experiment_id)
         if self.adain_use and 'AdaIN-Multi' in self.experiment_id:
@@ -1168,14 +1168,14 @@ class WNet(object):
         vn_std = np.std(vn, axis=0)
         pixel_std = np.std(pixel, axis=0)
 
-        evaluation_resule_save_dir = os.path.join(self.evaluation_resule_save_dir,self.experiment_id)
-        if not os.path.exists(evaluation_resule_save_dir):
-            os.makedirs(evaluation_resule_save_dir)
-        np.savetxt(os.path.join(evaluation_resule_save_dir,'Avg_FeatureMSE.csv'), mse_avg, delimiter=',')
-        np.savetxt(os.path.join(evaluation_resule_save_dir, 'Avg_FeatureVN.csv'), vn_avg, delimiter=',')
-        np.savetxt(os.path.join(evaluation_resule_save_dir, 'Avg_PixelDiff.csv'), pixel_avg, delimiter=',')
-        np.savetxt(os.path.join(evaluation_resule_save_dir, 'Std_FeatureMSE.csv'), mse_std, delimiter=',')
-        np.savetxt(os.path.join(evaluation_resule_save_dir, 'Std_FeatureVN.csv'), vn_std, delimiter=',')
-        np.savetxt(os.path.join(evaluation_resule_save_dir, 'Std_PixelDiff.csv'), pixel_std, delimiter=',')
+        evaluation_result_save_dir = os.path.join(self.evaluation_result_save_dir,self.experiment_id)
+        if not os.path.exists(evaluation_result_save_dir):
+            os.makedirs(evaluation_result_save_dir)
+        np.savetxt(os.path.join(evaluation_result_save_dir,'Avg_FeatureMSE.csv'), mse_avg, delimiter=',')
+        np.savetxt(os.path.join(evaluation_result_save_dir, 'Avg_FeatureVN.csv'), vn_avg, delimiter=',')
+        np.savetxt(os.path.join(evaluation_result_save_dir, 'Avg_PixelDiff.csv'), pixel_avg, delimiter=',')
+        np.savetxt(os.path.join(evaluation_result_save_dir, 'Std_FeatureMSE.csv'), mse_std, delimiter=',')
+        np.savetxt(os.path.join(evaluation_result_save_dir, 'Std_FeatureVN.csv'), vn_std, delimiter=',')
+        np.savetxt(os.path.join(evaluation_result_save_dir, 'Std_PixelDiff.csv'), pixel_std, delimiter=',')
         print("Evaluation result saved in:")
-        print(evaluation_resule_save_dir)
+        print(evaluation_result_save_dir)

@@ -17,9 +17,9 @@ from model.wnet_forEvaluation import WNet as WNET
 eps = 1e-9
 data_path_root = '/DataA/Harric/ChineseCharacterExp/'
 model_path_root = '/Data_HDD/Harric/ChineseCharacterExp/'
-evaluation_resule_save_dir  = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201904/'
-#evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190423-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf64_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/'
-evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190520-WNet-DenseMixer-BN_StylePf50_ContentPf64_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/'
+evaluation_result_save_dir  = '/Data_HDD/Harric/ChineseCharacterExp/EvalResult/EvaluationResult_201904/'
+evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190423-WNet-DenseMixer-AdaIN-Multi_StylePf50_ContentPf64_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/'
+3evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190520-WNet-DenseMixer-BN_StylePf50_ContentPf64_GenEncDec6-Des1@Lyr3_DisMdy6conv/generator/'
 #evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190520-WNet-ResidualMixer-BN_StylePf50_ContentPf64_GenEncDec6-Res1@Lyr3_DisMdy6conv/generator/'
 #evaluating_generator_dir = 'tfModels2019April_WNet/checkpoint/Exp20190606-WNet-ResidualMixer-AdaIN-Multi_StylePf50_ContentPf64_GenEncDec6-Res1@Lyr3_DisMdy6conv/generator/'
 
@@ -251,7 +251,7 @@ def main(_):
 
     model = WNET(debug_mode=args.debug_mode,
                  experiment_id=experiment_id,
-                 evaluation_resule_save_dir=evaluation_resule_save_dir,
+                 evaluation_result_save_dir=evaluation_result_save_dir,
                  style_input_number=style_input_number,
                  content_data_dir=content_data_dir,
                  style_train_data_dir=style_train_data_dir,
